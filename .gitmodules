@@ -1,0 +1,15 @@
+[submodule "externals/coreMQTT"]
+	path = externals/coreMQTT
+	url = https://github.com/FreeRTOS/coreMQTT
+[submodule "externals/azure-sdk-for-c"]
+	path = externals/azure-sdk-for-c
+	url = https://github.com/Azure/azure-sdk-for-c.git
+[submodule "externals/paho.mqtt.c"]
+	path = externals/paho.mqtt.c
+	url = https://github.com/eclipse/paho.mqtt.c
+[submodule "externals/paho.mqtt.embedded-c"]
+	path = externals/paho.mqtt.embedded-c
+	url = https://github.com/eclipse/paho.mqtt.embedded-c
+[submodule "externals/mbedtls"]
+	path = externals/mbedtls
+	url = https://github.com/Mbed-TLS/mbedtls

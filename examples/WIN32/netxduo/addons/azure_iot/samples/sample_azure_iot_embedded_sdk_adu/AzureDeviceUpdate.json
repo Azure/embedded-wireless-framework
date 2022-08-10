@@ -1,0 +1,74 @@
+{
+  "@context": "dtmi:dtdl:context;2",
+  "@id": "dtmi:azureiot:AzureDeviceUpdateCore;1",
+  "@type": "Interface",
+  "description": "Azure Device Update Core",
+  "displayName": "Azure Device Update Core",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "Client",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+            {
+                "name": "ResultCode",
+                "schema": "integer"
+            },
+            {
+                "name": "ExtendedResultCode",
+                "schema": "integer"
+            },
+            {
+                "name": "State",
+                "schema": "integer"
+            },
+            {
+              "name": "InstalledContentId",
+              "schema": "string"
+          }            
+        ]
+      }
+    },
+    {
+      "@type": "Property",
+      "name": "Orchestrator",
+      "schema": {
+        "@type": "Object",
+        "fields": [
+          {
+              "name": "Action",
+              "schema": "integer"
+          },
+          {
+              "name": "TargetVersion",
+              "schema": "integer"
+          },
+          {
+              "name": "Files",
+              "schema": {
+                "@type": "Map",
+                "mapKey": {
+                  "name": "FileHash",
+                  "schema": "string"
+                },
+                "mapValue": {
+                  "name": "DownloadUri",
+                  "schema": "string"
+                }
+              }
+          },
+          {
+            "name": "ExpectedContentId",
+            "schema": "string"
+          },
+          {
+            "name": "InstalledCriteria",
+            "schema": "string"
+          }          
+        ]
+      },
+      "writable": true
+    }  
+  ]
+}

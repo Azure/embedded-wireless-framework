@@ -1,0 +1,55 @@
+/************************************************************************//**
+ *
+ * @file az_sdnet_example_config.h.template
+ * @author Microsoft Corporation
+ * @version Internal Preview
+ *
+ * @section LICENSE
+ *
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ *
+ * @section DESCRIPTION
+ *
+ * The Azure Small Device Networking example configuration template.
+ * Copy this file into your own project, remove the .template extension
+ * and customize its contents.
+ *
+ ****************************************************************************/
+
+
+#ifndef __az_sdnet_example_conf__h__included__
+#define __az_sdnet_example_conf__h__included__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+/************************************************************************//**
+ * @defgroup group_configuration EWF example configuration
+ * @brief The definitions to configure the Embedded Wireless Framework.
+ * @{
+ ****************************************************************************/
+
+/**
+ * @defgroup group_example_configuration_iot_hub IoT Hub configuration
+ * @brief IoT Hub configuration settings used in examples
+ * @{
+ */
+/** @brief The IoT Hub hostname */
+#define AZ_SDNET_CONFIG_IOT_HUB_HOSTNAME ""
+/** @brief The device ID */
+#define AZ_SDNET_CONFIG_IOT_HUB_DEVICEID ""
+/** @} */
+
+/************************************************************************//**
+ * @}
+ ****************************************************************************/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __az_sdnet_example_conf__h__included__ */

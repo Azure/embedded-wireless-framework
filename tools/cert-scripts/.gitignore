@@ -1,0 +1,6 @@
+ca_cert.srl
+device_ec.csr
+validation_ec.csr
+*.key
+*.pem
+*.h

@@ -1,0 +1,16 @@
+/SAME54XPRO/sample_az_sdnet_info_sam_bg96/firmware/sample_az_sdnet_info_sam_bg96.X/.generated_files/
+/SAME54XPRO/*/firmware/*/.generated_files/
+/SAME54XPRO/*/firmware/*/build/
+/SAME54XPRO/*/firmware/*/dist/
+
+/PIC32CMLS60B/*/Secure/firmware/*/.generated_files/
+/PIC32CMLS60B/*/Secure/firmware/*/build/
+/PIC32CMLS60B/*/Secure/firmware/*/dist/
+/PIC32CMLS60B/*/NonSecure/firmware/*/.generated_files/
+/PIC32CMLS60B/*/NonSecure/firmware/*/build/
+/PIC32CMLS60B/*/NonSecure/firmware/*/dist/
+
+/*/common
+
+*.bak
+TODO.txt

@@ -1,0 +1,5 @@
+BrowseInfo/
+settings/
+*.dep
+*.ewt
+*.bak

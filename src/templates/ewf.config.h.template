@@ -1,0 +1,46 @@
+/************************************************************************//**
+ *
+ * @file
+ * @version Preview
+ * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * @brief The Azure Small Device Networking configuration.
+ *
+ ****************************************************************************/
+
+#ifndef __az_sdnet__config__h__included__
+#define __az_sdnet__config__h__included__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/************************************************************************//**
+ * @defgroup group_configuration EWF configuration
+ * @brief The definitions to configure the Embedded Wireless Framework.
+ * @{
+ ****************************************************************************/
+
+ /** Define this symbol to enable compilation of debug code. When this symbol is not defined, debug code is not present and the footprint is reduced.  */
+#define AZ_SDNET_DEBUG
+
+/** Define this symbol to enable verbose logging */
+//#define AZ_SDNET_LOG_VERBOSE
+
+/** Define this symbol to enable checking of function parameters. When this symbol is not defined, parameter checking code is not present and the footprint is reduced.  */
+#define AZ_SDNET_PARAMETER_CHECKING
+
+/* Define the platform to be used, only one is valid */
+//#define AZ_SDNET_PLATFORM_BARE_METAL
+#define AZ_SDNET_PLATFORM_THREADX
+//#define AZ_SDNET_PLATFORM_FREERTOS
+//#define AZ_SDNET_PLATFORM_WIN32
+
+/************************************************************************//**
+ * @} *** group_configuration
+ ****************************************************************************/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __az_sdnet__config__h__included__ */
