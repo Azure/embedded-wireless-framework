@@ -23,10 +23,10 @@ extern "C" {
 #define EWF_CONFIG_SIM_PIN "0000"
 
 /** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME "andrejm-test-iot-hub.azure-devices.net"
+#define EWF_CONFIG_IOT_HUB_HOSTNAME ""
 
 /** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID "andrejm-test-win32-bg96-cert"
+#define EWF_CONFIG_IOT_HUB_DEVICEID ""
 
 /** @brief Define the WIN32 COM port interface serial port file name */
 #define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME      ("\\\\.\\COM62")
