@@ -1,18 +1,10 @@
 /************************************************************************//**
  *
- * @file az_sdnet_example_config.h.template
- * @author Microsoft Corporation
- * @version Internal Preview
- *
- * @section LICENSE
- *
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential
- *
- * @section DESCRIPTION
- *
- * The Azure Small Device Networking example configuration template.
+ * @file
+ * @version Preview
+ * SPDX-License-Identifier: MIT
+ * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * @brief The Embedded Wireless Framework example configuration template.
  * Copy this file into your own project, remove the .template extension
  * and customize its contents.
  *
@@ -28,10 +20,19 @@ extern "C" {
 
 
 /************************************************************************//**
- * @defgroup group_configuration EWF example configuration
- * @brief The definitions to configure the Embedded Wireless Framework.
+ * @defgroup group_example_configuration Azure SDNET example configuration
+ * @brief The definitions to configure the sample software.
  * @{
  ****************************************************************************/
+
+/**
+ * @defgroup group_example_configuration_modem Modem configuration
+ * @brief Modem configuration settings used in examples
+ * @{
+ */
+/** @brief The SIM PIN for the modem */
+#define EWF_CONFIG_SIM_PIN "0000"
+/** @} */
 
 /**
  * @defgroup group_example_configuration_iot_hub IoT Hub configuration
@@ -39,9 +40,9 @@ extern "C" {
  * @{
  */
 /** @brief The IoT Hub hostname */
-#define AZ_SDNET_CONFIG_IOT_HUB_HOSTNAME ""
+#define EW_CONFIG_IOT_HUB_HOSTNAME ""
 /** @brief The device ID */
-#define AZ_SDNET_CONFIG_IOT_HUB_DEVICEID ""
+#define EW_CONFIG_IOT_HUB_DEVICEID ""
 /** @} */
 
 /************************************************************************//**

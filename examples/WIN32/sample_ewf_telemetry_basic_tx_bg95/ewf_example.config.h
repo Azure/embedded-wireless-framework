@@ -80,10 +80,10 @@ extern "C" {
  */
 
 /** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME "andrejm-test-iot-hub.azure-devices.net"
+#define EWF_CONFIG_IOT_HUB_HOSTNAME ""
 
 /** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID "andrejm-test-win32-bg96-cert"
+#define EWF_CONFIG_IOT_HUB_DEVICEID ""
 
 /** @} */
 

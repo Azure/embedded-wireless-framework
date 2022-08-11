@@ -9,7 +9,7 @@ The current set of examples use the EK-RA6M4 evaluation board and a ryz014 modem
 
 # Getting started - RYZ014
 To get started with the examples, please follow these steps:
-1. Acquire the necessary hardware and software: the Evaluation Kit EK-RA6M4, a Renesas RYZ014A PMOD, e2-studio with FSP 3.5 or newer, openssl, J-Link RTT viewer, azure IoT explorer.
+1. Acquire the necessary hardware and software: the Evaluation Kit EK-RA6M4, a Renesas RYZ014A PMOD, e2-studio with FSP 3.5 or newer, openssl, J-Link RTT viewer, Azure IoT Explorer(recommend to use v0.13.5 as latest version 0.14.x cannot show data correctly).
 2. Connect to RYZ014 PMOD to EK-RA6M4 board on PMOD2 connector. Connect Micro USB cable to USB Debug pin (DEBUG 1) and another USB cable to RYZ014 micro USB pin.
 3. Review and edit as necessary the files ewf.config.h and ewf_example.config.h in the different examples. Edit these files to match your configuration. Specially edit the variables EWF_CONFIG_SIM_PIN, EWF_CONFIG_IOT_HUB_HOSTNAME, EWF_CONFIG_IOT_HUB_DEVICEID.
 4. Register your device with Azure IoT Hub and generate the necessary certificates and keys and corresponding header files. The detailed instructions and scripts are located in this directory \tools\cert-scripts, copy the resulting .h files into the include directory of the "certs" example
