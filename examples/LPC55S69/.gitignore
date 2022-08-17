@@ -1,0 +1,10 @@
+.bak
+.metadata/
+.settings/
+.mcuxpressoide_packages_support/
+HardwareDebug/
+Debug/
+Release/
+AzureRTOS_TAD_logs/
+FreeRTOS_TAD_logs/
+ZephyrRTOS_TAD_logs/

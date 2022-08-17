@@ -285,12 +285,22 @@ ewf_result ewf_adapter_quectel_common_test_command_http(ewf_adapter* adapter_ptr
             false,
         };
         if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QHTTPREAD=80\r"))) return result;
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QHTTPREAD=10\r"))) return result;
         if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str)))
         {
             EWF_LOG_ERROR("Unexpected response.\n");
         }
         if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+
+        /* Wait for the read response time out */
+        uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 10;
+        while (timeout != 0)
+        {
+            ewf_interface_drop_all_responses(interface_ptr);
+            timeout--;
+            ewf_platform_sleep(1);
+        }
+
     }
 
     return EWF_RESULT_OK;

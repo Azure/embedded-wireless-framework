@@ -1,0 +1,49 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: ThreadX}
+children:
+- type: Symbols
+  children:
+  - type: Integer
+    attributes: {id: THREADX_CPU_CLOCK_HZ}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: ThreadX, value: '120000000'}
+  - type: Setting
+    attributes: {id: THREADX_OS_XC32_INCLUDE_DIRS}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: value}
+        children:
+        - {type: Value, value: ../src/config/sam_e54_xpro/threadx_config;../src/third_party/rtos/threadx/common/inc;../src/third_party/rtos/threadx/ports/cortex_m4/mplabx/inc;}
+  - type: Integer
+    attributes: {id: THREADX_TX_BYTE_POOL_SIZE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '8192'}
+  - type: Setting
+    attributes: {id: THREADX_XC32_AS_INCLUDE_DIRS}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: value}
+        children:
+        - {type: Value, value: ../src/config/sam_e54_xpro/threadx_config;../src/third_party/rtos/threadx/common/inc;../src/third_party/rtos/threadx/ports/cortex_m4/mplabx/inc;}
+  - type: Setting
+    attributes: {id: THREADX_XC32_AS_INCLUDE_PRE_PROC_DIRS}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: value}
+        children:
+        - {type: Value, value: ../src/config/sam_e54_xpro/threadx_config;../src/third_party/rtos/threadx/common/inc;../src/third_party/rtos/threadx/ports/cortex_m4/mplabx/inc;}
+- type: ElementPosition
+  attributes: {x: '191', y: '100', id: ThreadX}

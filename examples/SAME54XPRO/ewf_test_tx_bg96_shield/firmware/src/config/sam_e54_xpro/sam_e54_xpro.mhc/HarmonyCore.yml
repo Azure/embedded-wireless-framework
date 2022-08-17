@@ -1,0 +1,392 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: HarmonyCore}
+children:
+- type: Symbols
+  children:
+  - type: File
+    attributes: {id: APP0_C}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+      - type: String
+        attributes: {id: name}
+        children:
+        - {type: Value, value: ewf_test.c}
+  - type: File
+    attributes: {id: APP0_H}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+      - type: String
+        attributes: {id: name}
+        children:
+        - {type: Value, value: ewf_test.h}
+  - type: KeyValueSet
+    attributes: {id: COMMON_SYMBOL_CNTR}
+    children:
+    - type: Attributes
+      children:
+      - type: KeyValuePairList
+        attributes: {id: pairs}
+        children:
+        - type: Pairs
+          children:
+          - type: Pair
+            attributes: {description: 'TRUE', value: '1', key: ENABLE_DRV_COMMON}
+          - type: Pair
+            attributes: {description: 'TRUE', value: '1', key: ENABLE_SYS_COMMON}
+          - type: Pair
+            attributes: {description: 'FALSE', value: '0', key: ENABLE_SYS_MEDIA}
+          - type: Pair
+            attributes: {description: 'FALSE', value: '0', key: ENABLE_SYS_PORTS}
+          - type: Pair
+            attributes: {description: 'FALSE', value: '0', key: ENABLE_SYS_DMA}
+          - type: Pair
+            attributes: {description: 'FALSE', value: '0', key: ENABLE_SYS_RESET}
+  - type: File
+    attributes: {id: CONFIGURATION_H}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: DRIVER_COMMON}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: DRIVER_ROOT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: ENABLE_APP_FILE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: HarmonyCore, value: 'true'}
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: ENABLE_DRV_COMMON}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: readOnly}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: HarmonyCore, value: 'true'}
+  - type: Boolean
+    attributes: {id: ENABLE_OSAL}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: HarmonyCore, value: 'true'}
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: ENABLE_SYS_CACHE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: HarmonyCore, value: 'true'}
+  - type: Boolean
+    attributes: {id: ENABLE_SYS_COMMON}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: readOnly}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: HarmonyCore, value: 'true'}
+  - type: Boolean
+    attributes: {id: ENABLE_SYS_INT}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: HarmonyCore, value: 'true'}
+  - type: Integer
+    attributes: {id: GEN_APP_RTOS_TASK_0_DELAY}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '500'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_0_USE_DELAY}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
+  - type: Menu
+    attributes: {id: GEN_APP_RTOS_TASK_CONF_MENU0}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Menu
+    attributes: {id: GEN_APP_TASK_CONF_MENU0}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Integer
+    attributes: {id: GEN_APP_TASK_COUNT}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: Menu
+    attributes: {id: GEN_APP_TASK_MENU}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: String
+    attributes: {id: GEN_APP_TASK_NAME_0}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: ewf_test}
+  - type: File
+    attributes: {id: GEN_RTOS_APP_TASKS}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: GEN_RTOS_APP_TASKS_DEF}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: INT_DEF}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: INT_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: INT_MAPPING}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: INT_SOURCE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: OSAL_DEFINITIONS_H}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: OSAL_H}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: OSAL_SYSDEF_H}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: OSAL_THREADX_OS_III_C}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: OSAL_THREADX_OS_III_H}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Combo
+    attributes: {id: SELECT_RTOS}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: HarmonyCore, value: ThreadX}
+  - type: File
+    attributes: {id: SYSTEM_COMMON}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: SYSTEM_MODULE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: SYSTEM_ROOT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: SYS_CACHE_DEF}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: SYS_CACHE_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: SYS_CACHE_SOURCE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: SYS_DEBUG_DEF_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: SYS_DEBUG_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: TASKS_C}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+  - type: File
+    attributes: {id: USER_H}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+- type: ElementPosition
+  attributes: {x: '11', y: '112', id: HarmonyCore}

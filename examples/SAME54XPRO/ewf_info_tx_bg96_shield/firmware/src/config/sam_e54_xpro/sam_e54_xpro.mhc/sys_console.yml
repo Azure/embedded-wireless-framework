@@ -1,0 +1,128 @@
+format_version: v1.0
+type: GeneratorComponent
+attributes: {id: sys_console}
+children:
+- type: Symbols
+  children:
+  - type: Integer
+    attributes: {id: SYS_CONSOLE_PRINT_BUFFER_SIZE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '2048'}
+  - type: Integer
+    attributes: {id: SYS_CONSOLE_UART_CONNECTION_COUNTER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sys_console, value: '1'}
+- type: Instances
+  children:
+  - type: InstanceComponent
+    attributes: {instance: '0', id: sys_console}
+    children:
+    - type: Symbols
+      children:
+      - type: Comment
+        attributes: {id: SYS_CONSOLE_BUFFER_CONFIG_COMMENT}
+        children:
+        - type: Attributes
+          children:
+          - type: Boolean
+            attributes: {id: visible}
+            children:
+            - {type: Value, value: 'true'}
+      - type: String
+        attributes: {id: SYS_CONSOLE_DEVICE}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: sys_console_0, value: SERCOM2}
+      - type: String
+        attributes: {id: SYS_CONSOLE_DEVICE_SET}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: sys_console_0, value: UART}
+      - type: Integer
+        attributes: {id: SYS_CONSOLE_DEVICE_UART_INDEX}
+        children:
+        - type: Values
+          children:
+          - type: Dynamic
+            attributes: {id: sys_console, value: '0'}
+      - type: File
+        attributes: {id: SYS_CONSOLE_UART_DEFINITIONS_HEADER}
+        children:
+        - type: Attributes
+          children:
+          - type: Boolean
+            attributes: {id: enabled}
+            children:
+            - {type: Value, value: 'true'}
+      - type: File
+        attributes: {id: SYS_CONSOLE_UART_HEADER}
+        children:
+        - type: Attributes
+          children:
+          - type: Boolean
+            attributes: {id: enabled}
+            children:
+            - {type: Value, value: 'true'}
+      - type: File
+        attributes: {id: SYS_CONSOLE_UART_SOURCE}
+        children:
+        - type: Attributes
+          children:
+          - type: Boolean
+            attributes: {id: enabled}
+            children:
+            - {type: Value, value: 'true'}
+      - type: File
+        attributes: {id: SYS_CONSOLE_USB_CDC_SOURCE}
+        children:
+        - type: Attributes
+          children:
+          - type: Boolean
+            attributes: {id: enabled}
+            children:
+            - {type: Value, value: 'false'}
+      - type: File
+        attributes: {id: SYS_CONSOLE_USB_DEFINITIONS_HEADER}
+        children:
+        - type: Attributes
+          children:
+          - type: Boolean
+            attributes: {id: enabled}
+            children:
+            - {type: Value, value: 'false'}
+      - type: File
+        attributes: {id: SYS_CONSOLE_USB_HEADER}
+        children:
+        - type: Attributes
+          children:
+          - type: Boolean
+            attributes: {id: enabled}
+            children:
+            - {type: Value, value: 'false'}
+    - type: Attachments
+      children:
+      - type: DirectDependency
+        attributes: {id: sys_console_UART_dependency}
+        children:
+        - type: Attributes
+          children:
+          - type: String
+            attributes: {id: targetComponentID}
+            children:
+            - {type: Value, value: sercom2}
+          - type: String
+            attributes: {id: targetAttachmentID}
+            children:
+            - {type: Value, value: SERCOM2_UART}
+- type: ElementPosition
+  attributes: {x: '227', y: '401', id: sys_console}
