@@ -1,101 +1,91 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+/************************************************************************//**
+ * @file
+ * @version Preview
+ * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * @brief The Embedded Wireless Framework adapter telemetry example.
+ ****************************************************************************/
 
-#include <WinSock2.h>
-#include <ws2tcpip.h>
-#include <Windows.h>
+#include "ewf_adapter_winsock2.h" // Include first to force correct inclussion order for winsock2.h
+#include "ewf_allocator_threadx.h"
+#include "ewf_lib.h"
+#include "ewf_example.config.h"
 
-#include "ewf_lib.c"
-
-#include "ewf_platform_threadx.c"
-#include "ewf_allocator_threadx.c"
-#include "ewf_adapter_winsock2.c"
-
-#include "ewf_example_telemetry.c"
-
-
-/**
- * \def EWF_TELEMETRY_THREAD_STACK_SIZE
- * @brief Define the size of the URC thread
- */
-#ifndef EWF_DEBUG /* Tight release configuration */
-#define EWF_TELEMETRY_THREAD_STACK_SIZE (512)
-#else /* Comfortable debug configuration */
-#define EWF_TELEMETRY_THREAD_STACK_SIZE (1024)
-#endif
-
-/* Telemetry thread */
-static TX_THREAD telemetry_thread;
-static void telemetry_thread_entry(ULONG thread_input);
-static ULONG telemetry_thread_stack[EWF_TELEMETRY_THREAD_STACK_SIZE / sizeof(ULONG)];
-
+/* ThreadX thread, entry point declaration and stack definition.  */
+static TX_THREAD thread_sample;
+static void thread_sample_entry(ULONG thread_input);
+#define THREAD_SAMPLE_STACK_SIZE (1024)
+static ULONG thread_sample_stack[THREAD_SAMPLE_STACK_SIZE / sizeof(ULONG)];
 
 /**
- *  @brief The application entry point, initialize the hardware and start ThreadX
+ * @brief The application entry point
  */
 int main(int argc, char ** argv)
 {
+    /* Enter the ThreadX kernel.  */
+    tx_kernel_enter();
 
-  /* Enter the ThreadX kernel.  */
-  tx_kernel_enter();
+    /* We never get here, but we keep the compiler happy.  */
+    return 0;
 }
-
 
 /**
  *  @brief Define what the initial ThreadX system looks like.
  */
 void tx_application_define(void *first_unused_memory)
 {
-  UINT status;
+    UINT status;
 
-  /* Create the telemetry thread.  */
-  status = tx_thread_create(
-    &telemetry_thread,
-    "Telemetry",
-    telemetry_thread_entry, 0,
-    telemetry_thread_stack, EWF_TELEMETRY_THREAD_STACK_SIZE,
-    3, 3,
-    TX_NO_TIME_SLICE,
-    TX_AUTO_START);
-  if (status != TX_SUCCESS)
-  {
-    exit(status);
-  }
+    /* Create the sample thread.  */
+    status = tx_thread_create(
+        &thread_sample,
+        "thread sample",
+        thread_sample_entry, 0,
+        thread_sample_stack, THREAD_SAMPLE_STACK_SIZE,
+        1, 1,
+        TX_NO_TIME_SLICE,
+        TX_AUTO_START);
+    if (status != TX_SUCCESS)
+    {
+        exit(status);
+    }
 }
 
-
 /**
- *  @brief The telemetry thread entry point
+ *  @brief The sample thread entry point
  */
-void telemetry_thread_entry(ULONG param)
+void thread_sample_entry(ULONG param)
 {
-  az_result result;
+    ewf_result result;
 
-  // Start the adapter
-  if (ewf_result_failed(result = ewf_adapter_start()))
-  {
-    EWF_LOG_ERROR("Failed to start the adapter: az_result return code 0x%08lx.", result);
-    exit(result);
-  }
+    ewf_allocator* data_allocator_ptr = NULL;
+    ewf_adapter* adapter_ptr = NULL;
 
-#ifndef NDEBUG
-  // Show the adapter info
-  if (ewf_result_failed(result = ewf_adapter_info()))
-  {
-    EWF_LOG_ERROR("Failed to get the adapter info: az_result return code 0x%08lx.", result);
-    exit(result);
-  }
-#endif
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(data_allocator_ptr, data_allocator,
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_SIZE);
+    EWF_ADAPTER_WINSOCK2_STATIC_DECLARE(adapter_ptr, winsock2_adapter, data_allocator_ptr);
 
-  // Call the telemetry example
-  if (ewf_result_failed(result = ewf_example_telemetry()))
-  {
-    EWF_LOG_ERROR("The telemetry example returned and error: az_result return code 0x%08lx.", result);
-    exit(result);
-  }
+    // Start the adapter
+    if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
+        exit(result);
+    }
 
-  /* Wait forever  */
-  while (1)
-  {
-    tx_thread_sleep(1);
-  }
+    // Call the telemetry example
+    if (ewf_result_failed(result = ewf_example_telemetry_basic()))
+    {
+        EWF_LOG_ERROR("The telemetry example returned and error: ewf_result %d.\n", result);
+        exit(result);
+    }
+
+    EWF_LOG("\nDone!\n");
+
+    /* Stay here forever.  */
+    while (1)
+    {
+        EWF_LOG(".");
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
+    }
 }

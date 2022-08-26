@@ -9,7 +9,6 @@
 /*                                                                        */
 /**************************************************************************/
 
-
 /**************************************************************************/
 /**************************************************************************/
 /**                                                                       */
@@ -75,7 +74,6 @@
 #define NX_DRIVER_SOCKET_SEND_TIMEOUT_MAXIMUM   3000
 
 #define NX_DRIVER_CAPABILITY                    (NX_INTERFACE_CAPABILITY_TCPIP_OFFLOAD)
-
 
 /* Define basic netword driver information typedef.  */
 
@@ -1234,7 +1232,7 @@ static UINT _nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
                                      UINT local_port, UINT *remote_port, UINT wait_option)
 {
 UINT status = NX_NOT_SUCCESSFUL;
-UCHAR remote_ip_bytes[4];
+UCHAR remote_ip_bytes[4] = { 0 };
 NX_PACKET *current_packet;
 ULONG packet_size;
 ULONG offset;
@@ -1460,6 +1458,7 @@ ewf_result result;
         break;
 
     case NX_TCPIP_OFFLOAD_UDP_SOCKET_BIND:
+#if 0
         /* Note, send data from one port to multiple remotes are not supported.  */
         /* Store the index of driver socket.  */
         ((NX_UDP_SOCKET *)socket_ptr) -> nx_udp_socket_tcpip_offload_context = (VOID *)i;
@@ -1472,29 +1471,26 @@ ewf_result result;
 #endif
 
         status = NX_SUCCESS;
+#endif
         break;
 
     case NX_TCPIP_OFFLOAD_UDP_SOCKET_UNBIND:
+#if 0
         i = (UINT)(((NX_UDP_SOCKET *)socket_ptr) -> nx_udp_socket_tcpip_offload_context);
 
         if (nx_driver_sockets[i].remote_port)
         {
 
-#if 0 /* *** TODO *** */
-            /* Disconnect.  */
-            status = WIFI_CloseClientConnection(i);
-#endif
-
-#ifdef NX_DEBUG
             printf("UDP socket %u unbind port: %u\r\n", i, local_port);
-#endif
         }
 
         /* Reset socket to free this entry.  */
         nx_driver_sockets[i].socket_ptr = NX_NULL;
+#endif
         break;
 
     case NX_TCPIP_OFFLOAD_UDP_SOCKET_SEND:
+#if 0
         i = (UINT)(((NX_UDP_SOCKET *)socket_ptr) -> nx_udp_socket_tcpip_offload_context);
         if (nx_driver_sockets[i].remote_port == 0)
         {
@@ -1583,6 +1579,8 @@ ewf_result result;
 
         /* Release the packet.  */
         nx_packet_transmit_release(packet_ptr);
+#endif
+
         break;
 
     case NX_TCPIP_OFFLOAD_TCP_SOCKET_SEND:

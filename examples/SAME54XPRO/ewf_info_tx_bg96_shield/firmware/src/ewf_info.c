@@ -107,7 +107,7 @@ void ewf_info_tx_bg96_shield_example(void)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 256);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_MICROCHIP_SAM_UART_STATIC_DECLARE(interface_ptr, sam_uart);
     EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 

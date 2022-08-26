@@ -118,7 +118,7 @@ void ewf_adapter_quectel_bg96_stmod_power_on()
     /* Power ON */
     HAL_GPIO_WritePin(STMD_PWR_EN_GPIO_Port, STMD_PWR_EN_Pin, GPIO_PIN_SET);
 
-    /* Wait for the modem to reach ready state  */
+    /* Wait for the modem to reach ready state. "Some time" according to the documentation */
     ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 7);
 
     /* Initialize the UART */
@@ -135,18 +135,18 @@ void thread_sample_entry(ULONG thread_input)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 4, 1024);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_STM32_UART_STATIC_DECLARE(interface_ptr, stm32_uart_port, &huart1);
     EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 
     /* Power on the STMOD+ BG96 modem and select plastic SIM interface */
     ewf_adapter_quectel_bg96_stmod_power_on();
 
-    /* Start the adapter.  */
+    // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to start the adapter: result 0x%08x.", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
+        return;
     }
 
     // Set the SIM PIN
@@ -163,19 +163,20 @@ void thread_sample_entry(ULONG thread_input)
         exit(result);
     }
 
-    /* Run the adapter tests.  */
+    // Run the adapter tests
     if (ewf_result_failed(result = ewf_adapter_info(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to run the adapter test: result 0x%08x.", result);
+        EWF_LOG_ERROR("The info function returned an error, ewf_result %d.\n", result);
+        return;
     }
 
     EWF_LOG("\nDone!\n");
 
-    /* Stay here forever.  */
+    // Stay here forever
     while (1)
     {
-    	EWF_LOG(".");
-        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND);
+        EWF_LOG(".");
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
     }
 }
 /* USER CODE END 0 */

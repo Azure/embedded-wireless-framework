@@ -109,7 +109,7 @@ void thread_sample_entry(ULONG thread_input)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 256);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_ALLOCATOR_THREADX_STATIC_DECLARE(data_allocator_ptr, data_allocator, 4, 1500);
     EWF_INTERFACE_STM32_UART_STATIC_DECLARE(interface_ptr, stm32_uart_port, &huart4);
     EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, data_allocator_ptr, interface_ptr);

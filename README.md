@@ -1,21 +1,29 @@
 # Embedded Wireless Framework
 
-The Embedded Wireless Framework simplifies the development of internet and cloud connectivity for embedded device software by providing a defined interface for wireless network adapters, host interfaces, platform adaptations, and software stack extensions through a set of APIs. The goal is to provide a standard framework for writing applications and controlling wireless network adapters (cellular, wifi, ...) while abstracting a driver interface for hardware vendors to plug in modules with self-developed drivers.
+The Embedded Wireless Framework simplifies the development of internet and cloud connectivity for embedded device software by defining a set of APIs for network adapters, host interfaces, platforms, and software stacks. The goal is to provide a standard framework for writing applications and controlling wireless network adapters (cellular, wifi, ...) while abstracting a driver interface for hardware vendors to plug in modules with self-developed drivers.
 
 ## Objectives
 
 - Simplify development of IoT devices connecting to the cloud via various combinations of communication adapters and host processors.
 - Provide lifecycle management of communication adapter drivers for embedded application code in embedded IoT devices.
-- Enable wireless chip and module vendors to deliver Azure RTOS drivers for their products.
 - Ease migration between communication adapters during production or product transition.
+- Enable wireless chip and module vendors to deliver drivers for their products.
 - Encapsulate common functions in a robust re-useable module while flexibly offering an interface for vendor-specific enhancements reducing development time for device builders.
 - Encapsulate the port connection for cellular modules enabling agility for embedded processor vendors and device builders for various port configurations.
 
+# Public preview notice
+
+The project is currently in public preview. It is under active development and breaking changes may occur.
+
 # Architecture
 
-**Network Adapter** (ewf_adapter in the code) is the component that enables communication with the network by controlling and sending data through the network adapter module. The initial design is focused on cellular and wifi, but it is generic to allow for others (Ethernet, LoRa, ...). The framework defines several APIs common across adapters that can be used by applications, allowing easy access to the functionality of different adapters from common code.
+**Network Adapter Driver** (ewf_adapter in the code) is the component that implements control and data handling of the Network Adapter. The initial design is focused on cellular and wifi, but it is generic to allow for others (LoRa, Ethernet, ...).
 
-**Host Interface** (ewf_interface in the code) is an abstraction for connecting the Network Adapter driver with the Network adapter. The Host interface can be replaced and the same Network Adapter driver can be used in a different scenario. For example, a cellular modem connected to the microcontroller over UART, GPIO or USB, can use the same Network adapter driver.  The Embedded Wireless Framework is abstracted from the host operating platform software allowing it to run on a variety of platforms. These can be bare-metal, RTOS or OS. Initial support is provided for Azure RTOS, FreeRTOS, bare-metal, and Windows.
+The framework defines common *control and data APIs* (ewf_adapter_api_*.h), implemented uniformly across adapters. Control APIs depend on the adapter technology, some of these are modem API (based on 3GPP), WiFi API, LoRa API. Data APIs handle sending and receiving of raw or application layer data and are adapter technology independent, some of these are TCP, UDP, TLS, MQTT. Application code has easy access to the functionality of different adapters using a common API.
+
+**Host Interface Driver** (ewf_interface in the code) serves as an abstraction for the logical communication channel between a Network Adapter Driver and the Network Adapter.  This means that a Network Adapter Driver can be developed to be independent of the Host interface used by using the *interface API* (ewf_interface.h). For example, a cellular modem connected to the microcontroller over UART, SPI, USB or GPIO, can use the same Network Adapter Driver.
+
+**Platform*** The Embedded Wireless Framework is abstracted from the host operating platform software by a thin wrapper *platform API* (ewf_platform.h) that offers access to the functionality necessary to develop Network Adapter Drivers and Host Interface Drivers. On the initial phase platform implementations are provided for Azure RTOS, FreeRTOS, bare-metal, and Windows, with more planned.
 
 <p align="center">
 <a href="README_Architecture_Framework.jpg"><img src="README_Architecture_Framework.jpg" alt="Architecture" width="75%"/></a>
@@ -24,7 +32,7 @@ The Embedded Wireless Framework simplifies the development of internet and cloud
 ## Framework use
 
 The framework API can be used directly by the application code, or another software stack. Implementations for using Azure RTOS NetX-Duo and the Azure Embedded C SDK are provided.<br/>
-Application code can use the API directly, with help from the Azure Embedded C SDK, or with a software MQTT client (e.g. PAHO)
+Application code can use the API directly, with help from the Azure Embedded C SDK, or with a software MQTT client (e.g. Paho C)
 <p align="center">
 <a href="README_Architecture_Application.jpg"><img src="README_Architecture_Application.jpg" alt="Architecture" width="75%"/></a>
 </p>
@@ -41,7 +49,7 @@ The code is built out of each individual example. Refer to each example for more
 
 # Examples and drivers
 
-This is the list of supported network adapters, host interfaces, software platforms and hardware boards currently supported or under development.
+This is the list of network adapters, host interfaces, software platforms and hardware boards currently supported or under development.
 
 # Network Adapters
 
@@ -83,6 +91,7 @@ These interfaces can be used in any combination with the supported adapters:
 - Renesas RAxxxx UART
 - Renesas RXxxxx UART
 - NXP LPCxxxx UART
+- NXP RTxxxx UART
 - Microchip/Atmel SAMxxxx UART
 - Generic GPIO bit-banging
 - Azure RTOS USBX CDC ACM
@@ -97,7 +106,7 @@ These interfaces can be used in any combination with the supported adapters:
 # Hardware boards
 
 - Windows on PC
-- Linux on PC and on Raspberry Pi
+- Linux on PC
 - ST STM32U585 Discovery Kit for IoT
 - ST STM32L496 Discovery Kit
 - ST STM32L475 Discovery Kit IoT Node
@@ -105,19 +114,25 @@ These interfaces can be used in any combination with the supported adapters:
 - Renesas RA EK-RA6M4
 - Renesas RX RX65N Cloud Kit
 - NXP LPC55S69-EVK
+- NXP i.MX-RT1050-EVK
+- NXP i.MX-RT1060-EVK
 - Microchip SAM54-X-Plained Pro
+- Microchip PIC32CM
+- Raspberry Pi (Linux)
 - Raspberry Pi Pico
 
 # Examples
 
-These examples are currently available and actively being improved:
-- Info: query adapter information, example for verifying basic operation of the framework
-- Test: test adapter functionality, useful for further development and troubleshooting
-- Certs/basic: provision certificates and keys into the network adapter for a single end-point
-- Telemetry/basic: send telemetry messages to the Azure IoT Hub
-- Paho MQTT client for embedded C
-- PAHO MQTT client + Azure Embedded C SDK
-- EWF + Azure RTOS NetX Duo
+These examples are currently available, they are further developed and more examples will be added:
+- Info: query adapter information. This example is used for verifying basic operation of the framework. It can be the starting point for developing your own application if you want to communicate with the adapter directly using AT commands.
+- Test: test adapter functionality. It is useful for further development of network adapter driver functionality and troubleshooting.
+- Certs/basic: provision certificates and keys into the network adapter for a single end-point.
+- Telemetry/basic: send telemetry to the Azure IoT Hub using basic MQTT.
+- Certs (under development): provision certificates and keys into the network adapter for multiple end-points/configurations.
+- Telemetry (under development): send telemetry to the Azure IoT Hub using full MQTT.
+- EWF + Azure RTOS NetX Duo (undergoing an update).
+- Paho MQTT client for embedded C.
+- Paho MQTT client + Azure Embedded C SDK.
 
 # Contributing
 

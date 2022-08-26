@@ -3,8 +3,10 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @brief The Embedded Wireless Framework example configuration.
+ * @details
+ * The Embedded Wireless Framework example configuration.
  ****************************************************************************/
+
 
 #ifndef __ewf_example_conf__h__included__
 #define __ewf_example_conf__h__included__
@@ -25,37 +27,34 @@ extern "C" {
  * @{
  */
 
-/** @brief the number of allocator blocks */
-#define EWF_CONFIG_ALLOCATOR_BLOCK_COUNT                    (4)
+/** @brief the number of message allocator blocks */
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (4)
 
-/** @brief the size of each blocks allocator block */
-#define EWF_CONFIG_ALLOCATOR_BLOCK_SIZE                     (512)
+/** @brief the size of each message allocator block */
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (512)
 
 /** @} *** group_example_configuration_allocator */
 
 /**
- * @defgroup group_example_configuration_interface Host interface configuration
- * @brief Host interface configuration settings used in examples
+ * @defgroup group_example_configuration_interface Modem configuration
+ * @brief Modem configuration settings used in examples
  * @{
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME       ("\\\\.\\COM26")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM78")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE       (CBR_115200)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (CBR_115200)
 
 /** @brief Define the WIN32 COM port interface serial port byte size */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE       (8)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE               (8)
 
 /** @brief Define the WIN32 COM port interface serial port parity */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY          (NOPARITY)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY                  (NOPARITY)
 
 /** @brief Define the WIN32 COM port interface serial stop bits */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS       (ONESTOPBIT)
-
-/** @brief Define the WIN32 COM port interface serial buffer size */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BUFFER_SIZE     (1)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS               (ONESTOPBIT)
 
 /** @} *** group_example_configuration_interface */
 
@@ -65,16 +64,16 @@ extern "C" {
  * @{
  */
 
-/** @brief The modem SIM PIN */
-#define EWF_CONFIG_SIM_PIN                                  ("0000")
+/** @brief The SIM PIN for the modem */
+#define EWF_CONFIG_SIM_PIN                                          ("0000")
 
 /** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                               "1"
+#define EWF_CONFIG_CONTEXT_ID                                       (1)
 
 /** @} *** group_example_configuration_modem */
 
 /************************************************************************//**
- * @} *** group_example_configuration
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

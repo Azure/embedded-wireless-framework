@@ -195,7 +195,7 @@ ewf_result ewf_interface_rx_uart_hardware_receive(ewf_interface* interface_ptr, 
 				}
 				else if(err != SCI_SUCCESS)
 				{
-					EWF_LOG_ERROR("Failed to receieve a byte from RX UART, sci_err_t %d.\n", err);
+					EWF_LOG_ERROR("Failed to receive a byte from RX UART, sci_err_t %d.\n", err);
 					return EWF_RESULT_IRRECOVERABLE_ERROR;
 				}
 			}
@@ -213,7 +213,7 @@ ewf_result ewf_interface_rx_uart_hardware_receive(ewf_interface* interface_ptr, 
 			}
 			else if (err != SCI_SUCCESS)
 			{
-				EWF_LOG_ERROR("Failed to receieve a byte from RX UART, sci_err_t %d.\n", err);
+				EWF_LOG_ERROR("Failed to receive a byte from RX UART, sci_err_t %d.\n", err);
 				return EWF_RESULT_IRRECOVERABLE_ERROR;
 			}
 		}

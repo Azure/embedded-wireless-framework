@@ -1,4 +1,10 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+/************************************************************************//**
+ * @file
+ * @version Preview
+ * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * @brief The Embedded Wireless Framework adapter certs example.
+ ****************************************************************************/
 
 #include "ewf_platform.h"
 #include "ewf_allocator_threadx.h"
@@ -58,20 +64,21 @@ void thread_entry(ULONG param)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 1500);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port, 
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME, 
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
-        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS,
-        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BUFFER_SIZE);
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS);
     EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to start the adapter: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
         exit(result);
     }
 
@@ -85,13 +92,16 @@ void thread_entry(ULONG param)
     // Call the certificate provisioning example
     if (ewf_result_failed(result = ewf_example_certs_basic_quectel_bg96(adapter_ptr)))
     {
-        EWF_LOG_ERROR("The certificate provisioning example returned and error: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("The certificate provisioning example returned and error, ewf_result %d.\n", result);
         exit(result);
     }
 
-    /* Wait forever  */
+    EWF_LOG("\nDone!\n");
+
+    /* Stay here forever.  */
     while (1)
     {
-        tx_thread_sleep(1);
+        EWF_LOG(".");
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
     }
 }

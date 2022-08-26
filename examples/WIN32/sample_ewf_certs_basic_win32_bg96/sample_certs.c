@@ -7,7 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_platform.h"
-#include "ewf_allocator_threadx.h"
+#include "ewf_allocator_c_heap.h"
 #include "ewf_interface_win32_com.h"
 #include "ewf_adapter_quectel_bg96.h"
 #include "ewf_lib.h"
@@ -24,9 +24,9 @@ int main(int argc, char ** argv)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
-        EWF_CONFIG_ALLOCATOR_BLOCK_COUNT,
-        EWF_CONFIG_ALLOCATOR_BLOCK_SIZE);
+    EWF_ALLOCATOR_C_HEAP_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
@@ -62,6 +62,6 @@ int main(int argc, char ** argv)
     while (1)
     {
         EWF_LOG(".");
-        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND);
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
     }
 }

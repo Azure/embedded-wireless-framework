@@ -47,12 +47,12 @@ void tx_application_define(void *first_unused_memory)
         TX_AUTO_START);
     if (status != TX_SUCCESS)
     {
-        exit(-1);
+        exit(status);
     }
 }
 
 /**
- *  @brief The sample thread entry point, it calls other examples
+ *  @brief The sample thread entry point
  */
 void thread_sample_entry(ULONG param)
 {
@@ -62,8 +62,8 @@ void thread_sample_entry(ULONG param)
     ewf_adapter* adapter_ptr = NULL;
 
     EWF_ALLOCATOR_THREADX_STATIC_DECLARE(data_allocator_ptr, data_allocator,
-        EWF_CONFIG_ALLOCATOR_BLOCK_COUNT,
-        EWF_CONFIG_ALLOCATOR_BLOCK_SIZE);
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_SIZE);
     EWF_ADAPTER_WINSOCK2_STATIC_DECLARE(adapter_ptr, winsock2_adapter, data_allocator_ptr);
 
     // Start the adapter

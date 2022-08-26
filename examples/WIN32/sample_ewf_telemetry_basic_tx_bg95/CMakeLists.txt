@@ -54,8 +54,8 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sim_utility.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_bg95.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_bg95.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_bg95.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples/ewf_example_telemetry_basic.c
     ewf.config.h
     ewf_example.config.h
@@ -65,7 +65,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE threadx az_core az_iot_hub)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../common/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../externals/azure-sdk-for-c/sdk/inc)

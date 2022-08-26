@@ -4,7 +4,7 @@
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
  * @details
- * The Embedded Wireless Framework example configuration template.
+ * The Embedded Wireless Framework example configuration.
  ****************************************************************************/
 
 
@@ -42,8 +42,8 @@ extern "C" {
  */
 
 /** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN "0000"
-    
+#define EWF_CONFIG_SIM_PIN                                          ("0000")
+
 /** @brief The modem context ID used */
 #define EWF_CONFIG_CONTEXT_ID                                       (1)
 
@@ -56,12 +56,32 @@ extern "C" {
  */
 
 /** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME ""
+#define EWF_CONFIG_IOT_HUB_HOSTNAME                                 ""
 
 /** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID ""
+#define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
 
 /** @} *** group_example_configuration_iot_hub */
+
+/**
+ * @defgroup group_example_configuration_telemetry
+ * @brief Telemetry example configuration
+ * @{
+ */
+
+/** @brief The size of the buffer used to hold the IoT Hub username */
+#define EWF_CONFIG_TELEMETRY_USERNAME_LENGTH                        (256)
+
+/** @brief The size of the buffer used to hold the IoT Hub client ID */
+#define EWF_CONFIG_TELEMETRY_CLIENT_ID_LENGTH                       (64)
+
+/** @brief The size of the buffer used to hold the IoT Hub topic length */
+#define EWF_CONFIG_TELEMETRY_TOPIC_LENGTH                           (256)
+
+/** @brief The number of minutes to run the telemetry loop, 0 means to run forever */
+#define EWF_CONFIG_TELEMETRY_LOOP_MINUTES                           (60)
+
+/** @} */
 
 /************************************************************************//**
  * @}

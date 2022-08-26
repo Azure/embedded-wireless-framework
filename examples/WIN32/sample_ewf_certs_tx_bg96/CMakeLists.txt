@@ -59,12 +59,11 @@ add_executable(
     ewf.config.h
     ewf_example.config.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples/ewf_example_certs_basic_quectel_bg96.c
-     sample_certs.c)
+    sample_certs.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE threadx)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../common
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples)

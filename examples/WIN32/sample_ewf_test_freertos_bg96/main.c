@@ -95,7 +95,12 @@ void prvMainTask( void *pvParameters )
 
 	EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 64);
 	EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(data_allocator_ptr, data_allocator, 4, 1500);
-	EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port, "\\\\.\\COM26", 115200, 8, NOPARITY, ONESTOPBIT, 1);
+    EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS);
 	EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, data_allocator_ptr, interface_ptr);
 
 	// Start the adapter

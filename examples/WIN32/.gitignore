@@ -1,8 +1,8 @@
 build/
-common/
 .vs/
 *.bak
 Debug/
 Release/
 *.vcxproj.user
 *.pem.h
+out/

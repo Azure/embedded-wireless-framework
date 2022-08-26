@@ -58,14 +58,15 @@ void thread_entry(ULONG param)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 1500);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port, 
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME, 
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
-        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS,
-        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BUFFER_SIZE);
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS);
     EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
 
     // Start the adapter

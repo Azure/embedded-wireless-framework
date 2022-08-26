@@ -26,7 +26,7 @@ extern "C" {
  * @{
  */
 /** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN "0000"
+#define EWF_CONFIG_SIM_PIN                                          ("0000")
 /** @} */
 
 /************************************************************************//**

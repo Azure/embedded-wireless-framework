@@ -104,44 +104,48 @@ ewf_result ewf_adapter_modem_pdp_apn_set(ewf_adapter* adapter_ptr, uint32_t cont
 	return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_modem_packet_service_activate(ewf_adapter* adapter_ptr, const char * contextid)
+ewf_result ewf_adapter_modem_packet_service_activate(ewf_adapter* adapter_ptr, uint32_t context_id)
 {
 
 	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
 	if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
 
-	if(contextid == NULL)
-    {
-        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    }
-
 	ewf_result result;
+    char context_id_str[3];
+    const char* context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
 	/* Activate PDP context */
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGACT=1,", contextid, "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGACT=1,", context_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
+
+#ifdef EWF_DEBUG
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGACT?\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+#endif
 
 	return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_modem_packet_service_deactivate(ewf_adapter* adapter_ptr, const char * contextid)
+ewf_result ewf_adapter_modem_packet_service_deactivate(ewf_adapter* adapter_ptr, uint32_t context_id)
 {
 
 	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
 	if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
 
-	if(contextid == NULL)
-    {
-        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    }
-
 	ewf_result result;
+    char context_id_str[3];
+    const char* context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
 	/* Set Network Registration URC option */
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGACT=0,", contextid, "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGACT=0,", context_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
+
+#ifdef EWF_DEBUG
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGACT?\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+#endif
 
 	return EWF_RESULT_OK;
 }

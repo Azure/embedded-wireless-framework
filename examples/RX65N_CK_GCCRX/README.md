@@ -19,4 +19,9 @@ To get started with the examples, please follow these steps:
 8. Run the ewf_test_ryz014 example to verify basic functionality, check the output on the terminal for progress and possible errors, not all test may pass, depending on your current configuration.
 9. Run the ewf_certs_ryz014 example to provision the certificates into the modem. Verify the output on the terminal, there should be no errors.
 10. Run the ewf_telemetry_ryz014 example to see telemetry information being sent to IoT Hub. You can view the telemetry data being posted using the Azure IoT Explorer. Once the telemetry messages are sent, the application will wait one minute listening for cloud to device messages, you can use the Azure IoT Explorer to send messages to the device. You can observe the progress of the application and C2D incoming messages in the terminal.
-Note: C2D message processing is not implemented in the adapter code for RYZ014 due to firmware limitation on message size. This will be updated in near furture.
+
+> _NOTE:_
+>1. There is possibility of getting an error for network registration as modem may require more time for registration.  
+User should increase the timeout (wait_time_seconds) in the application code. Refer to the RYZ014 system integration guide for more info.
+>2. C2D message processing is not implemented in the adapter code for RYZ014 due to firmware limitation on message size.  
+This will be updated in near future.

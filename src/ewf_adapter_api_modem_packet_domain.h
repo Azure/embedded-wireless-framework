@@ -158,18 +158,18 @@ ewf_result ewf_adapter_modem_pdp_data_mode_enter(ewf_adapter* adapter_ptr, const
 /**
  * @brief Activate context (+cgact)
  * @param[in] adapter_ptr A pointer to the adapter structure
- * @param[in] contextid String PDP context definition id (0, 1, 2 ..)
+ * @param[in] context_id  Integer indicating context definition id
  * @return #ewf_result status code
  */
-ewf_result ewf_adapter_modem_packet_service_activate(ewf_adapter* adapter_ptr, const char * contextid);
+ewf_result ewf_adapter_modem_packet_service_activate(ewf_adapter* adapter_ptr, uint32_t context_id);
 
 /**
  * @brief De-activate context (+cgact)
  * @param[in] adapter_ptr A pointer to the adapter structure
- * @param[in] contextid String PDP context definition id (0, 1, 2 ..)
+ * @param[in] context_id  Integer indicating context definition id
  * @return #ewf_result status code
  */
-ewf_result ewf_adapter_modem_packet_service_deactivate(ewf_adapter* adapter_ptr, const char * contextid);
+ewf_result ewf_adapter_modem_packet_service_deactivate(ewf_adapter* adapter_ptr, uint32_t context_id);
 
 /**
  * @brief Attach to the Packet domain service (+cgatt)

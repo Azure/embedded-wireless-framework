@@ -60,7 +60,9 @@ void thread_sample_entry(ULONG param)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 64);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
@@ -95,7 +97,7 @@ void thread_sample_entry(ULONG param)
     }
 
     // Activated the PDP context
-    if (ewf_result_failed(result = ewf_adapter_modem_packet_service_activate(adapter_ptr, "1")))
+    if (ewf_result_failed(result = ewf_adapter_modem_packet_service_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG_ERROR("Failed to activate the PDP context: az_result return code 0x%08lx.", result);
         // continue despite the error

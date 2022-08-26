@@ -54,17 +54,8 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sim_utility.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_sequans.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_sequans.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014_control.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014_info.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014_urc.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014_nvm.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014_internet.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014_mqtt_basic.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014_tls_basic.c
     ewf.config.h
     ewf_example.config.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples/ewf_example_telemetry_basic.c
@@ -74,7 +65,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE threadx az_core az_iot_hub)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../common/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples
-    ${CMAKE_CURRENT_SOURCE_DIR}/../netxduo/addons/azure_iot/azure-sdk-for-c/sdk/inc)
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../externals/azure-sdk-for-c/sdk/inc)

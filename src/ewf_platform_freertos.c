@@ -147,7 +147,7 @@ ewf_result ewf_platform_queue_destroy(ewf_platform_queue* queue_ptr)
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_platform_queue_enqueue(ewf_platform_queue* queue_ptr, void* data_ptr, uint32_t data_size, bool wait)
+ewf_result ewf_platform_queue_enqueue(ewf_platform_queue* queue_ptr, const void* data_ptr, uint32_t data_size, bool wait)
 {
     if (!queue_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     if (!data_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;

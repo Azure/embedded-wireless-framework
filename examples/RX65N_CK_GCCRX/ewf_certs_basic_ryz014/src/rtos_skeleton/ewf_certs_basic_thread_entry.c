@@ -56,45 +56,45 @@ Includes   <System Includes> , "Project Includes"
 void ewf_certs_basic_thread_entry(ULONG entry_input)
 {
 
-	// Release the RYZ014A from reset
+    // Release the RYZ014A from reset
     PORTD.PODR.BIT.B0= 1;
     PORTD.PDR.BIT.B0= 1;
     tx_thread_sleep (100);
     PORTD.PODR.BIT.B0= 0;
-	EWF_LOG("Waiting for the module to Power Reset!\r\n");
-	ewf_platform_sleep(200);
-	EWF_LOG("Ready\r\n");
+    EWF_LOG("Waiting for the module to Power Reset!\r\n");
+    ewf_platform_sleep(200);
+    EWF_LOG("Ready\r\n");
 
-	ewf_result result;
+    ewf_result result;
 
-	ewf_allocator* message_allocator_ptr = NULL;
-	ewf_interface* interface_ptr = NULL;
-	ewf_adapter* adapter_ptr = NULL;
+    ewf_allocator* message_allocator_ptr = NULL;
+    ewf_interface* interface_ptr = NULL;
+    ewf_adapter* adapter_ptr = NULL;
 
-	EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 12, 1500);
-	EWF_INTERFACE_RX_UART_STATIC_DECLARE(interface_ptr , sci_uart);
-	EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
+    EWF_INTERFACE_RX_UART_STATIC_DECLARE(interface_ptr , sci_uart);
+    EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
 
-	// Start the adapter
-	if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
-	{
-		EWF_LOG_ERROR("Failed to start the adapter, return code 0x%08lx.", result);
-		return;
-	}
+    // Start the adapter
+    if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to start the adapter, return code 0x%08lx.", result);
+        return;
+    }
 
-	/* Disable network Registration URC */
-	if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
-	{
-		EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
-		return;
-	}
+    /* Disable network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
+    {
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
+    }
 
-	/* Disable EPS network Registration URC */
-	if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_urc_set(adapter_ptr, "0")))
-	{
-		EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
-		return;
-	}
+    /* Disable EPS network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_urc_set(adapter_ptr, "0")))
+    {
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
+    }
 
     /* Call the certificate provisioning example */
     if (ewf_result_failed(result = ewf_example_certs_basic_renesas_ryz014(adapter_ptr)))
@@ -103,10 +103,9 @@ void ewf_certs_basic_thread_entry(ULONG entry_input)
         exit(result);
     }
 
-	while (1)
-	{
-    	EWF_LOG(".");
-		tx_thread_sleep(100);
-	}
+    while (1)
+    {
+        EWF_LOG(".");
+        tx_thread_sleep(100);
+    }
 }
-

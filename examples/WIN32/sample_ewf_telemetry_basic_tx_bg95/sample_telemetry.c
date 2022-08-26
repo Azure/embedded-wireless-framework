@@ -60,8 +60,8 @@ void thread_sample_entry(ULONG param)
     ewf_adapter* adapter_ptr = NULL;
 
     EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
-        EWF_CONFIG_ALLOCATOR_BLOCK_COUNT,
-        EWF_CONFIG_ALLOCATOR_BLOCK_SIZE);
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
@@ -91,7 +91,7 @@ void thread_sample_entry(ULONG param)
         exit(result);
     }
 
-    // Activated the PDP context
+    // Activate the PDP context
     if (ewf_result_failed(result = ewf_adapter_quectel_bg95_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG("[WARNING] Failed to activate the PDP context, ewf_result %d.\n", result);
@@ -134,6 +134,6 @@ void thread_sample_entry(ULONG param)
     while (1)
     {
         EWF_LOG(".");
-        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND);
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
     }
 }

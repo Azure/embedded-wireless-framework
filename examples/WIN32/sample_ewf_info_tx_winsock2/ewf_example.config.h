@@ -3,8 +3,10 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @brief The Embedded Wireless Framework example configuration.
+ * @details
+ * The Embedded Wireless Framework example configuration.
  ****************************************************************************/
+
 
 #ifndef __ewf_example_conf__h__included__
 #define __ewf_example_conf__h__included__
@@ -25,16 +27,16 @@ extern "C" {
  * @{
  */
 
-/** @brief the number of allocator blocks */
-#define EWF_CONFIG_ALLOCATOR_BLOCK_COUNT                    (4)
+/** @brief the number of data allocator blocks */
+#define EWF_CONFIG_DATA_ALLOCATOR_BLOCK_COUNT                       (4)
 
-/** @brief the size of each blocks allocator block */
-#define EWF_CONFIG_ALLOCATOR_BLOCK_SIZE                     (512)
+/** @brief the size of each data allocator block */
+#define EWF_CONFIG_DATA_ALLOCATOR_BLOCK_SIZE                        (512)
 
 /** @} *** group_example_configuration_allocator */
 
 /************************************************************************//**
- * @} *** group_example_configuration
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

@@ -5,8 +5,7 @@
 #include "ewf_adapter.h"
 #include "ewf_lib.h"
 
-#include "ewf_example_config.h"
-
+#include "ewf_example.config.h"
 
 /* Define user configurable symbols. */
 #ifndef SAMPLE_IP_STACK_SIZE
@@ -65,7 +64,6 @@ ULONG record_buffer[50];
 UINT record_count;
 ULONG* ipv4_address_ptr[MAX_RECORD_COUNT];
 UCHAR dns_packet_pool_buffer[NX_PACKET_POOL_SIZE];
-
 
 ewf_result ewf_example_netx_duo_test(ULONG ip_address, ULONG network_mask, ULONG gateway_address)
 {
@@ -296,7 +294,7 @@ ewf_result ewf_example_netx_duo_test(ULONG ip_address, ULONG network_mask, ULONG
         return EWF_RESULT_NOT_SUPPORTED;
     }
 
-    status = nx_dns_create(&dns_0, &ip_0, "My DNS");
+    status = nx_dns_create(&dns_0, &ip_0, (UCHAR*) "My DNS");
     if (status)
     {
         EWF_LOG_ERROR("DNS create failed.\r\n");

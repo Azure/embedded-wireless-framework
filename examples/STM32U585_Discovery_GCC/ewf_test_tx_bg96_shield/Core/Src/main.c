@@ -55,9 +55,9 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
 #include "ewf_adapter_quectel_bg96.c"
-#include "test/ewf_adapter_quectel_bg96_test.c"
-#include "ewf.config.h"
+
 #include "ewf_example.config.h"
+#include "test/ewf_adapter_quectel_bg96_test.c"
 
 /* USER CODE END Includes */
 
@@ -110,29 +110,29 @@ void thread_sample_entry(ULONG thread_input)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 12, 256);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_STM32_UART_STATIC_DECLARE(interface_ptr, stm32_uart_port, &huart3);
     EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 
     /* Start the adapter.  */
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to start the adapter: ewf_result %d.", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
+        return;
     }
 
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN: ewf_result %d.", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
+        return;
     }
 
     // Set the ME functionality
     if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
     {
-        EWF_LOG_ERROR("Failed to the ME functionality: ewf_result %d.", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
+        return;
     }
 
     /* Run the adapter tests.  */
@@ -147,8 +147,8 @@ void thread_sample_entry(ULONG thread_input)
     /* Stay here forever.  */
     while (1)
     {
-    	EWF_LOG(".");
-        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND);
+        EWF_LOG(".");
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
     }
 }
 

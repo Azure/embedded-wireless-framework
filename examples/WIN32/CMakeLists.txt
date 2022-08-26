@@ -74,7 +74,7 @@ add_subdirectory(filex)
 if(DEFINED PCAP_NAME)
   add_subdirectory(pcap)
 else()
-  #add_subdirectory(tcpip_offload_driver)
+  add_subdirectory(tcpip_offload_driver)
 endif()
 
 ###############################################################################

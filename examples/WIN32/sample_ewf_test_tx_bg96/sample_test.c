@@ -61,7 +61,9 @@ void thread_sample_entry(ULONG param)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 1500);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
 //    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(data_allocator_ptr, data_allocator, 4, 1500);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,

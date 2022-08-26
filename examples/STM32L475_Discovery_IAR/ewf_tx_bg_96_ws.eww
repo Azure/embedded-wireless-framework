@@ -6,5 +6,8 @@
     <project>
         <path>$WS_DIR$\ewf_test_tx_bg96\EWARM\ewf_test_tx_bg96.ewp</path>
     </project>
+    <project>
+        <path>$WS_DIR$\sample_threadx\EWARM\sample_threadx.ewp</path>
+    </project>
     <batchBuild />
 </workspace>

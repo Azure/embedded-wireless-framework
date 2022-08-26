@@ -89,8 +89,8 @@ static void prvMainTask( void *pvParameters )
     ewf_adapter* adapter_ptr = NULL;
 
     EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(data_allocator_ptr, data_allocator,
-        EWF_CONFIG_ALLOCATOR_BLOCK_COUNT,
-        EWF_CONFIG_ALLOCATOR_BLOCK_SIZE);
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_SIZE);
     EWF_ADAPTER_WINSOCK2_STATIC_DECLARE(adapter_ptr, winsock2_adapter, data_allocator_ptr);
 
     // Start the adapter
@@ -100,7 +100,7 @@ static void prvMainTask( void *pvParameters )
         exit(result);
     }
 
-    // Get the adapter info
+    /* Get the adapter info.  */
     if (ewf_result_failed(result = ewf_adapter_info(adapter_ptr)))
     {
         EWF_LOG_ERROR("The info function returned an error, ewf_result %d.\n", result);

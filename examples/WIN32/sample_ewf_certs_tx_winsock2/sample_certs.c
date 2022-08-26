@@ -1,15 +1,17 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+/************************************************************************//**
+ * @file
+ * @version Preview
+ * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * @brief The Embedded Wireless Framework adapter certs example.
+ ****************************************************************************/
 
-#include "ewf_lib.c"
+#include "ewf_adapter_winsock2.h" // Include first to force correct inclussion order for winsock2.h
+#include "ewf_allocator_threadx.h"
+#include "ewf_lib.h"
+#include "ewf_example.config.h"
 
-#include "ewf_platform_threadx.c"
-#include "ewf_allocator_threadx.c"
-#include "ewf_interface_win32_com.c"
-#include "ewf_adapter_quectel_bg96.api.c"
-
-#include "ewf_example_certs_quectel_bg96.c"
-
-/* Telemetry thread */
+/* The thread */
 static TX_THREAD thread;
 static void thread_entry(ULONG thread_input);
 #define THREAD_STACK_SIZE (1024 * 2)
@@ -23,6 +25,7 @@ int main(int argc, char ** argv)
     /* Enter the ThreadX kernel.  */
     tx_kernel_enter();
 
+    /* We never get here, but we keep the compiler happy.  */
     return 0;
 }
 
@@ -33,7 +36,7 @@ void tx_application_define(void *first_unused_memory)
 {
     UINT status;
 
-    /* Create the telemetry thread.  */
+    /* Create the example thread.  */
     status = tx_thread_create(
         &thread,
         "Thread",
@@ -55,30 +58,34 @@ void thread_entry(ULONG param)
 {
     ewf_result result;
 
-    // Start the adapter
-    if (ewf_result_failed(result = ewf_adapter_start()))
-    {
-        EWF_LOG_ERROR("Failed to start the adapter: az_result return code 0x%08lx.", result);
-        exit(result);
-    }
+    ewf_allocator* data_allocator_ptr = NULL;
+    ewf_adapter* adapter_ptr = NULL;
 
-    // Set the SIM PIN
-    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(EWF_CONFIG_SIM_PIN)))
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(data_allocator_ptr, data_allocator,
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_SIZE);
+    EWF_ADAPTER_WINSOCK2_STATIC_DECLARE(adapter_ptr, winsock2_adapter, data_allocator_ptr);
+
+    // Start the adapter
+    if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN: az_result return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
         exit(result);
     }
 
     // Call the certificate provisioning example
-    if (ewf_result_failed(result = ewf_example_certs()))
+    if (ewf_result_failed(result = ewf_example_certs_basic_winsock2(adapter_ptr)))
     {
-        EWF_LOG_ERROR("The certificate provisioning example returned and error: az_result return code 0x%08lx.", result);
+        EWF_LOG_ERROR("The certificate provisioning example returned and error, ewf_result %d.\n", result);
         exit(result);
     }
 
-    /* Wait forever  */
+    EWF_LOG("\nDone!\n");
+
+    /* Stay here forever.  */
     while (1)
     {
-        tx_thread_sleep(1);
+        EWF_LOG(".");
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
     }
 }

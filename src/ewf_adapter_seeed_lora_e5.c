@@ -87,7 +87,6 @@ ewf_result ewf_adapter_seeed_lora_e5_start(ewf_adapter* adapter_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_SEEED_LORA_E5);
-    ewf_adapter_seeed_lora_e5* implementation_ptr = (ewf_adapter_seeed_lora_e5*)adapter_ptr->implementation_ptr;
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
@@ -180,8 +179,6 @@ ewf_result ewf_adapter_seeed_lora_e5_urc_callback(ewf_interface* interface_ptr, 
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    ewf_result result;
-
     /* Ignore empty URCs */
     if (_str_equals_str((char*)buffer_ptr, "\r\n"))
     {
@@ -207,7 +204,6 @@ ewf_result ewf_adapter_seeed_lora_e5_info(ewf_adapter* adapter_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_SEEED_LORA_E5);
-    ewf_adapter_seeed_lora_e5* implementation_ptr = (ewf_adapter_seeed_lora_e5*)adapter_ptr->implementation_ptr;
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 

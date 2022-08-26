@@ -1,55 +1,105 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+/************************************************************************//**
+ * @file
+ * @version Preview
+ * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * @brief The Embedded Wireless Framework adapter telemetry example.
+ ****************************************************************************/
 
-#include "ewf_lib.c"
+#include "ewf_platform.h"
+#include "ewf_allocator_c_heap.h"
+#include "ewf_interface_win32_com.h"
+#include "ewf_adapter_quectel_bg96.h"
+#include "ewf_lib.h"
 
-#include "ewf_platform_win32.c"
-#include "ewf_allocator_c_heap.c"
-#include "ewf_interface_win32_com.c"
-#include "ewf_adapter_quectel_bg96.api.c"
-
-#include "ewf_example_telemetry.c"
+#include "ewf_example.config.h"
 
 /**
  * @brief The application entry point
  */
 int main(int argc, char ** argv)
 {
-    az_result result;
+    ewf_result result;
+
+    ewf_allocator* message_allocator_ptr = NULL;
+    ewf_interface* interface_ptr = NULL;
+    ewf_adapter* adapter_ptr = NULL;
+
+    EWF_ALLOCATOR_C_HEAP_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
+    EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS);
+    EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 
     // Start the adapter
-    if (ewf_result_failed(result = ewf_adapter_start()))
+    if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to start the adapter: az_result return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
         exit(result);
     }
 
     // Set the SIM PIN
-    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(EWF_CONFIG_SIM_PIN)))
+    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN: az_result return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
         exit(result);
     }
 
-    // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_set_functionality("1")))
+    // Enable full functionality
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
     {
-        EWF_LOG_ERROR("Failed to the ME functionality: az_result return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to set the ME functionality, ewf_result %d.\n", result);
         exit(result);
     }
 
-    // Activated the PDP context
-    if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_activate(1)))
+    // Activate the PDP context
+    if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
-        EWF_LOG_ERROR("Failed to activate the PDP context: az_result return code 0x%08lx.", result);
+        EWF_LOG("[WARNING] Failed to activate the PDP context, ewf_result %d.\n", result);
+        // continue despite the error, the context may be already active
+    }
+
+#ifdef EWF_ADAPTER_QUECTEL_BG96_TLS_BASIC_ENABLED
+    if (ewf_result_failed(result = ewf_adapter_tls_basic_init(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to init the SSL basic API, ewf_result %d.\n", result);
+        return;
+    }
+#endif
+
+    // Call the telemetry example
+    if (ewf_result_failed(result = ewf_example_telemetry_basic(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("The telemetry example returned an error, ewf_result %d.\n", result);
+        return;
+    }
+
+#ifdef EWF_ADAPTER_QUECTEL_BG96_TLS_BASIC_ENABLED
+    if (ewf_result_failed(result = ewf_adapter_tls_basic_clean(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to clean the SSL basic API, ewf_result %d.\n", result);
+        return;
+    }
+#endif
+
+    // Deactivate the PDP context
+    if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_deactivate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
+    {
+        EWF_LOG("Failed to deactivate the PDP context, ewf_result %d.\n", result);
         // continue despite the error
     }
 
-    // Call the telemetry example
-    if (ewf_result_failed(result = ewf_example_telemetry()))
-    {
-        EWF_LOG_ERROR("The telemetry example returned and error: az_result return code 0x%08lx.", result);
-        exit(result);
-    }
+    EWF_LOG("Done!\n");
 
-    return 0;
+    /* Stay here forever.  */
+    while (1)
+    {
+        EWF_LOG(".");
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
+    }
 }

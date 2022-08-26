@@ -10,7 +10,6 @@
 #include "ewf_allocator_c_heap.h"
 #include "ewf_interface_win32_com.h"
 #include "ewf_adapter_quectel_bg95.h"
-#include "ewf_lib.h"
 #include "ewf_example.config.h"
 
 /**
@@ -25,8 +24,8 @@ int main(int argc, char ** argv)
     ewf_adapter* adapter_ptr = NULL;
 
     EWF_ALLOCATOR_C_HEAP_STATIC_DECLARE(message_allocator_ptr, message_allocator,
-        EWF_CONFIG_ALLOCATOR_BLOCK_COUNT,
-        EWF_CONFIG_ALLOCATOR_BLOCK_SIZE);
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,

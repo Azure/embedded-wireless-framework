@@ -1,10 +1,17 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+/************************************************************************//**
+ * @file
+ * @version Preview
+ * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * @brief The Embedded Wireless Framework adapter telemetry example.
+ ****************************************************************************/
 
 #include "ewf_platform.h"
 #include "ewf_allocator_threadx.h"
 #include "ewf_interface_win32_com.h"
 #include "ewf_adapter_renesas_ryz014.h"
 #include "ewf_lib.h"
+
 #include "ewf_example.config.h"
 
 /* ThreadX thread, entry point declaration and stack definition.  */
@@ -54,66 +61,70 @@ void thread_sample_entry(ULONG param)
 {
     ewf_result result;
 
-    uint32_t context_id = 1;
-
     ewf_allocator* message_allocator_ptr = NULL;
-    ewf_allocator* data_allocator_ptr = NULL;
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 1500);
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(data_allocator_ptr, data_allocator, 4, 1500);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
-        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS,
-        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BUFFER_SIZE);
-    EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, data_allocator_ptr, interface_ptr);
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS);
+    EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
 
     // Start the adapter.
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to start the adapter: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
         return;
     }
 
     // Set the ME functionality
     if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
     {
-        EWF_LOG_ERROR("Failed to the ME functionality: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
     }
 
-    ewf_platform_sleep(500);
-#if 0
+    /* Wait for the modem functionality to be up, increase/decrease the sleep time as required by modem and network,
+     * Refer system integration guide for more info */
+    uint32_t wait_time_seconds = 15;
+
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, wait_time_seconds)))
+    {
+        EWF_LOG_ERROR("Failed to register modem to network within timeout specified, ewf_result %d.\n", result);
+        return;
+    }
+
+    /* Disable network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
+    {
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
+    }
+
+    /* Disable EPS network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_urc_set(adapter_ptr, "0")))
+    {
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
+    }
+
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
         return;
     }
 
-#endif
-    // Set Network registration URC
-    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_set(adapter_ptr, "2")))
-    {
-        EWF_LOG_ERROR("Failed failed to set the network registration URC: az_result return code 0x%08lx.", result);
-        // continue despite the error
-    }
-
-    // Set EPS Network registration URC
-    if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_set(adapter_ptr, "2")))
-    {
-        EWF_LOG_ERROR("Failed failed to set the eps network registration URC: az_result return code 0x%08lx.", result);
-        // continue despite the error
-    }
-
     // Activated the PDP context
-    if (ewf_result_failed(result = ewf_adapter_modem_packet_service_activate(adapter_ptr, "1")))
+    if (ewf_result_failed(result = ewf_adapter_modem_packet_service_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
-        EWF_LOG_ERROR("Failed to activate the PDP context: az_result return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to activate the PDP context: ewf_result %d.\n", result);
         // continue despite the error
     }
 
@@ -127,7 +138,7 @@ void thread_sample_entry(ULONG param)
     // Call the telemetry example
     if (ewf_result_failed(result = ewf_example_telemetry_basic(adapter_ptr)))
     {
-        EWF_LOG_ERROR("The telemetry example returned and error: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("The telemetry example returned and error: ewf_result %d.\n", result);
         return;
     }
 
@@ -138,9 +149,12 @@ void thread_sample_entry(ULONG param)
         return;
     }
 
-    // Stay here forever.
+    EWF_LOG("Done!\n");
+
+    /* Stay here forever.  */
     while (1)
     {
-        tx_thread_sleep(100);
+        EWF_LOG(".");
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
     }
 }

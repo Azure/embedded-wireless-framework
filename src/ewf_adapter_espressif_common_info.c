@@ -34,8 +34,6 @@ ewf_result ewf_adapter_espressif_common_info(ewf_adapter* adapter_ptr)
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
     ewf_result result;
-    uint8_t * response_ptr;
-    uint32_t response_length;
 
     EWF_LOG("[ADAPTER INFORMATION START]\n");
 

@@ -2,7 +2,7 @@
 @ECHO OFF
 
 IF "%1" == "" (
-    ECHO ERROR: Pass path to 'common' directory in the required Example project.
+    ECHO ERROR: Pass path to include directory in the example project.
     ECHO Usage:
     ECHO %0 ^<Path to common dir^>
     EXIT /B 1

@@ -25,7 +25,7 @@ extern "C" {
  * @{
  */
 /** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN "0000"
+#define EWF_CONFIG_SIM_PIN                                          ("0000")
 /** @} */
 
 /**
@@ -34,9 +34,9 @@ extern "C" {
  * @{
  */
 /** @brief The IoT Hub hostname */
-#define EW_CONFIG_IOT_HUB_HOSTNAME ""
+#define EWF_CONFIG_IOT_HUB_HOSTNAME                                 ""
 /** @brief The device ID */
-#define EW_CONFIG_IOT_HUB_DEVICEID ""
+#define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
 /** @} */
 
 /************************************************************************//**

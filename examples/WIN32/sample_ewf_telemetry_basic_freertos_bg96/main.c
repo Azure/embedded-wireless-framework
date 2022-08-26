@@ -11,18 +11,15 @@
 /* Standard demo includes. */
 #include "StaticAllocation.h"
 
-/* Azure SD-NET */
-#include "ewf_example_config.h"
+/* Embedded Wireless Framework */
+#include "ewf_platform_freertos.h"
+#include "ewf_allocator_memory_pool.h"
+#include "ewf_interface_win32_com.h"
+#include "ewf_adapter_quectel_bg96.h"
 
-#include "ewf_lib.c"
+#include "ewf_lib.h"
 
-#include "ewf_platform_freertos.c"
-#include "ewf_allocator_memory_pool.c"
-#include "ewf_interface_win32_com.c"
-#include "ewf_adapter_quectel_bg96.api.c"
-
-#include "ewf_example_telemetry.c"
-
+#include "ewf_example.config.h"
 
 /*-----------------------------------------------------------*/
 
@@ -83,47 +80,94 @@ int main( void )
 
 static void prvMainTask( void *pvParameters )
 {
-	/* Just to remove compiler warning. */
-	( void ) pvParameters;
+    /* Just to remove compiler warning. */
+    ( void ) pvParameters;
 
-	ewf_result result;
+    ewf_result result;
 
-	/* Start the adapter.  */
-	if (ewf_result_failed(result = ewf_adapter_start()))
-	{
-		EWF_LOG_ERROR("Failed to start the modem: az_result return code 0x%08x.", result);
-		exit(result);
-	}
+    ewf_allocator* message_allocator_ptr = NULL;
+    ewf_interface* interface_ptr = NULL;
+    ewf_adapter* adapter_ptr = NULL;
 
-	/* Enter the modem PIN.  */
-	if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(EWF_CONFIG_SIM_PIN)))
-	{
-		EWF_LOG_ERROR("Failed to the modem PIN: az_result return code 0x%08lx.", result);
-		exit(result);
-	}
+    EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
+    EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS);
+    EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 
-	// Activated the PDP context
-	if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_activate(1)))
-	{
-		EWF_LOG_ERROR("Failed to activate the PDP context: az_result return code 0x%08lx.", result);
-	}
+    /* Start the adapter.  */
+    if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
+        exit(result);
+    }
 
-	// Call the telemetry example
-	if (ewf_result_failed(result = ewf_example_telemetry()))
-	{
-		EWF_LOG_ERROR("The telemetry example returned and error: az_result return code 0x%08lx.", result);
-		exit(result);
-	}
+    // Set the SIM PIN
+    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
+    {
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
+        exit(result);
+    }
 
-	for( ;; )
-	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelay(pdMS_TO_TICKS(1000UL));
+    // Enable full functionality
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
+    {
+        EWF_LOG_ERROR("Failed to set the ME functionality, ewf_result %d.\n", result);
+        exit(result);
+    }
 
-		/* This is the only task that uses stdout so its ok to call printf()
-		directly. */
-		printf( "tick count %d\r\n", xTaskGetTickCount());
-	}
+    // Activate the PDP context
+    if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
+    {
+        EWF_LOG("[WARNING] Failed to activate the PDP context, ewf_result %d.\n", result);
+        // continue despite the error, the context may be already active
+    }
+
+#ifdef EWF_ADAPTER_QUECTEL_BG96_TLS_BASIC_ENABLED
+    if (ewf_result_failed(result = ewf_adapter_tls_basic_init(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to init the SSL basic API, ewf_result %d.\n", result);
+        return;
+    }
+#endif
+
+    // Call the telemetry example
+    if (ewf_result_failed(result = ewf_example_telemetry_basic(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("The telemetry example returned and error, ewf_result %d.\n", result);
+        return;
+    }
+
+#ifdef EWF_ADAPTER_QUECTEL_BG96_TLS_BASIC_ENABLED
+    if (ewf_result_failed(result = ewf_adapter_tls_basic_clean(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to clean the SSL basic API, ewf_result %d.\n", result);
+        return;
+    }
+#endif
+
+    // Deactivate the PDP context
+    if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_deactivate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
+    {
+        EWF_LOG("Failed to deactivate the PDP context, ewf_result %d.\n", result);
+        // continue despite the error
+    }
+
+    EWF_LOG("Done!\n");
+
+    for( ;; )
+    {
+        /* Place this task in the blocked state until it is time to run again. */
+        vTaskDelay(pdMS_TO_TICKS(1000UL));
+
+        /* This is the only task that uses stdout so its ok to call printf() directly. */
+        printf( "tick count %d\r\n", xTaskGetTickCount());
+    }
 }
 /*-----------------------------------------------------------*/
 

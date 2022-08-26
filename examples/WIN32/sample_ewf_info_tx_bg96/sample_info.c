@@ -22,7 +22,7 @@ static ULONG thread_stack[THREAD_STACK_SIZE / sizeof(ULONG)];
 /**
  *  @brief The application entry point, initialize the hardware and start ThreadX
  */
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
     /* Enter the ThreadX kernel.  */
     tx_kernel_enter();
@@ -34,7 +34,7 @@ int main(int argc, char ** argv)
 /**
  *  @brief Define what the initial ThreadX system looks like.
  */
-void tx_application_define(void *first_unused_memory)
+void tx_application_define(void* first_unused_memory)
 {
     UINT status;
 
@@ -65,8 +65,8 @@ void thread_entry(ULONG param)
     ewf_adapter* adapter_ptr = NULL;
 
     EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
-        EWF_CONFIG_ALLOCATOR_BLOCK_COUNT,
-        EWF_CONFIG_ALLOCATOR_BLOCK_SIZE);
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,

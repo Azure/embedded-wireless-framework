@@ -1,4 +1,6 @@
 
+#include "ewf_adapter_winsock2.h" // Include first to force correct inclussion order for winsock2.h
+
 /* Standard includes. */
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,16 +13,13 @@
 /* Standard demo includes. */
 #include "StaticAllocation.h"
 
-/* Azure SD-NET */
+/* Embedded Wireless Framework */
 #include "ewf_platform_freertos.h"
 #include "ewf_allocator_memory_pool.h"
-#include "ewf_interface_win32_com.h"
-#include "ewf_adapter_quectel_bg96.h"
-
-#include "ewf_example.config.h"
 
 #include "ewf_lib.h"
 
+#include "ewf_example.config.h"
 
 /*-----------------------------------------------------------*/
 
@@ -79,69 +78,45 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-void prvMainTask( void *pvParameters )
+static void prvMainTask( void *pvParameters )
 {
-	/* Just to remove compiler warning. */
-	( void ) pvParameters;
+    /* Just to remove compiler warning. */
+    ( void ) pvParameters;
 
-	ewf_result result;
+    ewf_result result;
 
-	uint32_t context_id = 1;
+    ewf_allocator* data_allocator_ptr = NULL;
+    ewf_adapter* adapter_ptr = NULL;
 
-	ewf_allocator* message_allocator_ptr = NULL;
-	ewf_allocator* data_allocator_ptr = NULL;
-	ewf_interface* interface_ptr = NULL;
-	ewf_adapter* adapter_ptr = NULL;
+    EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(data_allocator_ptr, data_allocator,
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_SIZE);
+    EWF_ADAPTER_WINSOCK2_STATIC_DECLARE(adapter_ptr, winsock2_adapter, data_allocator_ptr);
 
-	EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 64);
-	EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(data_allocator_ptr, data_allocator, 4, 1500);
-	EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port, "\\\\.\\COM26", 115200, 8, NOPARITY, ONESTOPBIT, 1);
-	EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, data_allocator_ptr, interface_ptr);
+    // Start the adapter
+    if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
+        exit(result);
+    }
 
-	// Start the adapter
-	if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
-	{
-		EWF_LOG_ERROR("Failed to start the adapter, return code 0x%08lx.", result);
-		return;
-	}
+    /* Run the adapter tests.  */
+    if (ewf_result_failed(result = ewf_adapter_test(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to run the adapter test, ewf_result %d.\n", result);
+        exit(result);
+    }
 
-	// Set the SIM PIN
-	if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
-	{
-		EWF_LOG_ERROR("Failed to the SIM PIN, return code 0x%08lx.", result);
-		return;
-	}
+    EWF_LOG("\nDone!\n");
 
-	// Set the ME functionality
-	if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
-	{
-		EWF_LOG_ERROR("Failed to the ME functionality, return code 0x%08lx.", result);
-		return;
-	}
+    for( ;; )
+    {
+        /* Place this task in the blocked state until it is time to run again. */
+        vTaskDelay(pdMS_TO_TICKS(1000UL));
 
-	// Activated the PDP context
-	if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_activate(adapter_ptr, context_id)))
-	{
-		EWF_LOG_ERROR("Failed to activate the PDP context: return code 0x%08lx.", result);
-		// continue despite the error
-	}
-
-	/* Run the adapter tests.  */
-	if (ewf_result_failed(result = ewf_adapter_quectel_bg96_test(adapter_ptr)))
-	{
-		EWF_LOG_ERROR("Failed to run the adapter test: return code 0x%08x.", result);
-		exit(result);
-	}
-
-	for( ;; )
-	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelay(pdMS_TO_TICKS(1000UL));
-
-		/* This is the only task that uses stdout so its ok to call printf()
-		directly. */
-		printf( "tick count %d\r\n", xTaskGetTickCount());
-	}
+        /* This is the only task that uses stdout so its ok to call printf() directly. */
+        printf( "tick count %d\r\n", xTaskGetTickCount());
+    }
 }
 /*-----------------------------------------------------------*/
 

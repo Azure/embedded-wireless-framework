@@ -8,7 +8,7 @@
 
 #include "ewf_adapter_winsock2.h" // Include first to force correct inclussion order for winsock2.h
 #include "ewf_allocator_c_heap.h"
-#include "ewf_lib.h"
+
 #include "ewf_example.config.h"
 
 /**
@@ -22,8 +22,8 @@ int main(int argc, char ** argv)
     ewf_adapter* adapter_ptr = NULL;
 
     EWF_ALLOCATOR_C_HEAP_STATIC_DECLARE(data_allocator_ptr, data_allocator,
-        EWF_CONFIG_ALLOCATOR_BLOCK_COUNT,
-        EWF_CONFIG_ALLOCATOR_BLOCK_SIZE);
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_DATA_ALLOCATOR_BLOCK_SIZE);
     EWF_ADAPTER_WINSOCK2_STATIC_DECLARE(adapter_ptr, winsock2_adapter, data_allocator_ptr);
 
     // Start the adapter
@@ -48,4 +48,6 @@ int main(int argc, char ** argv)
         EWF_LOG(".");
         ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
     }
+    
+    return 0;
 }
