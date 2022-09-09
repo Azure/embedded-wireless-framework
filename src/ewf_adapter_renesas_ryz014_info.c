@@ -141,7 +141,7 @@ ewf_result ewf_adapter_renesas_ryz014_get_ipv4_address(ewf_adapter* adapter_ptr,
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGPADDR\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGPADDR=1\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 1 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
 
     if (response)
@@ -153,11 +153,11 @@ ewf_result ewf_adapter_renesas_ryz014_get_ipv4_address(ewf_adapter* adapter_ptr,
         int address_d;
         int fields = sscanf((char*)response, "\r\n+CGPADDR: %d,\"%d.%d.%d.%d\"", &context_id, &address_a, &address_b, &address_c, &address_d);
         ewf_interface_release(interface_ptr, response);
-        if (fields != 7)
-        {
-            EWF_LOG_ERROR("Unexpected response format.");
-            return EWF_RESULT_UNEXPECTED_RESPONSE;
-        }
+        // if (fields != 7)
+        // {
+        //     EWF_LOG_ERROR("Unexpected response format.");
+        //     return EWF_RESULT_UNEXPECTED_RESPONSE;
+        // }
 
         *address_ptr =
             ((address_a & 0xFF) << 24) |

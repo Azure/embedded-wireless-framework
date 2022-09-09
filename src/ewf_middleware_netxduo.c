@@ -101,6 +101,7 @@ typedef struct NX_DRIVER_SOCKET_STRUCT
 {
     VOID                *socket_ptr;
     UINT                 socket_id;
+    ewf_socket_tcp adapter_socket;
     UCHAR                protocol;
     UCHAR                tcp_connected;
     UCHAR                is_client;
@@ -116,6 +117,7 @@ static NX_DRIVER_INFORMATION nx_driver_information;
 static NX_DRIVER_SOCKET nx_driver_sockets[NX_DRIVER_SOCKETS_MAXIMUM];
 static TX_THREAD nx_driver_thread;
 static UCHAR nx_driver_thread_stack[NX_DRIVER_STACK_SIZE];
+extern ewf_adapter * adapter_ptr;
 
 /* Define the routines for processing each driver entry request.  The contents of these routines will change with
    each driver. However, the main driver entry function will not change, except for the entry function name.  */
@@ -1113,7 +1115,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                 /* Receive data without suspending.  */
                 unsigned len = data_length;
                 ewf_result result = ewf_adapter_tcp_receive(
-                    nx_driver_sockets[i].socket_id,
+                    &(nx_driver_sockets[i].adapter_socket),
                     (char *)(packet_ptr -> nx_packet_prepend_ptr), &len,
                     false);
                 data_length = len;
@@ -1124,8 +1126,8 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                     /* Connection error. Notify upper layer with Null packet.  */
                     if (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP)
                     {
-                        _nx_tcp_socket_driver_packet_receive(nx_driver_sockets[i].socket_ptr, NX_NULL);
-                        nx_driver_sockets[i].tcp_connected = NX_FALSE;
+                        // _nx_tcp_socket_driver_packet_receive(nx_driver_sockets[i].socket_ptr, NX_NULL);
+                        // nx_driver_sockets[i].tcp_connected = NX_FALSE;
                     }
                     else
                     {
@@ -1309,8 +1311,18 @@ ewf_result result;
                  remote_ip_bytes[1],
                  remote_ip_bytes[2],
                  remote_ip_bytes[3]);
+        
+        result = ewf_adapter_tcp_open(adapter_ptr, &(nx_driver_sockets[i].adapter_socket));
+        if (ewf_result_failed(result))
+        {
+            return(NX_NOT_SUCCESSFUL);
+        }
+        else
+        {
+            status = NX_SUCCESS;
+        }
 
-        result = ewf_adapter_tcp_connect((int *)&(nx_driver_sockets[i].socket_id), server_address, *remote_port);
+        result = ewf_adapter_tcp_connect((int *)&(nx_driver_sockets[i].adapter_socket), server_address, *remote_port);
         if (ewf_result_failed(result))
         {
             return(NX_NOT_SUCCESSFUL);
@@ -1427,7 +1439,7 @@ ewf_result result;
 #endif
 
                 /* Disconnect.  */
-                result = ewf_adapter_tcp_close(nx_driver_sockets[i].socket_id);
+                result = ewf_adapter_tcp_close(&(nx_driver_sockets[i].adapter_socket));
                 if (ewf_result_failed(result))
                     status = NX_NOT_SUCCESSFUL;
                 else
@@ -1440,7 +1452,7 @@ ewf_result result;
 #endif
 
                 /* Disconnect.  */
-                result = ewf_adapter_tcp_close(nx_driver_sockets[i].socket_id);
+                result = ewf_adapter_tcp_close(&(nx_driver_sockets[i].adapter_socket));
                 if (ewf_result_failed(result))
                     status = NX_NOT_SUCCESSFUL;
                 else
@@ -1616,7 +1628,7 @@ ewf_result result;
 
             /* Send data.  */
             ewf_result result = ewf_adapter_tcp_send(
-              nx_driver_sockets[i].socket_id,
+              &(nx_driver_sockets[i].adapter_socket),
               (char const *)(uint8_t *)current_packet-> nx_packet_prepend_ptr,
               packet_size);
             /* Check status.  */
@@ -1826,7 +1838,7 @@ UINT i;
         {
 
             /* Disconnect.  */
-            ewf_adapter_tcp_close(nx_driver_sockets[i].socket_id);
+            ewf_adapter_tcp_close(&(nx_driver_sockets[i].adapter_socket));
             nx_driver_sockets[i].socket_ptr = NX_NULL;
         }
     }
