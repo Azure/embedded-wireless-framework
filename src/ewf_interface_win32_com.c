@@ -8,7 +8,7 @@
 
 #include "ewf_interface_win32_com.h"
 
-#ifndef EWF_PLATFORM_SUPPORTS_THREADING
+#ifndef EWF_PLATFORM_HAS_THREADING
 #error This host interface is only supported in platforms with threading
 #endif
 
@@ -202,6 +202,22 @@ ewf_result ewf_interface_win32_com_hardware_receive(ewf_interface* interface_ptr
     if (!buffer_length_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     if (*buffer_length_ptr < 1) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
+    if (!wait)
+    {
+        COMSTAT Stat;
+
+        if (!ClearCommError(win32_com_interface_ptr->hComm, NULL, &Stat))
+        {
+            EWF_LOG_ERROR("The function ClearCommError failed with error 0x%08X.", GetLastError());
+            return EWF_RESULT_IRRECOVERABLE_ERROR;
+        }
+
+        if (Stat.cbInQue == 0)
+        {
+            return EWF_RESULT_NO_DATA_AVAILABLE;
+        }
+    }
+
     DWORD dwRes;
     DWORD dwRead = 0;
     DWORD dwLastError;
@@ -215,47 +231,45 @@ ewf_result ewf_interface_win32_com_hardware_receive(ewf_interface* interface_ptr
         &win32_com_interface_ptr->osReader))
     {
         *buffer_length_ptr = dwRead;
+        return EWF_RESULT_OK;
     }
-    else
+
+    dwLastError = GetLastError();
+    if (dwLastError != ERROR_IO_PENDING)
     {
-        dwLastError = GetLastError();
-        if (dwLastError == ERROR_IO_PENDING)
+        EWF_LOG_ERROR("The read operation failed with error 0x%08X.", dwLastError);
+        return EWF_RESULT_RECEPTION_FAILED;
+    }
+
+    dwRes = WaitForSingleObject(win32_com_interface_ptr->osReader.hEvent, INFINITE);
+    switch (dwRes)
+    {
+    case WAIT_OBJECT_0:
+        if (!GetOverlappedResult(win32_com_interface_ptr->hComm, &win32_com_interface_ptr->osReader, &dwRead, FALSE))
         {
-            dwRes = WaitForSingleObject(win32_com_interface_ptr->osReader.hEvent, INFINITE);
-            switch (dwRes)
-            {
-            case WAIT_OBJECT_0:
-                if (!GetOverlappedResult(win32_com_interface_ptr->hComm, &win32_com_interface_ptr->osReader, &dwRead, FALSE))
-                {
-                    dwLastError = GetLastError();
-                    EWF_LOG_ERROR("The overlapped read operation failed with error 0x%08X.", dwLastError);
-                    // Error in communications; report it.
-                }
-                else
-                {
-                    *buffer_length_ptr = dwRead;
-                    break;
-                }
-                break;
-
-            case WAIT_TIMEOUT:
-                // Operation isn't complete yet. fWaitingOnRead flag isn't
-                // changed since I'll loop back around, and I don't want
-                // to issue another read until the first one finishes.
-                //
-                // This is a good time to do some background work.
-                break;
-
-            default:
-                // Error in the WaitForSingleObject; abort.
-                // This indicates a problem with the OVERLAPPED structure's event handle.
-                break;
-            }
+            dwLastError = GetLastError();
+            EWF_LOG_ERROR("The overlapped read operation failed with error 0x%08X.", dwLastError);
+            // Error in communications; report it.
         }
         else
         {
-            EWF_LOG_ERROR("The read operation failed with error 0x%08X.", dwLastError);
+            *buffer_length_ptr = dwRead;
+            break;
         }
+        break;
+
+    case WAIT_TIMEOUT:
+        // Operation isn't complete yet. fWaitingOnRead flag isn't
+        // changed since I'll loop back around, and I don't want
+        // to issue another read until the first one finishes.
+        //
+        // This is a good time to do some background work.
+        break;
+
+    default:
+        // Error in the WaitForSingleObject; abort.
+        // This indicates a problem with the OVERLAPPED structure's event handle.
+        break;
     }
 
     /* All ok! */

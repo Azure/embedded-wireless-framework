@@ -11,6 +11,10 @@
 
 #include "ewf_platform.h"
 
+#ifndef EWF_PLATFORM_WIN32
+#error EWF_PLATFORM_WIN32 must be defined before including this file
+#endif
+
 #include <WinSock2.h>
 #include <windows.h>
 
@@ -53,12 +57,12 @@ struct _ewf_platform_thread
 };
 
 #define EWF_PLATFORM_THREAD_STATIC_DECLARE(thread_ptr, thread_name_symb, thread_function_ptr_param, thread_function_data_param, stack_size_param, thread_priority_param)  \
-do {                                                                                                                                \
-static ULONG _ewf_platform_thread__stack__##thread_name_symb[stack_size_param / sizeof(ULONG)];                                \
-static struct _ewf_platform_thread _ewf_platform_thread__##thread_name_symb = {0};                                        \
-_ewf_platform_thread__##thread_name_symb.thread_function_ptr = thread_function_ptr_param;                                      \
+do {                                                                                                                            \
+static ULONG _ewf_platform_thread__stack__##thread_name_symb[stack_size_param / sizeof(ULONG)];                                 \
+static struct _ewf_platform_thread _ewf_platform_thread__##thread_name_symb = {0};                                              \
+_ewf_platform_thread__##thread_name_symb.thread_function_ptr = thread_function_ptr_param;                                       \
 _ewf_platform_thread__##thread_name_symb.thread_function_data = thread_function_data_param;                                     \
-thread_ptr = &(_ewf_platform_thread__##thread_name_symb);                                                                      \
+thread_ptr = &(_ewf_platform_thread__##thread_name_symb);                                                                       \
 } while(0)
 
 struct _ewf_platform_mutex
@@ -66,10 +70,10 @@ struct _ewf_platform_mutex
     HANDLE hMutex;
 };
 
-#define EWF_PLATFORM_MUTEX_STATIC_DECLARE(mutex_ptr, mutex_name_symb)                                                          \
-do {                                                                                                                                \
-static struct _ewf_platform_mutex _ewf_platform_mutex__##mutex_name_symb = {0};                                           \
-mutex_ptr = &(_ewf_platform_mutex__##mutex_name_symb);                                                                         \
+#define EWF_PLATFORM_MUTEX_STATIC_DECLARE(mutex_ptr, mutex_name_symb)                                                           \
+do {                                                                                                                            \
+static struct _ewf_platform_mutex _ewf_platform_mutex__##mutex_name_symb = {0};                                                 \
+mutex_ptr = &(_ewf_platform_mutex__##mutex_name_symb);                                                                          \
 } while(0)
 
 struct _ewf_platform_queue
@@ -89,16 +93,16 @@ struct _ewf_platform_queue
  * @param[in] item_type type queue item type
  * @param[in] item_count the maximum number item the queue can contain
  */
-#define EWF_PLATFORM_QUEUE_STATIC_DECLARE(queue_ptr, queue_name_symb, item_type, item_count)                                   \
-do {                                                                                                                                \
-static item_type ewf_platform_queue__data__##queue_name_symb[item_count];                                                      \
-static ewf_platform_queue ewf_platform_queue__##queue_name_symb = {0};                                                    \
-ewf_platform_queue__##queue_name_symb.data = ewf_platform_queue__data__##queue_name_symb;                                 \
-ewf_platform_queue__##queue_name_symb.item_size = sizeof(item_type);                                                           \
-ewf_platform_queue__##queue_name_symb.queue_size = item_count;                                                                 \
-ewf_platform_queue__##queue_name_symb.tail_index = 0;                                                                          \
-ewf_platform_queue__##queue_name_symb.used_count = 0;                                                                          \
-queue_ptr = &(ewf_platform_queue__##queue_name_symb);                                                                          \
+#define EWF_PLATFORM_QUEUE_STATIC_DECLARE(queue_ptr, queue_name_symb, item_type, item_count)                                    \
+do {                                                                                                                            \
+static item_type ewf_platform_queue__data__##queue_name_symb[item_count];                                                       \
+static ewf_platform_queue ewf_platform_queue__##queue_name_symb = {0};                                                          \
+ewf_platform_queue__##queue_name_symb.data = ewf_platform_queue__data__##queue_name_symb;                                       \
+ewf_platform_queue__##queue_name_symb.item_size = sizeof(item_type);                                                            \
+ewf_platform_queue__##queue_name_symb.queue_size = item_count;                                                                  \
+ewf_platform_queue__##queue_name_symb.tail_index = 0;                                                                           \
+ewf_platform_queue__##queue_name_symb.used_count = 0;                                                                           \
+queue_ptr = &(ewf_platform_queue__##queue_name_symb);                                                                           \
 } while(0)
 
 /************************************************************************//**

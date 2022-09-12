@@ -54,8 +54,10 @@ typedef struct _ewf_adapter_api_mqtt_basic
 
     ewf_result(*connect)(ewf_adapter* adapter_ptr, char const* server_cstr, uint32_t port, char const* clientid_cstr, char const* username_cstr, char const* password_cstr);
     ewf_result(*disconnect)(ewf_adapter* adapter_ptr);
+
     ewf_result(*subscribe)(ewf_adapter* adapter_ptr, char const* topic_cstr);
     ewf_result(*unsubscribe)(ewf_adapter* adapter_ptr, char const* topic_cstr);
+
     ewf_result(*publish)(ewf_adapter* adapter_ptr, const char* topic_cstr, const char* message_cstr);
 
 } ewf_adapter_api_mqtt_basic;
@@ -64,11 +66,15 @@ ewf_result ewf_adapter_mqtt_basic_control(ewf_adapter* adapter_ptr, const char* 
 
 ewf_result ewf_adapter_mqtt_basic_connect(ewf_adapter* adapter_ptr, char const* server_cstr, uint32_t port, char const* clientid_cstrs, char const* username_cstr, char const* password_cstr);
 ewf_result ewf_adapter_mqtt_basic_disconnect(ewf_adapter* adapter_ptr);
+
 ewf_result ewf_adapter_mqtt_basic_subscribe(ewf_adapter* adapter_ptr, char const* topic_cstr);
 ewf_result ewf_adapter_mqtt_basic_unsubscribe(ewf_adapter* adapter_ptr, char const* topic_cstr);
+
 ewf_result ewf_adapter_mqtt_basic_publish(ewf_adapter* adapter_ptr, const char* topic_cstr, const char* message_cstr);
+
 ewf_result ewf_adapter_mqtt_basic_state_callback_set(ewf_adapter * adapter_ptr, ewf_adapter_mqtt_basic_state_callback callback);
 ewf_result ewf_adapter_mqtt_basic_message_callback_set(ewf_adapter * adapter_ptr, ewf_adapter_mqtt_basic_message_callback callback);
+
 /************************************************************************//**
  * @} *** group_adapter_mqtt_basic
  ****************************************************************************/

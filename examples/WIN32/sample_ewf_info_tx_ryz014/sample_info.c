@@ -54,8 +54,6 @@ void thread_sample_entry(ULONG param)
 {
     ewf_result result;
 
-    uint32_t context_id = 1;
-
     ewf_allocator* message_allocator_ptr = NULL;
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
@@ -74,39 +72,39 @@ void thread_sample_entry(ULONG param)
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to start the adapter, return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
         return;
     }
 
     // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
     {
-        EWF_LOG_ERROR("Failed to the ME functionality, return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
     }
 
-    /* Wait for the modem functionality to be up, increase the sleep time as required by modem and network, 
+    /* Wait for the modem functionality to be up, increase the sleep time as required by modem and network,
      * Refer modem user manual for more info */
     ewf_platform_sleep(100);
 
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN, return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
         return;
     }
 
     // Activated the PDP context
     if (ewf_result_failed(result = ewf_adapter_modem_packet_service_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
-        EWF_LOG_ERROR("Failed to activate the PDP context: az_result return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to activate the PDP context, ewf_result %d.\n", result);
         // continue despite the error
     }
 
     // Get the adapter info
     if (ewf_result_failed(result = ewf_adapter_info(adapter_ptr)))
     {
-        EWF_LOG_ERROR("The info function returned an error, return code 0x%08lx.", result);
+        EWF_LOG_ERROR("The info function returned an error, ewf_result %d.\n", result);
         return;
     }
 

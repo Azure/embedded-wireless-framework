@@ -35,7 +35,7 @@ ewf_result ewf_adapter_modem_sim_pin_enter(ewf_adapter* adapter_ptr, const char*
 	if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CPIN?\r"))) return result;
 	if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response))) return result;
 
-	equal = _str_equals_str((char*)response, "\r\n+CPIN: READY\r\n\r\nOK\r\n");
+	equal = ewfl_str_equals_str((char*)response, "\r\n+CPIN: READY\r\n\r\nOK\r\n");
 	ewf_interface_release(interface_ptr, response);
 
 	if (!equal)

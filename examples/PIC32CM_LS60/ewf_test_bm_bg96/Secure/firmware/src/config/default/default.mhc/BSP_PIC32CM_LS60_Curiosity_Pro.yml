@@ -1,0 +1,6 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: BSP_PIC32CM_LS60_Curiosity_Pro, bsp: 'true'}
+children:
+- type: ElementPosition
+  attributes: {x: '170', y: '80', id: BSP_PIC32CM_LS60_Curiosity_Pro}

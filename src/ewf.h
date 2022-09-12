@@ -49,43 +49,45 @@ enum _ewf_result
 {
     /* Non error results - positive or zero */
 
-    EWF_RESULT_OK                                = 0,    /**< The function completed successfully */
+    EWF_RESULT_OK                               = 0,    /**< The function completed successfully */
 
-    EWF_RESULT_UNHANDLED_URC                     = 1,    /**< The URC has not been handled. */
+    EWF_RESULT_UNHANDLED_URC                    = 1,    /**< The URC has not been handled. */
+
+    EWF_RESULT_NO_DATA_AVAILABLE                = 2,    /**< There is not data available. */
 
     /* Error results - negative */
 
-    EWF_RESULT_INVALID_FUNCTION_ARGUMENT         = -1,   /**< An invalid value has been passed to the function. */
-    EWF_RESULT_OUT_OF_MEMORY                     = -2,   /**< The system ran out of memory. */
-    EWF_RESULT_NOT_SUPPORTED                     = -3,   /**< Unsupported functionality . */
-    EWF_RESULT_TIMEOUT                           = -4,   /**< Timeout */
-    EWF_RESULT_IRRECOVERABLE_ERROR               = -5,   /**< Irrecoverable error */
+    EWF_RESULT_INVALID_FUNCTION_ARGUMENT        = -1,   /**< An invalid value has been passed to the function. */
+    EWF_RESULT_OUT_OF_MEMORY                    = -2,   /**< The system ran out of memory. */
+    EWF_RESULT_NOT_SUPPORTED                    = -3,   /**< Unsupported functionality . */
+    EWF_RESULT_TIMEOUT                          = -4,   /**< Timeout */
+    EWF_RESULT_IRRECOVERABLE_ERROR              = -5,   /**< Irrecoverable error */
 
-    EWF_RESULT_UNEXPECTED_RESPONSE               = -50,  /**< Unexpected adapter response. */
+    EWF_RESULT_UNEXPECTED_RESPONSE              = -50,  /**< Unexpected adapter response. */
 
-    EWF_RESULT_EMPTY_QUEUE                       = -80,  /**< The queue is empty. */
-    EWF_RESULT_FULL_QUEUE                        = -81,  /**< The queue is full. */
+    EWF_RESULT_EMPTY_QUEUE                      = -80,  /**< The queue is empty. */
+    EWF_RESULT_FULL_QUEUE                       = -81,  /**< The queue is full. */
 
-    EWF_RESULT_CONNECTION_FAILED                 = -101, /**< Failed to connect. */
-    EWF_RESULT_RECEPTION_FAILED                  = -102, /**< The reception failed. */
-    EWF_RESULT_NO_DATA_RECEIVED                  = -103, /**< No data has been received. */
+    EWF_RESULT_CONNECTION_FAILED                = -101, /**< Failed to connect. */
+    EWF_RESULT_RECEPTION_FAILED                 = -102, /**< The reception failed. */
+    EWF_RESULT_NO_DATA_RECEIVED                 = -103, /**< No data has been received. */
 
-    EWF_RESULT_TOO_MANY_OPEN_SOCKETS             = -201, /**< Too many open sockets, the adpater limit has been reached. */
-    EWF_RESULT_INVALID_SOCKET                    = -202, /**< Invalid socket value. */
-    EWF_RESULT_SOCKET_NOT_OPEN                   = -203, /**< The socket is not open. */
+    EWF_RESULT_TOO_MANY_OPEN_SOCKETS            = -201, /**< Too many open sockets, the adpater limit has been reached. */
+    EWF_RESULT_INVALID_SOCKET                   = -202, /**< Invalid socket value. */
+    EWF_RESULT_SOCKET_NOT_OPEN                  = -203, /**< The socket is not open. */
 
-    EWF_RESULT_INTERFACE_INITIALIZATION_FAILED   = -301, /**< The interface initialization failed. */
-    EWF_RESULT_INTERFACE_SEND_FAILED             = -302, /**< The interface failed to send. */
-    EWF_RESULT_INTERFACE_RECEIVE_FAILED          = -303, /**< The interface failed to receive. */
+    EWF_RESULT_INTERFACE_INITIALIZATION_FAILED  = -301, /**< The interface initialization failed. */
+    EWF_RESULT_INTERFACE_SEND_FAILED            = -302, /**< The interface failed to send. */
+    EWF_RESULT_INTERFACE_RECEIVE_FAILED         = -303, /**< The interface failed to receive. */
 
-    EWF_RESULT_ADAPTER_INITIALIZATION_FAILED     = -401, /**< The adapter initialization failed. */
-    EWF_RESULT_ADAPTER_RESPONDED_ERROR           = -402, /**< The adapter responded with an error message. */
-    EWF_RESULT_ADAPTER_RECEIVE_FAILED            = -403, /**< An adapter receive operation failed. */
-    EWF_RESULT_ADAPTER_TRANSMIT_FAILED           = -404, /**< An adapter transmit operation failed. */
+    EWF_RESULT_ADAPTER_INITIALIZATION_FAILED    = -401, /**< The adapter initialization failed. */
+    EWF_RESULT_ADAPTER_RESPONDED_ERROR          = -402, /**< The adapter responded with an error message. */
+    EWF_RESULT_ADAPTER_RECEIVE_FAILED           = -403, /**< An adapter receive operation failed. */
+    EWF_RESULT_ADAPTER_TRANSMIT_FAILED          = -404, /**< An adapter transmit operation failed. */
 
-    EWF_RESULT_ALLOCATOR_INITIALIZATION_FAILED   = -501, /**< The allocator initialization failed. */
+    EWF_RESULT_ALLOCATOR_INITIALIZATION_FAILED  = -501, /**< The allocator initialization failed. */
 
-    EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED      = -601, /**< The modem not registered to network */
+    EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED     = -601, /**< The modem not registered to network */
 };
 
 /**

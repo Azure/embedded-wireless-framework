@@ -36,10 +36,11 @@ typedef struct _ewf_interface_rx_uart
 {
     ewf_platform_thread* thread_ptr;
 
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
+#ifdef EWF_PLATFORM_HAS_THREADING
     ewf_platform_mutex mutex;
     ewf_platform_thread* receive_thread_ptr;
 #endif
+
 } ewf_interface_rx_uart;
 
 /* Default RYZ014 is enabled in RX interface. Change to 0 if alternate UART configuration is used */
@@ -88,13 +89,6 @@ do {                                                                            
 do {                                                                                                                                                    \
 static ewf_interface_rx_uart ewf_interface_rx_uart__implementation__##interface_name_symb = {0};                                              \
 static ewf_interface ewf_interface_rx_uart__interface__##interface_name_symb = {0};                                                           \
-EWF_PLATFORM_THREAD_STATIC_DECLARE(                                                                                                                 \
-    ewf_interface_rx_uart__interface__##interface_name_symb.receive_thread_ptr,                                                                  \
-    ewf_interface_rx_uart__receive_thread__##interface_name_symb,                                                                                \
-    ewf_interface_receive_thread,                                                                                                                   \
-    &(ewf_interface_rx_uart__interface__##interface_name_symb),                                                                                  \
-    (1024 * 2),                                                                                                                                    	\
-    EWF_PLATFORM_THREAD_PRIORITY_HIGH);                                                                                                           \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                 \
     ewf_interface_rx_uart__interface__##interface_name_symb.response_queue_ptr,                                                                    \
     ewf_interface_rx_uart__response_queue__##interface_name_symb,                                                                                  \
@@ -123,5 +117,3 @@ EWF_INTERFACE_RX_UART_INITIALIZE_HEADER(interface_ptr);                         
 #endif
 
 #endif /* __ewf_interface_rx_uart__h__included__ */
-
-

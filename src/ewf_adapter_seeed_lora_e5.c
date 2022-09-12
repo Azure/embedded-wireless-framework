@@ -180,7 +180,7 @@ ewf_result ewf_adapter_seeed_lora_e5_urc_callback(ewf_interface* interface_ptr, 
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
     /* Ignore empty URCs */
-    if (_str_equals_str((char*)buffer_ptr, "\r\n"))
+    if (ewfl_str_equals_str((char*)buffer_ptr, "\r\n"))
     {
         return EWF_RESULT_OK;
     }

@@ -6,11 +6,6 @@
  * @brief Library of utility macros and low footprint functions.
  ****************************************************************************/
 
-/************************************************************************//**
- * @defgroup group_lib EWF Library
- * @{
- ****************************************************************************/
-
 #ifndef __ewf_lib__h__included__
 #define __ewf_lib__h__included__
 
@@ -21,21 +16,20 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- *
+ * @defgroup group_lib EWF Library
+ * @{
+ ****************************************************************************/
+
+/************************************************************************//**
  * @defgroup group_lib_string String utilities
  * Low footprint string functions to avoid bringing in libraries.
  * Some of these functions are similar to C library functions but are
  * available here to avoid including C standard libraries, this enables
  * some toolchains to further optimize footprint.
  * @{
- *
  ****************************************************************************/
 
-
 #ifdef EWF_DEBUG // only in debug configurations!!!
-
-/** This can be configured to match the application requirements  */
-#define EWF_ESCAPE_STR_BUFFER_SIZE (2048)
 
 /**
  * @brief Escapes non-printable and control characters in a string.
@@ -52,40 +46,36 @@ extern "C" {
  * @return a pointer to a static buffer with an C like escaped version of the
   * passed string.
  */
-const char * _escape_str_to_str_buffer(const char * str, unsigned len);
+const char * ewfl_escape_str_to_str_buffer(const char * str, uint32_t len);
 
 #endif
 
-
 /**
- * @brief Converts an unsigned to a string.
- * @param[in] u an unsigned to be converted into a string.
+ * @brief Converts an uint32_t to a string.
+ * @param[in] u an uint32_t to be converted into a string.
  * @return a pointer to a static buffer with the string representation of
- * the passed unsigned.
+ * the passed uint32_t.
  */
-const char * _unsigned_to_str_buffer(unsigned u);
-
+const char * ewflewfl_unsigned_to_str_buffer(uint32_t u);
 
 /**
- * @brief Converts an unsigned to a string.
- * @param[in] u and unsigned to be converted into a string.
+ * @brief Converts an uint32_t to a string.
+ * @param[in] u and uint32_t to be converted into a string.
  * @param[in,out] str a pointer to a buffer
  * @return a pointer to a static buffer with the string representation of the
- * passed unsigned.
+ * passed uint32_t.
  */
-char * _unsigned_to_str(unsigned u, char * str, unsigned len);
-
+char * ewfl_unsigned_to_str(uint32_t u, char * str, uint32_t len);
 
 /**
- * @brief Parse an unsigned from a string.
- * This function will attempt to parse an unsigned out of the passed string.
+ * @brief Parse an uint32_t from a string.
+ * This function will attempt to parse an uint32_t out of the passed string.
  * If the string is NULL, 0 is returned.
  * The string will be parsed until the first non digit character.
  * @param[in] str a pointer to a NULL terminated string to be parsed
- * @return an unsigned value parsed from the string
+ * @return an uint32_t value parsed from the string
  */
-unsigned _str_to_unsigned(const char * str);
-
+uint32_t ewfl_str_to_unsigned(const char * str);
 
 /**
  * @brief Returns the length of the passed NULL terminated string.
@@ -95,13 +85,12 @@ unsigned _str_to_unsigned(const char * str);
  * define strlen will allow some toolchains to further optimize footprint.
  *
  * @param[in] a pointer to a NULL terminated string.
- * @return the unsigned length of the passed string.
+ * @return the uint32_t length of the passed string.
  */
-unsigned _str_length(const char * str);
-
+uint32_t ewfl_str_length(const char * str);
 
 /**
- * @brief Converts an unsigned to a string
+ * @brief Converts an uint32_t to a string
  *
  * Note that the order of parameters in this function is not interchangeable.
  * The first parameter is the string that will be matched and the second one
@@ -113,23 +102,20 @@ unsigned _str_length(const char * str);
  * @param[in] prefix the prefix that will be looked for at the begining of the string.
  * @return true if the string starts with the prefix, false otherwise.
  */
-bool _str_starts_with(const char * str, const char * prefix);
-
+bool ewfl_str_starts_with(const char * str, const char * prefix);
 
 /**
  * @brief Checks if a buffer ends with a string
  * @return true if the buffer ends with the suffix, false otherwise.
  */
-bool _buffer_ends_with(const char * buffer, unsigned buffer_length, const char * suffix, unsigned suffix_length);
-
+bool ewfl_buffer_ends_with(const char * buffer, uint32_t buffer_length, const char * suffix, uint32_t suffix_length);
 
 /**
  * @brief Checks if a buffer ends with a string containing wildcards
  * The current version supports question marks '?'to match single characters.
  * @return true if the buffer ends with the suffix, false otherwise.
  */
-bool _buffer_ends_with_wildcard_string(const char* buffer, unsigned buffer_length, const char* suffix, unsigned suffix_length);
-
+bool ewfl_buffer_ends_with_wildcard_string(const char* buffer, uint32_t buffer_length, const char* suffix, uint32_t suffix_length);
 
 /**
  * @brief Checks if two strings are equal.
@@ -145,8 +131,7 @@ bool _buffer_ends_with_wildcard_string(const char* buffer, unsigned buffer_lengt
  * @param[in] str2 a pointer to a NULL terminated string.
  * @return true if both strings are equal, false if they are different.
  */
-bool _str_equals_str(const char * str1, const char * str2);
-
+bool ewfl_str_equals_str(const char * str1, const char * str2);
 
 /**
  * @brief Searches for a string in a substring
@@ -159,7 +144,7 @@ bool _str_equals_str(const char * str1, const char * str2);
  * @param[in] substr a sub-string pattern that will be looked for in str.
  * @return true if the substr is found in str, false otherwise.
  */
-bool _str_contains_str(const char * str, const char * substr);
+bool ewfl_str_contains_str(const char * str, const char * substr);
 
 /**
  * @brief Copies source string to destination buffer and terminates it by NULL
@@ -170,7 +155,7 @@ bool _str_contains_str(const char * str, const char * substr);
  * @param[in] n number of bytes that will be copied
  * @return true if the substr is found in str, false otherwise.
  */
-char * _str_n_cpy(char* dest, const char* src_str, uint32_t n);
+char * ewfl_str_n_cpy(char* dest, const char* src_str, uint32_t n);
 
 /**
  * @brief Remove leading and trailing white space characters
@@ -178,7 +163,7 @@ char * _str_n_cpy(char* dest, const char* src_str, uint32_t n);
  * @param[in] str a pointer to the string that will be trimmed
  * @return pointer to the trimed string.
  */
-char * _str_remove_white_spaces(char* str);
+char * ewfl_str_remove_white_spaces(char* str);
 
 /**
  * @brief Remove suffix from string
@@ -188,7 +173,7 @@ char * _str_remove_white_spaces(char* str);
  * @param[in] suffix_str a pointer to substring to be removed
  * @return pointer to the trimmed string.
  */
-char * _str_remove_suffix_str(char* str, const char * suffix_str);
+char * ewfl_str_remove_suffix_str(char* str, const char * suffix_str);
 
 /**
  * @brief Parse adapter response by trimming white space and "OK"
@@ -198,20 +183,18 @@ char * _str_remove_suffix_str(char* str, const char * suffix_str);
  * @param[in] suffix_str a pointer to substring to be removed
  * @return pointer to the trimmed string.
  */
-char* adapter_response_str_extract(char* str);
-
+char* ewfl_adapter_response_str_extract(char* str);
 
 /************************************************************************//**
- * @}
+ * @} *** group_lib_string
  ****************************************************************************/
 
+/************************************************************************//**
+ * @} *** group_lib
+ ****************************************************************************/
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* __ewf_lib__h__included__ */
-
-/************************************************************************//**
- * @}
- ****************************************************************************/

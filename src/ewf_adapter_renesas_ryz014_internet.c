@@ -4,8 +4,7 @@
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
 
- * @details
- * The Embedded Wireless Framework Renesas RYZ014 Internet(TCP+UDP) implementation
+ * brief The Embedded Wireless Framework Renesas RYZ014 Internet(TCP+UDP) implementation
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_ryz014.h"
@@ -46,6 +45,7 @@ ewf_adapter_api_udp ewf_adapter_renesas_ryz014_api_udp =
     ewf_adapter_renesas_ryz014_udp_set_dtls_configuration,
 
     ewf_adapter_renesas_ryz014_udp_bind,
+    ewf_adapter_renesas_ryz014_udp_shutdown,
     ewf_adapter_renesas_ryz014_udp_send_to,
     ewf_adapter_renesas_ryz014_udp_receive_from,
 };
@@ -132,11 +132,11 @@ ewf_result ewf_adapter_renesas_ryz014_internet_urc_callback(ewf_interface* inter
 
     EWF_PARAMETER_NOT_USED(buffer_length);
 
-    if (_str_starts_with((char*)buffer_ptr, "CONNECT: "))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "CONNECT: "))
     {
         return EWF_RESULT_OK;
     }
-    if (_str_starts_with((char*)buffer_ptr, "+SQNSRING:"))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSRING:"))
     {
         EWF_LOG("\nURC: SQNSRING");
         int connectionID = EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_INVALID;
@@ -144,7 +144,7 @@ ewf_result ewf_adapter_renesas_ryz014_internet_urc_callback(ewf_interface* inter
         if (items != 1 ||
             ((connectionID < 0) || (EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_POOL_SIZE <= connectionID)))
         {
-            EWF_LOG("\nURC: unexpected format.");
+            EWF_LOG("\nURC: unexpected format.\n");
             return EWF_RESULT_OK;
         }
         else
@@ -154,14 +154,14 @@ ewf_result ewf_adapter_renesas_ryz014_internet_urc_callback(ewf_interface* inter
         }
         return EWF_RESULT_OK;
     }
-    if (_str_starts_with((char*)buffer_ptr, "SQNSH:"))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "SQNSH:"))
     {
         int connectionID = -1;
         int items = sscanf((char*)buffer_ptr, "SQNSH:%u", &connectionID);
         if (items != 1 ||
             ((connectionID < 0) || (EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_POOL_SIZE <= connectionID)))
         {
-            EWF_LOG("\nURC: unexpected format.");
+            EWF_LOG("\nURC: unexpected format.\n");
             return EWF_RESULT_OK;
         }
         else
@@ -173,23 +173,7 @@ ewf_result ewf_adapter_renesas_ryz014_internet_urc_callback(ewf_interface* inter
             return EWF_RESULT_OK;
         }
     }
-    if (_str_starts_with((char*)buffer_ptr, "+QIURC: \"recv\","))// TODO for RYZ014, awaiting new firmware update
-    {
-        int connectionID = -1;
-        int items = sscanf((char*)buffer_ptr, "+QIURC: \"recv\",%u", &connectionID);
-        if (items != 1 ||
-            ((connectionID < 0) || (EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_POOL_SIZE <= connectionID)))
-        {
-            EWF_LOG("\nURC: unexpected format.");
-            return EWF_RESULT_OK;
-        }
-        else
-        {
-            adapter_renesas_ryz014_ptr->internet_socket_pool[connectionID].recv = true;
-            return EWF_RESULT_OK;
-        }
-    }
-    if (_str_starts_with((char*)buffer_ptr, "+CME ERROR: 171"))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+CME ERROR: 171"))
     {
         return EWF_RESULT_OK;
     }
@@ -225,28 +209,34 @@ static ewf_result _ewf_adapter_renesas_ryz014_internet_socket_open(ewf_adapter* 
     }
 
     char socket_str[3];
-    const char* socket_cstr = _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
+    const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
 
     char service_type_str[3];
-    const char* service_type_cstr = _unsigned_to_str(service_type, service_type_str, sizeof(service_type_str));
+    const char* service_type_cstr = ewfl_unsigned_to_str(service_type, service_type_str, sizeof(service_type_str));
+
+    char context_id_str[3];
+    const char* context_id_cstr = ewfl_unsigned_to_str(adapter_renesas_ryz014_ptr->current_context_id, context_id_str, sizeof(context_id_str));
 
 #ifdef EWF_DEBUG
-    // Socket Information
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNSI\r"))) return result;
+    // Socket Status
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNSS\r"))) return result;
+    ewf_platform_sleep(50);
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     // Close outstanding connections just in case
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSH=", socket_cstr, "\r", NULL))) return result;
+
+    ewf_platform_sleep(50); 
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
     char port_str[7];
-    const char* port_cstr = _unsigned_to_str(port, port_str, sizeof(port_str));
+    const char* port_cstr = ewfl_unsigned_to_str(port, port_str, sizeof(port_str));
 
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSCFG=", socket_cstr, ",1,0,0,600,50\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSCFG=", socket_cstr, ",", context_id_cstr,", 0, 0, 600, 50\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSCFGEXT=", socket_cstr, ",0,0,0\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSCFGEXT=", socket_cstr, ",1,0,0\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr,
@@ -285,7 +275,7 @@ static ewf_result _ewf_adapter_renesas_ryz014_internet_socket_close(ewf_adapter*
     internet_socket_ptr->conn = false;
     internet_socket_ptr->conn_error = false;
 
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSH=", _unsigned_to_str_buffer(internet_socket_ptr->id), "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSH=", ewflewfl_unsigned_to_str_buffer(internet_socket_ptr->id), "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     return EWF_RESULT_OK;
@@ -340,7 +330,12 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_close(ewf_socket_tcp* socket_ptr)
 
 ewf_result ewf_adapter_renesas_ryz014_tcp_control(ewf_socket_tcp* socket_ptr, const char* control_str, const uint8_t* buffer_ptr, uint32_t* buffer_length_ptr)
 {
-    EWF_PARAMETER_NOT_USED(socket_ptr);
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     EWF_PARAMETER_NOT_USED(control_str);
     EWF_PARAMETER_NOT_USED(buffer_ptr);
     EWF_PARAMETER_NOT_USED(buffer_length_ptr);
@@ -350,7 +345,12 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_control(ewf_socket_tcp* socket_ptr, co
 
 ewf_result ewf_adapter_renesas_ryz014_tcp_set_tls_configuration(ewf_socket_tcp* socket_ptr, uint32_t tls_configuration_id)
 {
-    EWF_PARAMETER_NOT_USED(socket_ptr);
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     EWF_PARAMETER_NOT_USED(tls_configuration_id);
     return EWF_RESULT_OK;
 }
@@ -376,9 +376,9 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_listen(ewf_socket_tcp* socket_ptr)
     ewf_result result;
 
     char socket_str[3];
-    const char* socket_cstr = _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
+    const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
     char port_str[7];
-    const char* port_cstr = _unsigned_to_str(internet_socket_ptr->port, port_str, sizeof(port_str));
+    const char* port_cstr = ewfl_unsigned_to_str(internet_socket_ptr->port, port_str, sizeof(port_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSL=", socket_cstr, ",1,", port_cstr, "\r", NULL)))
         return result;
@@ -432,10 +432,10 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_accept(ewf_socket_tcp* socket_ptr,  ew
     }
 
     char socket_str[3];
-    const char* socket_cstr = _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
+    const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
     char connect_mode_str[7];
     /* Connection mode set to Command Mode */
-    const char* connect_mode_cstr = _unsigned_to_str(1, connect_mode_str, sizeof(connect_mode_str));
+    const char* connect_mode_cstr = ewfl_unsigned_to_str(1, connect_mode_str, sizeof(connect_mode_str));
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSA=", socket_cstr, ",", connect_mode_cstr, "\r", NULL)))
         return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n")))
@@ -505,8 +505,8 @@ static ewf_result _ewf_adapter_renesas_ryz014_socket_send(ewf_interface* interfa
     if (ewf_result_failed(result = ewf_interface_send_commands(
             interface_ptr,
             "AT+SQNSSENDEXT=",
-            _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str)), ",",
-            _unsigned_to_str(buffer_length, len_str, sizeof(len_str)), "\r",
+            ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str)), ",",
+            ewfl_unsigned_to_str(buffer_length, len_str, sizeof(len_str)), "\r",
             NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern1_str))) return result;
 
@@ -579,11 +579,13 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
                 internet_socket_ptr->recv = false;
                 break;
             }
+            ewf_interface_poll(interface_ptr);
             ewf_platform_sleep(1);
         }
     }
     else
     {
+        ewf_interface_poll(interface_ptr);
         if (internet_socket_ptr->recv == false)
         {
             return EWF_RESULT_NO_DATA_RECEIVED;
@@ -594,8 +596,8 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
     uint32_t read_length = (*buffer_length_ptr > 1500) ? (1500) : (*buffer_length_ptr);
 
     char socket_str[3];
-    const char* socket_cstr = _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
-    char* read_length_cstr = _unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
+    const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
+    char* read_length_cstr = ewfl_unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSRECV=",socket_cstr,",",read_length_cstr,"\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr , &response_ptr, &response_length, 100))) return result;
@@ -606,35 +608,31 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
-    if (_str_starts_with((char*)response_ptr, "\r\nERROR"))
+    if (ewfl_str_starts_with((char*)response_ptr, "\r\nERROR"))
     {
         ewf_interface_release(interface_ptr, response_ptr);
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
     const char data_read_response_str[] = "\r\n+SQNSRECV: ";
-    if (!_str_starts_with((char*)response_ptr, data_read_response_str))
+    if (!ewfl_str_starts_with((char*)response_ptr, data_read_response_str))
     {
         ewf_interface_release(interface_ptr, response_ptr);
         return EWF_RESULT_UNEXPECTED_RESPONSE;
     }
     else
     {
-        uint32_t read_actual_length;
+        uint32_t recieve_actual_lenght;
         char* p;
         p = (char*)response_ptr;
-        p += sizeof(data_read_response_str) - 1;
-        read_actual_length = _str_to_unsigned(p);
-        if (read_actual_length == 0)
+        p += 15; // Skip the characters until the actual number of bytes received
+        recieve_actual_lenght = ewfl_str_to_unsigned(p);
+        if (recieve_actual_lenght == 0)
         {
             *buffer_length_ptr = 0;
         }
         else
         {
-            while (*p && isdigit((unsigned char)*p)) p++;
-            while (*p && (*p==',')) p++; // skip the socket number and ','
-            uint32_t recieve_actual_lenght;
-            recieve_actual_lenght = atoi(p);
             while (*p && isdigit((unsigned char)*p)) p++; // skip the received length
             p = p+2; // skip <CR><LF> before start of data
             if(*(p + recieve_actual_lenght + 0) != '\r'
@@ -711,7 +709,12 @@ ewf_result ewf_adapter_renesas_ryz014_udp_close(ewf_socket_udp* socket_ptr)
 
 ewf_result ewf_adapter_renesas_ryz014_udp_control(ewf_socket_udp* socket_ptr, const char* control_str, const uint8_t* buffer_ptr, uint32_t* buffer_length_ptr)
 {
-    EWF_PARAMETER_NOT_USED(socket_ptr);
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     EWF_PARAMETER_NOT_USED(control_str);
     EWF_PARAMETER_NOT_USED(buffer_ptr);
     EWF_PARAMETER_NOT_USED(buffer_length_ptr);
@@ -721,7 +724,12 @@ ewf_result ewf_adapter_renesas_ryz014_udp_control(ewf_socket_udp* socket_ptr, co
 
 ewf_result ewf_adapter_renesas_ryz014_udp_set_dtls_configuration(ewf_socket_udp* socket_ptr, uint32_t tls_configuration_id)
 {
-    EWF_PARAMETER_NOT_USED(socket_ptr);
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     EWF_PARAMETER_NOT_USED(tls_configuration_id);
     return EWF_RESULT_OK;
 }
@@ -731,6 +739,17 @@ ewf_result ewf_adapter_renesas_ryz014_udp_bind(ewf_socket_udp* socket_ptr, uint3
     EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr);
     ewf_adapter_renesas_ryz014_internet_socket* internet_socket_ptr = (ewf_adapter_renesas_ryz014_internet_socket*)socket_ptr->data_ptr;
     internet_socket_ptr->port = port;
+    return EWF_RESULT_OK;
+}
+
+ewf_result ewf_adapter_renesas_ryz014_udp_shutdown(ewf_socket_udp* socket_ptr)
+{
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     return EWF_RESULT_OK;
 }
 
@@ -805,11 +824,13 @@ ewf_result ewf_adapter_renesas_ryz014_udp_receive_from(ewf_socket_udp* socket_pt
                 internet_socket_ptr->recv = false;
                 break;
             }
+            ewf_interface_poll(interface_ptr);
             ewf_platform_sleep(1);
         }
     }
     else
     {
+        ewf_interface_poll(interface_ptr);
         if (internet_socket_ptr->recv == false)
         {
             return EWF_RESULT_NO_DATA_RECEIVED;
@@ -820,8 +841,8 @@ ewf_result ewf_adapter_renesas_ryz014_udp_receive_from(ewf_socket_udp* socket_pt
     uint32_t read_length = (*buffer_length_ptr > 1500) ? (1500) : (*buffer_length_ptr);
 
     char socket_str[3];
-    const char* socket_cstr = _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
-    char* read_length_cstr = _unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
+    const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
+    char* read_length_cstr = ewfl_unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSRECV=",socket_cstr,",",read_length_cstr,"\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr , &response_ptr, &response_length, 100))) return result;
@@ -832,14 +853,14 @@ ewf_result ewf_adapter_renesas_ryz014_udp_receive_from(ewf_socket_udp* socket_pt
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
-    if (_str_starts_with((char*)response_ptr, "\r\nERROR"))
+    if (ewfl_str_starts_with((char*)response_ptr, "\r\nERROR"))
     {
         ewf_interface_release(interface_ptr, response_ptr);
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
     const char data_read_response_str[] = "\r\n+SQNSRECV: ";
-    if (!_str_starts_with((char*)response_ptr, data_read_response_str))
+    if (!ewfl_str_starts_with((char*)response_ptr, data_read_response_str))
     {
         ewf_interface_release(interface_ptr, response_ptr);
         return EWF_RESULT_UNEXPECTED_RESPONSE;
@@ -850,7 +871,7 @@ ewf_result ewf_adapter_renesas_ryz014_udp_receive_from(ewf_socket_udp* socket_pt
         char* p;
         p = (char*)response_ptr;
         p += sizeof(data_read_response_str) - 1;
-        read_actual_length = _str_to_unsigned(p);
+        read_actual_length = ewfl_str_to_unsigned(p);
         if (read_actual_length == 0)
         {
             *buffer_length_ptr = 0;

@@ -1,0 +1,355 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: sercom3}
+children:
+- type: Symbols
+  children:
+  - type: Hex
+    attributes: {id: I2CM_BAUD}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '232'}
+  - type: Integer
+    attributes: {id: I2CS_SDASETUP_TIME_NS}
+    children:
+    - type: Attributes
+      children:
+      - type: Integer
+        attributes: {id: max}
+        children:
+        - {type: Value, value: '5125'}
+  - type: Integer
+    attributes: {id: I2CS_SDASETUP_TIME_REG_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '0'}
+  - type: Boolean
+    attributes: {id: I2CS_SDASETUP_TIME_SUPPORT}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: 'true'}
+  - type: String
+    attributes: {id: RECEIVE_DATA_REGISTER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '&(SERCOM3_REGS->USART_INT.SERCOM_DATA)'}
+  - type: File
+    attributes: {id: SERCOM_I2CM_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_I2CM_MASTER_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_I2CM_SOURCE}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_I2CS_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_I2CS_SLAVE_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_I2CS_SOURCE}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: KeyValueSet
+    attributes: {id: SERCOM_MODE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: readOnly}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '0'}
+  - type: File
+    attributes: {id: SERCOM_SPIM_COMMON_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_SPIM_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_SPIM_SOURCE}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_SPIS_COMMON_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_SPIS_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_SPIS_SOURCE}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_SYS_DEF}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: name}
+        children:
+        - {type: Value, value: core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES}
+  - type: File
+    attributes: {id: SERCOM_SYS_INIT}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: name}
+        children:
+        - {type: Value, value: core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS}
+  - type: File
+    attributes: {id: SERCOM_USART_COMMON_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_USART_HEADER}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: File
+    attributes: {id: SERCOM_USART_SOURCE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'true'}
+      - type: String
+        attributes: {id: security}
+        children:
+        - {type: Value, value: NON_SECURE}
+  - type: Integer
+    attributes: {id: SPI_BAUD_REG_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '23'}
+  - type: String
+    attributes: {id: TRANSMIT_DATA_REGISTER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '&(SERCOM3_REGS->USART_INT.SERCOM_DATA)'}
+  - type: Integer
+    attributes: {id: USART_BAUD_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '63019'}
+  - type: KeyValueSet
+    attributes: {id: USART_FORM}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '0'}
+  - type: Boolean
+    attributes: {id: USART_INTERRUPT_MODE_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: 'false'}
+  - type: Boolean
+    attributes: {id: USART_LIN_MASTER_SUPPORTED}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: 'true'}
+  - type: KeyValueSet
+    attributes: {id: USART_OPERATING_MODE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: readOnly}
+        children:
+        - {type: Value, value: 'false'}
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '0'}
+  - type: Boolean
+    attributes: {id: USART_RING_BUFFER_MODE_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: 'false'}
+  - type: KeyValueSet
+    attributes: {id: USART_RXPO}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: Boolean
+    attributes: {id: USART_RX_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
+  - type: Integer
+    attributes: {id: USART_SAMPLE_COUNT}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '16'}
+  - type: Integer
+    attributes: {id: USART_SAMPLE_RATE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: sercom3, value: '0'}
+  - type: Boolean
+    attributes: {id: USART_SFDE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'false'}
+- type: Attachments
+  children:
+  - type: DirectCapability
+    attributes: {id: SERCOM3_I2C}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'false'}
+  - type: DirectCapability
+    attributes: {id: SERCOM3_SPI}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: enabled}
+        children:
+        - {type: Value, value: 'false'}
+  - type: DirectCapability
+    attributes: {id: SERCOM3_UART}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: targetComponentID}
+        children:
+        - {type: Value, value: stdio}
+      - type: String
+        attributes: {id: targetAttachmentID}
+        children:
+        - {type: Value, value: UART}
+- type: ElementPosition
+  attributes: {x: '25', y: '275', id: sercom3}

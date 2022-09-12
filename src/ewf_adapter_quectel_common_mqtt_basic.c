@@ -48,13 +48,13 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
     ewf_adapter_quectel_common* implementation_ptr = (ewf_adapter_quectel_common*)adapter_ptr->implementation_ptr;
 
     const char urc_prefix_str[] = "+QMT";
-    if (_str_starts_with((char*)buffer_ptr, urc_prefix_str))
+    if (ewfl_str_starts_with((char*)buffer_ptr, urc_prefix_str))
     {
         char* urc_str = (char*) buffer_ptr + sizeof(urc_prefix_str) - 1;
 
         {
             const char match_str[] = "OPEN: 0,";
-            if (_str_starts_with(urc_str, match_str))
+            if (ewfl_str_starts_with(urc_str, match_str))
             {
                 char* parse_str = urc_str + sizeof(match_str) - 1;
                 int err = atoi(parse_str);
@@ -70,7 +70,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
 
         {
             const char match_str[] = "CONN: 0,";
-            if (_str_starts_with(urc_str, match_str))
+            if (ewfl_str_starts_with(urc_str, match_str))
             {
                 char* parse_str = urc_str + sizeof(match_str) - 1;
                 int err = atoi(parse_str);
@@ -84,7 +84,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
 
         {
             const char match_str[] = "DISC: 0,";
-            if (_str_starts_with(urc_str, match_str))
+            if (ewfl_str_starts_with(urc_str, match_str))
             {
                 char* parse_str = urc_str + sizeof(match_str) - 1;
                 int err = atoi(parse_str);
@@ -100,7 +100,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
 
         {
             const char match_str[] = "STAT: 0,";
-            if (_str_starts_with(urc_str, match_str))
+            if (ewfl_str_starts_with(urc_str, match_str))
             {
                 char* parse_str = urc_str + sizeof(match_str) - 1;
                 int err = atoi(parse_str);
@@ -165,7 +165,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
 
         {
             const char match_str[] = "PUB: 0,";
-            if (_str_starts_with(urc_str, match_str))
+            if (ewfl_str_starts_with(urc_str, match_str))
             {
                 /* Message published */
                 EWF_LOG("[INFO][QUECTEL MQTT PUB]\n");
@@ -175,7 +175,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
 
         {
             const char match_str[] = "SUB: 0,";
-            if (_str_starts_with(urc_str, match_str))
+            if (ewfl_str_starts_with(urc_str, match_str))
             {
                 /* Subscribed to topic */
                 EWF_LOG("[INFO][QUECTEL MQTT SUB]\n");
@@ -185,7 +185,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
 
         {
             const char match_str[] = "UNS: 0,";
-            if (_str_starts_with(urc_str, match_str))
+            if (ewfl_str_starts_with(urc_str, match_str))
             {
                 /* Unsubscribed from topic */
                 EWF_LOG("[INFO][QUECTEL MQTT UNS]\n");
@@ -195,7 +195,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
 
         {
             const char match_str[] = "RECV: 0,";
-            if (_str_starts_with(urc_str, match_str))
+            if (ewfl_str_starts_with(urc_str, match_str))
             {
                 char* parse_str = urc_str + sizeof(match_str) - 1;
 
@@ -336,11 +336,14 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_connect(ewf_adapter* adapter_pt
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
+    char port_str[7];
+    const char* port_cstr = ewfl_unsigned_to_str(port, port_str, sizeof(port_str));
+
     if (ewf_result_failed(result = ewf_interface_send_commands(
             interface_ptr,
             "AT+QMTOPEN=0,",
             "\"", server_str, "\",",
-            _unsigned_to_str_buffer(port), "\r",
+            port_cstr, "\r",
             NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
@@ -348,18 +351,22 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_connect(ewf_adapter* adapter_pt
     timeout = 30 * EWF_PLATFORM_TICKS_PER_SECOND;
     while (--timeout)
     {
+        ewf_interface_receive_poll(interface_ptr);
         if (implementation_ptr->mqtt_basic_open)
         {
+    EWF_LOG("connected\n");
             break;
         }
         if (implementation_ptr->mqtt_basic_open_error)
         {
+    EWF_LOG("error\n");
             return EWF_RESULT_CONNECTION_FAILED;
         }
         ewf_platform_sleep(1);
     }
     if (!timeout)
     {
+    EWF_LOG("timeout\n");
         if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QICLOSE=0\r"))) return result;
         if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
         return EWF_RESULT_CONNECTION_FAILED;
@@ -420,6 +427,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_connect(ewf_adapter* adapter_pt
     timeout = 30 * EWF_PLATFORM_TICKS_PER_SECOND;
     while (--timeout)
     {
+        ewf_interface_receive_poll(interface_ptr);
         if (implementation_ptr->mqtt_basic_conn)
         {
             break;
@@ -465,6 +473,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_disconnect(ewf_adapter* adapter
     timeout = 30 * EWF_PLATFORM_TICKS_PER_SECOND;
     while (--timeout)
     {
+        ewf_interface_receive_poll(interface_ptr);
         if (implementation_ptr->mqtt_basic_conn == false) break;
         ewf_platform_sleep(1);
     }
@@ -537,7 +546,8 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_publish(ewf_adapter* adapter_pt
             false,
         };
         if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QMTPUB=0,0,0,0,\"", topic_cstr, "\",", _unsigned_to_str_buffer(message_length), "\r", NULL))) return result;
+        char message_length_str[6];
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QMTPUB=0,0,0,0,\"", topic_cstr, "\",", ewfl_unsigned_to_str(message_length, message_length_str, sizeof(message_length_str)), "\r", NULL))) return result;
         if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str))) return result;
         if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
     }

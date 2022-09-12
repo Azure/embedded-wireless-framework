@@ -140,12 +140,6 @@ children:
   - type: Integer
     attributes: {id: GEN_APP_RTOS_TASK_0_DELAY}
     children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
     - type: Values
       children:
       - type: User

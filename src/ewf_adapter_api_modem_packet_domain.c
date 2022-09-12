@@ -29,53 +29,53 @@ ewf_adapter_modem_api_packet_domain ewf_adapter_modem_api_packet_domain_implemen
 
 ewf_result ewf_adapter_modem_eps_network_registration_urc_set(ewf_adapter* adapter_ptr, const char* n_str)
 {
-	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-	if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
 
-	if(n_str == NULL)
+    if(n_str == NULL)
     {
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-	ewf_result result;
+    ewf_result result;
 
-	/* Set Network Registration URC option */
+    /* Set Network Registration URC option */
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CEREG=", n_str, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
-	return EWF_RESULT_OK;
+    return EWF_RESULT_OK;
 
 }
 
 ewf_result ewf_adapter_modem_gprs_network_registration_urc_set(ewf_adapter* adapter_ptr, const char* n_str)
 {
-	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-	if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
 
-	if(n_str == NULL)
+    if(n_str == NULL)
     {
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-	ewf_result result;
+    ewf_result result;
 
-	/* Set Network Registration URC option */
+    /* Set Network Registration URC option */
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGREG=", n_str, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
-	return EWF_RESULT_OK;
+    return EWF_RESULT_OK;
 
 }
 
 ewf_result ewf_adapter_modem_pdp_apn_set(ewf_adapter* adapter_ptr, uint32_t context_id, const char * pdptype_ptr, const char* apn_ptr)
 {
-	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
 
-	if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
-	ewf_result result;
+    if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    ewf_result result;
 
     if (context_id <= 0)
     {
@@ -94,28 +94,28 @@ ewf_result ewf_adapter_modem_pdp_apn_set(ewf_adapter* adapter_ptr, uint32_t cont
     }
 
     char context_id_str[3];
-    const char* context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
+    const char* context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGDCONT=", context_id_cstr,
-    		",\"",pdptype_ptr,"\"",
-    		",\"",apn_ptr,"\"",
-			"\r", NULL))) return result;
+            ",\"",pdptype_ptr,"\"",
+            ",\"",apn_ptr,"\"",
+            "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
-	return EWF_RESULT_OK;
+    return EWF_RESULT_OK;
 }
 
 ewf_result ewf_adapter_modem_packet_service_activate(ewf_adapter* adapter_ptr, uint32_t context_id)
 {
 
-	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-	if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
 
-	ewf_result result;
+    ewf_result result;
     char context_id_str[3];
-    const char* context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
+    const char* context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
-	/* Activate PDP context */
+    /* Activate PDP context */
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGACT=1,", context_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
@@ -124,21 +124,21 @@ ewf_result ewf_adapter_modem_packet_service_activate(ewf_adapter* adapter_ptr, u
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
-	return EWF_RESULT_OK;
+    return EWF_RESULT_OK;
 }
 
 ewf_result ewf_adapter_modem_packet_service_deactivate(ewf_adapter* adapter_ptr, uint32_t context_id)
 {
 
-	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-	if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
 
-	ewf_result result;
+    ewf_result result;
     char context_id_str[3];
-    const char* context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
+    const char* context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
-	/* Set Network Registration URC option */
+    /* Set Network Registration URC option */
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGACT=0,", context_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
@@ -147,38 +147,38 @@ ewf_result ewf_adapter_modem_packet_service_deactivate(ewf_adapter* adapter_ptr,
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
-	return EWF_RESULT_OK;
+    return EWF_RESULT_OK;
 }
 
 ewf_result ewf_adapter_modem_packet_service_attach(ewf_adapter* adapter_ptr)
 {
 
-	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-	if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
 
-	ewf_result result;
+    ewf_result result;
 
-	/* Attach to network */
+    /* Attach to network */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGATT=1\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
-	return EWF_RESULT_OK;
+    return EWF_RESULT_OK;
 }
 
 ewf_result ewf_adapter_modem_packet_service_detach(ewf_adapter* adapter_ptr)
 {
 
-	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-	if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    if (adapter_ptr->interface_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
 
-	ewf_result result;
+    ewf_result result;
 
-	/* Attach to network */
+    /* Attach to network */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGATT=0\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
-	return EWF_RESULT_OK;
+    return EWF_RESULT_OK;
 }
 

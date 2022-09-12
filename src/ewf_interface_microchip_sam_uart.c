@@ -82,44 +82,45 @@ ewf_result ewf_interface_microchip_sam_uart_hardware_send(ewf_interface* interfa
 
 ewf_result ewf_interface_microchip_sam_uart_hardware_receive(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
 {
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+	EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    /* Expect a valid buffer */
-    if (!buffer_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    if (!buffer_length_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    if (*buffer_length_ptr < 1) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+	/* Expect a valid buffer */
+	if (!buffer_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+	if (!buffer_length_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+	if (*buffer_length_ptr < 1) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
     size_t bytesread;
-    /* Receive */
-    if(wait)
-    {
-        for (uint32_t i = 0; i < *buffer_length_ptr; i++)
-        {
-            do
-            {
+	/* Receive */
+	if(wait)
+	{
+		for (uint32_t i = 0; i < *buffer_length_ptr; i++)
+		{
+			do
+			{
                 bytesread = SERCOM0_USART_Read(&buffer_ptr[i],sizeof(uint8_t));
                 if(!bytesread)
                 {
-                    ewf_platform_sleep(1);
+					ewf_platform_sleep(1);                    
                 }
-            }
-            while(bytesread == 0);
-        }
-    }
-    else
-    {
-        for (uint32_t i = 0; i < *buffer_length_ptr; i++)
-        {
-            
+			}
+			while(bytesread == 0);
+		}
+	}
+	else
+	{
+		for (uint32_t i = 0; i < *buffer_length_ptr; i++)
+		{
+			
             bytesread = SERCOM0_USART_Read(&buffer_ptr[i],sizeof(uint8_t));
             if(!bytesread)
             {
-                return EWF_RESULT_INTERFACE_RECEIVE_FAILED;
+                // No data available in the UART ring buffer
+                return EWF_RESULT_EMPTY_QUEUE;
             }
-        }
-    }
+		}
+	}
 
-    /* All ok! */
-    return EWF_RESULT_OK;
+	/* All ok! */
+	return EWF_RESULT_OK;
 }
 

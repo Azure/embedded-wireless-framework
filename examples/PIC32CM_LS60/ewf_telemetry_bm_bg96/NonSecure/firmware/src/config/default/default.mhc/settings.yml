@@ -1,0 +1,14 @@
+configName: default
+folderName: ewf_telemetry_bm_bg96_NonSecure
+format_version: v1.0
+frameworkPath: ..\..\..\..\..\..\Microchip\Harmony
+processor: PIC32CM5164LS60100
+projectName: ewf_telemetry_bm_bg96_NonSecure
+settings:
+  PackageFilter: azure_rtos;bsp;classb_pic32cm_mc;core;core_apps_pic32cm_jh00_jh01;core_apps_pic32cm_le_ls;core_apps_pic32cm_mc00;core_apps_sam_d5x_e5x;crypto;csp;csp_apps_pic32cm_le_ls;csp_apps_pic32cm_mc00;csp_apps_sam_d5x_e5x;dev_packs;harmony-services;mc_apps_sam_d5x_e5x;motor_control;net;quick_docs;usb;x2c
+  FORCE_OPTIMIZATION: 'false'
+  GENERATE_BACKUP: 'true'
+  TRUSTZONE: 'true'
+  CMSISPath: .\dev_packs\arm\CMSIS\5.8.0
+  MERGE_STRATEGY: USER_ALL
+  DFPPath: .\dev_packs\Microchip\PIC32CM-LS_DFP\1.1.162\PIC32CM-LS60\atdf\PIC32CM5164LS60100.atdf

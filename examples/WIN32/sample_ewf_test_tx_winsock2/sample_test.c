@@ -74,7 +74,7 @@ void thread_sample_entry(ULONG param)
     }
 
     // Get the adapter info
-    if (ewf_result_failed(result = ewf_adapter_test(adapter_ptr)))
+    if (ewf_result_failed(result = ewf_adapter_winsock2_test(adapter_ptr)))
     {
         EWF_LOG_ERROR("The test function returned an error, ewf_result %d.\n", result);
         exit(result);

@@ -4,8 +4,7 @@
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
 
- * @details
- * The Embedded Wireless Framework Renesas RYZ014 adapter driver
+ * brief The Embedded Wireless Framework Renesas RYZ014 adapter driver
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_ryz014.h"

@@ -16,10 +16,8 @@ ewf_result ewf_allocator_memory_pool_start(ewf_allocator* allocator_ptr)
 
     uint32_t i;
 
-#ifdef EWF_PLATFORM_HAS_MUTEX
-    EWF_PLATFORM_MUTEX_STATIC_DECLARE(_ewf_allocator.mutex_ptr, ewf_allocator_mutex);
-
-    if (ewf_result_failed(ewf_platform_mutex_create(_ewf_allocator.mutex_ptr)))
+#ifdef EWF_PLATFORM_HAS_THREADING
+    if (ewf_result_failed(ewf_platform_mutex_create(implementation_ptr->mutex_ptr)))
     {
         EWF_LOG_ERROR("Error creating the memory pool allocator mutex.\n");
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
@@ -55,21 +53,21 @@ ewf_result ewf_allocator_memory_pool_allocate(ewf_allocator* allocator_ptr, void
         return EWF_RESULT_OUT_OF_MEMORY;
     }
 
-#ifdef EWF_PLATFORM_BARE_METAL
-    ewf_platform_interrupt_state state;
-    state = ewf_platform_interrupt_state_get();
-    ewf_platform_interrupt_disable();
-#else
+#if defined(EWF_PLATFORM_HAS_THREADING)
     ewf_platform_mutex_get(implementation_ptr->mutex_ptr);
+#elif defined(EWF_PLATFORM_BARE_METAL)
+    EWF_PLATFORM_INTERRUPT_STATE_TYPE state;
+    state = EWF_PLATFORM_INTERRUPT_STATE_TYPE_GET();
+    EWF_PLATFORM_INTERRUPT_DISABLE();
 #endif
 
     *p = implementation_ptr->next_free_ptr->data_ptr;
     implementation_ptr->next_free_ptr = implementation_ptr->next_free_ptr->next_free_ptr;
 
-#ifdef EWF_PLATFORM_BARE_METAL
-    ewf_platform_interrupt_state_set(state);
-#else
+#if defined(EWF_PLATFORM_HAS_THREADING)
     ewf_platform_mutex_put(implementation_ptr->mutex_ptr);
+#elif defined(EWF_PLATFORM_BARE_METAL)
+    EWF_PLATFORM_INTERRUPT_STATE_TYPE_SET(state);
 #endif
 
     return EWF_RESULT_OK;
@@ -95,21 +93,21 @@ ewf_result ewf_allocator_memory_pool_release(ewf_allocator* allocator_ptr, void*
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-#ifdef EWF_PLATFORM_BARE_METAL
-    ewf_platform_interrupt_state state;
-    state = ewf_platform_interrupt_state_get();
-    ewf_platform_interrupt_disable();
-#else
+#if defined(EWF_PLATFORM_HAS_THREADING)
     ewf_platform_mutex_get(implementation_ptr->mutex_ptr);
+#elif defined(EWF_PLATFORM_BARE_METAL)
+    EWF_PLATFORM_INTERRUPT_STATE_TYPE state;
+    state = EWF_PLATFORM_INTERRUPT_STATE_TYPE_GET();
+    EWF_PLATFORM_INTERRUPT_DISABLE();
 #endif
 
     ((ewf_allocator_memory_pool_block*)p)->next_free_ptr = implementation_ptr->next_free_ptr;
     implementation_ptr->next_free_ptr = ((ewf_allocator_memory_pool_block*)p);
 
-#ifdef EWF_PLATFORM_BARE_METAL
-    ewf_platform_interrupt_state_set(state);
-#else
+#if defined(EWF_PLATFORM_HAS_THREADING)
     ewf_platform_mutex_put(implementation_ptr->mutex_ptr);
+#elif defined(EWF_PLATFORM_BARE_METAL)
+    EWF_PLATFORM_INTERRUPT_STATE_TYPE_SET(state);
 #endif
 
     return EWF_RESULT_OK;

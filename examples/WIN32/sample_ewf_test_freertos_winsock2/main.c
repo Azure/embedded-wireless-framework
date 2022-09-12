@@ -101,7 +101,7 @@ static void prvMainTask( void *pvParameters )
     }
 
     /* Run the adapter tests.  */
-    if (ewf_result_failed(result = ewf_adapter_test(adapter_ptr)))
+    if (ewf_result_failed(result = ewf_adapter_winsock2_test(adapter_ptr)))
     {
         EWF_LOG_ERROR("Failed to run the adapter test, ewf_result %d.\n", result);
         exit(result);

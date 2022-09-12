@@ -2,7 +2,11 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group name="ewf_same54_tx_bg96">
+            <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_certs_tx_bg96_shield/firmware/src/ewf_example.config.h</file>
+            <file>file:/C:/MyDrive/Repo/tmp/comms_framework/src/ewf_adapter_api_modem.c</file>
+            <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_certs_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
+        </group>
         <group/>
-        <group name="ewf_same54_tx_bg96"/>
     </open-files>
 </project-private>

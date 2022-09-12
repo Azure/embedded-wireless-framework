@@ -43,11 +43,8 @@ ewf_result ewf_adapter_quectel_common_tls_basic_start(ewf_adapter* adapter_ptr)
 
 #ifdef EWF_DEBUG
     /* Query and log the SSL state */
-    uint8_t* response_ptr;
-    uint32_t response_length;
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QSSLSTATE\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 30)))
-        ewf_interface_release(interface_ptr, response_ptr);
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
 	return EWF_RESULT_OK;
@@ -117,11 +114,9 @@ ewf_result ewf_adapter_quectel_common_tls_basic_init(ewf_adapter* adapter_ptr)
 
 #ifdef EWF_DEBUG
     /* Query and log the SSL state */
-    uint8_t* response_ptr;
-    uint32_t response_length;
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QSSLSTATE\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 30)))
-        ewf_interface_release(interface_ptr, response_ptr);
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
 #endif
 
     return EWF_RESULT_OK;

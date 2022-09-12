@@ -1,0 +1,10 @@
+*.pem.h
+**/.generated_files/
+**/build/
+**/dist/
+**/debug/
+**/nbproject/private/
+*.bak
+*.xml~
+*.lib
+TODO.txt

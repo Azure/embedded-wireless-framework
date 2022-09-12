@@ -51,13 +51,13 @@ struct _ewf_socket_tcp
     ewf_adapter_tcp_disconnect_callback disconnect_callback;
 };
 
-#define EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr)                            \
+#define EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr)                                 \
 do {                                                                                \
     if ((socket_ptr == NULL) ||                                                     \
         (socket_ptr->adapter_ptr == NULL))                                          \
     {                                                                               \
-        EWF_LOG_ERROR("The TCP socket pointer is invalid.");                   \
-        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                           \
+        EWF_LOG_ERROR("The TCP socket pointer is invalid.");                        \
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                                \
     }                                                                               \
 } while(0)
 
@@ -160,8 +160,6 @@ ewf_result ewf_adapter_tcp_connect(ewf_socket_tcp* socket_ptr, const char* serve
 /**
  * @brief Shutdown a TCP socket
  * @param[in] socket_ptr A pointer to a TCP socket
- * @param[in] server the address or name of the server to connect to
- * @param[in] port the port number to connect to
  * @return #ewf_result success and error conditions
  */
 ewf_result ewf_adapter_tcp_shutdown(ewf_socket_tcp* socket_ptr);

@@ -34,8 +34,6 @@ ewf_result ewf_adapter_quectel_common_info(ewf_adapter* adapter_ptr)
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
     ewf_result result;
-    uint8_t * response_ptr;
-    uint32_t response_length;
 
     EWF_LOG("[ADAPTER INFORMATION START]\n");
 
@@ -140,8 +138,7 @@ ewf_result ewf_adapter_quectel_common_info(ewf_adapter* adapter_ptr)
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QMTCFG=?\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 1 * EWF_PLATFORM_TICKS_PER_SECOND)))
-    ewf_interface_release(interface_ptr, response_ptr);
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     EWF_LOG("[ADAPTER INFORMATION END]\n");
 

@@ -1,131 +1,137 @@
+/************************************************************************//**
+ * @file
+ * @version Preview
+ * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * @brief The Embedded Wireless Framework WinSock2 adapter driver test
+ ****************************************************************************/
+
+#include "ewf_adapter_winsock2.h" // Include first to force correct inclussion order for winsock2.h
+#include "ewf_adapter_test.h"
+#include "ewf_adapter_test.c"
 #include "ewf_lib.h"
 
+ewf_result ewf_adapter_winsock2_test(ewf_adapter* adapter_ptr);
 
-ewf_result ewf_adapter_test_ping();
-ewf_result ewf_adapter_test_dns();
-ewf_result ewf_adapter_test_ntp();
-ewf_result ewf_adapter_test_http();
-ewf_result ewf_adapter_test_ufs();
-ewf_result ewf_adapter_test_tcp();
-ewf_result ewf_adapter_test_udp();
+ewf_result ewf_adapter_winsock2_test_ping(ewf_adapter* adapter_ptr);
+ewf_result ewf_adapter_winsock2_test_dns(ewf_adapter* adapter_ptr);
+ewf_result ewf_adapter_winsock2_test_ntp(ewf_adapter* adapter_ptr);
+ewf_result ewf_adapter_winsock2_test_http(ewf_adapter* adapter_ptr);
+ewf_result ewf_adapter_winsock2_test_tcp(ewf_adapter* adapter_ptr);
+ewf_result ewf_adapter_winsock2_test_udp(ewf_adapter* adapter_ptr);
 
-
-ewf_result ewf_adapter_test()
+/**
+ * @brief Run all adapter tests
+ */
+ewf_result ewf_adapter_winsock2_test(ewf_adapter* adapter_ptr)
 {
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+
     ewf_result result;
 
     // Adapter tests - ping
-    result = ewf_adapter_test_ping();
+    result = ewf_adapter_winsock2_test_ping(adapter_ptr);
     if (ewf_result_failed(result))
     {
-        EWF_LOG_ERROR("Failed to run the adapter ping test: az_result return code 0x%08x.", result);
+        EWF_LOG_ERROR("Failed to run the adapter ping test: ewf_result %d.\n", result);
     }
 
     // Adapter tests - DNS
-    result = ewf_adapter_test_dns();
+    result = ewf_adapter_winsock2_test_dns(adapter_ptr);
     if (ewf_result_failed(result))
     {
-        EWF_LOG_ERROR("Failed to run the adapter DNS test: az_result return code 0x%08x.", result);
+        EWF_LOG_ERROR("Failed to run the adapter DNS test: ewf_result %d.\n", result);
     }
 
     // Adapter tests - NTP
-    result = ewf_adapter_test_ntp();
+    result = ewf_adapter_winsock2_test_ntp(adapter_ptr);
     if (ewf_result_failed(result))
     {
-        EWF_LOG_ERROR("Failed to run the adapter NTP test: az_result return code 0x%08x.", result);
+        EWF_LOG_ERROR("Failed to run the adapter NTP test: ewf_result %d.\n", result);
     }
 
     // Adapter tests - HTTP
-    result = ewf_adapter_test_http();
+    result = ewf_adapter_winsock2_test_http(adapter_ptr);
     if (ewf_result_failed(result))
     {
-        EWF_LOG_ERROR("Failed to run the adapter HTTP test: az_result return code 0x%08x.", result);
+        EWF_LOG_ERROR("Failed to run the adapter HTTP test: ewf_result %d.\n", result);
     }
 
     // Adapter tests - TCP
-    result = ewf_adapter_test_tcp();
+    result = ewf_adapter_winsock2_test_tcp(adapter_ptr);
     if (ewf_result_failed(result))
     {
-        EWF_LOG_ERROR("Failed to run the adapter TCP test: az_result return code 0x%08x.", result);
+        EWF_LOG_ERROR("Failed to run the adapter TCP test: ewf_result %d.\n", result);
     }
 
     // Adapter tests - UDP
-    result = ewf_adapter_test_udp();
+    result = ewf_adapter_winsock2_test_udp(adapter_ptr);
     if (ewf_result_failed(result))
     {
-        EWF_LOG_ERROR("Failed to run the adapter TCP test: az_result return code 0x%08x.", result);
+        EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
+    }
+
+    // Adapter tests - TCP
+    result = ewf_adapter_test_api_tcp(adapter_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to run the adapter TCP test: ewf_result %d.\n", result);
+    }
+
+    // Adapter tests - UDP
+    result = ewf_adapter_test_api_udp(adapter_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
     }
 
     return EWF_RESULT_OK;
 }
 
-
-ewf_result ewf_adapter_test_dns()
+/**
+ * @brief The WinSock2 adapter ping test
+ */
+ewf_result ewf_adapter_winsock2_test_ping(ewf_adapter* adapter_ptr)
 {
-  return EWF_RESULT_OK;
-}
-
-
-ewf_result ewf_adapter_test_ping()
-{
-  return EWF_RESULT_OK;
-}
-
-
-ewf_result ewf_adapter_test_ntp()
-{
-  return EWF_RESULT_OK;
-}
-
-
-ewf_result ewf_adapter_test_http()
-{
-  return EWF_RESULT_OK;
-}
-
-
-ewf_result ewf_adapter_test_ufs()
-{
-  return EWF_RESULT_OK;
-}
-
-
-ewf_result ewf_adapter_test_tcp()
-{
-    const char http_server[] = "www.microsoft.com";
-    unsigned http_host_port = 80;
-    const char http_message[] = "GET / HTTP/1.1\r\nHost:www.microsoft.com\r\n\r\n";
-    unsigned http_message_length = sizeof(http_message) - 1;
-    static char buffer[2048];
-    unsigned buffer_length = sizeof(buffer);
-
-    ewf_result result;
-    int socket = -1;
-
-    EWF_LOG("WinSock2 adapter TCP test starting...\n");
-
-    EWF_LOG("Connecting to server %s...\n", http_server);
-    if (ewf_result_failed(result = ewf_adapter_tcp_connect(&socket, http_server, http_host_port))) return result;
-    EWF_LOG("Connected\n");
-
-    EWF_LOG("Sending message %s\n", http_message);
-    if (ewf_result_failed(result = ewf_adapter_tcp_send(socket, http_message, http_message_length))) return result;
-    EWF_LOG("Message sent\n");
-
-    EWF_LOG("Receving message...\n");
-    if (ewf_result_failed(result = ewf_adapter_tcp_receive(socket, buffer, &buffer_length, true))) return result;
-    EWF_LOG("Message received: %.*s\n", buffer_length, buffer);
-
-    EWF_LOG("Closing socket...\n");
-    if (ewf_result_failed(result = ewf_adapter_tcp_close(socket))) return result;
-    EWF_LOG("Socked closed.\n");
-
-    EWF_LOG("WinSock2 adapter TCP test finished successfully.\n");
-
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_test_udp()
+/**
+ * @brief The WinSock2 adapter ping test
+ */
+ewf_result ewf_adapter_winsock2_test_dns(ewf_adapter* adapter_ptr)
 {
-  return EWF_RESULT_OK;
+    return EWF_RESULT_OK;
+}
+
+/**
+ * @brief The WinSock2 adapter NTP test
+ */
+ewf_result ewf_adapter_winsock2_test_ntp(ewf_adapter* adapter_ptr)
+{
+    return EWF_RESULT_OK;
+}
+
+/**
+ * @brief The WinSock2 adapter HTTP test
+ */
+ewf_result ewf_adapter_winsock2_test_http(ewf_adapter* adapter_ptr)
+{
+    return EWF_RESULT_OK;
+}
+
+/**
+ * @brief The WinSock2 adapter TCP test
+ */
+ewf_result ewf_adapter_winsock2_test_tcp(ewf_adapter* adapter_ptr)
+{
+    return EWF_RESULT_OK;
+}
+
+/**
+ * @brief The WinSock2 adapter UDP test
+ */
+ewf_result ewf_adapter_winsock2_test_udp(ewf_adapter* adapter_ptr)
+{
+    return EWF_RESULT_OK;
 }

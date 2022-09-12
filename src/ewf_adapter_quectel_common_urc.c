@@ -24,19 +24,19 @@ ewf_result ewf_adapter_quectel_common_urc_callback(ewf_interface* interface_ptr,
     ewf_result result;
 
     /* Ignore empty URCs */
-    if (_str_equals_str((char*)buffer_ptr, "\r\n"))
+    if (ewfl_str_equals_str((char*)buffer_ptr, "\r\n"))
     {
         return EWF_RESULT_OK;
     }
 
     /* Modem ready */
-    if (_str_starts_with((char*)buffer_ptr, "APP RDY"))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "APP RDY"))
     {
         return EWF_RESULT_OK;
     }
 
     /* PDP context */
-    if (_str_starts_with((char *)buffer_ptr, "+QIURC: \"pdpdeact\","))
+    if (ewfl_str_starts_with((char *)buffer_ptr, "+QIURC: \"pdpdeact\","))
     {
         return EWF_RESULT_OK;
     }

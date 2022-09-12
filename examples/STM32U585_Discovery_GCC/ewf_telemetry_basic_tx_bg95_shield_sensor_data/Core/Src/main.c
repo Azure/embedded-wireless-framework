@@ -54,10 +54,9 @@
 #include "ewf_adapter_api_modem_packet_domain.c"
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
-#include "ewf_adapter_quectel_bg96.c"
-
+#include "ewf_adapter_quectel_bg95.c"
+#include "examples/ewf_example_telemetry_basic.c"
 #include "ewf_example.config.h"
-#include "ewf_example_telemetry_basic.c"
 
 /* USER CODE END Includes */
 
@@ -122,17 +121,15 @@ void telemetry_thread_entry(ULONG param)
 {
     ewf_result result;
 
-    uint32_t context_id = 1;
-
     ewf_allocator* message_allocator_ptr = NULL;
-    ewf_allocator* data_allocator_ptr = NULL;
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(data_allocator_ptr, data_allocator, 4, 1500);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_STM32_UART_STATIC_DECLARE(interface_ptr, stm32_uart_port, &huart3);
-    EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, data_allocator_ptr, interface_ptr);
+    EWF_ADAPTER_QUECTEL_BG95_STATIC_DECLARE(adapter_ptr, quectel_bg95, message_allocator_ptr, NULL, interface_ptr);
 
     /* Initialize the I2C */
     BSP_I2C2_Init();
@@ -165,7 +162,7 @@ void telemetry_thread_entry(ULONG param)
     }
 
     // Activated the PDP context
-    if (ewf_result_failed(result = ewf_adapter_quectel_common_context_activate(adapter_ptr, context_id)))
+    if (ewf_result_failed(result = ewf_adapter_quectel_bg95_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG("Failed to activate the PDP context: ewf_result %d.\n", result);
         // continue despite the error

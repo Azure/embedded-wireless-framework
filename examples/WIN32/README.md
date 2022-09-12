@@ -1,4 +1,38 @@
-# Azure RTOS samples on x86 using CMake
+# The Embedded Wireless Framework (EWF) examples on x86/WIN32 (Windows) using CMake and/or Visual Studio
+
+*There are examples for Azure RTOS also in this directory. Go to the next section for more details.*
+
+## Overview
+
+This directory contains a set of examples for the [Embedded Wireless Framework](https://github.com/Azure/embedded-wireless-framework) on x86/WIN32 (Windows) using CMake and/or Visual Studio.
+
+## Prerequisites
+
+- A PC running Microsoft Windows (Windows 10 recommended)
+- For some examples (telemetry to Azure IoT Hub) you will need an Azure subscription. If you don't have an Azure subscription, [create one for free](https://azure.microsoft.com/free/) before you begin.
+- Internet connectivity for your PC.
+
+## Prepare the development environment
+
+- Toolchain: [Visual Studio](https://visualstudio.com) and cmake. You can use any edition of Visual Studio, version 2019 or newer.
+- For examples that send telemetry to Azure IoT Hub: [Azure IoT Explorer](https://github.com/Azure/azure-iot-explorer/releases): Cross-platform utility to monitor and manage Azure IoT resources
+
+### Build application on Windows with CMake (command line)
+
+1. Open a terminal in current folder. Generate build files by command,
+```
+cmake -Bbuild -A WIN32 .
+```
+2. Build project in parallel,
+```
+cmake --build build -j 8
+```
+
+### Build application on Windows with Visual Studio
+
+Open this directory with Visual Studio and you are ready to go!
+
+# Azure RTOS samples on x86 using CMake (also included in this package)
 
 ## Overview
 

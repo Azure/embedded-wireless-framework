@@ -35,14 +35,14 @@ ewf_result ewf_interface_init(ewf_interface* interface_ptr)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     ewf_result result = ewf_platform_mutex_create(&interface_ptr->global_mutex);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to create the host interface access mutex, ewf_result %d.\n", result);
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     /* Initialize the current message */
     interface_ptr->current_message.buffer_ptr = NULL;
@@ -66,14 +66,14 @@ ewf_result ewf_interface_clean(ewf_interface* interface_ptr)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     ewf_result result = ewf_platform_mutex_destroy(&interface_ptr->global_mutex);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to destory the host interface access mutex, ewf_result %d.\n", result);
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     /* All ok! */
     return EWF_RESULT_OK;
@@ -140,20 +140,6 @@ ewf_result ewf_interface_start(ewf_interface* interface_ptr)
         }
     }
 
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
-    if (ewf_result_failed(ewf_platform_thread_create(interface_ptr->receive_thread_ptr)))
-    {
-        EWF_LOG_ERROR("Error creating the interface receive thread.\n");
-        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
-    }
-
-    if (ewf_result_failed(ewf_platform_thread_start(interface_ptr->receive_thread_ptr)))
-    {
-        EWF_LOG_ERROR("Error starting the interface receive thread.\n");
-        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
-    }
-#endif /* EWF_PLATFORM_SUPPORTS_THREADING */
-
     /* All ok! */
     return EWF_RESULT_OK;
 }
@@ -163,19 +149,6 @@ ewf_result ewf_interface_stop(ewf_interface* interface_ptr)
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
     ewf_result result;
-
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
-
-    if (interface_ptr->receive_thread_ptr)
-    {
-        result = ewf_platform_thread_destroy(interface_ptr->receive_thread_ptr);
-        if (ewf_result_failed(result))
-        {
-            EWF_LOG_ERROR("Failed to destroy the interface receive thread.\n");
-        }
-    }
-
-#endif /* EWF_PLATFORM_SUPPORTS_THREADING */
 
     /* Stop the hardware interface */
     if (interface_ptr->hardware_stop)
@@ -215,21 +188,21 @@ ewf_result ewf_interface_send(ewf_interface* interface_ptr, const uint8_t * cons
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    ewf_result result;
+    ewf_result result = EWF_RESULT_OK;
 
     /* Expect a valid buffer */
     if (!buffer) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     if (length  < 1) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     /* Log the buffer */
-    EWF_LOG("[SEND][%4lu][%s]\n", length, _escape_str_to_str_buffer((char *) buffer, length));
+    EWF_LOG("[SEND][%4lu][%s]\n", length, ewfl_escape_str_to_str_buffer((char *) buffer, length));
 
     /* Enter command mode */
     interface_ptr->command_mode = true;
@@ -243,20 +216,21 @@ ewf_result ewf_interface_send(ewf_interface* interface_ptr, const uint8_t * cons
         result = interface_ptr->hardware_send(interface_ptr, buffer, length);
         if (ewf_result_failed(result))
         {
-            return EWF_RESULT_ADAPTER_TRANSMIT_FAILED;
+        	EWF_LOG_ERROR("The interface hardware send failed, ewf_result %d.\n", result);
+        	/* Override the hardware specific error */
+            result = EWF_RESULT_ADAPTER_TRANSMIT_FAILED;
         }
     }
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
-    /* All ok! */
-    return EWF_RESULT_OK;
+    return result;
 }
 
 static ewf_result _ewf_interface_receive_from_queue(ewf_interface* interface_ptr, ewf_platform_queue* queue_ptr, uint8_t** buffer_ptr_ptr, uint32_t* buffer_length_ptr, uint32_t wait_time)
@@ -283,11 +257,9 @@ static ewf_result _ewf_interface_receive_from_queue(ewf_interface* interface_ptr
     uint32_t timeout = wait_time;
     do
     {
-#ifndef EWF_PLATFORM_SUPPORTS_THREADING
-        ewf_interface_receive_poll(interface_ptr);
-#endif
         message_size = sizeof(message);
         if ((result = ewf_platform_queue_dequeue(queue_ptr, &message, &message_size, false)) != EWF_RESULT_EMPTY_QUEUE) break;
+        ewf_interface_receive_poll(interface_ptr);
         ewf_platform_sleep(1);
     }
     while (timeout-- > 0);
@@ -371,24 +343,24 @@ ewf_result ewf_interface_tokenizer_command_response_end_pattern_set(ewf_interfac
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     ewf_result result;
     if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     interface_ptr->command_response_end_tokenizer_pattern_ptr = tokenizer_patter_ptr;
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     return EWF_RESULT_OK;
 }
@@ -405,24 +377,24 @@ ewf_result ewf_interface_tokenizer_command_response_pattern_set(ewf_interface* i
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     ewf_result result;
     if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     interface_ptr->command_response_tokenizer_pattern_ptr = tokenizer_patter_ptr;
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     return EWF_RESULT_OK;
 }
@@ -439,24 +411,24 @@ ewf_result ewf_interface_tokenizer_urc_pattern_set(ewf_interface* interface_ptr,
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     ewf_result result;
     if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     interface_ptr->urc_tokenizer_pattern_ptr = tokenizer_patter_ptr;
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     return EWF_RESULT_OK;
 }
@@ -495,7 +467,7 @@ static ewf_result _ewf_interface_queue_current_message(ewf_interface* interface_
         EWF_LOG("[%s][%4lu][%s]\n",
             interface_ptr->command_mode ? ("RECV") : ("URC^"),
             interface_ptr->current_message.buffer_length,
-            _escape_str_to_str_buffer(
+            ewfl_escape_str_to_str_buffer(
                 (char*)interface_ptr->current_message.buffer_ptr,
                 interface_ptr->current_message.buffer_length));
 
@@ -588,7 +560,7 @@ ewf_result ewf_interface_urc_process_message(ewf_interface* interface_ptr, uint8
 {
     ewf_result result;
 
-    EWF_LOG("[URCv][%4lu][%s]\n", buffer_length, _escape_str_to_str_buffer((char*)buffer_ptr, buffer_length));
+    EWF_LOG("[URCv][%4lu][%s]\n", buffer_length, ewfl_escape_str_to_str_buffer((char*)buffer_ptr, buffer_length));
 
     if (interface_ptr->urc_callback)
     {
@@ -633,7 +605,7 @@ static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface*
     {
         if (pattern_ptr->has_wildcards)
         {
-            if (_buffer_ends_with_wildcard_string(
+            if (ewfl_buffer_ends_with_wildcard_string(
                 (const char *)interface_ptr->current_message.buffer_ptr,
                 interface_ptr->current_message.buffer_length,
                 pattern_ptr->pattern_str,
@@ -645,7 +617,7 @@ static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface*
         }
         else
         {
-            if (_buffer_ends_with(
+            if (ewfl_buffer_ends_with(
                 (const char *)interface_ptr->current_message.buffer_ptr,
                 interface_ptr->current_message.buffer_length,
                 pattern_ptr->pattern_str,
@@ -666,12 +638,12 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
 
     ewf_result result;
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     /* Too verbose normally, but helpful when debugging the interface */
 #ifdef EWF_LOG_VERBOSE
@@ -791,60 +763,27 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
         }
     }
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
     {
         EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
     }
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     return EWF_RESULT_OK;
 }
 
 /************************************************************************//**
  *
- * Receive thread
+ * Polling
  *
  ****************************************************************************/
 
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
 
-ewf_result ewf_interface_receive_thread(void* data_ptr)
+ewf_result ewf_interface_poll(ewf_interface* interface_ptr)
 {
-    if (data_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    ewf_interface* interface_ptr = (ewf_interface*)data_ptr;
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-    ewf_result result = EWF_RESULT_OK;
-
-    while (1)
-    {
-#ifdef EWF_LOG_VERBOSE
-        EWF_LOG("[RECEIVE THREAD]\n");
-#endif
-
-        uint8_t buffer[1];
-        uint32_t buffer_length = 1;
-
-        result = interface_ptr->hardware_receive(interface_ptr, buffer, &buffer_length, true);
-        if (ewf_result_failed(result))
-        {
-            EWF_LOG_ERROR("Failed to receive data from the hardware, ewf_result %d.\n", result);
-            continue;
-        }
-
-        /* Process the received byte */
-        result = ewf_interface_process_byte(interface_ptr, buffer[0]);
-        if (ewf_result_failed(result))
-        {
-            EWF_LOG_ERROR("Failed to process a byte, byte [%02d], ewf_result %d.\n", buffer[0], result);
-        }
-    }
-
-    return result;
+	return ewf_interface_receive_poll(interface_ptr);
 }
-
-#else
 
 ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr)
 {
@@ -858,7 +797,7 @@ ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr)
         uint32_t buffer_length = sizeof(buffer);
 
         result = interface_ptr->hardware_receive(interface_ptr, buffer, &buffer_length, false);
-        if (result == EWF_RESULT_EMPTY_QUEUE)
+        if (result == EWF_RESULT_EMPTY_QUEUE || result == EWF_RESULT_NO_DATA_AVAILABLE)
         {
             return result;
         }
@@ -879,9 +818,6 @@ ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr)
 
     return result;
 }
-
-#endif /* EWF_PLATFORM_SUPPORTS_THREADING */
-
 
 /************************************************************************//**
  *
@@ -927,7 +863,7 @@ ewf_result ewf_interface_send_command(ewf_interface* interface_ptr, const char *
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
     uint32_t length;
-    length = _str_length((char *) command_str);
+    length = ewfl_str_length((char *) command_str);
     return ewf_interface_send(interface_ptr, (const uint8_t* ) command_str, length);
 }
 
@@ -942,7 +878,7 @@ ewf_result ewf_interface_send_commands(ewf_interface* interface_ptr, const char 
     do
     {
         uint32_t length;
-        length = _str_length((char *) command_str);
+        length = ewfl_str_length((char *) command_str);
         result = ewf_interface_send(interface_ptr, (const uint8_t* ) command_str, length);
         if (ewf_result_failed(result))
             break;
@@ -1044,9 +980,9 @@ ewf_result ewf_interface_verify_response(ewf_interface* interface_ptr, const cha
     }
     else
     {
-        if (!_str_equals_str((char *) response, (char *) expected_str))
+        if (!ewfl_str_equals_str((char *) response, (char *) expected_str))
         {
-            EWF_LOG_ERROR("Unexpected response: [%s]\n", _escape_str_to_str_buffer((char*)response, response_legth));
+            EWF_LOG_ERROR("Unexpected response: [%s]\n", ewfl_escape_str_to_str_buffer((char*)response, response_legth));
             ewf_interface_release(interface_ptr, response);
             return EWF_RESULT_NOT_SUPPORTED;
         }
@@ -1084,7 +1020,7 @@ ewf_result ewf_interface_verify_responses(ewf_interface* interface_ptr, uint32_t
     {
         for(i=0; i<response_count; i++)
         {
-            if(_str_equals_str((char *) response, (char *) expected_str_arr[i]))
+            if(ewfl_str_equals_str((char *) response, (char *) expected_str_arr[i]))
             {
                 /* got the expected result, release the buffer */
                 ewf_interface_release(interface_ptr, response);
@@ -1118,7 +1054,7 @@ ewf_result ewf_interface_verify_response_starts_with(ewf_interface* interface_pt
     }
     else
     {
-        if (!_str_starts_with((char *) response, (char *) expected_start))
+        if (!ewfl_str_starts_with((char *) response, (char *) expected_start))
         {
             EWF_LOG_ERROR("Unexpected response: %s\n", response);
             ewf_interface_release(interface_ptr, response);

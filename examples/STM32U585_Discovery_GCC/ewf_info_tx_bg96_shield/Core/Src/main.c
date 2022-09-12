@@ -101,6 +101,10 @@ static void MX_USART3_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+/**
+ *  @brief The thread entry point
+ */
 void thread_sample_entry(ULONG thread_input)
 {
     ewf_result result;
@@ -109,35 +113,37 @@ void thread_sample_entry(ULONG thread_input)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_STM32_UART_STATIC_DECLARE(interface_ptr, stm32_uart_port, &huart3);
     EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 
     /* Start the adapter.  */
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to start the adapter: ewf_result %d.\n", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
+        return;
     }
 
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN: ewf_result %d.\n", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
+        return;
     }
 
     // Set the ME functionality
     if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
     {
-        EWF_LOG_ERROR("Failed to the ME functionality: ewf_result %d.\n", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
+        return;
     }
 
     /* Run the adapter tests.  */
     if (ewf_result_failed(result = ewf_adapter_info(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to run the adapter test: ewf_result %d.\n", result);
+        EWF_LOG_ERROR("Failed to run the adapter test, ewf_result %d.\n", result);
         exit(result);
     }
 

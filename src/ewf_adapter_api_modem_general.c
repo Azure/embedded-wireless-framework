@@ -27,10 +27,10 @@ ewf_result ewf_adapter_modem_manufacturer_read(ewf_adapter* adapter_ptr, char * 
     if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_ptr))) return result;
 
     /* TODO, review */
-    _str_n_cpy(info_str, (char*)response_ptr, _str_length((char*)response_ptr));
+    ewfl_str_n_cpy(info_str, (char*)response_ptr, ewfl_str_length((char*)response_ptr));
     ewf_interface_release(interface_ptr, response_ptr);
-    info_str = adapter_response_str_extract(info_str);
-    *info_str_len_ptr = (uint16_t)_str_length(info_str);
+    info_str = ewfl_adapter_response_str_extract(info_str);
+    *info_str_len_ptr = (uint16_t)ewfl_str_length(info_str);
 
     return EWF_RESULT_OK;
 }
@@ -54,10 +54,10 @@ ewf_result ewf_adapter_modem_model_read(ewf_adapter* adapter_ptr, char * info_st
     if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_ptr))) return result;
 
     /* TODO, review */
-    _str_n_cpy(info_str, (char*)response_ptr, _str_length((char*)response_ptr));
+    ewfl_str_n_cpy(info_str, (char*)response_ptr, ewfl_str_length((char*)response_ptr));
     ewf_interface_release(interface_ptr, response_ptr);
-    info_str = adapter_response_str_extract(info_str);
-    *info_str_len_ptr = (uint16_t)_str_length(info_str);
+    info_str = ewfl_adapter_response_str_extract(info_str);
+    *info_str_len_ptr = (uint16_t)ewfl_str_length(info_str);
 
     return EWF_RESULT_OK;
 }
@@ -81,10 +81,10 @@ ewf_result ewf_adapter_modem_revision_read(ewf_adapter* adapter_ptr, char * info
     if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_ptr))) return result;
 
     /* TODO, review */
-    _str_n_cpy(info_str, (char*)response_ptr, _str_length((char*)response_ptr));
+    ewfl_str_n_cpy(info_str, (char*)response_ptr, ewfl_str_length((char*)response_ptr));
     ewf_interface_release(interface_ptr, response_ptr);
-    info_str = adapter_response_str_extract(info_str);
-    *info_str_len_ptr = (uint16_t)_str_length(info_str);
+    info_str = ewfl_adapter_response_str_extract(info_str);
+    *info_str_len_ptr = (uint16_t)ewfl_str_length(info_str);
 
     return EWF_RESULT_OK;
 }
@@ -116,10 +116,10 @@ ewf_result ewf_adapter_modem_serial_number_read(ewf_adapter* adapter_ptr,  const
     if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_ptr))) return result;
 
     /* TODO, review */
-    _str_n_cpy(info_str, (char*)response_ptr, _str_length((char*)response_ptr));
+    ewfl_str_n_cpy(info_str, (char*)response_ptr, ewfl_str_length((char*)response_ptr));
     ewf_interface_release(interface_ptr, response_ptr);
-    info_str = adapter_response_str_extract(info_str);
-    *info_str_len_ptr = (uint16_t)_str_length(info_str);
+    info_str = ewfl_adapter_response_str_extract(info_str);
+    *info_str_len_ptr = (uint16_t)ewfl_str_length(info_str);
 
     return EWF_RESULT_OK;
 }
@@ -143,10 +143,10 @@ ewf_result ewf_adapter_modem_imsi_read(ewf_adapter* adapter_ptr, char * info_str
     if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_ptr))) return result;
 
     /* TODO, review */
-    _str_n_cpy(info_str, (char*)response_ptr, _str_length((char*)response_ptr));
+    ewfl_str_n_cpy(info_str, (char*)response_ptr, ewfl_str_length((char*)response_ptr));
     ewf_interface_release(interface_ptr, response_ptr);
-    info_str = adapter_response_str_extract(info_str);
-    *info_str_len_ptr = (uint16_t)_str_length(info_str);
+    info_str = ewfl_adapter_response_str_extract(info_str);
+    *info_str_len_ptr = (uint16_t)ewfl_str_length(info_str);
 
     return EWF_RESULT_OK;
 }

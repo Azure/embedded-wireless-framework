@@ -23,7 +23,7 @@ ewf_result ewf_adapter_sequans_autoconnect(ewf_adapter* adapter_ptr, uint32_t mo
 #endif
 
 	char mode_str[3];
-	const char* mode_cstr = _unsigned_to_str(mode, mode_str, sizeof(mode_str));
+	const char* mode_cstr = ewfl_unsigned_to_str(mode, mode_str, sizeof(mode_str));
 
 	if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNAUTOCONNECT=", mode_cstr,"\r", NULL))) return result;
 	if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
@@ -45,7 +45,7 @@ ewf_result ewf_adapter_sequans_autointernet(ewf_adapter* adapter_ptr, uint32_t m
 #endif
 
 	char mode_str[3];
-	const char* mode_cstr = _unsigned_to_str(mode, mode_str, sizeof(mode_str));
+	const char* mode_cstr = ewfl_unsigned_to_str(mode, mode_str, sizeof(mode_str));
 
 	if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNAUTOINTERNET=", mode_cstr,"\r", NULL))) return result;
 	if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
@@ -73,10 +73,10 @@ ewf_result ewf_adapter_sequans_context_mode_change(ewf_adapter* adapter_ptr, uin
 #endif
 
 	char mode_str[3];
-	const char* mode_cstr = _unsigned_to_str(mode, mode_str, sizeof(mode_str));
+	const char* mode_cstr = ewfl_unsigned_to_str(mode, mode_str, sizeof(mode_str));
 
 	char context_id_str[3];
-	const char* context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
+	const char* context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
 	const char * expected_response_arr[]= {"\r\nOK\r\n","\r\n+CME ERROR: 171\r\n"};
 
@@ -106,7 +106,7 @@ ewf_result ewf_adapter_sequans_configure_pdp_context(ewf_adapter* adapter_ptr, u
 	}
 
 	char context_id_str[3];
-	const char * context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
+	const char * context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
 	if (ewf_result_failed(result = ewf_interface_send_commands(
 			interface_ptr,

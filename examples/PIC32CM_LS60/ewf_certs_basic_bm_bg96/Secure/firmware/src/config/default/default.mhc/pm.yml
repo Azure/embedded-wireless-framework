@@ -1,0 +1,15 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: pm}
+children:
+- type: Symbols
+  children:
+  - type: KeyValueSet
+    attributes: {id: PM_PLCFG_PLSEL}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: pm, value: '1'}
+- type: ElementPosition
+  attributes: {x: '560', y: '20', id: pm}

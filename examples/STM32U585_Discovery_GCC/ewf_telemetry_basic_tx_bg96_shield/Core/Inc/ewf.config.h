@@ -1,21 +1,21 @@
 /************************************************************************//**
  * @file
  * @version Preview
- * SPDX-License-Identifier: MIT
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * SPDX-License-Identifier: MIT
  * @brief The Embedded Wireless Framework configuration.
  ****************************************************************************/
 
-#ifndef __ewf__config__h__included__
-#define __ewf__config__h__included__
+#ifndef __ewf_config__h__included__
+#define __ewf_config__h__included__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_configuration Azure SDNET configuration
- * @brief The definitions to configure the Azure SD-NET.
+ * @defgroup group_configuration EWF configuration
+ * @brief The definitions to configure the EWF.
  * @{
  ****************************************************************************/
 
@@ -42,4 +42,4 @@ extern "C" {
 }
 #endif
 
-#endif /* __ewf__config__h__included__ */
+#endif /* __ewf_config__h__included__ */

@@ -32,11 +32,6 @@ extern "C" {
  * @{
  */
 
-#ifndef EWF_INTERFACE_MICROCHIP_SAM_UART_CONFIG_RX_THREAD_STACK_SIZE
-/** This is the stack size for the reception thread, the default is conservative, you can reduce this in your application */
-#define EWF_INTERFACE_MICROCHIP_SAM_UART_CONFIG_RX_THREAD_STACK_SIZE    (1024 * 2)
-#endif
-
 #ifndef EWF_INTERFACE_MICROCHIP_SAM_UART_CONFIG_RESPONSE_QUEUE_SIZE
 #define EWF_INTERFACE_MICROCHIP_SAM_UART_CONFIG_RESPONSE_QUEUE_SIZE     (8)
 #endif
@@ -50,12 +45,7 @@ extern "C" {
  */
 typedef struct _ewf_interface_microchip_sam_uart
 {
-    ewf_platform_thread* thread_ptr;
-
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
-    ewf_platform_mutex mutex;
-    ewf_platform_thread* receive_thread_ptr;
-#endif
+    uint8_t rx_buffer[sizeof(uint8_t)];
 } ewf_interface_microchip_sam_uart;
 
 
@@ -101,13 +91,6 @@ do {                                                                            
 do {                                                                                                                                                                \
 static ewf_interface_microchip_sam_uart ewf_interface_microchip_sam_uart__implementation__##interface_name_symb = {0};                                              \
 static ewf_interface ewf_interface_microchip_sam_uart__interface__##interface_name_symb = {0};                                                                      \
-EWF_PLATFORM_THREAD_STATIC_DECLARE(                                                                                                                                 \
-    ewf_interface_microchip_sam_uart__interface__##interface_name_symb.receive_thread_ptr,                                                                          \
-    ewf_interface_microchip_sam_uart__receive_thread__##interface_name_symb,                                                                                        \
-    ewf_interface_receive_thread,                                                                                                                                   \
-    &(ewf_interface_microchip_sam_uart__interface__##interface_name_symb),                                                                                          \
-    EWF_INTERFACE_MICROCHIP_SAM_UART_CONFIG_RX_THREAD_STACK_SIZE,                                                                                                                                                     \
-    EWF_PLATFORM_THREAD_PRIORITY_HIGH);                                                                                                                             \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                                  \
     ewf_interface_microchip_sam_uart__interface__##interface_name_symb.response_queue_ptr,                                                                          \
     ewf_interface_microchip_sam_uart__response_queue__##interface_name_symb,                                                                                        \

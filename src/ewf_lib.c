@@ -13,13 +13,19 @@
 #include "ewf_lib.h"
 
 #ifdef EWF_DEBUG
-char const * _escape_str_to_str_buffer(const char * str, unsigned len)
+
+/** This can be configured to match the application requirements  */
+#ifndef EWF_ESCAPE_STR_BUFFER_SIZE
+#define EWF_ESCAPE_STR_BUFFER_SIZE (2048)
+#endif
+
+char const * ewfl_escape_str_to_str_buffer(const char * str, uint32_t len)
 {
     static char buffer[EWF_ESCAPE_STR_BUFFER_SIZE];
     char * guard = buffer + sizeof(buffer) - 5; /* one character may be escaped to four by using \xhh */
     char * out = buffer;
     const char * in = str;
-    for ( ; *in && (out < guard) && ((len == 0) ? (true) : ((unsigned)(in - str) < len)); in++)
+    for ( ; *in && (out < guard) && ((len == 0) ? (true) : ((uint32_t)(in - str) < len)); in++)
     {
     switch(*in)
     {
@@ -70,17 +76,16 @@ char const * _escape_str_to_str_buffer(const char * str, unsigned len)
     *out = 0;
     return buffer;
 }
+
 #endif
 
-
-char const * _unsigned_to_str_buffer(unsigned u)
+char const * ewflewfl_unsigned_to_str_buffer(uint32_t u)
 {
-    static char str[(sizeof(unsigned) <= 4) ? 11 : 20];
-    return _unsigned_to_str(u, str, sizeof(str));
+    static char str[20];
+    return ewfl_unsigned_to_str(u, str, sizeof(str));
 }
 
-
-char * _unsigned_to_str(unsigned u, char * str, unsigned len)
+char * ewfl_unsigned_to_str(uint32_t u, char * str, uint32_t len)
 {
     if (!str) return NULL;
     if (len < 1) return NULL;
@@ -95,35 +100,31 @@ char * _unsigned_to_str(unsigned u, char * str, unsigned len)
     return rev;
 }
 
-
-unsigned _str_to_unsigned(const char * str)
+uint32_t ewfl_str_to_unsigned(const char * str)
 {
     if (!str) return 0;
-    unsigned u = 0;
+    uint32_t u = 0;
     for (const char * p = str; *p && isdigit((int)*p); p++)
         u = (u * 10) + (*p - '0');
     return u;
 }
 
-
-unsigned _str_length(const char * str)
+uint32_t ewfl_str_length(const char * str)
 {
-    unsigned len = 0;
+    uint32_t len = 0;
     if (!str) return 0;
     while (*str++) len++;
     return len;
 }
 
-
-bool _str_starts_with(const char * str, const char * prefix)
+bool ewfl_str_starts_with(const char * str, const char * prefix)
 {
     if (!str || !prefix) return false;
     while (*prefix) if (*prefix++ != *str++) return false;
     return true;
 }
 
-
-bool _buffer_ends_with(const char* buffer, unsigned buffer_length, const char* suffix, unsigned suffix_length)
+bool ewfl_buffer_ends_with(const char* buffer, uint32_t buffer_length, const char* suffix, uint32_t suffix_length)
 {
     if (!buffer) return false;
     if (!buffer_length) return false;
@@ -139,8 +140,7 @@ bool _buffer_ends_with(const char* buffer, unsigned buffer_length, const char* s
     return true;
 }
 
-
-bool _buffer_ends_with_wildcard_string(const char* buffer, unsigned buffer_length, const char* suffix, unsigned suffix_length)
+bool ewfl_buffer_ends_with_wildcard_string(const char* buffer, uint32_t buffer_length, const char* suffix, uint32_t suffix_length)
 {
     if (!buffer) return false;
     if (!buffer_length) return false;
@@ -162,17 +162,15 @@ bool _buffer_ends_with_wildcard_string(const char* buffer, unsigned buffer_lengt
     return true;
 }
 
-
-bool _str_equals_str(const char * str1, const char * str2)
+bool ewfl_str_equals_str(const char * str1, const char * str2)
 {
-    if (_str_length(str1)!= _str_length(str2)) return false;
+    if (ewfl_str_length(str1)!= ewfl_str_length(str2)) return false;
     if (!str1 || !str2) return false;
     for (; *str1 == *str2; str1++, str2++) if (!*str1 && !*str2) return true;
     return false;
 }
 
-
-bool _str_contains_str(const char * str, const char * substr)
+bool ewfl_str_contains_str(const char * str, const char * substr)
 {
     while(*str)
     {
@@ -194,20 +192,20 @@ bool _str_contains_str(const char * str, const char * substr)
     return false;
 }
 
-char * _str_n_cpy(char* dest, const char* src_str, uint32_t n)
+char * ewfl_str_n_cpy(char* dest, const char* src_str, uint32_t n)
 {
     *((char*)memcpy(dest, src_str, n) + n)  = '\0';
     return dest;
 }
 
-char * _str_remove_white_spaces(char* str)
+char * ewfl_str_remove_white_spaces(char* str)
 {
     while ((*str != '\0') && (isspace((int)*str)) != 0)
     {
         str++;
     }
 
-    char* str_end = str + _str_length(str) - 1;
+    char* str_end = str + ewfl_str_length(str) - 1;
     while (isspace((int)*str_end))
     {
         --str_end;
@@ -217,10 +215,10 @@ char * _str_remove_white_spaces(char* str)
     return str;
 }
 
-char * _str_remove_suffix_str(char* str, const char* suffix_str)
+char * ewfl_str_remove_suffix_str(char* str, const char* suffix_str)
 {
-    char* str_end = str + _str_length(str);
-    const char* suffix_str_end = suffix_str + _str_length(suffix_str);
+    char* str_end = str + ewfl_str_length(str);
+    const char* suffix_str_end = suffix_str + ewfl_str_length(suffix_str);
 
     while (*str_end == *suffix_str_end)
     {
@@ -232,11 +230,11 @@ char * _str_remove_suffix_str(char* str, const char* suffix_str)
     return str;
 }
 
-char * adapter_response_str_extract(char * str)
+char * ewfl_adapter_response_str_extract(char * str)
 {
-    char* response_str = _str_remove_suffix_str(str, "OK\r\n");
+    char* response_str = ewfl_str_remove_suffix_str(str, "OK\r\n");
 
-    response_str = _str_remove_white_spaces(response_str);
+    response_str = ewfl_str_remove_white_spaces(response_str);
 
     return response_str;
 }

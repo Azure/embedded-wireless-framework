@@ -3,8 +3,7 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @details
- * The Embedded Wireless Framework Quectel common internet(TCP+UDP) implementation
+ * @brief The Embedded Wireless Framework Quectel common internet(TCP+UDP) implementation
  ****************************************************************************/
 
 #include "ewf_adapter_quectel_common.h"
@@ -45,6 +44,7 @@ ewf_adapter_api_udp ewf_adapter_quectel_common_api_udp =
     ewf_adapter_quectel_common_udp_set_dtls_configuration,
 
     ewf_adapter_quectel_common_udp_bind,
+    ewf_adapter_quectel_common_udp_shutdown,
     ewf_adapter_quectel_common_udp_send_to,
     ewf_adapter_quectel_common_udp_receive_from,
 };
@@ -129,7 +129,7 @@ ewf_result ewf_adapter_quectel_common_internet_urc_callback(ewf_interface* inter
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_adapter_quectel_common* adapter_quectel_common_ptr = (ewf_adapter_quectel_common*)adapter_ptr->implementation_ptr;
 
-    if (_str_starts_with((char*)buffer_ptr, "+QIOPEN: "))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+QIOPEN: "))
     {
         int connectionID = EWF_ADAPTER_QUECTEL_COMMON_INTERNET_SOCKET_INVALID;
         int err = -1;
@@ -158,7 +158,7 @@ ewf_result ewf_adapter_quectel_common_internet_urc_callback(ewf_interface* inter
         }
     }
 
-    if (_str_starts_with((char*)buffer_ptr, "+QIURC: \"closed\","))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+QIURC: \"closed\","))
     {
         int connectionID = EWF_ADAPTER_QUECTEL_COMMON_INTERNET_SOCKET_INVALID;
         int items = sscanf((char*)buffer_ptr, "+QIURC: \"closed\",%u", &connectionID);
@@ -178,7 +178,7 @@ ewf_result ewf_adapter_quectel_common_internet_urc_callback(ewf_interface* inter
         }
     }
 
-    if (_str_starts_with((char*)buffer_ptr, "+QIURC: \"recv\","))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+QIURC: \"recv\","))
     {
         int connectionID = EWF_ADAPTER_QUECTEL_COMMON_INTERNET_SOCKET_INVALID;
         int items = sscanf((char*)buffer_ptr, "+QIURC: \"recv\",%u", &connectionID);
@@ -195,7 +195,7 @@ ewf_result ewf_adapter_quectel_common_internet_urc_callback(ewf_interface* inter
         }
     }
 
-    if (_str_starts_with((char*)buffer_ptr, "+QIURC: \"incoming\","))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+QIURC: \"incoming\","))
     {
         // TODO : incoming connection
         return EWF_RESULT_OK;
@@ -231,7 +231,7 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_open(ewf_adapter* adapter
     }
 
     char socket_str[3];
-    const char* socket_cstr = _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
+    const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
 
 #ifdef EWF_DEBUG
     /* Close outstanding connections just in case */
@@ -240,7 +240,7 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_open(ewf_adapter* adapter
 #endif
 
     char port_str[7];
-    const char* port_cstr = _unsigned_to_str(port, port_str, sizeof(port_str));
+    const char* port_cstr = ewfl_unsigned_to_str(port, port_str, sizeof(port_str));
 
     /* Open a connection */
     if (ewf_result_failed(result = ewf_interface_send_commands(
@@ -267,6 +267,7 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_open(ewf_adapter* adapter
             EWF_LOG("\nFailed to connect to the server: [%s]\n", server);
             return EWF_RESULT_CONNECTION_FAILED;
         }
+        ewf_interface_poll(interface_ptr);
         ewf_platform_sleep(1);
     }
     if (!timeout)
@@ -302,7 +303,10 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_close(ewf_adapter* adapte
     internet_socket_ptr->conn = false;
     internet_socket_ptr->conn_error = false;
 
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QICLOSE=", _unsigned_to_str_buffer(internet_socket_ptr->id), "\r", NULL))) return result;
+    char socket_str[3];
+    const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
+
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QICLOSE=", socket_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     return EWF_RESULT_OK;
@@ -317,9 +321,9 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_close(ewf_adapter* adapte
 ewf_result ewf_adapter_quectel_common_tcp_open(ewf_adapter* adapter_ptr, ewf_socket_tcp* socket_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-    
+
     ewf_adapter_quectel_common* adapter_quectel_common_ptr = (ewf_adapter_quectel_common*)adapter_ptr->implementation_ptr;
-    
+
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
@@ -357,11 +361,23 @@ ewf_result ewf_adapter_quectel_common_tcp_close(ewf_socket_tcp* socket_ptr)
 
 ewf_result ewf_adapter_quectel_common_tcp_control(ewf_socket_tcp* socket_ptr, const char* control_str, const uint8_t* buffer_ptr, uint32_t* buffer_length_ptr)
 {
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     return EWF_RESULT_OK;
 }
 
 ewf_result ewf_adapter_quectel_common_tcp_set_tls_configuration(ewf_socket_tcp* socket_ptr, uint32_t tls_configuration_id)
 {
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     return EWF_RESULT_OK;
 }
 
@@ -384,6 +400,12 @@ ewf_result ewf_adapter_quectel_common_tcp_listen(ewf_socket_tcp* socket_ptr)
 
 ewf_result ewf_adapter_quectel_common_tcp_accept(ewf_socket_tcp* socket_ptr, ewf_socket_tcp* socket_new_ptr)
 {
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     return EWF_RESULT_OK;
 }
 
@@ -398,6 +420,12 @@ ewf_result ewf_adapter_quectel_common_tcp_connect(ewf_socket_tcp* socket_ptr, co
 
 ewf_result ewf_adapter_quectel_common_tcp_shutdown(ewf_socket_tcp* socket_ptr)
 {
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     return EWF_RESULT_OK;
 }
 
@@ -454,8 +482,8 @@ ewf_result ewf_adapter_quectel_common_tcp_send(ewf_socket_tcp* socket_ptr, const
         if (ewf_result_failed(result = ewf_interface_send_commands(
             interface_ptr,
             "AT+QISEND=",
-            _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str)), ",",
-            _unsigned_to_str(buffer_length, len_str, sizeof(len_str)), "\r",
+            ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str)), ",",
+            ewfl_unsigned_to_str(buffer_length, len_str, sizeof(len_str)), "\r",
             NULL))) return result;
         if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern1_str))) return result;
 
@@ -522,17 +550,19 @@ ewf_result ewf_adapter_quectel_common_tcp_receive(ewf_socket_tcp* socket_ptr, ui
                 internet_socket_ptr->recv = false;
                 break;
             }
+            ewf_interface_poll(interface_ptr);
             ewf_platform_sleep(1);
         }
     }
     else
     {
+        ewf_interface_poll(interface_ptr);
         if (internet_socket_ptr->recv == false)
         {
             return EWF_RESULT_NO_DATA_RECEIVED;
         }
     }
-    
+
     uint32_t response_overhead = 32; /* Conservative estimate */
 
     /* Read at most the buffer size, take into account the message overhead */
@@ -540,10 +570,10 @@ ewf_result ewf_adapter_quectel_common_tcp_receive(ewf_socket_tcp* socket_ptr, ui
     read_length = (*buffer_length_ptr < read_length) ? *buffer_length_ptr : read_length;
 
     char socket_str[3];
-    char* socket_cstr = _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
-    
+    char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
+
     char read_length_str[5];
-    char* read_length_cstr = _unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
+    char* read_length_cstr = ewfl_unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(
         interface_ptr,
@@ -560,14 +590,14 @@ ewf_result ewf_adapter_quectel_common_tcp_receive(ewf_socket_tcp* socket_ptr, ui
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
-    if (_str_starts_with((char*)response_ptr, "\r\nERROR"))
+    if (ewfl_str_starts_with((char*)response_ptr, "\r\nERROR"))
     {
         ewf_interface_release(interface_ptr, response_ptr);
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
     const char data_read_response_str[] = "\r\n+QIRD: ";
-    if (!_str_starts_with((char*)response_ptr, data_read_response_str))
+    if (!ewfl_str_starts_with((char*)response_ptr, data_read_response_str))
     {
         ewf_interface_release(interface_ptr, response_ptr);
         return EWF_RESULT_UNEXPECTED_RESPONSE;
@@ -578,7 +608,7 @@ ewf_result ewf_adapter_quectel_common_tcp_receive(ewf_socket_tcp* socket_ptr, ui
         char* p;
         p = (char*)response_ptr;
         p += sizeof(data_read_response_str) - 1;
-        read_actual_length = _str_to_unsigned(p);
+        read_actual_length = ewfl_str_to_unsigned(p);
         if (read_actual_length == 0)
         {
             *buffer_length_ptr = 0;
@@ -660,11 +690,23 @@ ewf_result ewf_adapter_quectel_common_udp_close(ewf_socket_udp* socket_ptr)
 
 ewf_result ewf_adapter_quectel_common_udp_control(ewf_socket_udp* socket_ptr, const char* control_str, const uint8_t* buffer_ptr, uint32_t* buffer_length_ptr)
 {
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     return EWF_RESULT_OK;
 }
 
 ewf_result ewf_adapter_quectel_common_udp_set_dtls_configuration(ewf_socket_udp* socket_ptr, uint32_t dtls_configuration_id)
 {
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
     return EWF_RESULT_OK;
 }
 
@@ -675,6 +717,17 @@ ewf_result ewf_adapter_quectel_common_udp_bind(ewf_socket_udp* socket_ptr, uint3
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_adapter_quectel_common_internet_socket* internet_socket_ptr = (ewf_adapter_quectel_common_internet_socket*)socket_ptr->data_ptr;
     return _ewf_adapter_quectel_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "UDP SERVICE", "127.0.0.1", port);
+}
+
+ewf_result ewf_adapter_quectel_common_udp_shutdown(ewf_socket_udp* socket_ptr)
+{
+    EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    return EWF_RESULT_OK;
 }
 
 ewf_result ewf_adapter_quectel_common_udp_send_to(ewf_socket_udp* socket_ptr, const char* remote_address_str, uint32_t remote_port, const uint8_t* buffer_ptr, uint32_t buffer_length)
@@ -737,10 +790,10 @@ ewf_result ewf_adapter_quectel_common_udp_send_to(ewf_socket_udp* socket_ptr, co
         if (ewf_result_failed(result = ewf_interface_send_commands(
             interface_ptr,
             "AT+QISEND=",
-            _unsigned_to_str(internet_socket_ptr->id, socket_id_str, sizeof(socket_id_str)), ",",
-            _unsigned_to_str(buffer_length, buffer_length_str, sizeof(buffer_length_str)), ",",
+            ewfl_unsigned_to_str(internet_socket_ptr->id, socket_id_str, sizeof(socket_id_str)), ",",
+            ewfl_unsigned_to_str(buffer_length, buffer_length_str, sizeof(buffer_length_str)), ",",
             "\"", remote_address_str,"\",",
-            _unsigned_to_str(remote_port, remote_port_str, sizeof(remote_port_str)), ",",
+            ewfl_unsigned_to_str(remote_port, remote_port_str, sizeof(remote_port_str)), ",",
             "\r",
             NULL))) return result;
         if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern1_str))) return result;
@@ -808,11 +861,13 @@ ewf_result ewf_adapter_quectel_common_udp_receive_from(ewf_socket_udp* socket_pt
                 internet_socket_ptr->recv = false;
                 break;
             }
+            ewf_interface_poll(interface_ptr);
             ewf_platform_sleep(1);
         }
     }
     else
     {
+        ewf_interface_poll(interface_ptr);
         if (internet_socket_ptr->recv == false)
         {
             return EWF_RESULT_NO_DATA_RECEIVED;
@@ -826,8 +881,8 @@ ewf_result ewf_adapter_quectel_common_udp_receive_from(ewf_socket_udp* socket_pt
     if (ewf_result_failed(result = ewf_interface_send_commands(
         interface_ptr,
         "AT+QIRD=",
-        _unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str)), ",",
-        _unsigned_to_str(length, length_str, sizeof(length_str)), "\r",
+        ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str)), ",",
+        ewfl_unsigned_to_str(length, length_str, sizeof(length_str)), "\r",
         NULL)))
         return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 30))) return result;
@@ -838,14 +893,14 @@ ewf_result ewf_adapter_quectel_common_udp_receive_from(ewf_socket_udp* socket_pt
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
-    if (_str_starts_with((char*)response_ptr, "\r\nERROR"))
+    if (ewfl_str_starts_with((char*)response_ptr, "\r\nERROR"))
     {
         ewf_interface_release(interface_ptr, response_ptr);
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
     const char data_read_response_str[] = "\r\n+QIRD: ";
-    if (!_str_starts_with((char*)response_ptr, data_read_response_str))
+    if (!ewfl_str_starts_with((char*)response_ptr, data_read_response_str))
     {
         ewf_interface_release(interface_ptr, response_ptr);
         return EWF_RESULT_UNEXPECTED_RESPONSE;
@@ -856,7 +911,7 @@ ewf_result ewf_adapter_quectel_common_udp_receive_from(ewf_socket_udp* socket_pt
         char* p;
         p = (char*)response_ptr;
         p += sizeof(data_read_response_str) - 1;
-        read_actual_length = _str_to_unsigned(p);
+        read_actual_length = ewfl_str_to_unsigned(p);
         if (read_actual_length == 0)
         {
             *buffer_length_ptr = 0;

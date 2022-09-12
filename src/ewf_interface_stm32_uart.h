@@ -32,12 +32,7 @@ extern "C" {
  */
 
 #ifndef EWF_INTERFACE_STM32_UART_CONFIG_UART_RX_QUEUE_SIZE
-#define EWF_INTERFACE_STM32_UART_CONFIG_UART_RX_QUEUE_SIZE      (32)
-#endif
-
-#ifndef EWF_INTERFACE_STM32_UART_CONFIG_RX_THREAD_STACK_SIZE
-/** This is the stack size for the reception thread, the default is conservative, you can reduce this in your application */
-#define EWF_INTERFACE_STM32_UART_CONFIG_RX_THREAD_STACK_SIZE    (1024 * 2)
+#define EWF_INTERFACE_STM32_UART_CONFIG_UART_RX_QUEUE_SIZE      (256)
 #endif
 
 #ifndef EWF_INTERFACE_STM32_UART_CONFIG_RESPONSE_QUEUE_SIZE
@@ -93,21 +88,6 @@ do {                                                                            
 #define EWF_INTERFACE_STM32_UART_INITIALIZE_HEADER(interface_ptr)
 #endif /* EWF_PARAMETER_CHECKING */
 
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
-#define EWF_INTERFACE_STM32_UART_INITIALIZE_RX_THREAD(thread_ptr, thread_name_symb, interface_ptr)                                                  \
-do {                                                                                                                                                \
-EWF_PLATFORM_THREAD_STATIC_DECLARE(                                                                                                                 \
-    thread_ptr,                                                                                                                                     \
-    thread_name_symb,                                                                                                                               \
-    ewf_interface_receive_thread,                                                                                                                   \
-    interface_ptr,                                                                                                                                  \
-    EWF_INTERFACE_STM32_UART_CONFIG_RX_THREAD_STACK_SIZE,                                                                                           \
-    EWF_PLATFORM_THREAD_PRIORITY_HIGH);                                                                                                             \
-} while(0)
-#else
-#define EWF_INTERFACE_STM32_UART_INITIALIZE_RX_THREAD(thread_ptr, thread_name_symb, interface_ptr)
-#endif /* EWF_ADAPTER_QUECTEL_BG95_MQTT_BASIC_ENABLED */
-
 /**
  * @brief Declare a STM32 UART host interface
  * @param[in,out] interface_ptr a pointer to an interface that will be initialized to point to the one statically declared by the macro
@@ -123,10 +103,6 @@ EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                              
     ewf_interface_stm32_uart__uart_rx_queue__##interface_name_symb,                                                                                 \
     uint8_t,                                                                                                                                        \
     EWF_INTERFACE_STM32_UART_CONFIG_UART_RX_QUEUE_SIZE);                                                                                            \
-EWF_INTERFACE_STM32_UART_INITIALIZE_RX_THREAD(                                                                                                      \
-    ewf_interface_stm32_uart__interface__##interface_name_symb.receive_thread_ptr,                                                                  \
-    ewf_interface_stm32_uart__receive_thread__##interface_name_symb,                                                                                \
-    &(ewf_interface_stm32_uart__interface__##interface_name_symb));                                                                                 \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \
     ewf_interface_stm32_uart__interface__##interface_name_symb.response_queue_ptr,                                                                  \
     ewf_interface_stm32_uart__response_queue__##interface_name_symb,                                                                                \

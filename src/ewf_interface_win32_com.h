@@ -35,11 +35,6 @@ extern "C" {
 #define EWF_INTERFACE_WIN32_COM_CONFIG_RX_BUFFER_SIZE           (1)
 #endif
 
-#ifndef EWF_INTERFACE_WIN32_COM_CONFIG_RX_THREAD_STACK_SIZE
-/** This is the stack size for the reception thread, the default is conservative, you can reduce this in your application */
-#define EWF_INTERFACE_WIN32_COM_CONFIG_RX_THREAD_STACK_SIZE     (1024 * 2)
-#endif
-
 #ifndef EWF_INTERFACE_WIN32_COM_CONFIG_RESPONSE_QUEUE_SIZE
 #define EWF_INTERFACE_WIN32_COM_CONFIG_RESPONSE_QUEUE_SIZE      (8)
 #endif
@@ -119,13 +114,6 @@ ewf_interface_win32_com__implementation__##interface_name_symb.BaudRate = BaudRa
 ewf_interface_win32_com__implementation__##interface_name_symb.ByteSize = ByteSize_param;                                                           \
 ewf_interface_win32_com__implementation__##interface_name_symb.Parity = Parity_param;                                                               \
 ewf_interface_win32_com__implementation__##interface_name_symb.StopBits = StopBits_param;                                                           \
-EWF_PLATFORM_THREAD_STATIC_DECLARE(                                                                                                                 \
-    ewf_interface_win32_com__interface__##interface_name_symb.receive_thread_ptr,                                                                   \
-    ewf_interface_win32_com__receive_thread__##interface_name_symb,                                                                                 \
-    ewf_interface_receive_thread,                                                                                                                   \
-    &(ewf_interface_win32_com__interface__##interface_name_symb),                                                                                   \
-    EWF_INTERFACE_WIN32_COM_CONFIG_RX_THREAD_STACK_SIZE,                                                                                            \
-    EWF_PLATFORM_THREAD_PRIORITY_HIGH);                                                                                                             \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \
     ewf_interface_win32_com__interface__##interface_name_symb.response_queue_ptr,                                                                   \
     ewf_interface_win32_com__response_queue__##interface_name_symb,                                                                                 \

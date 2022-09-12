@@ -43,9 +43,8 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
 #include "ewf_adapter_quectel_bg95.c"
-
-#include "ewf_example.config.h"
 #include "ewf_example_certs_basic_quectel_bg95.c"
+#include "ewf_example.config.h"
 
 /* USER CODE END Includes */
 
@@ -102,7 +101,9 @@ void thread_entry(ULONG param)
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+		EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+		EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_STM32_UART_STATIC_DECLARE(interface_ptr, stm32_uart_port, &huart3);
     EWF_ADAPTER_QUECTEL_BG95_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 
@@ -133,7 +134,7 @@ void thread_entry(ULONG param)
     while (1)
     {
     	EWF_LOG(".");
-        tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND);
+		ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
     }
 }
 /* USER CODE END 0 */

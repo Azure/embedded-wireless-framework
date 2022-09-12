@@ -67,8 +67,8 @@ void thread_entry(ULONG param)
     EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
         EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
         EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
-    EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port, 
-        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME, 
+    EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
@@ -85,7 +85,7 @@ void thread_entry(ULONG param)
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
         exit(result);
     }
 

@@ -6,34 +6,17 @@
  * @brief The Embedded Wireless Framework WinSock2 adapter driver
  ****************************************************************************/
 
+#include "ewf_adapter_winsock2.h" // Include first to force correct inclussion order for winsock2.h
+
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "fwpuclnt.lib") // Winsock secure socket extensions
 #pragma comment(lib, "ntdsapi.lib") // DsMakeSpn function
 
-#include "ewf_adapter_winsock2.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "ewf_lib.h"
-
-/**
- * @brief Get an available socket from the internal pool
- * @return an index to an available entry in the socket pool, or -1 if not available
- */
-static int _ewf_adapter_winsock2_socket_pool_allocate(ewf_adapter* adapter_ptr)
-{
-    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
-    ewf_adapter_winsock2* implementation_ptr = (ewf_adapter_winsock2*) adapter_ptr->implementation_ptr;
-
-    int i = -1;
-    for (i = 0; i < EWF_ADAPTER_WINSOCK2_SOCKET_POOL_SIZE; ++i)
-        if (implementation_ptr->socket_pool[i].used == false)
-            break;
-    return i;
-}
 
 ewf_adapter_api_control ewf_adapter_winsock2_api_control =
 {
@@ -51,17 +34,10 @@ ewf_result ewf_adapter_winsock2_start(ewf_adapter* adapter_ptr)
 
     /* Initialize Winsock */
     iResult = WSAStartup(MAKEWORD(2, 2), &(implementation_ptr->wsaData));
-    if (iResult != 0) 
+    if (iResult != 0)
     {
         EWF_LOG_ERROR("WSAStartup failed with error: %d\n", iResult);
         return EWF_RESULT_ADAPTER_INITIALIZATION_FAILED;
-    }
-
-    /* Initialize the internal socket array */
-    for (unsigned i = 0; i < EWF_ADAPTER_WINSOCK2_SOCKET_POOL_SIZE; ++i)
-    {
-        implementation_ptr->socket_pool[i].used = false;
-        implementation_ptr->socket_pool[i].s = -1;
     }
 
     PIP_ADAPTER_INFO pAdapterInfo;
@@ -81,7 +57,7 @@ ewf_result ewf_adapter_winsock2_start(ewf_adapter* adapter_ptr)
     {
         HeapFree(GetProcessHeap(), 0, pAdapterInfo);
         pAdapterInfo = (IP_ADAPTER_INFO*)HeapAlloc(GetProcessHeap(), 0, ulOutBufLen);
-        if (pAdapterInfo == NULL) 
+        if (pAdapterInfo == NULL)
         {
             EWF_LOG("Error allocating memory needed to call GetAdaptersinfo\n");
             return EWF_RESULT_NOT_SUPPORTED;
@@ -195,7 +171,7 @@ ewf_result ewf_adapter_winsock2_info(ewf_adapter* adapter_ptr)
 
     ULONG ulOutBufLen = sizeof(IP_ADAPTER_INFO);
     pAdapterInfo = (IP_ADAPTER_INFO*)HeapAlloc(GetProcessHeap(), 0, sizeof(IP_ADAPTER_INFO));
-    if (pAdapterInfo == NULL) 
+    if (pAdapterInfo == NULL)
     {
         EWF_LOG("Error allocating memory needed to call GetAdaptersinfo\n");
         return EWF_RESULT_NOT_SUPPORTED;
@@ -203,27 +179,27 @@ ewf_result ewf_adapter_winsock2_info(ewf_adapter* adapter_ptr)
 
     // Make an initial call to GetAdaptersInfo to get
     // the necessary size into the ulOutBufLen variable
-    if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) 
+    if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW)
     {
         HeapFree(GetProcessHeap(), 0, pAdapterInfo);
         pAdapterInfo = (IP_ADAPTER_INFO*)HeapAlloc(GetProcessHeap(), 0, ulOutBufLen);
-        if (pAdapterInfo == NULL) 
+        if (pAdapterInfo == NULL)
         {
             EWF_LOG("Error allocating memory needed to call GetAdaptersinfo\n");
             return EWF_RESULT_NOT_SUPPORTED;
         }
     }
 
-    if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR) 
+    if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR)
     {
         pAdapter = pAdapterInfo;
-        while (pAdapter) 
+        while (pAdapter)
         {
             EWF_LOG("\tComboIndex: \t%d\n", pAdapter->ComboIndex);
             EWF_LOG("\tAdapter Name: \t%s\n", pAdapter->AdapterName);
             EWF_LOG("\tAdapter Desc: \t%s\n", pAdapter->Description);
             EWF_LOG("\tAdapter Addr: \t");
-            for (i = 0; i < pAdapter->AddressLength; i++) 
+            for (i = 0; i < pAdapter->AddressLength; i++)
             {
                 if (i == (pAdapter->AddressLength - 1))
                     EWF_LOG("%.2X\n", (int)pAdapter->Address[i]);
@@ -264,7 +240,7 @@ ewf_result ewf_adapter_winsock2_info(ewf_adapter* adapter_ptr)
             EWF_LOG("\tGateway: \t%s\n", pAdapter->GatewayList.IpAddress.String);
             EWF_LOG("\t***\n");
 
-            if (pAdapter->DhcpEnabled) 
+            if (pAdapter->DhcpEnabled)
             {
                 EWF_LOG("\tDHCP Enabled: Yes\n");
                 EWF_LOG("\t  DHCP Server: \t%s\n",
@@ -294,7 +270,7 @@ ewf_result ewf_adapter_winsock2_info(ewf_adapter* adapter_ptr)
                 {
                     EWF_LOG("Invalid Argument to _localtime32_s\n");
                 }
-                else 
+                else
                 {
                     // Convert to an ASCII representation
                     error = asctime_s(buffer, 32, &newtime);
@@ -341,7 +317,7 @@ ewf_result ewf_adapter_winsock2_get_ipv4_address(ewf_adapter* adapter_ptr, uint3
 
     if (!address_ptr)
     {
-        EWF_LOG_ERROR("The address_ptr parameter cannot be NULL.");
+        EWF_LOG_ERROR("The address_ptr parameter cannot be NULL.\n");
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
@@ -358,7 +334,7 @@ ewf_result ewf_adapter_winsock2_get_ipv4_netmask(ewf_adapter* adapter_ptr, uint3
 
     if (!netmask_ptr)
     {
-        EWF_LOG_ERROR("The netmask parameter cannot be NULL.");
+        EWF_LOG_ERROR("The netmask parameter cannot be NULL.\n");
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
@@ -375,7 +351,7 @@ ewf_result ewf_adapter_winsock2_get_ipv4_gateway(ewf_adapter* adapter_ptr, uint3
 
     if (!gateway_ptr)
     {
-        EWF_LOG_ERROR("The gateway parameter cannot be NULL.");
+        EWF_LOG_ERROR("The gateway parameter cannot be NULL.\n");
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
@@ -392,7 +368,7 @@ ewf_result ewf_adapter_winsock2_get_ipv4_dns(ewf_adapter* adapter_ptr, uint32_t 
 
     if (!dns_ptr)
     {
-        EWF_LOG_ERROR("The dns parameter cannot be NULL.");
+        EWF_LOG_ERROR("The dns parameter cannot be NULL.\n");
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
@@ -425,6 +401,40 @@ ewf_result ewf_adapter_winsock2_tcp_open(ewf_adapter* adapter_ptr, ewf_socket_tc
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2* implementation_ptr = (ewf_adapter_winsock2*) adapter_ptr->implementation_ptr;
+
+    if (socket_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The socket pointer cannot be NULL.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    EWF_LOG("[WINSOCK2][TCP][OPEN/CALL][ADAPTER 0x%08p]\n", adapter_ptr);
+
+    socket_ptr->adapter_ptr = adapter_ptr;
+
+    socket_ptr->data_ptr = HeapAlloc(GetProcessHeap(), 0, sizeof(ewf_adapter_winsock2_socket));
+
+    if (socket_ptr->data_ptr == NULL)
+    {
+        EWF_LOG_ERROR("Failed to allocate a new socket in the heap.\n");
+        return EWF_RESULT_OUT_OF_MEMORY;
+    }
+
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+    ws2_socket_ptr->s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("socket failed with error: %ld\n", WSAGetLastError());
+        if (socket_ptr->data_ptr == NULL)
+        {
+            HeapFree(GetProcessHeap(), 0, socket_ptr->data_ptr);
+        }
+        return EWF_RESULT_INVALID_SOCKET;
+    }
+
+    EWF_LOG("[WINSOCK2][TCP][OPEN/RETURN][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
 
     return EWF_RESULT_OK;
 }
@@ -435,6 +445,29 @@ ewf_result ewf_adapter_winsock2_tcp_close(ewf_socket_tcp* socket_ptr)
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+    EWF_LOG("[WINSOCK2][TCP][CLOSE/CALL][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
+
+    if (socket_ptr->data_ptr)
+    {
+        ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+        if (ws2_socket_ptr->s != INVALID_SOCKET)
+        {
+            int iResult;
+
+            iResult = closesocket(ws2_socket_ptr->s);
+            if (iResult == SOCKET_ERROR)
+            {
+                EWF_LOG_ERROR("closesocket failed with error: %d\n", WSAGetLastError());
+            }
+        }
+
+        HeapFree(GetProcessHeap(), 0, socket_ptr->data_ptr);
+    }
+
+    EWF_LOG("[WINSOCK2][TCP][CLOSE/RETURN][OK]\n");
 
     return EWF_RESULT_OK;
 }
@@ -445,6 +478,7 @@ ewf_result ewf_adapter_winsock2_tcp_control(ewf_socket_tcp* socket_ptr, const ch
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
     return EWF_RESULT_OK;
 }
@@ -455,6 +489,7 @@ ewf_result ewf_adapter_winsock2_tcp_set_tls_configuration(ewf_socket_tcp* socket
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
     return EWF_RESULT_OK;
 }
@@ -465,6 +500,31 @@ ewf_result ewf_adapter_winsock2_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t po
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+    if (ws2_socket_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("The socket is invalid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    struct sockaddr_in bind_addr;
+    bind_addr.sin_family = AF_INET;
+    bind_addr.sin_port = htons(port);
+    bind_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    int iResult = bind(ws2_socket_ptr->s, (SOCKADDR*)&bind_addr, sizeof(bind_addr));
+    if (iResult == SOCKET_ERROR)
+    {
+        EWF_LOG_ERROR("bind failed with error: %d\n", WSAGetLastError());
+        return EWF_RESULT_UNEXPECTED_RESPONSE;
+    }
 
     return EWF_RESULT_OK;
 }
@@ -475,6 +535,26 @@ ewf_result ewf_adapter_winsock2_tcp_listen(ewf_socket_tcp* socket_ptr)
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+    if (ws2_socket_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    int iResult = listen(ws2_socket_ptr->s, SOMAXCONN);
+    if (iResult == SOCKET_ERROR)
+    {
+        EWF_LOG_ERROR("listen failed with error: %d\n", WSAGetLastError());
+        return EWF_RESULT_UNEXPECTED_RESPONSE;
+    }
 
     return EWF_RESULT_OK;
 }
@@ -485,83 +565,130 @@ ewf_result ewf_adapter_winsock2_tcp_accept(ewf_socket_tcp* socket_ptr, ewf_socke
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+    if (ws2_socket_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (socket_new_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The new socket pointer cannot be NULL.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    EWF_LOG("[WINSOCK2][TCP][ACCEPT/CALL][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
+
+    socket_new_ptr->adapter_ptr = adapter_ptr;
+
+    socket_new_ptr->data_ptr = HeapAlloc(GetProcessHeap(), 0, sizeof(ewf_adapter_winsock2_socket));
+    if (socket_new_ptr->data_ptr == NULL)
+    {
+        EWF_LOG_ERROR("Failed to allocate a new socket in the heap.\n");
+        return EWF_RESULT_OUT_OF_MEMORY;
+    }
+
+    ewf_adapter_winsock2_socket* ws2_new_socket_ptr = (ewf_adapter_winsock2_socket*)socket_new_ptr->data_ptr;
+
+    struct sockaddr_in addr;
+    int addrlen = sizeof(addr);
+
+    ws2_new_socket_ptr->s = accept(ws2_socket_ptr->s, (SOCKADDR*)&addr, &addrlen);
+    if (ws2_new_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("accept failed with error: %d\n", WSAGetLastError());
+        return EWF_RESULT_INVALID_SOCKET;
+    }
+
+    char addr_str[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &(addr.sin_addr), addr_str, INET_ADDRSTRLEN);
+    EWF_LOG("[WINSOCK2][TCP][ACCEPT/RETURN][SOCKET 0x%08X][NEW SOCKET 0x%08X][ORIGIN %s]\n", ws2_socket_ptr->s, ws2_new_socket_ptr->s, addr_str);
 
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_winsock2_tcp_connect(ewf_socket_tcp* socket_ptr, const char* const server, uint32_t port)
+ewf_result ewf_adapter_winsock2_tcp_connect(ewf_socket_tcp* socket_ptr, const char* server_str, uint32_t port)
 {
     EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr);
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
-#if 0
-    ewf_result result;
-    int iResult;
-
-    if (!server)
+    if (ws2_socket_ptr == NULL)
     {
-        EWF_LOG_ERROR("The server string cannot be NULL.");
+        EWF_LOG_ERROR("The socket is not valid.\n");
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    *socket_id_ptr = _adapter_socket_pool_allocate();
-    if (*socket_id_ptr == -1)
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
     {
-        EWF_LOG_ERROR("Too many open sockets.");
-        return EWF_RESULT_TOO_MANY_OPEN_SOCKETS;
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-	char port_str[7];
-	const char* port_cstr = _unsigned_to_str(port, port_str, sizeof(port_str));
+    if (!server_str)
+    {
+        EWF_LOG_ERROR("The server string cannot be NULL.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
 
-	struct addrinfo server_addrinfo;
-	ZeroMemory(&server_addrinfo, sizeof(server_addrinfo));
-	server_addrinfo.ai_family = AF_INET;
-	server_addrinfo.ai_socktype = SOCK_STREAM;
-	server_addrinfo.ai_protocol = IPPROTO_TCP;
+    EWF_LOG("[WINSOCK2][TCP][CONNECT/CALL][SOCKET 0x%08X][SERVER %s][PORT %u]\n", ws2_socket_ptr->s, server_str, port);
 
-	struct addrinfo* addrinfo_result = NULL;
-	struct addrinfo* addrinfo_ptr = NULL;
+    char port_str[7];
+    const char* port_cstr = ewfl_unsigned_to_str(port, port_str, sizeof(port_str));
 
-	/* Resolve the server address and port */
-	iResult = getaddrinfo(server, port_cstr, &server_addrinfo, &addrinfo_result);
-	if (iResult != 0)
-	{
-		EWF_LOG_ERROR("getaddrinfo failed with error: %d\n", iResult);
-		return EWF_RESULT_CONNECTION_FAILED;
-	}
+    ewf_result result;
+    int iResult;
 
-	/* Attempt to connect to an address until one succeeds */
-	for (addrinfo_ptr = addrinfo_result; addrinfo_ptr != NULL; addrinfo_ptr = addrinfo_ptr->ai_next) {
+    struct addrinfo server_addrinfo;
+    ZeroMemory(&server_addrinfo, sizeof(server_addrinfo));
+    server_addrinfo.ai_family = AF_INET;
+    server_addrinfo.ai_socktype = SOCK_STREAM;
+    server_addrinfo.ai_protocol = IPPROTO_TCP;
 
-		/* Create a SOCKET for connecting to the server. */
-		_adapter_socket_pool[*socket_id_ptr].s = socket(addrinfo_ptr->ai_family, addrinfo_ptr->ai_socktype, addrinfo_ptr->ai_protocol);
-		if (_adapter_socket_pool[*socket_id_ptr].s == INVALID_SOCKET) {
-			EWF_LOG_ERROR("socket failed with error: %ld\n", WSAGetLastError());
-			break;
-		}
+    struct addrinfo* addrinfo_result = NULL;
+    struct addrinfo* addrinfo_ptr = NULL;
 
-		/* Attmept to connect to the server. */
-		iResult = connect(_adapter_socket_pool[*socket_id_ptr].s, addrinfo_ptr->ai_addr, (int)addrinfo_ptr->ai_addrlen);
-		if (iResult == SOCKET_ERROR) {
-			closesocket(_adapter_socket_pool[*socket_id_ptr].s);
-			_adapter_socket_pool[*socket_id_ptr].s = INVALID_SOCKET;
-			continue;
-		}
-		break;
-	}
+    /* Resolve the server address and port */
+    iResult = getaddrinfo(server_str, port_cstr, &server_addrinfo, &addrinfo_result);
+    if (iResult != 0)
+    {
+        EWF_LOG_ERROR("getaddrinfo failed with error: %d\n", iResult);
+        return EWF_RESULT_CONNECTION_FAILED;
+    }
 
-	freeaddrinfo(addrinfo_result);
+    if (addrinfo_result->ai_next)
+    {
+        EWF_LOG_ERROR("[WARNING] Ambiguous address resolved, using the first one.\n");
+    }
 
-	if (_adapter_socket_pool[*socket_id_ptr].s == INVALID_SOCKET) {
-		EWF_LOG_ERROR("Unable to connect to server!\n");
-		return EWF_RESULT_CONNECTION_FAILED;
-	}
+    /* Attmept to connect to the server. */
+    iResult = connect(ws2_socket_ptr->s, addrinfo_result->ai_addr, (int)addrinfo_result->ai_addrlen);
+    if (iResult == SOCKET_ERROR)
+    {
+        EWF_LOG("connect failed with error: %d\n", WSAGetLastError());
+        freeaddrinfo(addrinfo_result);
+        return EWF_RESULT_CONNECTION_FAILED;
+    }
 
-	_adapter_socket_pool[*socket_id_ptr].used = true;
-#endif
+    freeaddrinfo(addrinfo_result);
+
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("Unable to connect to server!\n");
+        return EWF_RESULT_CONNECTION_FAILED;
+    }
+
+    EWF_LOG("[WINSOCK2][TCP][CONNECT/RETURN][OK]\n");
 
     return EWF_RESULT_OK;
 }
@@ -572,32 +699,30 @@ ewf_result ewf_adapter_winsock2_tcp_shutdown(ewf_socket_tcp* socket_ptr)
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
-#if 0
-    ewf_result result;
-	int iResult;
+    if (ws2_socket_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
 
-	if ((socket_id < 0) || (_ADAPTER_SOCKET_POOL_SIZE <= socket_id))
-	{
-		EWF_LOG_ERROR("Invalid socket value.");
-		return EWF_RESULT_INVALID_SOCKET;
-	}
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("The socket is invalid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
 
-	if (_adapter_socket_pool[socket_id].used == false)
-	{
-		EWF_LOG_ERROR("Socket is not open.");
-		return EWF_RESULT_SOCKET_NOT_OPEN;
-	}
+    EWF_LOG("[WINSOCK2][TCP][SHUTDOWN/CALL][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
 
-	_adapter_socket_pool[socket_id].used = false;
+    int iResult = shutdown(ws2_socket_ptr->s, SD_BOTH);
+    if (iResult == SOCKET_ERROR)
+    {
+        EWF_LOG_ERROR("shutdown failed with error: %d\n", WSAGetLastError());
+        return EWF_RESULT_UNEXPECTED_RESPONSE;
+    }
 
-	iResult = shutdown(_adapter_socket_pool[socket_id].s, SD_BOTH);
-	if (iResult == SOCKET_ERROR) {
-		EWF_LOG_ERROR("shutdown failed with error: %d\n", WSAGetLastError());
-	}
-
-	closesocket(_adapter_socket_pool[socket_id].s);
-#endif
+    EWF_LOG("[WINSOCK2][TCP][SHUTDOWN/RETURN][OK]\n");
 
     return EWF_RESULT_OK;
 }
@@ -608,69 +733,113 @@ ewf_result ewf_adapter_winsock2_tcp_send(ewf_socket_tcp* socket_ptr, const uint8
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
-#if 0
-	int iResult;
-
-	if ((socket_id < 0) || (_ADAPTER_SOCKET_POOL_SIZE <= socket_id))
-	{
-		EWF_LOG_ERROR("Invalid socket value.");
-		return EWF_RESULT_INVALID_SOCKET;
-	}
-
-	if (_adapter_socket_pool[socket_id].used == false)
-	{
-		EWF_LOG_ERROR("Socket is not open.");
-		return EWF_RESULT_SOCKET_NOT_OPEN;
-	}
-
-	iResult = send(_adapter_socket_pool[socket_id].s, buffer, (int)buffer_length, 0);
-	if (iResult == SOCKET_ERROR) 
+    if (ws2_socket_ptr == NULL)
     {
-		EWF_LOG_ERROR("send failed with error: %d\n", WSAGetLastError());
-	}
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("The socket is invalid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    int iResult;
+
+#ifdef EWF_DEBUG
+    uint32_t step = 64;
+    for (uint32_t i = 0; i < buffer_length; i += step)
+    {
+        const char* str = ewfl_escape_str_to_str_buffer(buffer_ptr + i, step);
+        EWF_LOG("[WINSOCK2][TCP][SEND/CALL][BUFFER 0x%08p][%04d][%s]\n", buffer_ptr, i, str);
+    }
 #endif
+
+    EWF_LOG("[WINSOCK2][TCP][SEND/CALL][SOCKET 0x%08X][BUFFER 0x%08p][LENGTH %u]\n", ws2_socket_ptr->s, buffer_ptr, buffer_length);
+
+    iResult = send(ws2_socket_ptr->s, buffer_ptr, (int)buffer_length, 0);
+    if (iResult == SOCKET_ERROR)
+    {
+        EWF_LOG_ERROR("send failed with error: %d\n", WSAGetLastError());
+        return EWF_RESULT_ADAPTER_TRANSMIT_FAILED;
+    }
+
+    EWF_LOG("[WINSOCK2][TCP][SEND/RETURN][OK]\n");
 
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_winsock2_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length, bool wait)
+ewf_result ewf_adapter_winsock2_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
 {
     EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr);
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
-#if 0
-	int iResult;
+    if (ws2_socket_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
 
-	if ((socket_id < 0) || (_ADAPTER_SOCKET_POOL_SIZE <= socket_id))
-	{
-		EWF_LOG_ERROR("Invalid socket value.");
-		return EWF_RESULT_INVALID_SOCKET;
-	}
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("The socket is invalid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
 
-	if (_adapter_socket_pool[socket_id].used == false)
-	{
-		EWF_LOG_ERROR("Socket is not open.");
-		return EWF_RESULT_SOCKET_NOT_OPEN;
-	}
+    EWF_LOG("[WINSOCK2][TCP][RECEIVE/CALL][SOCKET 0x%08X][BUFFER 0x%08p][LENGTH %u]\n", ws2_socket_ptr->s, buffer_ptr, *buffer_length_ptr);
 
-	iResult = recv(_adapter_socket_pool[socket_id].s, buffer, *buffer_length, 0);
-	if (iResult > 0)
-	{
-		*buffer_length = iResult;
-	}
-	else if (iResult == 0)
-	{
-		EWF_LOG_ERROR("Connection closed");
-		return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
-	}
-	else
-	{
-		EWF_LOG_ERROR("recv failed with error: %d\n", WSAGetLastError());
-		return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
-	}
+    if (!wait)
+    {
+        struct timeval timeout;
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 0;
+
+        struct fd_set fds;
+        FD_ZERO(&fds);
+        FD_SET(ws2_socket_ptr->s, &fds);
+
+        int iResult = select(0, &fds, 0, 0, &timeout);
+        if (iResult == 0)
+        {
+            *buffer_length_ptr = 0;
+            return EWF_RESULT_NO_DATA_AVAILABLE;
+        }
+        else if (iResult < 0)
+        {
+            EWF_LOG_ERROR("select failed with error: %d\n", WSAGetLastError());
+            return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
+        }
+    }
+
+    int iResult = recv(ws2_socket_ptr->s, buffer_ptr, *buffer_length_ptr, 0);
+    if (iResult == 0)
+    {
+        EWF_LOG_ERROR("Connection closed");
+        return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
+    }
+    else if (iResult == SOCKET_ERROR)
+    {
+        EWF_LOG_ERROR("recv failed with error: %d\n", WSAGetLastError());
+        return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
+    }
+
+    *buffer_length_ptr = iResult;
+
+    EWF_LOG("[WINSOCK2][TCP][RECEIVE/RETURN][SOCKET 0x%08X][LENGTH %u]\n", ws2_socket_ptr->s, *buffer_length_ptr);
+
+#ifdef EWF_DEBUG
+    uint32_t step = 64;
+    for (uint32_t i = 0; i < *buffer_length_ptr; i += step)
+    {
+        const char* str = ewfl_escape_str_to_str_buffer(buffer_ptr + i, step);
+        EWF_LOG("[WINSOCK2][TCP][RECEIVE/RETURN][SOCKET 0x%08X][%04d][%s]\n", ws2_socket_ptr->s, i, str);
+    }
 #endif
 
     return EWF_RESULT_OK;
@@ -690,6 +859,7 @@ ewf_adapter_api_udp ewf_adapter_winsock2_api_udp =
     ewf_adapter_winsock2_udp_set_dtls_configuration,
 
     ewf_adapter_winsock2_udp_bind,
+    ewf_adapter_winsock2_udp_shutdown,
     ewf_adapter_winsock2_udp_send_to,
     ewf_adapter_winsock2_udp_receive_from,
 };
@@ -698,79 +868,35 @@ ewf_result ewf_adapter_winsock2_udp_open(ewf_adapter* adapter_ptr, ewf_socket_ud
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2* implementation_ptr = (ewf_adapter_winsock2*)adapter_ptr->implementation_ptr;
 
-#if 0
-    ewf_result result;
-    int iResult;
-
-    if (!socket_id_ptr)
+    if (socket_ptr == NULL)
     {
-        EWF_LOG_ERROR("The socket pointer cannot be NULL.");
+        EWF_LOG_ERROR("The socket pointer cannot be NULL.\n");
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    if (!server)
+    EWF_LOG("[WINSOCK2][UDP][OPEN/CALL][ADAPTER 0x%08p]\n", adapter_ptr);
+
+    socket_ptr->adapter_ptr = adapter_ptr;
+
+    socket_ptr->data_ptr = HeapAlloc(GetProcessHeap(), 0, sizeof(ewf_adapter_winsock2_socket));
+    if (socket_ptr->data_ptr == NULL)
     {
-        EWF_LOG_ERROR("The server string cannot be NULL.");
-        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+        EWF_LOG_ERROR("Failed to allocate a new socket in the heap.\n");
+        return EWF_RESULT_OUT_OF_MEMORY;
     }
 
-    *socket_id_ptr = _adapter_socket_pool_allocate();
-    if (*socket_id_ptr == -1)
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+    ws2_socket_ptr->s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
     {
-        EWF_LOG_ERROR("Too many open sockets.");
-        return EWF_RESULT_TOO_MANY_OPEN_SOCKETS;
+        EWF_LOG_ERROR("socket failed with error: %ld\n", WSAGetLastError());
+        return EWF_RESULT_INVALID_SOCKET;
     }
 
-    char port_str[7];
-    const char* port_cstr = _unsigned_to_str(port, port_str, sizeof(port_str));
-
-    struct addrinfo server_addrinfo;
-    ZeroMemory(&server_addrinfo, sizeof(server_addrinfo));
-    server_addrinfo.ai_family = AF_INET;
-    server_addrinfo.ai_socktype = SOCK_DGRAM;
-    server_addrinfo.ai_protocol = IPPROTO_UDP;
-
-    struct addrinfo* addrinfo_result = NULL;
-    struct addrinfo* addrinfo_ptr = NULL;
-
-    /* Resolve the server address and port */
-    iResult = getaddrinfo(server, port_cstr, &server_addrinfo, &addrinfo_result);
-    if (iResult != 0)
-    {
-        EWF_LOG_ERROR("getaddrinfo failed with error: %d\n", iResult);
-        return EWF_RESULT_CONNECTION_FAILED;
-    }
-
-    /* Attempt to connect to an address until one succeeds */
-    for (addrinfo_ptr = addrinfo_result; addrinfo_ptr != NULL; addrinfo_ptr = addrinfo_ptr->ai_next) {
-
-        /* Create a SOCKET for connecting to the server. */
-        _adapter_socket_pool[*socket_id_ptr].s = socket(addrinfo_ptr->ai_family, addrinfo_ptr->ai_socktype, addrinfo_ptr->ai_protocol);
-        if (_adapter_socket_pool[*socket_id_ptr].s == INVALID_SOCKET) {
-            EWF_LOG_ERROR("socket failed with error: %ld\n", WSAGetLastError());
-            break;
-        }
-
-        /* Attmept to connect to the server. */
-        iResult = connect(_adapter_socket_pool[*socket_id_ptr].s, addrinfo_ptr->ai_addr, (int)addrinfo_ptr->ai_addrlen);
-        if (iResult == SOCKET_ERROR) {
-            closesocket(_adapter_socket_pool[*socket_id_ptr].s);
-            _adapter_socket_pool[*socket_id_ptr].s = INVALID_SOCKET;
-            continue;
-        }
-        break;
-    }
-
-    freeaddrinfo(addrinfo_result);
-
-    if (_adapter_socket_pool[*socket_id_ptr].s == INVALID_SOCKET) {
-        EWF_LOG_ERROR("Unable to connect to server!\n");
-        return EWF_RESULT_CONNECTION_FAILED;
-    }
-
-    _adapter_socket_pool[*socket_id_ptr].used = true;
-#endif
+    EWF_LOG("[WINSOCK2][UDP][OPEN/RETURN][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
 
     return EWF_RESULT_OK;
 }
@@ -781,32 +907,29 @@ ewf_result ewf_adapter_winsock2_udp_close(ewf_socket_udp* socket_ptr)
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
-    /*
-    ewf_result result;
-    int iResult;
+    EWF_LOG("[WINSOCK2][UDP][CLOSE/CALL][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
 
-    if ((socket_id < 0) || (_ADAPTER_SOCKET_POOL_SIZE <= socket_id))
+    if (socket_ptr->data_ptr)
     {
-        EWF_LOG_ERROR("Invalid socket value.");
-        return EWF_RESULT_INVALID_SOCKET;
+        ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+        if (ws2_socket_ptr->s != INVALID_SOCKET)
+        {
+            int iResult;
+
+            iResult = closesocket(ws2_socket_ptr->s);
+            if (iResult == SOCKET_ERROR)
+            {
+                EWF_LOG_ERROR("closesocket failed with error: %d\n", WSAGetLastError());
+            }
+        }
+
+        HeapFree(GetProcessHeap(), 0, socket_ptr->data_ptr);
     }
 
-    if (_adapter_socket_pool[socket_id].used == false)
-    {
-        EWF_LOG_ERROR("Socket is not open.");
-        return EWF_RESULT_SOCKET_NOT_OPEN;
-    }
-
-    _adapter_socket_pool[socket_id].used = false;
-
-    iResult = shutdown(_adapter_socket_pool[socket_id].s, SD_BOTH);
-    if (iResult == SOCKET_ERROR) {
-        EWF_LOG_ERROR("shutdown failed with error: %d\n", WSAGetLastError());
-    }
-
-    closesocket(_adapter_socket_pool[socket_id].s);
-    */
+    EWF_LOG("[WINSOCK2][UDP][CLOSE/RETURN][OK]\n");
 
     return EWF_RESULT_OK;
 }
@@ -837,6 +960,66 @@ ewf_result ewf_adapter_winsock2_udp_bind(ewf_socket_udp* socket_ptr, uint32_t po
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+    if (ws2_socket_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("The socket is invalid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    struct sockaddr_in bind_addr;
+    bind_addr.sin_family = AF_INET;
+    bind_addr.sin_port = htons(port);
+    bind_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    int iResult;
+    iResult = bind(ws2_socket_ptr->s, (SOCKADDR*)&bind_addr, sizeof(bind_addr));
+    if (iResult == SOCKET_ERROR)
+    {
+        EWF_LOG_ERROR("bind failed with error: %d\n", WSAGetLastError());
+        return EWF_RESULT_UNEXPECTED_RESPONSE;
+    }
+
+    return EWF_RESULT_OK;
+}
+
+ewf_result ewf_adapter_winsock2_udp_shutdown(ewf_socket_udp* socket_ptr)
+{
+    EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr);
+    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
+
+    if (ws2_socket_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("The socket is invalid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    EWF_LOG("[WINSOCK2][UDP][SHUTDOWN/CALL][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
+
+    int iResult = shutdown(ws2_socket_ptr->s, SD_BOTH);
+    if (iResult == SOCKET_ERROR)
+    {
+        EWF_LOG_ERROR("shutdown failed with error: %d\n", WSAGetLastError());
+        return EWF_RESULT_UNEXPECTED_RESPONSE;
+    }
+
+    EWF_LOG("[WINSOCK2][UDP][SHUTDOWN/RETURN][OK]\n");
 
     return EWF_RESULT_OK;
 }
@@ -847,28 +1030,69 @@ ewf_result ewf_adapter_winsock2_udp_send_to(ewf_socket_udp* socket_ptr, const ch
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
-    /*
+    if (ws2_socket_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    {
+        EWF_LOG_ERROR("The socket is invalid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
     int iResult;
 
-    if ((socket_id < 0) || (_ADAPTER_SOCKET_POOL_SIZE <= socket_id))
+    char remote_port_str[7];
+    const char* remote_port_cstr = ewfl_unsigned_to_str(remote_port, remote_port_str, sizeof(remote_port_str));
+
+    struct addrinfo remote_addrinfo;
+    ZeroMemory(&remote_addrinfo, sizeof(remote_addrinfo));
+    remote_addrinfo.ai_family = AF_INET;
+    remote_addrinfo.ai_socktype = SOCK_DGRAM;
+    remote_addrinfo.ai_protocol = IPPROTO_UDP;
+
+    struct addrinfo* addrinfo_result = NULL;
+    struct addrinfo* addrinfo_ptr = NULL;
+
+    /* Resolve the server address and port */
+    iResult = getaddrinfo(remote_address_str, remote_port_cstr, &remote_addrinfo, &addrinfo_result);
+    if (iResult != 0)
     {
-        EWF_LOG_ERROR("Invalid socket value.");
-        return EWF_RESULT_INVALID_SOCKET;
+        EWF_LOG_ERROR("getaddrinfo failed with error: %d\n", iResult);
+        return EWF_RESULT_CONNECTION_FAILED;
     }
 
-    if (_adapter_socket_pool[socket_id].used == false)
+    if (addrinfo_result->ai_next)
     {
-        EWF_LOG_ERROR("Socket is not open.");
-        return EWF_RESULT_SOCKET_NOT_OPEN;
+        EWF_LOG_ERROR("[WARNING] Ambiguous address resolved, using the first one.\n");
     }
 
-    iResult = send(_adapter_socket_pool[socket_id].s, buffer, (int)buffer_length, 0);
-    if (iResult == SOCKET_ERROR) 
+#ifdef EWF_DEBUG
+    uint32_t step = 64;
+    for (uint32_t i = 0; i < buffer_length; i += step)
     {
-        EWF_LOG_ERROR("send failed with error: %d\n", WSAGetLastError());
+        const char* str = ewfl_escape_str_to_str_buffer(buffer_ptr + i, step);
+        EWF_LOG("[WINSOCK2][UDP][SEND-TO/CALL][SOCKET 0x%08X][%04d][%s]\n", ws2_socket_ptr->s, i, str);
     }
-    */
+#endif
+
+    EWF_LOG("[WINSOCK2][UDP][SEND-TO/CALL][SOCKET 0x%08X][SERVER %s][PORT %u][BUFFER 0x%08p][LENGTH %u]\n", ws2_socket_ptr->s, remote_address_str, remote_port, buffer_ptr, buffer_length);
+
+    iResult = sendto(ws2_socket_ptr->s, buffer_ptr, buffer_length, 0, addrinfo_result->ai_addr, addrinfo_result->ai_addrlen);
+    if (iResult == SOCKET_ERROR)
+    {
+        EWF_LOG_ERROR("sendto failed with error: %d\n", WSAGetLastError());
+        freeaddrinfo(addrinfo_result);
+        return EWF_RESULT_ADAPTER_TRANSMIT_FAILED;
+    }
+
+    freeaddrinfo(addrinfo_result);
+
+    EWF_LOG("[WINSOCK2][UDP][SEND-TO/RETURN][OK]\n");
 
     return EWF_RESULT_OK;
 }
@@ -879,38 +1103,89 @@ ewf_result ewf_adapter_winsock2_udp_receive_from(ewf_socket_udp* socket_ptr, cha
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
-    /*
-    int iResult;
-
-    if ((socket_id < 0) || (_ADAPTER_SOCKET_POOL_SIZE <= socket_id))
+    if (ws2_socket_ptr == NULL)
     {
-        EWF_LOG_ERROR("Invalid socket value.");
-        return EWF_RESULT_INVALID_SOCKET;
+        EWF_LOG_ERROR("The socket is not valid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    if (_adapter_socket_pool[socket_id].used == false)
+    if (ws2_socket_ptr->s == INVALID_SOCKET)
     {
-        EWF_LOG_ERROR("Socket is not open.");
-        return EWF_RESULT_SOCKET_NOT_OPEN;
+        EWF_LOG_ERROR("The socket is invalid.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    iResult = recv(_adapter_socket_pool[socket_id].s, buffer, *buffer_length, 0);
-    if (iResult > 0)
+    if (buffer_ptr == NULL)
     {
-        *buffer_length = iResult;
+        EWF_LOG_ERROR("buffer_ptr cannot be NULL.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
-    else if (iResult == 0)
+
+    if (buffer_length_ptr == NULL)
     {
-        EWF_LOG_ERROR("Connection closed");
-        return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
+        EWF_LOG_ERROR("buffer_length_ptr cannot be NULL.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
-    else
+
+    struct sockaddr_in remote_addr;
+    int remote_addr_size = sizeof(remote_addr);
+
+    EWF_LOG("[WINSOCK2][UDP][RECEIVE-FROM/CALL][SOCKET 0x%08X][BUFFER 0x%08p][LENGTH %u]\n", ws2_socket_ptr->s, buffer_ptr, *buffer_length_ptr);
+
+    if (!wait)
+    {
+        struct timeval timeout;
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 0;
+
+        struct fd_set fds;
+        FD_ZERO(&fds);
+        FD_SET(ws2_socket_ptr->s, &fds);
+
+        int iResult = select(0, &fds, 0, 0, &timeout);
+        if (iResult == 0)
+        {
+            *buffer_length_ptr = 0;
+            return EWF_RESULT_NO_DATA_AVAILABLE;
+        }
+        else if (iResult < 0)
+        {
+            EWF_LOG_ERROR("select failed with error: %d\n", WSAGetLastError());
+            return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
+        }
+    }
+
+    int iResult = recvfrom(ws2_socket_ptr->s, buffer_ptr, *buffer_length_ptr, 0, (SOCKADDR*)&remote_addr, &remote_addr_size);
+    if (iResult == SOCKET_ERROR)
     {
         EWF_LOG_ERROR("recv failed with error: %d\n", WSAGetLastError());
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
-    */
+
+    *buffer_length_ptr = iResult;
+
+    if (remote_address && remote_address_length_ptr && (*remote_address_length_ptr > 0))
+    {
+        inet_ntop(AF_INET, &(remote_addr.sin_addr), remote_address, *remote_address_length_ptr);
+    }
+
+    if (remote_port_ptr)
+    {
+        *remote_port_ptr = remote_addr.sin_port;
+    }
+
+    EWF_LOG("[WINSOCK2][UDP][RECEIVE-FROM/RETURN][SOCKET 0x%08X][SERVER %s][PORT %u][LENGTH %u]\n", ws2_socket_ptr->s, remote_address ? remote_address : "unresolved", remote_addr.sin_port, *buffer_length_ptr);
+
+#ifdef EWF_DEBUG
+    uint32_t step = 64;
+    for (uint32_t i = 0; i < *buffer_length_ptr; i += step)
+    {
+        const char* str = ewfl_escape_str_to_str_buffer(buffer_ptr + i, step);
+        EWF_LOG("[WINSOCK2][UDP][RECEIVE-FROM/RETURN][SOCKET 0x%08X][%04d][%s]\n", ws2_socket_ptr->s, i, str);
+    }
+#endif
 
     return EWF_RESULT_OK;
 }
