@@ -1629,7 +1629,7 @@ ewf_result result;
             /* Send data.  */
             ewf_result result = ewf_adapter_tcp_send(
               &(nx_driver_sockets[i].adapter_socket),
-              (char const *)(uint8_t *)current_packet-> nx_packet_prepend_ptr,
+              (char const *)(uint8_t *)current_packet-> nx_packet_prepend_ptr + offset,
               packet_size);
             /* Check status.  */
             if (ewf_result_failed(result))
