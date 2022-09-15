@@ -39,6 +39,8 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_mqtt_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_winsock2.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_winsock2.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_middleware_netxduo.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples/ewf_example_netx_duo_test.c
     ewf.config.h
     ewf_example.config.h
     sample_netx_duo_test.c)

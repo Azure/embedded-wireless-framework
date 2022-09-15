@@ -94,10 +94,10 @@ struct _ewf_interface
     uint32_t struct_type;
 #endif /* EWF_PARAMETER_CHECKING */
 
-#ifdef EWF_PLATFORM_SUPPORTS_MUTEXING
+#ifdef EWF_PLATFORM_HAS_THREADING
     /**< The access mutex used to synchronize access to internal state */
     ewf_platform_mutex global_mutex;
-#endif /* EWF_PLATFORM_SUPPORTS_MUTEXING */
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     /**<
      * The current message being received
@@ -160,14 +160,6 @@ struct _ewf_interface
 
     /**< A pointer to the hardware receive function */
     ewf_result(*hardware_receive)(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
-
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
-    /**< A pointer to the hardware receive thread control structure */
-    ewf_platform_thread* receive_thread_ptr;
-
-    /**< A pointer to the hardware receive thread entry point */
-    ewf_result(*hardware_receive_thread)(void* data_ptr);
-#endif
 
     /* *** Pointers to other related structures *** */
 
@@ -457,23 +449,17 @@ ewf_result ewf_interface_urc_process_message(ewf_interface* interface_ptr, uint8
  ****************************************************************************/
 
   /************************************************************************//**
- * @defgroup group_interface_receive_calls Host interface periodic receive calls
- * @brief The host interface periodic receive calls
+ * @defgroup group_interface_polling Host interface polling calls
+ * @brief The host interface polling calls
  * @{
  ****************************************************************************/
 
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
-
-ewf_result ewf_interface_receive_thread(void* data_ptr);
-
-#else
+ewf_result ewf_interface_poll(ewf_interface* interface_ptr);
 
 ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr);
 
-#endif /* EWF_PLATFORM_SUPPORTS_THREADING */
-
 /************************************************************************//**
- * @} *** group_interface_receive_calls
+ * @} *** group_interface_polling
  ****************************************************************************/
 
 /************************************************************************//**

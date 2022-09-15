@@ -30,7 +30,7 @@ ewf_result ewf_adapter_quectel_common_context_activate(ewf_adapter* adapter_ptr,
 #endif
 
     char context_id_str[3];
-    const char* context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
+    const char* context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIACT=", context_id_cstr,"\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
@@ -63,7 +63,7 @@ ewf_result ewf_adapter_quectel_common_context_deactivate(ewf_adapter* adapter_pt
 #endif
 
     char context_id_str[3];
-    const char* context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
+    const char* context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIDEACT=", context_id_cstr,"\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
@@ -103,7 +103,7 @@ ewf_result ewf_adapter_quectel_common_context_configure(ewf_adapter* adapter_ptr
     }
 
     char context_id_str[3];
-    const char * context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
+    const char * context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
 #ifdef EWF_DEBUG
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QICSGP=", context_id_cstr, "\r", NULL))) return result;
@@ -111,10 +111,10 @@ ewf_result ewf_adapter_quectel_common_context_configure(ewf_adapter* adapter_ptr
 #endif
 
     char type_str[3];
-    const char * type_cstr = _unsigned_to_str(type, type_str, sizeof(type_str));
+    const char * type_cstr = ewfl_unsigned_to_str(type, type_str, sizeof(type_str));
 
     char authentication_str[3];
-    const char * authentication_cstr = _unsigned_to_str(authentication, authentication_str, sizeof(authentication_str));
+    const char * authentication_cstr = ewfl_unsigned_to_str(authentication, authentication_str, sizeof(authentication_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(
         interface_ptr,
@@ -152,7 +152,7 @@ ewf_result ewf_adapter_quectel_common_context_configure_dns(ewf_adapter* adapter
     }
 
     char context_id_str[3];
-    const char * context_id_cstr = _unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
+    const char * context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
 #ifdef EWF_DEBUG
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIDNSCFG=", context_id_cstr, "\r", NULL))) return result;

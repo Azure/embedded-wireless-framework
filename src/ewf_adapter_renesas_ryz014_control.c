@@ -4,8 +4,7 @@
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
 
- * @details
- * The Embedded Wireless Framework Renesas RYZ014 adapter control driver
+ * brief The Embedded Wireless Framework Renesas RYZ014 adapter control driver
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_ryz014.h"
@@ -143,10 +142,6 @@ ewf_result ewf_adapter_renesas_ryz014_start(ewf_adapter* adapter_ptr)
     /* Set the error Message Format */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CMEE=1\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
-
-    /* (Re) initialize the internal status */
-
-    adapter_renesas_ryz014_ptr->current_context_id = 0;
 
 #if EWF_ADAPTER_RENESAS_RYZ014_TCP_ENABLED || EWF_ADAPTER_RENESAS_RYZ014_UDP_ENABLED
     if (ewf_result_failed(result = ewf_adapter_renesas_ryz014_internet_start(adapter_ptr)))

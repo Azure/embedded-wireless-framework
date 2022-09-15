@@ -55,9 +55,8 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
 #include "ewf_adapter_quectel_bg96.c"
-
-#include "ewf_example.config.h"
 #include "test/ewf_adapter_quectel_bg96_test.c"
+#include "ewf_example.config.h"
 
 /* USER CODE END Includes */
 
@@ -118,28 +117,28 @@ void thread_sample_entry(ULONG thread_input)
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
         EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
-        return;
+        exit(result);
     }
 
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
         EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
-        return;
+        exit(result);
     }
 
     // Set the ME functionality
     if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
     {
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
-        return;
+        exit(result);
     }
 
-    /* Run the adapter tests.  */
+    // Run the adapter tests
     if (ewf_result_failed(result = ewf_adapter_quectel_bg96_test(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to run the adapter test: ewf_result %d.", result);
-        return;
+        EWF_LOG_ERROR("Failed to run the adapter test, ewf_result %d.\n", result);
+        exit(result);
     }
 
     EWF_LOG("\nDone!\n");

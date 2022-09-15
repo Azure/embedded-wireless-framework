@@ -78,7 +78,7 @@ ewf_result ewf_adapter_modem_network_registration_read(ewf_adapter* adapter_ptr,
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
     const char data_read_response_str[] = "\r\n+CREG: ";
-    if (!_str_starts_with((char*)response_ptr, data_read_response_str))
+    if (!ewfl_str_starts_with((char*)response_ptr, data_read_response_str))
     {
         ewf_interface_release(interface_ptr, response_ptr);
         return EWF_RESULT_UNEXPECTED_RESPONSE;
@@ -89,9 +89,9 @@ ewf_result ewf_adapter_modem_network_registration_read(ewf_adapter* adapter_ptr,
         p = (char*)response_ptr;
         p += sizeof(data_read_response_str) - 1;
         while (*p && (!isdigit((unsigned char)*p))) p++;
-        *n_ptr = _str_to_unsigned(p);
+        *n_ptr = ewfl_str_to_unsigned(p);
         p = p +2; //skip ',' after URC option value (n)
-        *cmnRegistrationStatus_ptr = _str_to_unsigned(p);
+        *cmnRegistrationStatus_ptr = ewfl_str_to_unsigned(p);
         ewf_interface_release(interface_ptr, response_ptr);
     }
 

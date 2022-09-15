@@ -10,13 +10,11 @@
 /**************************************************************************/
 
 /**************************************************************************/
-/**************************************************************************/
 /**                                                                       */
 /** NetX Component                                                        */
 /**                                                                       */
-/**   Generic Driver for Embedded Wireless Framework Adapters           */
+/**   Generic Driver for Embedded Wireless Framework Adapters             */
 /**                                                                       */
-/**************************************************************************/
 /**************************************************************************/
 
 #include <stdlib.h>
@@ -94,22 +92,24 @@ typedef struct NX_DRIVER_INFORMATION_STRUCT
 
 } NX_DRIVER_INFORMATION;
 
-
 /* Define socket structure for hardware TCP/IP.  */
 
 typedef struct NX_DRIVER_SOCKET_STRUCT
 {
-    VOID                *socket_ptr;
-    UINT                 socket_id;
-    ewf_socket_tcp adapter_socket;
-    UCHAR                protocol;
-    UCHAR                tcp_connected;
-    UCHAR                is_client;
-    ULONG                local_ip;
-    ULONG                remote_ip;
-    USHORT               local_port;
-    USHORT               remote_port;
-    USHORT               reseverd;
+    VOID*   socket_ptr;
+    union 
+    {
+        ewf_socket_tcp tcp_socket;
+        ewf_socket_udp udp_socket;
+    };
+    UCHAR   protocol;
+    UCHAR   tcp_connected;
+    UCHAR   is_client;
+    ULONG   local_ip;
+    ULONG   remote_ip;
+    USHORT  local_port;
+    USHORT  remote_port;
+    USHORT  reseverd;
 
 } NX_DRIVER_SOCKET;
 
@@ -152,12 +152,11 @@ static UINT         _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr)
 static UINT         _nx_driver_hardware_capability_set(NX_IP_DRIVER *driver_req_ptr);
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
-
 /**************************************************************************/
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
-/*    nx_driver_ewf_adapter                          PORTABLE C      */
+/*    nx_driver_ewf_adapter                               PORTABLE C      */
 /*                                                           6.x          */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -200,12 +199,11 @@ static UINT         _nx_driver_hardware_capability_set(NX_IP_DRIVER *driver_req_
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 {
-
     /* Default to successful return.  */
     driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
 
@@ -223,7 +221,6 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 
     case NX_LINK_INITIALIZE:
     {
-
         /* Process link initialize requests.  */
         _nx_driver_initialize(driver_req_ptr);
         break;
@@ -231,7 +228,6 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 
     case NX_LINK_ENABLE:
     {
-
         /* Process link enable requests.  */
         _nx_driver_enable(driver_req_ptr);
         break;
@@ -239,12 +235,10 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 
     case NX_LINK_DISABLE:
     {
-
         /* Process link disable requests.  */
         _nx_driver_disable(driver_req_ptr);
         break;
     }
-
 
     case NX_LINK_ARP_SEND:
     case NX_LINK_ARP_RESPONSE_SEND:
@@ -252,26 +246,21 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
     case NX_LINK_RARP_SEND:
     case NX_LINK_PACKET_SEND:
     {
-
         /* Default to successful return.  */
         driver_req_ptr -> nx_ip_driver_status = NX_NOT_SUCCESSFUL;
         nx_packet_transmit_release(driver_req_ptr -> nx_ip_driver_packet);
         break;
     }
 
-
     case NX_LINK_MULTICAST_JOIN:
     {
-
         /* Process multicast join requests.  */
         _nx_driver_multicast_join(driver_req_ptr);
         break;
     }
 
-
     case NX_LINK_MULTICAST_LEAVE:
     {
-
         /* Process multicast leave requests.  */
         _nx_driver_multicast_leave(driver_req_ptr);
         break;
@@ -279,7 +268,6 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 
     case NX_LINK_GET_STATUS:
     {
-
         /* Process get status requests.  */
         _nx_driver_get_status(driver_req_ptr);
         break;
@@ -288,7 +276,6 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 #if (NETXDUO_MAJOR_VERSION > 6) || ((NETXDUO_MAJOR_VERSION == 6) && ((NETXDUO_MINOR_VERSION > 1) || ((NETXDUO_MINOR_VERSION == 1) && (NETXDUO_PATCH_VERSION > 8))))
     case NX_LINK_GET_INTERFACE_TYPE:
     {
-
         /* Return the link's interface type in the supplied return pointer. */
         *(driver_req_ptr -> nx_ip_driver_return_ptr) = EWF_NX_INTERFACE_TYPE;
         break;
@@ -297,7 +284,6 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 
     case NX_LINK_DEFERRED_PROCESSING:
     {
-
         /* Process driver deferred requests.  */
 
         /* Process a device driver function on behave of the IP thread. */
@@ -309,7 +295,6 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
     case NX_INTERFACE_CAPABILITY_GET:
     {
-
         /* Process get capability requests.  */
         _nx_driver_capability_get(driver_req_ptr);
         break;
@@ -317,7 +302,6 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 
     case NX_INTERFACE_CAPABILITY_SET:
     {
-
         /* Process set capability requests.  */
         _nx_driver_capability_set(driver_req_ptr);
         break;
@@ -325,7 +309,6 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
     default:
-
 
         /* Invalid driver request.  */
 
@@ -336,7 +319,6 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
         driver_req_ptr -> nx_ip_driver_status =  NX_NOT_SUCCESSFUL;
     }
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -373,7 +355,7 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr)
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_interface_attach(NX_IP_DRIVER *driver_req_ptr)
@@ -385,7 +367,6 @@ static VOID  _nx_driver_interface_attach(NX_IP_DRIVER *driver_req_ptr)
     /* Return successful status.  */
     driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -424,7 +405,7 @@ static VOID  _nx_driver_interface_attach(NX_IP_DRIVER *driver_req_ptr)
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_initialize(NX_IP_DRIVER *driver_req_ptr)
@@ -468,7 +449,7 @@ UINT          status;
         interface_ptr -> nx_interface_ip_mtu_size = NX_DRIVER_IP_MTU;
 
         /* Setup the physical address of this IP instance.  */
-        /* TODO: Use WIFI_GetMAC_Address() to set the real value.  */
+        /* TODO, implement */
         interface_ptr -> nx_interface_physical_address_msw = 0;
         interface_ptr -> nx_interface_physical_address_lsw = 0;
 
@@ -489,7 +470,6 @@ UINT          status;
         driver_req_ptr -> nx_ip_driver_status =   NX_NOT_SUCCESSFUL;
     }
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -528,7 +508,7 @@ UINT          status;
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_enable(NX_IP_DRIVER *driver_req_ptr)
@@ -581,7 +561,6 @@ UINT            status;
     }
 }
 
-
 /**************************************************************************/
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
@@ -619,7 +598,7 @@ UINT            status;
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_disable(NX_IP_DRIVER *driver_req_ptr)
@@ -663,7 +642,6 @@ UINT            status;
     }
 }
 
-
 /**************************************************************************/
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
@@ -701,7 +679,7 @@ UINT            status;
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
@@ -710,7 +688,6 @@ static VOID  _nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
     /* Not supported.  */
     driver_req_ptr -> nx_ip_driver_status =  NX_NOT_SUCCESSFUL;
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -750,7 +727,7 @@ static VOID  _nx_driver_multicast_join(NX_IP_DRIVER *driver_req_ptr)
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
@@ -759,7 +736,6 @@ static VOID  _nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
     /* Not supported.  */
     driver_req_ptr -> nx_ip_driver_status =  NX_NOT_SUCCESSFUL;
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -798,7 +774,7 @@ static VOID  _nx_driver_multicast_leave(NX_IP_DRIVER *driver_req_ptr)
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_get_status(NX_IP_DRIVER *driver_req_ptr)
@@ -824,7 +800,6 @@ UINT        status;
         driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
     }
 }
-
 
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
 /**************************************************************************/
@@ -862,7 +837,7 @@ UINT        status;
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr)
@@ -874,7 +849,6 @@ static VOID  _nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr)
     /* Return the success status.  */
     driver_req_ptr -> nx_ip_driver_status =  NX_SUCCESS;
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -911,7 +885,7 @@ static VOID  _nx_driver_capability_get(NX_IP_DRIVER *driver_req_ptr)
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_capability_set(NX_IP_DRIVER *driver_req_ptr)
@@ -938,7 +912,6 @@ UINT        status;
     }
 }
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -976,13 +949,12 @@ UINT        status;
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr)
 {
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -1027,7 +999,7 @@ static VOID  _nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr)
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static VOID _nx_driver_thread_entry(ULONG thread_input)
@@ -1048,6 +1020,16 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
 
     for (;;)
     {
+        ewf_adapter* adapter_ptr = (ewf_adapter*)ip_ptr->nx_ip_reserved_ptr;
+        if ((adapter_ptr == NULL) ||
+            (adapter_ptr->struct_magic != EWF_ADAPTER_STRUCT_MAGIC) ||
+            (adapter_ptr->struct_size != EWF_ADAPTER_STRUCT_SIZE) ||
+            (adapter_ptr->struct_version != EWF_ADAPTER_VERSION))
+        {
+            tx_thread_sleep(1);
+            /* Wait until we have a valid adapter pointer */
+            continue;
+        }
 
         /* Obtain the IP internal mutex before processing the IP event.  */
         tx_mutex_get(&(ip_ptr -> nx_ip_protection), TX_WAIT_FOREVER);
@@ -1112,13 +1094,30 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                     data_length = NX_DRIVER_IP_MTU;
                 }
 
+                ewf_result result;
+
                 /* Receive data without suspending.  */
-                unsigned len = data_length;
-                ewf_result result = ewf_adapter_tcp_receive(
-                    &(nx_driver_sockets[i].adapter_socket),
-                    (char *)(packet_ptr -> nx_packet_prepend_ptr), &len,
-                    false);
-                data_length = len;
+                if (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP)
+                {
+                    unsigned len = data_length;
+                    result = ewf_adapter_tcp_receive(
+                        &nx_driver_sockets[i].tcp_socket,
+                        (char*)(packet_ptr->nx_packet_prepend_ptr), 
+                        &len,
+                        false);
+                    data_length = len;
+                }
+                else
+                {
+                    unsigned len = data_length;
+                    result = ewf_adapter_udp_receive_from(
+                        &nx_driver_sockets[i].udp_socket,
+                        NULL, NULL, NULL,
+                        (char*)(packet_ptr->nx_packet_prepend_ptr),
+                        &len,
+                        false);
+                    data_length = len;
+                }
 
                 if (ewf_result_failed(result))
                 {
@@ -1180,7 +1179,6 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
     }
 }
 
-
 /**************************************************************************/
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
@@ -1224,7 +1222,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static UINT _nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
@@ -1234,6 +1232,7 @@ static UINT _nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
                                      UINT local_port, UINT *remote_port, UINT wait_option)
 {
 UINT status = NX_NOT_SUCCESSFUL;
+char server_address[16] = { 0 };
 UCHAR remote_ip_bytes[4] = { 0 };
 NX_PACKET *current_packet;
 ULONG packet_size;
@@ -1241,6 +1240,16 @@ ULONG offset;
 uint16_t sent_size;
 UINT i = 0;
 ewf_result result;
+
+    ewf_adapter* adapter_ptr = (ewf_adapter*)ip_ptr->nx_ip_reserved_ptr;
+    if ((adapter_ptr == NULL) ||
+        (adapter_ptr->struct_magic != EWF_ADAPTER_STRUCT_MAGIC) ||
+        (adapter_ptr->struct_size != EWF_ADAPTER_STRUCT_SIZE) ||
+        (adapter_ptr->struct_version != EWF_ADAPTER_VERSION))
+    {
+        /* We need a valid adapter pointer */
+        return(NX_NOT_SUPPORTED);
+    }
 
     if (operation == NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_LISTEN)
     {
@@ -1299,20 +1308,7 @@ ewf_result result;
         /* Store the index of driver socket.  */
         ((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context = (VOID *)i;
 
-        /* Convert remote IP to byte array.  */
-        remote_ip_bytes[0] = (remote_ip -> nxd_ip_address.v4 >> 24) & 0xFF;
-        remote_ip_bytes[1] = (remote_ip -> nxd_ip_address.v4 >> 16) & 0xFF;
-        remote_ip_bytes[2] = (remote_ip -> nxd_ip_address.v4 >> 8) & 0xFF;
-        remote_ip_bytes[3] = (remote_ip -> nxd_ip_address.v4) & 0xFF;
-
-        char server_address[16];
-        snprintf(server_address, 16, "%u.%u.%u.%u",
-                 remote_ip_bytes[0],
-                 remote_ip_bytes[1],
-                 remote_ip_bytes[2],
-                 remote_ip_bytes[3]);
-        
-        result = ewf_adapter_tcp_open(adapter_ptr, &(nx_driver_sockets[i].adapter_socket));
+        result = ewf_adapter_tcp_open(adapter_ptr, &nx_driver_sockets[i].tcp_socket);
         if (ewf_result_failed(result))
         {
             return(NX_NOT_SUCCESSFUL);
@@ -1322,7 +1318,20 @@ ewf_result result;
             status = NX_SUCCESS;
         }
 
-        result = ewf_adapter_tcp_connect((int *)&(nx_driver_sockets[i].adapter_socket), server_address, *remote_port);
+        /* Convert remote IP to byte array.  */
+        remote_ip_bytes[0] = (remote_ip -> nxd_ip_address.v4 >> 24) & 0xFF;
+        remote_ip_bytes[1] = (remote_ip -> nxd_ip_address.v4 >> 16) & 0xFF;
+        remote_ip_bytes[2] = (remote_ip -> nxd_ip_address.v4 >> 8) & 0xFF;
+        remote_ip_bytes[3] = (remote_ip -> nxd_ip_address.v4) & 0xFF;
+
+        snprintf(server_address, sizeof(server_address), 
+            "%u.%u.%u.%u",
+            remote_ip_bytes[0],
+            remote_ip_bytes[1],
+            remote_ip_bytes[2],
+            remote_ip_bytes[3]);
+
+        result = ewf_adapter_tcp_connect(&nx_driver_sockets[i].tcp_socket, server_address, *remote_port);
         if (ewf_result_failed(result))
         {
             return(NX_NOT_SUCCESSFUL);
@@ -1351,16 +1360,12 @@ ewf_result result;
         /* Store the index of driver socket.  */
         ((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context = (VOID *)i;
 
-#if 0 /* *** TODO *** */
-        /* Start TCP server.  */
-        status = WIFI_StartServer(i, WIFI_TCP_PROTOCOL, NX_DRIVER_SERVER_LISTEN_COUNT, "", local_port);
-        if (status)
+        ewf_result result = ewf_adapter_tcp_listen(
+            &nx_driver_sockets[i].tcp_socket);
+        if (ewf_result_failed(result))
         {
             return(NX_NOT_SUCCESSFUL);
         }
-#else
-        /* TODO */
-#endif
 
 #ifdef NX_DEBUG
         printf("TCP server socket %u listen to port: %u\r\n", i, local_port);
@@ -1439,7 +1444,7 @@ ewf_result result;
 #endif
 
                 /* Disconnect.  */
-                result = ewf_adapter_tcp_close(&(nx_driver_sockets[i].adapter_socket));
+                result = ewf_adapter_tcp_close(&nx_driver_sockets[i].tcp_socket);
                 if (ewf_result_failed(result))
                     status = NX_NOT_SUCCESSFUL;
                 else
@@ -1452,7 +1457,7 @@ ewf_result result;
 #endif
 
                 /* Disconnect.  */
-                result = ewf_adapter_tcp_close(&(nx_driver_sockets[i].adapter_socket));
+                result = ewf_adapter_tcp_close(&nx_driver_sockets[i].tcp_socket);
                 if (ewf_result_failed(result))
                     status = NX_NOT_SUCCESSFUL;
                 else
@@ -1470,7 +1475,7 @@ ewf_result result;
         break;
 
     case NX_TCPIP_OFFLOAD_UDP_SOCKET_BIND:
-#if 0
+
         /* Note, send data from one port to multiple remotes are not supported.  */
         /* Store the index of driver socket.  */
         ((NX_UDP_SOCKET *)socket_ptr) -> nx_udp_socket_tcpip_offload_context = (VOID *)i;
@@ -1483,11 +1488,11 @@ ewf_result result;
 #endif
 
         status = NX_SUCCESS;
-#endif
+
         break;
 
     case NX_TCPIP_OFFLOAD_UDP_SOCKET_UNBIND:
-#if 0
+
         i = (UINT)(((NX_UDP_SOCKET *)socket_ptr) -> nx_udp_socket_tcpip_offload_context);
 
         if (nx_driver_sockets[i].remote_port)
@@ -1498,45 +1503,14 @@ ewf_result result;
 
         /* Reset socket to free this entry.  */
         nx_driver_sockets[i].socket_ptr = NX_NULL;
-#endif
+
         break;
 
     case NX_TCPIP_OFFLOAD_UDP_SOCKET_SEND:
-#if 0
+
         i = (UINT)(((NX_UDP_SOCKET *)socket_ptr) -> nx_udp_socket_tcpip_offload_context);
         if (nx_driver_sockets[i].remote_port == 0)
         {
-
-            /* Do connection once. */
-            /* Convert remote IP to byte array.  */
-            remote_ip_bytes[0] = (remote_ip -> nxd_ip_address.v4 >> 24) & 0xFF;
-            remote_ip_bytes[1] = (remote_ip -> nxd_ip_address.v4 >> 16) & 0xFF;
-            remote_ip_bytes[2] = (remote_ip -> nxd_ip_address.v4 >> 8) & 0xFF;
-            remote_ip_bytes[3] = (remote_ip -> nxd_ip_address.v4) & 0xFF;
-
-            char server_address[16];
-            snprintf(server_address, 16, "%u.%u.%u.%u",
-                remote_ip_bytes[0],
-                remote_ip_bytes[1],
-                remote_ip_bytes[2],
-                remote_ip_bytes[3]);
-
-            result = ewf_adapter_udp_connect((int*)&(nx_driver_sockets[i].socket_id), server_address, *remote_port);
-            if (ewf_result_failed(result))
-            {
-                return(NX_NOT_SUCCESSFUL);
-            }
-            else
-            {
-                status = NX_SUCCESS;
-            }
-
-#ifdef NX_DEBUG
-            printf("UDP socket %u connect to: %u.%u.%u.%u:%u\r\n",
-                   i, remote_ip_bytes[0], remote_ip_bytes[1],
-                   remote_ip_bytes[2], remote_ip_bytes[3], *remote_port);
-#endif
-
             /* Store address and port.  */
             nx_driver_sockets[i].local_ip = local_ip -> nxd_ip_address.v4;
             nx_driver_sockets[i].remote_ip = remote_ip -> nxd_ip_address.v4;
@@ -1567,9 +1541,29 @@ ewf_result result;
             wait_option = wait_option / NX_IP_PERIODIC_RATE * 1000;
         }
 
+        /* Convert remote IP to byte array.  */
+        remote_ip_bytes[0] = (remote_ip->nxd_ip_address.v4 >> 24) & 0xFF;
+        remote_ip_bytes[1] = (remote_ip->nxd_ip_address.v4 >> 16) & 0xFF;
+        remote_ip_bytes[2] = (remote_ip->nxd_ip_address.v4 >> 8) & 0xFF;
+        remote_ip_bytes[3] = (remote_ip->nxd_ip_address.v4) & 0xFF;
+
+        snprintf(server_address, sizeof(server_address), 
+            "%u.%u.%u.%u",
+            remote_ip_bytes[0],
+            remote_ip_bytes[1],
+            remote_ip_bytes[2],
+            remote_ip_bytes[3]);
+
+#ifdef NX_DEBUG
+        printf("UDP socket %u connect to: %u.%u.%u.%u:%u\r\n",
+            i, remote_ip_bytes[0], remote_ip_bytes[1],
+            remote_ip_bytes[2], remote_ip_bytes[3], *remote_port);
+#endif
+
         /* Send data.  */
-        ewf_result result = ewf_adapter_udp_send(
-            nx_driver_sockets[i].socket_id,
+        result = ewf_adapter_udp_send_to(
+            &nx_driver_sockets[i].udp_socket,
+            server_address, *remote_port,
             (char const*)(uint8_t*)packet_ptr->nx_packet_prepend_ptr,
             packet_ptr->nx_packet_length);
         /* Check status.  */
@@ -1591,7 +1585,6 @@ ewf_result result;
 
         /* Release the packet.  */
         nx_packet_transmit_release(packet_ptr);
-#endif
 
         break;
 
@@ -1628,8 +1621,8 @@ ewf_result result;
 
             /* Send data.  */
             ewf_result result = ewf_adapter_tcp_send(
-              &(nx_driver_sockets[i].adapter_socket),
-              (char const *)(uint8_t *)current_packet-> nx_packet_prepend_ptr + offset,
+              &nx_driver_sockets[i].tcp_socket,
+              (char const *)(uint8_t *)current_packet-> nx_packet_prepend_ptr,
               packet_size);
             /* Check status.  */
             if (ewf_result_failed(result))
@@ -1678,9 +1671,7 @@ ewf_result result;
     return(status);
 }
 
-
 /****** DRIVER SPECIFIC ****** Start of part/vendor specific internal driver functions.  */
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -1717,7 +1708,7 @@ ewf_result result;
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static UINT  _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
@@ -1739,7 +1730,6 @@ UINT priority = 0;
     /* Return success!  */
     return(status);
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -1776,7 +1766,7 @@ UINT priority = 0;
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static UINT  _nx_driver_hardware_enable(NX_IP_DRIVER *driver_req_ptr)
@@ -1787,7 +1777,6 @@ static UINT  _nx_driver_hardware_enable(NX_IP_DRIVER *driver_req_ptr)
     /* Return success!  */
     return(NX_SUCCESS);
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -1824,22 +1813,32 @@ static UINT  _nx_driver_hardware_enable(NX_IP_DRIVER *driver_req_ptr)
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static UINT  _nx_driver_hardware_disable(NX_IP_DRIVER *driver_req_ptr)
 {
 UINT i;
 
-    /* Reset all sockets.  */
-    for (i = 0; i < NX_DRIVER_SOCKETS_MAXIMUM; i++)
+    ewf_adapter* adapter_ptr = (ewf_adapter*)driver_req_ptr->nx_ip_driver_ptr->nx_ip_reserved_ptr;
+    if ((adapter_ptr == NULL) ||
+        (adapter_ptr->struct_magic != EWF_ADAPTER_STRUCT_MAGIC) ||
+        (adapter_ptr->struct_size != EWF_ADAPTER_STRUCT_SIZE) ||
+        (adapter_ptr->struct_version != EWF_ADAPTER_VERSION))
     {
-        if (nx_driver_sockets[i].socket_ptr)
+        /* We need a valid adapter pointer */
+    }
+    else
+    {
+        /* Reset all sockets.  */
+        for (i = 0; i < NX_DRIVER_SOCKETS_MAXIMUM; i++)
         {
-
-            /* Disconnect.  */
-            ewf_adapter_tcp_close(&(nx_driver_sockets[i].adapter_socket));
-            nx_driver_sockets[i].socket_ptr = NX_NULL;
+            if (nx_driver_sockets[i].socket_ptr)
+            {
+                /* Disconnect.  */
+                ewf_adapter_tcp_close(&nx_driver_sockets[i].tcp_socket);
+                nx_driver_sockets[i].socket_ptr = NX_NULL;
+            }
         }
     }
 
@@ -1849,7 +1848,6 @@ UINT i;
     /* Return success!  */
     return(NX_SUCCESS);
 }
-
 
 /**************************************************************************/
 /*                                                                        */
@@ -1885,7 +1883,7 @@ UINT i;
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static UINT  _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr)
@@ -1894,7 +1892,6 @@ static UINT  _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr)
     /* Return success.  */
     return(NX_SUCCESS);
 }
-
 
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
 /**************************************************************************/
@@ -1931,7 +1928,7 @@ static UINT  _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr)
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  xx-xx-xxxx     Andres Mlinar            Initial Version 6.x           */
+/*  01-09-2022     Andres Mlinar            Initial Version 6.x           */
 /*                                                                        */
 /**************************************************************************/
 static UINT _nx_driver_hardware_capability_set(NX_IP_DRIVER *driver_req_ptr)

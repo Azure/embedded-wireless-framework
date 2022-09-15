@@ -11,6 +11,24 @@
 
 #include "ewf.h"
 
+/****************************************************************************
+ * Check for platform definitions, define/undef EWF_PLATFORM_HAS_THREADING
+ ****************************************************************************/
+
+#if defined(EWF_PLATFORM_BARE_METAL) && !defined(EWF_PLATFORM_THREADX) && !defined(EWF_PLATFORM_FREERTOS) && !defined(EWF_PLATFORM_WIN32) && !defined(EWF_PLATFORM_PTHREAD)
+#undef EWF_PLATFORM_HAS_THREADING
+#elif !defined(EWF_PLATFORM_BARE_METAL) && defined(EWF_PLATFORM_THREADX) && !defined(EWF_PLATFORM_FREERTOS) && !defined(EWF_PLATFORM_WIN32) && !defined(EWF_PLATFORM_PTHREAD)
+#define EWF_PLATFORM_HAS_THREADING
+#elif !defined(EWF_PLATFORM_BARE_METAL) && !defined(EWF_PLATFORM_THREADX) && defined(EWF_PLATFORM_FREERTOS) && !defined(EWF_PLATFORM_WIN32) && !defined(EWF_PLATFORM_PTHREAD)
+#define EWF_PLATFORM_HAS_THREADING
+#elif !defined(EWF_PLATFORM_BARE_METAL) && !defined(EWF_PLATFORM_THREADX) && !defined(EWF_PLATFORM_FREERTOS) && defined(EWF_PLATFORM_WIN32) && !defined(EWF_PLATFORM_PTHREAD)
+#define EWF_PLATFORM_HAS_THREADING
+#elif !defined(EWF_PLATFORM_BARE_METAL) && !defined(EWF_PLATFORM_THREADX) && !defined(EWF_PLATFORM_FREERTOS) && !defined(EWF_PLATFORM_WIN32) && defined(EWF_PLATFORM_PTHREAD)
+#define EWF_PLATFORM_HAS_THREADING
+#else
+#error One and only one valid platform should be defined (check the file ewf.config.h and/or your build settings)
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,14 +46,13 @@ extern "C" {
  */
 ewf_result ewf_platform_sleep(uint32_t time);
 
+#ifdef EWF_PLATFORM_HAS_THREADING
+
 /************************************************************************//**
  * @defgroup group_platform_thread EWF Platform API - Thread
  * @brief Functions for abstracting the platform where EWF is running.
  * @{
  ****************************************************************************/
-
-/** Defined if the platform supports threading */
-#define EWF_PLATFORM_SUPPORTS_THREADING
 
 /**
  * @brief The generic thread priority type
@@ -87,14 +104,15 @@ ewf_result ewf_platform_thread_stop(ewf_platform_thread * thread_ptr);
  * @} * group_platform_thread
  ****************************************************************************/
 
+#endif /* EWF_PLATFORM_HAS_THREADING */
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+
 /************************************************************************//**
  * @defgroup group_platform_mutex EWF Platform API - Mutex
  * @brief Functions for abstracting the platform where EWF is running.
  * @{
  ****************************************************************************/
-
-/** Defined if the platform supports mutexing */
-#define EWF_PLATFORM_SUPPORTS_MUTEXING
 
 /**
  * @brief The mutex structure, defined per platform
@@ -135,6 +153,8 @@ ewf_result ewf_platform_mutex_put(ewf_platform_mutex * mutex_ptr);
 /************************************************************************//**
  * @} * group_platform_mutex
  ****************************************************************************/
+
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
 /************************************************************************//**
  * @defgroup group_platform_queue EWF Platform API - Queue
@@ -180,24 +200,30 @@ ewf_result ewf_platform_queue_dequeue(ewf_platform_queue* queue_ptr, void* buffe
  * @} * group_platform_queue
  ****************************************************************************/
 
- /************************************************************************//**
+/************************************************************************//**
  * @} * group_platform
  ****************************************************************************/
 
-#if defined(EWF_PLATFORM_BARE_METAL) && !defined(EWF_PLATFORM_THREADX) && !defined(EWF_PLATFORM_FREERTOS) && !defined(EWF_PLATFORM_WIN32)
-#include "ewf_platform_bare_metal.h"
-#elif !defined(EWF_PLATFORM_BARE_METAL) && defined(EWF_PLATFORM_THREADX) && !defined(EWF_PLATFORM_FREERTOS) && !defined(EWF_PLATFORM_WIN32)
-#include "ewf_platform_threadx.h"
-#elif !defined(EWF_PLATFORM_BARE_METAL) && !defined(EWF_PLATFORM_THREADX) && defined(EWF_PLATFORM_FREERTOS) && !defined(EWF_PLATFORM_WIN32)
-#include "ewf_platform_freertos.h"
-#elif !defined(EWF_PLATFORM_BARE_METAL) && !defined(EWF_PLATFORM_THREADX) && !defined(EWF_PLATFORM_FREERTOS) && defined(EWF_PLATFORM_WIN32)
-#include "ewf_platform_win32.h"
-#else
-#error One and only one valid platform should be defined!
-#endif
-
 #ifdef __cplusplus
 }
+#endif
+
+/****************************************************************************
+ * Include the platform specific header
+ ****************************************************************************/
+
+#if defined(EWF_PLATFORM_BARE_METAL)
+#include "ewf_platform_bare_metal.h"
+#elif defined(EWF_PLATFORM_THREADX)
+#include "ewf_platform_threadx.h"
+#elif defined(EWF_PLATFORM_FREERTOS)
+#include "ewf_platform_freertos.h"
+#elif defined(EWF_PLATFORM_WIN32)
+#include "ewf_platform_win32.h"
+#elif defined(EWF_PLATFORM_PTHREAD)
+#include "ewf_platform_pthread.h"
+#else
+#error No valid platform defined!
 #endif
 
 #endif /* __ewf_platform__h__included__ */

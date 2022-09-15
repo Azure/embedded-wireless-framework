@@ -55,7 +55,6 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
 #include "ewf_adapter_quectel_bg96.c"
-
 #include "ewf_example.config.h"
 
 /* USER CODE END Includes */
@@ -152,14 +151,14 @@ void thread_sample_entry(ULONG thread_input)
     ewf_result result;
 
     ewf_allocator* message_allocator_ptr = NULL;
-    ewf_allocator* data_allocator_ptr = NULL;
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
-    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(data_allocator_ptr, data_allocator, 4, 1500);
+    EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_STM32_UART_STATIC_DECLARE(interface_ptr, stm32_uart_port, &huart3);
-    EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, data_allocator_ptr, interface_ptr);
+    EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 
     /* Start the adapter.  */
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
@@ -194,7 +193,7 @@ void thread_sample_entry(ULONG thread_input)
     /* Stay here forever.  */
     while (1)
     {
-    	EWF_LOG(".");
+        EWF_LOG(".");
         tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND);
     }
 }

@@ -188,7 +188,7 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.pathentry"/>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="ewf_telemetry_tx_bg96.null.631501485" name="ewf_telemetry_tx_bg96"/>
+		<project id="ewf_telemetry_basic_tx_bg95_shield.null.631501485" name="ewf_telemetry_basic_tx_bg95_shield"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="scannerConfiguration">
@@ -203,10 +203,10 @@
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/ewf_telemetry_tx_bg96"/>
+			<resource resourceType="PROJECT" workspacePath="/ewf_telemetry_basic_tx_bg95_shield"/>
 		</configuration>
 		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/ewf_telemetry_tx_bg96"/>
+			<resource resourceType="PROJECT" workspacePath="/ewf_telemetry_basic_tx_bg95_shield"/>
 		</configuration>
 	</storageModule>
 </cproject>

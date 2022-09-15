@@ -4,8 +4,7 @@
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
 
- * @details
- * The Embedded Wireless Framework Renesas RYZ014 adapter driver
+ * brief The Embedded Wireless Framework Renesas RYZ014 adapter driver
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_ryz014.h"
@@ -21,29 +20,29 @@ ewf_result ewf_adapter_renesas_ryz014_urc_callback(ewf_interface* interface_ptr,
 
     ewf_result result;
 
-    if (_str_starts_with((char*)buffer_ptr, "+CREG:"))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+CREG:"))
     {
         return EWF_RESULT_OK;
     }
-    if (_str_starts_with((char*)buffer_ptr, "+CEREG:"))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+CEREG:"))
     {
         return EWF_RESULT_OK;
     }
-    if (_str_starts_with((char*)buffer_ptr, "+SYSSTART"))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+SYSSTART"))
     {
         adapter_renesas_ryz014_ptr->module_start = true;
         return EWF_RESULT_OK;
     }
-    if (_str_starts_with((char*)buffer_ptr, "+SHUTDOWN"))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+SHUTDOWN"))
     {
         adapter_renesas_ryz014_ptr->module_start = false;
         return EWF_RESULT_OK;
     }
-    if (_str_starts_with((char*)buffer_ptr, "+SQNSIMST: "))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSIMST: "))
     {
         return EWF_RESULT_OK;
     }
-    if (_str_starts_with((char*)buffer_ptr, "+CME ERROR: 171"))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+CME ERROR: 171"))
     {
         /* Last PDN disconnection not allowed, Cause No. 49 �quality of service unavailable�
         * refer  3GPP TS 24.008 [8] cause codes for more info */

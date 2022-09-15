@@ -35,24 +35,19 @@ extern "C" {
  * @{
  */
 
-#define EWF_INTERFACE_LPC_UART_RING_BUFFER_SIZE           		(128U)
+#define EWF_INTERFACE_LPC_UART_RING_BUFFER_SIZE                 (128U)
 
 
 #ifndef EWF_INTERFACE_LPC_UART_CONFIG_UART_RX_QUEUE_SIZE
-#define EWF_INTERFACE_LPC_UART_CONFIG_UART_RX_QUEUE_SIZE      	(32)
-#endif
-
-#ifndef EWF_INTERFACE_LPC_UART_CONFIG_RX_THREAD_STACK_SIZE
-/** This is the stack size for the reception thread, the default is conservative, you can reduce this in your application */
-#define EWF_INTERFACE_LPC_UART_CONFIG_RX_THREAD_STACK_SIZE    	(1024 * 2)
+#define EWF_INTERFACE_LPC_UART_CONFIG_UART_RX_QUEUE_SIZE        (32)
 #endif
 
 #ifndef EWF_INTERFACE_LPC_UART_CONFIG_RESPONSE_QUEUE_SIZE
-#define EWF_INTERFACE_LPC_UART_CONFIG_RESPONSE_QUEUE_SIZE     	(8)
+#define EWF_INTERFACE_LPC_UART_CONFIG_RESPONSE_QUEUE_SIZE       (8)
 #endif
 
 #ifndef EWF_INTERFACE_LPC_UART_CONFIG_URC_QUEUE_SIZE
-#define EWF_INTERFACE_LPC_UART_CONFIG_URC_QUEUE_SIZE          	(8)
+#define EWF_INTERFACE_LPC_UART_CONFIG_URC_QUEUE_SIZE            (8)
 #endif
 
 /** @} *** group_interface_lpc_uart_config */
@@ -119,40 +114,21 @@ do {                                                                            
 #define EWF_INTERFACE_LPC_UART_INITIALIZE_HEADER(interface_ptr)
 #endif /* EWF_PARAMETER_CHECKING */
 
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
-#define EWF_INTERFACE_LPC_UART_INITIALIZE_RX_THREAD(thread_ptr, thread_name_symb, interface_ptr)                                                    \
-do {                                                                                                                                                \
-EWF_PLATFORM_THREAD_STATIC_DECLARE(                                                                                                                 \
-    thread_ptr,                                                                                                                                     \
-    thread_name_symb,                                                                                                                               \
-    ewf_interface_receive_thread,                                                                                                                   \
-    interface_ptr,                                                                                                                                  \
-    EWF_INTERFACE_LPC_UART_CONFIG_RX_THREAD_STACK_SIZE,                                                                                             \
-    EWF_PLATFORM_THREAD_PRIORITY_HIGH);                                                                                                             \
-} while(0)
-#else
-#define EWF_INTERFACE_LPC_UART_INITIALIZE_RX_THREAD(thread_ptr, thread_name_symb, interface_ptr)
-#endif /* EWF_PLATFORM_SUPPORTS_THREADING */
-
 /**
  * @brief Declare a LPC UART host interface
  * @param[in,out] interface_ptr a pointer to an interface that will be initialized to point to the one statically declared by the macro
  * @param[in] interface_name_symb a unique symbol name that will be used as a name suffix for the statically declared data
  */
-#define EWF_INTERFACE_LPC_UART_STATIC_DECLARE(interface_ptr, interface_name_symb, uart_base_ptr_param, baud_rate_param)								\
+#define EWF_INTERFACE_LPC_UART_STATIC_DECLARE(interface_ptr, interface_name_symb, uart_base_ptr_param, baud_rate_param)                             \
 do {                                                                                                                                                \
 static ewf_interface_lpc_uart ewf_interface_lpc_uart__implementation__##interface_name_symb = {0};                                                  \
 static ewf_interface ewf_interface_lpc_uart__interface__##interface_name_symb = {0};                                                                \
-ewf_interface_lpc_uart__implementation__##interface_name_symb.base = uart_base_ptr_param;                                              				\
-ewf_interface_lpc_uart__implementation__##interface_name_symb.buffer_size = EWF_INTERFACE_LPC_UART_RING_BUFFER_SIZE;								\
-ewf_interface_lpc_uart__implementation__##interface_name_symb.baud_rate = baud_rate_param;															\
+ewf_interface_lpc_uart__implementation__##interface_name_symb.base = uart_base_ptr_param;                                                           \
+ewf_interface_lpc_uart__implementation__##interface_name_symb.buffer_size = EWF_INTERFACE_LPC_UART_RING_BUFFER_SIZE;                                \
+ewf_interface_lpc_uart__implementation__##interface_name_symb.baud_rate = baud_rate_param;                                                          \
 EWF_PLATFORM_MUTEX_STATIC_DECLARE(                                                                                                                  \
-	ewf_interface_lpc_uart__implementation__##interface_name_symb.rx_mutex_ptr,                                                                 	\
+    ewf_interface_lpc_uart__implementation__##interface_name_symb.rx_mutex_ptr,                                                                     \
     ewf_interface_lpc_uart__uart_rx_mutex__##interface_name_symb);                                                                                  \
-EWF_INTERFACE_LPC_UART_INITIALIZE_RX_THREAD(                                                                                                        \
-    ewf_interface_lpc_uart__interface__##interface_name_symb.receive_thread_ptr,                                                                    \
-    ewf_interface_lpc_uart__receive_thread__##interface_name_symb,                                                                                  \
-    &(ewf_interface_lpc_uart__interface__##interface_name_symb));                                                                                   \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \
     ewf_interface_lpc_uart__interface__##interface_name_symb.response_queue_ptr,                                                                    \
     ewf_interface_lpc_uart__response_queue__##interface_name_symb,                                                                                  \

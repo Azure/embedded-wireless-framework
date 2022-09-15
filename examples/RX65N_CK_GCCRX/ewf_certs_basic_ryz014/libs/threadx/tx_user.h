@@ -132,7 +132,7 @@
    Note: the actual hardware timer value may need to be changed (usually in tx_initialize_low_level).  */
 #define USE_TX_TIMER_TICKS_PER_SECOND				0
 #if USE_TX_TIMER_TICKS_PER_SECOND
-#define TX_TIMER_TICKS_PER_SECOND		(100)
+#define TX_TIMER_TICKS_PER_SECOND		((ULONG) 100)
 #endif
 
 /* Determine if there is a FileX pointer in the thread control block.

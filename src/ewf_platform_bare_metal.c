@@ -12,6 +12,7 @@
 
 ewf_result ewf_platform_sleep(uint32_t t)
 {
+    EWF_PLATFORM_BUSY_WAIT(t);
     return EWF_RESULT_OK;
 }
 
@@ -67,9 +68,9 @@ ewf_result ewf_platform_queue_enqueue(ewf_platform_queue* queue_ptr, const void*
 
     do
     {
-        ewf_platform_interrupt_state state;
-        state = ewf_platform_interrupt_state_get();
-        ewf_platform_interrupt_disable();
+        EWF_PLATFORM_INTERRUPT_STATE_TYPE state;
+        state = EWF_PLATFORM_INTERRUPT_STATE_TYPE_GET();
+        EWF_PLATFORM_INTERRUPT_DISABLE();
 
         if (queue_ptr->used_count >= queue_ptr->queue_size)
         {
@@ -86,7 +87,7 @@ ewf_result ewf_platform_queue_enqueue(ewf_platform_queue* queue_ptr, const void*
             queue_ptr->used_count++;
         }
 
-        ewf_platform_interrupt_state_set(state);
+        EWF_PLATFORM_INTERRUPT_STATE_TYPE_SET(state);
     }
     while (wait && (result == EWF_RESULT_FULL_QUEUE));
 
@@ -125,9 +126,9 @@ ewf_result ewf_platform_queue_dequeue(ewf_platform_queue* queue_ptr, void* buffe
 
     do
     {
-        ewf_platform_interrupt_state state;
-        state = ewf_platform_interrupt_state_get();
-        ewf_platform_interrupt_disable();
+        EWF_PLATFORM_INTERRUPT_STATE_TYPE state;
+        state = EWF_PLATFORM_INTERRUPT_STATE_TYPE_GET();
+        EWF_PLATFORM_INTERRUPT_DISABLE();
 
         if (queue_ptr->used_count == 0)
         {
@@ -145,7 +146,7 @@ ewf_result ewf_platform_queue_dequeue(ewf_platform_queue* queue_ptr, void* buffe
             queue_ptr->used_count--;
         }
 
-        ewf_platform_interrupt_state_set(state);
+        EWF_PLATFORM_INTERRUPT_STATE_TYPE_SET(state);
     }
     while (wait && (result == EWF_RESULT_EMPTY_QUEUE));
 

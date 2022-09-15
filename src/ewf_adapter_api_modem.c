@@ -39,7 +39,7 @@ ewf_result ewf_adapter_modem_network_registration_check(ewf_adapter* adapter_ptr
     	return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-	ewf_result result;
+	ewf_result result = EWF_RESULT_OK;
 	uint32_t n;
 	ewf_network_status stat = EWF_NOT_REGISTERED_NOT_SEARCHING;
 

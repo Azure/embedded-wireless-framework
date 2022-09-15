@@ -6,6 +6,9 @@
             <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_test_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
             <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_test_tx_bg96_shield/firmware/src/main.c</file>
         </group>
-        <group name="ewf_same54_tx_bg96"/>
+        <group name="ewf_same54_tx_bg96">
+            <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_test_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
+            <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_test_tx_bg96_shield/firmware/src/ewf_example.config.h</file>
+        </group>
     </open-files>
 </project-private>

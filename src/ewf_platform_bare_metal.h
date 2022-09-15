@@ -11,37 +11,64 @@
 
 #include "ewf_platform.h"
 
-#ifdef __cplusplus
-extern "C" {
+#ifndef EWF_PLATFORM_BARE_METAL
+#error EWF_PLATFORM_BARE_METAL must be defined before including this file
 #endif
 
 #include <stdint.h>
 
-/** Define the number of ticks per second in the platform; this is used to calculate absolute times.  */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef EWF_PLATFORM_TICKS_PER_SECOND
+/** Define the number of ticks per second in the platform; this is used to calculate absolute times. This default value is only a recommendation, override with the right value for your system.  */
 #define EWF_PLATFORM_TICKS_PER_SECOND          (1000)
 #endif
 
-#if defined(__CORTEX_M) /* Generic Cortex-M CMSIS*/
-typedef uint32_t ewf_platform_interrupt_state;
-#define ewf_platform_interrupt_disable() __disable_irq()
-#define ewf_platform_interrupt_enable() __enable_irq()
-#define ewf_platform_interrupt_state_get() __get_PRIMASK()
-#define ewf_platform_interrupt_state_set(state) __set_PRIMASK(state)
-#elif defined(__IAR_SYSTEMS_ICC__) /* Generic IAR */
-typedef __istate_t ewf_platform_interrupt_state;
-#define ewf_platform_interrupt_disable() __disable_interrupt()
-#define ewf_platform_interrupt_enable() __enable_interrupt()
-#define ewf_platform_interrupt_state_get() __get_interrupt_state()
-#define ewf_platform_interrupt_state_set(state) __set_interrupt_state(state)
-#else
-// Insert other bare metal implementations here
-#error "Bare metal platform not implemented! (yet)"
+#ifndef EWF_PLATFORM_BUSY_WAIT
+/**
+ * @brief The default platform busy wait macro.
+ * @description
+ * This default implementation is not time accurate and very wasteful (power hungry, bus hungry).
+ * Override it with an implementation valid for your system, ideally sleeping the CPU for the requested number of ticks.
+ *
+ */
+#define EWF_PLATFORM_BUSY_WAIT(count)       \
+do {                                        \
+    static volatile uint32_t i, j, x;       \
+    for (i = 0, x = 0; i < count; i++)      \
+        for (j = 0; j < 1024; j++)          \
+            x += i + j;                     \
+} while(0)
 #endif
 
-#undef EWF_PLATFORM_SUPPORTS_THREADING
+#if defined(__CORTEX_M) /* Generic Cortex-M CMSIS*/
 
-#undef EWF_PLATFORM_SUPPORTS_MUTEXING
+#define EWF_PLATFORM_INTERRUPT_DISABLE() __disable_irq()
+#define EWF_PLATFORM_INTERRUPT_ENABLE() __enable_irq()
+
+#define EWF_PLATFORM_INTERRUPT_STATE_TYPE uint32_t
+
+#define EWF_PLATFORM_INTERRUPT_STATE_TYPE_GET() __get_PRIMASK()
+#define EWF_PLATFORM_INTERRUPT_STATE_TYPE_SET(state) __set_PRIMASK(state)
+
+#elif defined(__IAR_SYSTEMS_ICC__) /* Generic IAR */
+
+#define EWF_PLATFORM_INTERRUPT_DISABLE() __disable_interrupt()
+#define EWF_PLATFORM_INTERRUPT_ENABLE() __enable_interrupt()
+
+#define EWF_PLATFORM_INTERRUPT_STATE_TYPE __istate_t
+
+#define EWF_PLATFORM_INTERRUPT_STATE_TYPE_GET() __get_interrupt_state()
+#define EWF_PLATFORM_INTERRUPT_STATE_TYPE_SET(state) __set_interrupt_state(state)
+
+#else
+
+// Insert other bare metal implementations here
+#error "Bare metal platform not implemented! (yet)"
+
+#endif
 
 struct _ewf_platform_queue
 {
@@ -61,14 +88,14 @@ struct _ewf_platform_queue
  */
 #define EWF_PLATFORM_QUEUE_STATIC_DECLARE(queue_ptr, queue_name_symb, item_type, item_count)                                    \
 do {                                                                                                                            \
-static uint8_t _ewf_platform_queue__buffer__##queue_name_symb[sizeof(item_type) * item_count];                                  \
-static ewf_platform_queue _ewf_platform_queue__##queue_name_symb = {0};                                                         \
-_ewf_platform_queue__##queue_name_symb.data = _ewf_platform_queue__buffer__##queue_name_symb;                                   \
-_ewf_platform_queue__##queue_name_symb.item_size = sizeof(item_type);                                                           \
-_ewf_platform_queue__##queue_name_symb.queue_size = item_count;                                                                 \
-_ewf_platform_queue__##queue_name_symb.tail_index = 0;                                                                          \
-_ewf_platform_queue__##queue_name_symb.used_count = 0;                                                                          \
-queue_ptr = &(_ewf_platform_queue__##queue_name_symb);                                                                          \
+static uint8_t ewf_platform_queue__buffer__##queue_name_symb[sizeof(item_type) * item_count];                                   \
+static ewf_platform_queue ewf_platform_queue__##queue_name_symb = {0};                                                          \
+ewf_platform_queue__##queue_name_symb.data = ewf_platform_queue__buffer__##queue_name_symb;                                     \
+ewf_platform_queue__##queue_name_symb.item_size = sizeof(item_type);                                                            \
+ewf_platform_queue__##queue_name_symb.queue_size = item_count;                                                                  \
+ewf_platform_queue__##queue_name_symb.tail_index = 0;                                                                           \
+ewf_platform_queue__##queue_name_symb.used_count = 0;                                                                          	\
+queue_ptr = &(ewf_platform_queue__##queue_name_symb);                                                                          	\
 } while(0)
 
 #ifdef __cplusplus

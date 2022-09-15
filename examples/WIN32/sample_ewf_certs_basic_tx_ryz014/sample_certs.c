@@ -61,8 +61,8 @@ void thread_entry(ULONG param)
     EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
         EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
         EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
-    EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port, 
-        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME, 
+    EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
+        EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
@@ -72,15 +72,15 @@ void thread_entry(ULONG param)
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to start the adapter: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
         exit(result);
     }
 
 #if 0
     // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
     {
-        EWF_LOG_ERROR("Failed to the ME functionality, return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
     }
 #endif
@@ -89,7 +89,7 @@ void thread_entry(ULONG param)
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
         exit(result);
     }
 #endif
@@ -97,7 +97,7 @@ void thread_entry(ULONG param)
     // Call the certificate provisioning example
     if (ewf_result_failed(result = ewf_example_certs_basic_renesas_ryz014(adapter_ptr)))
     {
-        EWF_LOG_ERROR("The certificate provisioning example returned and error: return code 0x%08lx.", result);
+        EWF_LOG_ERROR("The certificate provisioning example returned and error, ewf_result %d.\n", result);
         exit(result);
     }
 

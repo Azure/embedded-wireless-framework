@@ -50,14 +50,14 @@ ewf_result ewf_adapter_renesas_ryz014_nvm_list(ewf_adapter* adapter_ptr)
     do
     {
         if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 3*EWF_PLATFORM_TICKS_PER_SECOND))) return result;
-        if (_str_contains_str((char*)response, "\r\nOK\r\n")) finished = true;
+        if (ewfl_str_contains_str((char*)response, "\r\nOK\r\n")) finished = true;
         ewf_interface_release(interface_ptr, response);
     } while (!finished);
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNSNVR=\"privatekey\"\r"))) return result;
     do
     {
         if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 3* EWF_PLATFORM_TICKS_PER_SECOND))) return result;
-        if (_str_contains_str((char*)response, "\r\nOK\r\n")) finished = true;
+        if (ewfl_str_contains_str((char*)response, "\r\nOK\r\n")) finished = true;
         ewf_interface_release(interface_ptr, response);
     } while (!finished);
 
@@ -95,7 +95,7 @@ ewf_result ewf_adapter_renesas_ryz014_nvm_upload(ewf_adapter* adapter_ptr, const
         false,
     };
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSNVW=\"", filename_str, "\",", index, ",", _unsigned_to_str_buffer(length), "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSNVW=\"", filename_str, "\",", index, ",", ewflewfl_unsigned_to_str_buffer(length), "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str))) return result;
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, data, length))) return result;

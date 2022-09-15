@@ -11,6 +11,10 @@
 
 #include "ewf_platform.h"
 
+#ifndef EWF_PLATFORM_THREADX
+#error EWF_PLATFORM_THREADX must be defined before including this file
+#endif
+
 #include "tx_api.h"
 
 #ifdef __cplusplus

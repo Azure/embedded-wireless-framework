@@ -17,7 +17,7 @@ ewf_result ewf_adapter_espressif_common_urc_callback(ewf_interface* interface_pt
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
 
     /* Ignore empty URCs */
-    if (_str_equals_str((char*)buffer_ptr, "\r\n"))
+    if (ewfl_str_equals_str((char*)buffer_ptr, "\r\n"))
     {
         return EWF_RESULT_OK;
     }

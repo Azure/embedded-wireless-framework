@@ -122,7 +122,7 @@ ewf_result ewf_example_telemetry(ewf_adapter* adapter_ptr)
         ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
 
         {
-            str = _unsigned_to_str(mqtt_count, buffer, sizeof(buffer));
+            str = ewfl_unsigned_to_str(mqtt_count, buffer, sizeof(buffer));
             length = strlen(str);
             ewf_result = adapter_ptr->mqtt_api_ptr->publish(adapter_ptr, socket, telemetry_topic_buffer, length, str);
             if (ewf_result_failed(ewf_result))

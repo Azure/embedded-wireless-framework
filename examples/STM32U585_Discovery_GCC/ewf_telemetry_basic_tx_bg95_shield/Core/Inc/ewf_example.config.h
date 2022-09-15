@@ -7,7 +7,6 @@
  * The Embedded Wireless Framework example configuration.
  ****************************************************************************/
 
-
 #ifndef __ewf_example_conf__h__included__
 #define __ewf_example_conf__h__included__
 
@@ -31,7 +30,7 @@ extern "C" {
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (128)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
 
 /** @} *** group_example_configuration_allocator */
 

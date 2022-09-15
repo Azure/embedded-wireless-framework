@@ -44,7 +44,7 @@ add_executable(
     ewf_example.config.h
     sample_test.c)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE threadx)
+target_link_libraries(${PROJECT_NAME} PRIVATE threadx az_core az_iot_hub)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/

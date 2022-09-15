@@ -4,8 +4,7 @@
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
 
- * @details
- * The Embedded Wireless Framework Renesas RYZ014 adapter driver
+ * brief The Embedded Wireless Framework Renesas RYZ014 adapter driver
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_ryz014.h"
@@ -118,6 +117,12 @@ ewf_result ewf_adapter_renesas_ryz014_info(ewf_adapter* adapter_ptr)
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CFUN?\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNSPCFG\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNSMQTTCFG=0\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     /* All ok! */

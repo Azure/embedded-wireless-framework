@@ -84,7 +84,7 @@ void thread_sample_entry(ULONG param)
     }
 
     // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
     {
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
@@ -131,7 +131,7 @@ void thread_sample_entry(ULONG param)
     // Initialize the TLS basic API
     if (ewf_result_failed(result = ewf_adapter_tls_basic_init(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to init the SSL basic API: return code 0x%08x.", result);
+        EWF_LOG_ERROR("Failed to init the SSL basic API, ewf_result %d.\n", result);
         return;
     }
 
@@ -145,7 +145,7 @@ void thread_sample_entry(ULONG param)
     // Cleaup the TLS basic API
     if (ewf_result_failed(result = ewf_adapter_tls_basic_clean(adapter_ptr)))
     {
-        EWF_LOG_ERROR("Failed to clean the SSL basic API: return code 0x%08x.", result);
+        EWF_LOG_ERROR("Failed to clean the SSL basic API, ewf_result %d.\n", result);
         return;
     }
 

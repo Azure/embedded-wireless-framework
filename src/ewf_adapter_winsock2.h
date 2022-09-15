@@ -6,8 +6,8 @@
  * @brief The Embedded Wireless Framework WinSock2 adapter driver
  ****************************************************************************/
 
-#ifndef __ewf_adapter_winsock2__config__h__included__
-#define __ewf_adapter_winsock2__config__h__included__
+#ifndef __ewf_adapter_winsock2__h__included__
+#define __ewf_adapter_winsock2__h__included__
 
 #include <WinSock2.h>
 #include <ws2tcpip.h>
@@ -29,9 +29,6 @@ extern "C" {
  * @brief WinSock2 adapter configuration
  * @{
  ****************************************************************************/
-
-/** @brief The total number of supported sockets in the adapter */
-#define EWF_ADAPTER_WINSOCK2_SOCKET_POOL_SIZE   (12)
 
 #ifndef EWF_ADAPTER_WINSOCK2_TCP_ENABLED
 #define EWF_ADAPTER_WINSOCK2_TCP_ENABLED        (1)
@@ -121,6 +118,7 @@ ewf_result ewf_adapter_winsock2_udp_close(ewf_socket_udp* socket_ptr);
 ewf_result ewf_adapter_winsock2_udp_control(ewf_socket_udp* socket_ptr, const char* control_str, const uint8_t* buffer_ptr, uint32_t* buffer_length_ptr);
 ewf_result ewf_adapter_winsock2_udp_set_dtls_configuration(ewf_socket_udp* socket_ptr, uint32_t dtls_configuration_id);
 ewf_result ewf_adapter_winsock2_udp_bind(ewf_socket_udp* socket_ptr, uint32_t port);
+ewf_result ewf_adapter_winsock2_udp_shutdown(ewf_socket_udp* socket_ptr);
 ewf_result ewf_adapter_winsock2_udp_send_to(ewf_socket_udp* socket_ptr, const char* remote_address_str, uint32_t remote_port, const uint8_t* buffer_ptr, uint32_t buffer_length);
 ewf_result ewf_adapter_winsock2_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
 
@@ -144,7 +142,6 @@ ewf_result ewf_adapter_winsock2_udp_receive_from(ewf_socket_udp* socket_ptr, cha
 typedef struct _ewf_adapter_winsock2_socket
 {
     volatile SOCKET s;
-    volatile bool used;
 
 } ewf_adapter_winsock2_socket;
 
@@ -156,9 +153,6 @@ typedef struct _ewf_adapter_winsock2
     IN_ADDR ipv4_netmask;
     IN_ADDR ipv4_gateway;
     IN_ADDR ipv4_dns;
-
-    /**< The internal memory pool of sockets */
-    ewf_adapter_winsock2_socket socket_pool[EWF_ADAPTER_WINSOCK2_SOCKET_POOL_SIZE];
 
 } ewf_adapter_winsock2;
 
@@ -249,4 +243,4 @@ EWF_ADAPTER_WINSOCK2_INITIALIZE_MQTT_BASIC_API(adapter_ptr);                    
 }
 #endif
 
-#endif /* __ewf_adapter_winsock2__config__h__included__ */
+#endif /* __ewf_adapter_winsock2__h__included__ */

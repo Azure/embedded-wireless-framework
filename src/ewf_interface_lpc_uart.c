@@ -154,9 +154,6 @@ ewf_result ewf_interface_lpc_uart_hardware_receive(ewf_interface* interface_ptr,
 
     if (wait)
     {
-#if 0
-    	USART_ReadBlocking(implementation_ptr->base, buffer_ptr, *buffer_length_ptr);
-#else
     	implementation_ptr->xfer.data = buffer_ptr;
     	implementation_ptr->xfer.dataSize = *buffer_length_ptr;
 
@@ -167,11 +164,18 @@ ewf_result ewf_interface_lpc_uart_hardware_receive(ewf_interface* interface_ptr,
 			&implementation_ptr->xfer,
 			&receivedBytes);
 
-        ewf_platform_mutex_get(implementation_ptr->rx_mutex_ptr);
-#endif
+		*buffer_length_ptr = receivedBytes;
+
+		ewf_platform_mutex_get(implementation_ptr->rx_mutex_ptr);
     }
     else
     {
+    	size_t rx_length = USART_TransferGetRxRingBufferLength(&implementation_ptr->handle);
+    	if (rx_length == 0)
+    	{
+    		return EWF_RESULT_NO_DATA_AVAILABLE;
+    	}
+
     	implementation_ptr->xfer.data = buffer_ptr;
     	implementation_ptr->xfer.dataSize = *buffer_length_ptr;
 
@@ -182,15 +186,9 @@ ewf_result ewf_interface_lpc_uart_hardware_receive(ewf_interface* interface_ptr,
 			&implementation_ptr->xfer,
 			&receivedBytes);
 
-    	if (receivedBytes == 0)
-    	{
-    		*buffer_length_ptr = 0;
-    		return EWF_RESULT_EMPTY_QUEUE;
-    	}
-    	else
-    	{
-    		*buffer_length_ptr = receivedBytes;
-    	}
+		*buffer_length_ptr = receivedBytes;
+
+        ewf_platform_mutex_get(implementation_ptr->rx_mutex_ptr);
     }
 
     /* All ok! */

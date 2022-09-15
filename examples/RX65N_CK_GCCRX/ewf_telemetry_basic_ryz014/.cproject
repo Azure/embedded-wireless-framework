@@ -55,25 +55,13 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/common/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/rtos_config/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/rtos_skeleton/}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/inc/azure}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/inc/azure/iot}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/inc/azure/core/internal}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/inc/azure/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/inc/azure/iot/internal}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/src/azure/platform}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/src/azure}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/src/azure/core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/src/azure/iot}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/azure_sdk_for_c/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/azure_sdk_for_c/azure/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/azure_sdk_for_c/src/azure/iot}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/ewf}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/ewf/test}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/ewf/examples}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/ewf/templates}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ewf_telemetry_basic_ryz014/src/ewf}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ewf_telemetry_basic_ryz014/src/ewf/examples}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ewf_telemetry_basic_ryz014/src/ewf/test}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ewf}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ewf/test}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ewf/examples}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/general}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_pincfg}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_bsp}&quot;"/>
@@ -412,11 +400,36 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.update.1465912291.324669010" name="/" resourcePath="azure_sdk_for_c">
+						<toolChain id="com.renesas.cdt.managedbuild.gcc.rx.toolchain.debug.update.6043823" name="GCC for Renesas RX" superClass="com.renesas.cdt.managedbuild.gcc.rx.toolchain.debug.update" unusedChildren="">
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.optimizationLevel.207773333.700852765" name="Optimization Level" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.optimizationLevel.207773333"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.fdatasections.41998457.481689940" name="Data sections (-fdata-sections)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.fdatasections.41998457"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.debug.debugFormat.321145734.984813112" name="Debug format" superClass="com.renesas.cdt.managedbuild.gcc.core.option.debug.debugFormat.321145734"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.addtools.printsize.1969566263.2114284352" name="Create Print Size" superClass="com.renesas.cdt.managedbuild.gcc.core.option.addtools.printsize.1969566263"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.1202685320.1954619598" name="Architecture" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.1202685320"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.applicability.1779024736.1836421567" name="Architecture Applicability" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.applicability.1779024736"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.cpuType.521390377.723525854" name="CPU Type" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.cpuType.521390377"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.deviceShortName.387811547.630532727" name="DeviceName" superClass="com.renesas.cdt.managedbuild.gcc.core.option.deviceShortName.387811547"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.deviceCommand.1592727080.623973386" name="DeviceCommand" superClass="com.renesas.cdt.managedbuild.gcc.core.option.deviceCommand.1592727080"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.rx.option.fdiagnostics.94431263.1438508570" name="Fixit error parser" superClass="com.renesas.cdt.managedbuild.gcc.rx.option.fdiagnostics.94431263"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.functionsections.830263777.868493807" name="Function sections (-ffunction-sections)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.functionsections.830263777"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.debug.warnStackSize.1146336863.1464721480" name="Warn if stack size exceeds the limit, in bytes (-Wstack-usage)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.debug.warnStackSize.1146336863"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.libgen.1181489640" name="Library Generator" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.libgen.1095049278"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC.1643248057" name="Compiler" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC.250974865"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerCPP.783444663" name="Compiler CPP" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerCPP.1191815275"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.assembler.1898466139" name="Assembler" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.assembler.1903880142"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.linker.695758869" name="Linker" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.linker.740284743"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.linker.2058144142" name="Linker CPP" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.linker.615196181"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.objcopy.343893449" name="Objcopy" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.objcopy.1308974831"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.archiver.1879460754" name="Archiver" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.archiver.1939164612"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.printsize.481339551" name="Print Size" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.printsize.779171603"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/azure_sdk_for_c|src/ewf|trash/" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/azure_sdk_for_c/inc"/>
-						<entry excluding="az_http_response.c|az_http_request.c|az_http_policy.c|az_http_policy_retry.c|az_http_policy_logging.c|az_http_pipeline.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/azure_sdk_for_c/src/azure/core"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/azure_sdk_for_c/src/azure/iot"/>
+						<entry excluding="azure_sdk_for_c|ewf|azure_sdk_for_c/inc|azure_sdk_for_c/src/azure/iot|azure_sdk_for_c/src/azure/core|src/azure_sdk_for_c|src/ewf|trash/" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="azure_sdk_for_c/inc"/>
+						<entry excluding="az_http_response.c|az_http_request.c|az_http_policy.c|az_http_policy_retry.c|az_http_policy_logging.c|az_http_pipeline.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="azure_sdk_for_c/src/azure/core"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="azure_sdk_for_c/src/azure/iot"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -850,10 +863,10 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/azure_sdk_for_c|src/ewf|trash/" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/azure_sdk_for_c/inc"/>
-						<entry excluding="az_http_response.c|az_http_request.c|az_http_policy.c|az_http_policy_retry.c|az_http_policy_logging.c|az_http_pipeline.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/azure_sdk_for_c/src/azure/core"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/azure_sdk_for_c/src/azure/iot"/>
+						<entry excluding="azure_sdk_for_c/inc|azure_sdk_for_c/src/azure/iot|azure_sdk_for_c/src/azure/core|src/azure_sdk_for_c|src/ewf|trash/" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="azure_sdk_for_c/inc"/>
+						<entry excluding="az_http_response.c|az_http_request.c|az_http_policy.c|az_http_policy_retry.c|az_http_policy_logging.c|az_http_pipeline.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="azure_sdk_for_c/src/azure/core"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="azure_sdk_for_c/src/azure/iot"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

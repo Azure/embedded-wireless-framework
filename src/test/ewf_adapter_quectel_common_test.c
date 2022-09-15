@@ -67,12 +67,14 @@ ewf_result ewf_adapter_quectel_common_test(ewf_adapter* adapter_ptr)
         EWF_LOG_ERROR("Failed to run the adapter NTP test: ewf_result %d.\n", result);
     }
 
+#if 0
     // Adapter tests - HTTP
     result = ewf_adapter_quectel_common_test_command_http(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the adapter HTTP test: ewf_result %d.\n", result);
     }
+#endif
 
     // Adapter tests - Modem - UFS
     result = ewf_adapter_quectel_common_test_api_ufs(adapter_ptr);
@@ -81,26 +83,39 @@ ewf_result ewf_adapter_quectel_common_test(ewf_adapter* adapter_ptr)
         EWF_LOG_ERROR("Failed to run the modem adapter UFS test: ewf_result %d.\n", result);
     }
 
+    // Adapter tests - TCP/HTTP
+    result = ewf_adapter_test_api_tcp_http(adapter_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to run the adapter TCP/HTTP test: ewf_result %d.\n", result);
+    }
+
+#if 0 /* TODO, under development */
     // Adapter tests - TCP
     result = ewf_adapter_test_api_tcp(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the adapter TCP test: ewf_result %d.\n", result);
     }
+#endif
 
+#if 0 /* TODO, under development */
     // Adapter tests - UDP
     result = ewf_adapter_test_api_udp(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
     }
+#endif
 
+#if 0 /* TODO, under development */
     // Adapter tests - MQTT
     result = ewf_adapter_test_api_mqtt(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
     }
+#endif
 
     if (ewf_result_failed(result = ewf_adapter_quectel_common_context_deactivate(adapter_ptr, pdp_context)))
     {
@@ -111,7 +126,7 @@ ewf_result ewf_adapter_quectel_common_test(ewf_adapter* adapter_ptr)
 }
 
 /**
- * @brief Ping test
+ * @brief Quectel adapter common ping test
  */
 ewf_result ewf_adapter_quectel_common_test_command_ping(ewf_adapter* adapter_ptr)
 {
@@ -138,7 +153,7 @@ ewf_result ewf_adapter_quectel_common_test_command_ping(ewf_adapter* adapter_ptr
 }
 
 /**
- * @brief DNS test
+ * @brief Quectel adapter common DNS test
  */
 ewf_result ewf_adapter_quectel_common_test_command_dns(ewf_adapter* adapter_ptr)
 {
@@ -164,7 +179,7 @@ ewf_result ewf_adapter_quectel_common_test_command_dns(ewf_adapter* adapter_ptr)
 }
 
 /**
- * @brief NTP test
+ * @brief Quectel adapter common NTP test
  */
 ewf_result ewf_adapter_quectel_common_test_command_ntp(ewf_adapter* adapter_ptr)
 {
@@ -192,12 +207,13 @@ ewf_result ewf_adapter_quectel_common_test_command_ntp(ewf_adapter* adapter_ptr)
     return EWF_RESULT_OK;
 }
 
+/** @brief HTTP test - flag to signal when the HTTP get response URC is received */
 volatile bool ewf_adapter_quectel_common_test_command_http_http_get = false;
 
 /** @brief HTTP test - URC callback */
 ewf_result ewf_adapter_quectel_common_test_command_http_urc_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
 {
-    if (_str_starts_with((char*)buffer_ptr, "+QHTTPGET: "))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+QHTTPGET: "))
     {
         ewf_adapter_quectel_common_test_command_http_http_get = true;
 
@@ -207,7 +223,7 @@ ewf_result ewf_adapter_quectel_common_test_command_http_urc_callback(ewf_interfa
     return EWF_RESULT_OK;
 }
 
-/** @brief HTTP test - URC callback */
+/** @brief HTTP test */
 ewf_result ewf_adapter_quectel_common_test_command_http(ewf_adapter* adapter_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
@@ -238,7 +254,7 @@ ewf_result ewf_adapter_quectel_common_test_command_http(ewf_adapter* adapter_ptr
         };
 
         char url_length_str[4];
-        const char* url_length_cstr = _unsigned_to_str(url_length, url_length_str, sizeof(url_length_str));
+        const char* url_length_cstr = ewfl_unsigned_to_str(url_length, url_length_str, sizeof(url_length_str));
 
         if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
         if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QHTTPURL=", url_length_cstr, ",80\r", NULL))) return result;
@@ -259,23 +275,29 @@ ewf_result ewf_adapter_quectel_common_test_command_http(ewf_adapter* adapter_ptr
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QHTTPGET=80\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
+    /* Set a user URC callback to wait for the HTTP GET response */
     ewf_adapter_quectel_common_test_command_http_http_get = false;
     if (ewf_result_failed(result = ewf_interface_set_user_urc_callback(interface_ptr, ewf_adapter_quectel_common_test_command_http_urc_callback))) return result;
 
+    /* Wait until the response is recevied or a timeout is reached */
     uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 60;
     while (!ewf_adapter_quectel_common_test_command_http_http_get && timeout != 0)
     {
         ewf_platform_sleep(1);
+        ewf_interface_poll(interface_ptr);
         timeout--;
     }
 
+    /* Clear the user URC callback */
     if (ewf_result_failed(result = ewf_interface_set_user_urc_callback(interface_ptr, NULL))) return result;
 
+    /* If we reached the timeout there was no response, fail */
     if (timeout == 0)
     {
         return EWF_RESULT_UNEXPECTED_RESPONSE;
     }
 
+    /* Read the responses */
     {
         char tokenizer_pattern_str[] = "\r\nCONNECT\r\n";
         ewf_interface_tokenizer_pattern tokenizer_pattern = {

@@ -31,13 +31,8 @@ extern "C" {
  */
 typedef struct _ewf_interface_ra_uart
 {
-    ewf_platform_thread* thread_ptr;
     volatile uint8_t g_uart_event;
 
-#ifdef EWF_PLATFORM_SUPPORTS_THREADING
-    ewf_platform_mutex mutex;
-    ewf_platform_thread* receive_thread_ptr;
-#endif
 } ewf_interface_ra_uart;
 
 /**
@@ -81,13 +76,6 @@ do {                                                                            
 do {                                                                                                                                                    \
 static ewf_interface_ra_uart ewf_interface_ra_uart__implementation__##interface_name_symb = {0};                                              \
 static ewf_interface ewf_interface_ra_uart__interface__##interface_name_symb = {0};                                                           \
-EWF_PLATFORM_THREAD_STATIC_DECLARE(                                                                                                                 \
-    ewf_interface_ra_uart__interface__##interface_name_symb.receive_thread_ptr,                                                                  \
-    ewf_interface_ra_uart__receive_thread__##interface_name_symb,                                                                                \
-    ewf_interface_receive_thread,                                                                                                                   \
-    &(ewf_interface_ra_uart__interface__##interface_name_symb),                                                                                  \
-    (1024 * 2),                                                                                                                                    	\
-    EWF_PLATFORM_THREAD_PRIORITY_HIGH);                                                                                                           \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                 \
     ewf_interface_ra_uart__interface__##interface_name_symb.response_queue_ptr,                                                                    \
     ewf_interface_ra_uart__response_queue__##interface_name_symb,                                                                                  \

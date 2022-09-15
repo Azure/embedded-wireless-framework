@@ -8,7 +8,7 @@
 
 #include "ewf_adapter_winsock2.h" // Include first to force correct inclussion order for winsock2.h
 #include "ewf_allocator_c_heap.h"
-
+#include "ewf_lib.h"
 #include "ewf_example.config.h"
 
 /**
@@ -34,7 +34,7 @@ int main(int argc, char ** argv)
     }
 
     // Get the adapter info
-    if (ewf_result_failed(result = ewf_adapter_test(adapter_ptr)))
+    if (ewf_result_failed(result = ewf_adapter_winsock2_test(adapter_ptr)))
     {
         EWF_LOG_ERROR("The test function returned an error, ewf_result %d.\n", result);
         exit(result);

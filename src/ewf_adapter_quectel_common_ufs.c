@@ -44,7 +44,7 @@ ewf_result ewf_adapter_quectel_common_ufs_list(ewf_adapter* adapter_ptr)
     do
     {
         if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 1 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
-        if (_str_contains_str((char*)response, "\r\nOK\r\n")) finished = true;
+        if (ewfl_str_contains_str((char*)response, "\r\nOK\r\n")) finished = true;
         ewf_interface_release(interface_ptr, response);
     } while (!finished);
 
@@ -83,10 +83,10 @@ ewf_result ewf_adapter_quectel_common_ufs_upload(ewf_adapter* adapter_ptr, const
         };
 
     char file_size_str[5];
-    const char* file_size_cstr = _unsigned_to_str(length, file_size_str, sizeof(file_size_str));
+    const char* file_size_cstr = ewfl_unsigned_to_str(length, file_size_str, sizeof(file_size_str));
 
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QFUPL=\"", filename_str, "\",", file_size_cstr, ",", _unsigned_to_str_buffer(10),",0\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QFUPL=\"", filename_str, "\",", file_size_cstr, ",10,0\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str))) return result;
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, data, length))) return result;

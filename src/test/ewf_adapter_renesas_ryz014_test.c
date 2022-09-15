@@ -133,17 +133,6 @@ ewf_result ewf_adapter_renesas_ryz014_test_command_dns(ewf_adapter* adapter_ptr)
     char * response;
     uint32_t length;
 
-    /* Read PDP context */
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGDCONT?\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
-    /* Read PDP context Read Dynamic Parameters */
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGCONTRDP?\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
-    if (ewf_result_failed (result = ewf_interface_send_command(interface_ptr, "AT+CGPADDR\r"))) return result;
-    if (ewf_result_failed (result = ewf_interface_drop_response(interface_ptr))) return result;
-
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNDNSLKUP=\"www.microsoft.com\"\r"))) return result;
     while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 30)))
     {
@@ -170,17 +159,6 @@ ewf_result ewf_adapter_renesas_ryz014_test_command_ntp(ewf_adapter* adapter_ptr)
     char* response_str;
     uint32_t response_length;
 
-    /* Read PDP context */
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGDCONT?\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
-    /* Read PDP context Read Dynamic Parameters */
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGCONTRDP?\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
-    if (ewf_result_failed (result = ewf_interface_send_command(interface_ptr, "AT+CGPADDR\r"))) return result;
-    if (ewf_result_failed (result = ewf_interface_drop_response(interface_ptr))) return result;
-
     /* Automatic timezone update */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CTZU?\r"))) return result;
     while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response_str, &response_length, 3)))
@@ -203,7 +181,7 @@ ewf_result ewf_adapter_renesas_ryz014_test_command_http_urc_callback(ewf_interfa
 {
 	EWF_PARAMETER_NOT_USED(interface_ptr);
 	EWF_PARAMETER_NOT_USED(buffer_length);
-    if (_str_starts_with((char*)buffer_ptr, "+SQNHTTPRING: "))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNHTTPRING: "))
     {
         ewf_adapter_renesas_ryz014_test_command_http_http_get = true;
 
@@ -238,6 +216,7 @@ ewf_result ewf_adapter_renesas_ryz014_test_command_http(ewf_adapter* adapter_ptr
     uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 60;
     while (!ewf_adapter_renesas_ryz014_test_command_http_http_get && timeout != 0)
     {
+        ewf_interface_poll(interface_ptr);
         ewf_platform_sleep(1);
         timeout--;
     }

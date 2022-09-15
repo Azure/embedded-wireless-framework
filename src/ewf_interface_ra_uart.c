@@ -63,7 +63,7 @@ ewf_result ewf_interface_ra_uart_hardware_start(ewf_interface* interface_ptr)
     /* Save the interface pointer */
     g_interface_ptr = interface_ptr;
 
-    /* Initialize UART channel with baud rate 115200 */
+    /* Initialize UART channel */
     result = R_SCI_UART_Open (&g_uart0_ctrl, &g_uart0_cfg);
     if (FSP_SUCCESS != result)
       return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
