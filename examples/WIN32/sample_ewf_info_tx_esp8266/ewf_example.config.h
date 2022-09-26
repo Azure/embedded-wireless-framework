@@ -42,7 +42,7 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM78")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM14")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
 #define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (CBR_115200)

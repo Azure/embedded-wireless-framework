@@ -80,11 +80,22 @@ endif()
 ###############################################################################
 # Azure RTOS
 ###############################################################################
+
+# ThreadX
 add_subdirectory(sample_threadx)
-add_subdirectory(sample_azure_iot_embedded_sdk)
-add_subdirectory(sample_azure_iot_embedded_sdk_pnp)
-add_subdirectory(sample_pnp_temperature_controller)
+
+# NetX Duo
+add_subdirectory(sample_netx_duo_azure_iot_embedded_sdk)
+add_subdirectory(sample_netx_duo_azure_iot_embedded_sdk_pnp)
+add_subdirectory(sample_netx_duo_pnp_temperature_controller)
 add_subdirectory(sample_netx_duo_iperf)
+
+###############################################################################
+# FreeRTOS
+###############################################################################
+
+# FreeRTOS
+add_subdirectory(sample_freertos)
 
 ###############################################################################
 # EWF
@@ -97,50 +108,33 @@ add_subdirectory(sample_netx_duo_iperf)
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_winsock2)
 add_subdirectory(sample_ewf_test_tx_winsock2)
+#add_subdirectory(sample_ewf_certs_basic_tx_winsock2)
+#add_subdirectory(sample_ewf_telemetry_basic_tx_winsock2)
 add_subdirectory(sample_ewf_certs_tx_winsock2)
 add_subdirectory(sample_ewf_telemetry_tx_winsock2)
 
 # NetX Duo
 add_subdirectory(sample_ewf_netx_duo_test_winsock2)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_winsock2)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_winsock2)
+add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_winsock2)
+add_subdirectory(sample_ewf_netx_duo_iperf_winsock2)
 
 # WIN32
 add_subdirectory(sample_ewf_info_win32_winsock2)
 add_subdirectory(sample_ewf_test_win32_winsock2)
+#add_subdirectory(sample_ewf_certs_basic_win32_winsock2)
+#add_subdirectory(sample_ewf_telemetry_basic_win32_winsock2)
 add_subdirectory(sample_ewf_certs_win32_winsock2)
 add_subdirectory(sample_ewf_telemetry_win32_winsock2)
 
 # FreeRTOS
 add_subdirectory(sample_ewf_info_freertos_winsock2)
 add_subdirectory(sample_ewf_test_freertos_winsock2)
+#add_subdirectory(sample_ewf_certs_basic_freertos_winsock2)
+#add_subdirectory(sample_ewf_telemetry_basic_freertos_winsock2)
 #add_subdirectory(sample_ewf_certs_freertos_winsock2)
 #add_subdirectory(sample_ewf_telemetry_freertos_winsock2)
-
-#######################################
-# BG96
-#######################################
-
-# ThreadX
-add_subdirectory(sample_ewf_info_tx_bg96)
-add_subdirectory(sample_ewf_test_tx_bg96)
-add_subdirectory(sample_ewf_certs_basic_tx_bg96)
-add_subdirectory(sample_ewf_telemetry_basic_tx_bg96)
-add_subdirectory(sample_ewf_certs_tx_bg96)
-add_subdirectory(sample_ewf_telemetry_tx_bg96)
-
-# NetX Duo
-add_subdirectory(sample_ewf_netx_duo_test_bg96)
-
-# WIN32
-add_subdirectory(sample_ewf_info_win32_bg96)
-add_subdirectory(sample_ewf_test_win32_bg96)
-add_subdirectory(sample_ewf_certs_basic_win32_bg96)
-add_subdirectory(sample_ewf_telemetry_basic_win32_bg96)
-
-# FreeRTOS
-add_subdirectory(sample_ewf_info_freertos_bg96)
-add_subdirectory(sample_ewf_test_freertos_bg96)
-add_subdirectory(sample_ewf_certs_basic_freertos_bg96)
-add_subdirectory(sample_ewf_telemetry_basic_freertos_bg96)
 
 #######################################
 # BG95
@@ -153,19 +147,50 @@ add_subdirectory(sample_ewf_certs_basic_tx_bg95)
 add_subdirectory(sample_ewf_telemetry_basic_tx_bg95)
 
 # NetX Duo
-#add_subdirectory(sample_ewf_netx_duo_test_bg95)
+add_subdirectory(sample_ewf_netx_duo_test_bg95)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_bg95)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_bg95)
+add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_bg95)
 
 # WIN32
 add_subdirectory(sample_ewf_info_win32_bg95)
-#add_subdirectory(sample_ewf_test_win32_bg95)
+add_subdirectory(sample_ewf_test_win32_bg95)
 add_subdirectory(sample_ewf_certs_basic_win32_bg95)
-#add_subdirectory(sample_ewf_telemetry_basic_win32_bg95)
+add_subdirectory(sample_ewf_telemetry_basic_win32_bg95)
 
 # FreeRTOS
 add_subdirectory(sample_ewf_info_freertos_bg95)
-#add_subdirectory(sample_ewf_test_freertos_bg95)
+add_subdirectory(sample_ewf_test_freertos_bg95)
 add_subdirectory(sample_ewf_certs_basic_freertos_bg95)
-#add_subdirectory(sample_ewf_telemetry_basic_freertos_bg95)
+add_subdirectory(sample_ewf_telemetry_basic_freertos_bg95)
+
+#######################################
+# BG96
+#######################################
+
+# ThreadX
+add_subdirectory(sample_ewf_info_tx_bg96)
+add_subdirectory(sample_ewf_test_tx_bg96)
+add_subdirectory(sample_ewf_certs_basic_tx_bg96)
+add_subdirectory(sample_ewf_telemetry_basic_tx_bg96)
+
+# NetX Duo
+add_subdirectory(sample_ewf_netx_duo_test_bg96)
+#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_bg96)
+#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_bg96)
+#add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_bg96)
+
+# WIN32
+add_subdirectory(sample_ewf_info_win32_bg96)
+add_subdirectory(sample_ewf_test_win32_bg96)
+add_subdirectory(sample_ewf_certs_basic_win32_bg96)
+add_subdirectory(sample_ewf_telemetry_basic_win32_bg96)
+
+# FreeRTOS
+add_subdirectory(sample_ewf_info_freertos_bg96)
+add_subdirectory(sample_ewf_test_freertos_bg96)
+add_subdirectory(sample_ewf_certs_basic_freertos_bg96)
+add_subdirectory(sample_ewf_telemetry_basic_freertos_bg96)
 
 #######################################
 # RYZ014
@@ -204,6 +229,7 @@ add_subdirectory(sample_ewf_info_tx_sim868)
 
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_esp8266)
+add_subdirectory(sample_ewf_test_tx_esp8266)
 
 #######################################
 # ESP8285
@@ -211,6 +237,7 @@ add_subdirectory(sample_ewf_info_tx_esp8266)
 
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_esp8285)
+add_subdirectory(sample_ewf_test_tx_esp8285)
 
 #######################################
 # ESPWROOM02
@@ -218,6 +245,8 @@ add_subdirectory(sample_ewf_info_tx_esp8285)
 
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_esp_wroom_02)
+add_subdirectory(sample_ewf_test_tx_esp_wroom_02)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_esp_wroom_02)
 
 #######################################
 # Seeed LoRa-E5

@@ -51,6 +51,9 @@ ewf_result ewf_interface_init(ewf_interface* interface_ptr)
     /* Not in command mode initially */
     interface_ptr->command_mode = false;
 
+    /* No context active initially */
+    interface_ptr->current_context = 0;
+
 #ifdef EWF_LOG_VERBOSE
     EWF_LOG("[COMMAND MODE: FALSE]\n");
 #endif
@@ -603,28 +606,45 @@ static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface*
 
     for (; pattern_ptr; pattern_ptr = pattern_ptr->netx_ptr)
     {
-        if (pattern_ptr->has_wildcards)
+        if (pattern_ptr->match_function)
         {
-            if (ewfl_buffer_ends_with_wildcard_string(
-                (const char *)interface_ptr->current_message.buffer_ptr,
+            bool stop = false;
+            if (pattern_ptr->match_function(
+                (const char*)interface_ptr->current_message.buffer_ptr,
                 interface_ptr->current_message.buffer_length,
-                pattern_ptr->pattern_str,
-                pattern_ptr->patter_length))
+                pattern_ptr,
+                &stop))
             {
                 *match_ptr = true;
                 return EWF_RESULT_OK;
             }
+            if (stop) break;
         }
         else
         {
-            if (ewfl_buffer_ends_with(
-                (const char *)interface_ptr->current_message.buffer_ptr,
-                interface_ptr->current_message.buffer_length,
-                pattern_ptr->pattern_str,
-                pattern_ptr->patter_length))
+            if (pattern_ptr->has_wildcards)
             {
-                *match_ptr = true;
-                return EWF_RESULT_OK;
+                if (ewfl_buffer_ends_with_wildcard_string(
+                    (const char*)interface_ptr->current_message.buffer_ptr,
+                    interface_ptr->current_message.buffer_length,
+                    pattern_ptr->pattern_str,
+                    pattern_ptr->patter_length))
+                {
+                    *match_ptr = true;
+                    return EWF_RESULT_OK;
+                }
+            }
+            else
+            {
+                if (ewfl_buffer_ends_with(
+                    (const char*)interface_ptr->current_message.buffer_ptr,
+                    interface_ptr->current_message.buffer_length,
+                    pattern_ptr->pattern_str,
+                    pattern_ptr->patter_length))
+                {
+                    *match_ptr = true;
+                    return EWF_RESULT_OK;
+                }
             }
         }
     }
@@ -1033,7 +1053,7 @@ ewf_result ewf_interface_verify_responses(ewf_interface* interface_ptr, uint32_t
     }
 }
 
-ewf_result ewf_interface_verify_response_starts_with(ewf_interface* interface_ptr, const char * expected_start)
+ewf_result ewf_interface_verify_response_starts_with(ewf_interface* interface_ptr, const char * expected_start_str)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
@@ -1054,7 +1074,44 @@ ewf_result ewf_interface_verify_response_starts_with(ewf_interface* interface_pt
     }
     else
     {
-        if (!ewfl_str_starts_with((char *) response, (char *) expected_start))
+        if (!ewfl_str_starts_with((char *) response, (char *)expected_start_str))
+        {
+            EWF_LOG_ERROR("Unexpected response: %s\n", response);
+            ewf_interface_release(interface_ptr, response);
+            return EWF_RESULT_NOT_SUPPORTED;
+        }
+        else
+        {
+            /* got the expected result, release the buffer */
+            ewf_interface_release(interface_ptr, response);
+        }
+    }
+
+    return EWF_RESULT_OK;
+}
+
+ewf_result ewf_interface_verify_response_ends_with(ewf_interface* interface_ptr, const char* expected_end_str)
+{
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    ewf_result result;
+    uint8_t* response = NULL;
+    uint32_t response_legth;
+
+    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, (uint32_t)-1);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Modem reception failed.");
+        return EWF_RESULT_RECEPTION_FAILED;
+    }
+    if (!response)
+    {
+        EWF_LOG_ERROR("Unexpected NULL response.\n");
+        return EWF_RESULT_NOT_SUPPORTED;
+    }
+    else
+    {
+        if (!ewfl_str_ends_with((char*)response, (char*)expected_end_str))
         {
             EWF_LOG_ERROR("Unexpected response: %s\n", response);
             ewf_interface_release(interface_ptr, response);

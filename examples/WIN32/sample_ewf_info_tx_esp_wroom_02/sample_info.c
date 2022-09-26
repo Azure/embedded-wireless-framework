@@ -73,7 +73,7 @@ void thread_entry(ULONG param)
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS);
-    EWF_ADAPTER_ESPRESSIF_WROOM02_STATIC_DECLARE(adapter_ptr, wroom02, message_allocator_ptr, NULL, interface_ptr);
+    EWF_ADAPTER_ESPRESSIF_WROOM_02_STATIC_DECLARE(adapter_ptr, wroom_02, message_allocator_ptr, NULL, interface_ptr);
 
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))

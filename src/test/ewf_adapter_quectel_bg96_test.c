@@ -7,7 +7,6 @@
  ****************************************************************************/
 
 #include "ewf_adapter_quectel_bg96.h"
-
 #include "ewf_adapter_test.c"
 #include "ewf_adapter_quectel_common_test.c"
 

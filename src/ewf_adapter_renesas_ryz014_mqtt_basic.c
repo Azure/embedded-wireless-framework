@@ -75,12 +75,14 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_urc_callback(ewf_interface* int
     {
         return EWF_RESULT_OK;
     }
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTPUBLISH: "))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTPUBLISH:0,"))
     {
+        adapter_renesas_ryz014_ptr->mqtt_basic_publish = true;
         return EWF_RESULT_OK;
     }
     if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTONSUBSCRIBE:0"))
     {
+        adapter_renesas_ryz014_ptr->mqtt_basic_subscribe = true;
         return EWF_RESULT_OK;
     }
     if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTDISCONNECT:"))
@@ -172,8 +174,9 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_connect(ewf_adapter* adapter_pt
     ewf_result result;
 
 #ifdef EWF_DEBUG
-    //ewf_adapter_renesas_ryz014_mqtt_disconnect(adapter_ptr, *socket_ptr);
-    ewf_platform_sleep(100);
+    /* Close the connection in case it is still outstanding, ignore errors */
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNSMQTTDISCONNECT=0\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
     /* MQTT client configuration */
@@ -191,8 +194,11 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_connect(ewf_adapter* adapter_pt
     }
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
+    char port_str[7];
+    const char* port_cstr = ewfl_unsigned_to_str(port, port_str, sizeof(port_str));
+
     /* Initiate MQTT connection */
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSMQTTCONNECT=0,\"", server, "\",", ewflewfl_unsigned_to_str_buffer(port), "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSMQTTCONNECT=0,\"", server, "\",", port_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
     for (unsigned i = 0; i < (30 * EWF_PLATFORM_TICKS_PER_SECOND); i++)
     {
@@ -233,6 +239,7 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_subscribe(ewf_adapter* adapter_
 
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+    ewf_adapter_renesas_ryz014* adapter_renesas_ryz014_ptr = (ewf_adapter_renesas_ryz014*)adapter_ptr->implementation_ptr;
 
     ewf_result result;
 
@@ -240,7 +247,13 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_subscribe(ewf_adapter* adapter_
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSMQTTSUBSCRIBE=0,\"", topic, "\",0\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
-
+    for (unsigned i = 0; i < (2 * EWF_PLATFORM_TICKS_PER_SECOND); i++)
+    {
+        if (adapter_renesas_ryz014_ptr->mqtt_basic_subscribe) break;
+        ewf_interface_poll(interface_ptr);
+        ewf_platform_sleep(1);
+    }
+    adapter_renesas_ryz014_ptr->mqtt_basic_subscribe = false;
     return EWF_RESULT_OK;
 }
 
@@ -255,20 +268,22 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_unsubscribe(ewf_adapter* adapte
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_publish(ewf_adapter* adapter_ptr, const char* const topic, const char* msg)
+ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_publish(ewf_adapter* adapter_ptr, const char* const topic, const char* message_cstr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
 
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+    ewf_adapter_renesas_ryz014* adapter_renesas_ryz014_ptr = (ewf_adapter_renesas_ryz014*)adapter_ptr->implementation_ptr;
 
     if (!topic) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    if (!msg) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    if (!message_cstr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
     ewf_result result;
     uint8_t* response;
 
-    uint32_t length = strlen(msg);
+    /* allow empty messages, zero length, NULL pointer */
+    uint32_t message_length = (message_cstr == NULL) ? 0 : strlen(message_cstr);
 
     char tokenizer_pattern_str[] = "\r\n> ";
     ewf_interface_tokenizer_pattern tokenizer_pattern = {
@@ -277,17 +292,24 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_publish(ewf_adapter* adapter_pt
         sizeof(tokenizer_pattern_str) - 1,
         false,
     };
+    char message_length_str[6];
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSMQTTPUBLISH=0,\"", topic, "\",,", ewflewfl_unsigned_to_str_buffer(length), "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSMQTTPUBLISH=0,\"", topic, "\",,", ewfl_unsigned_to_str(message_length, message_length_str, sizeof(message_length_str)), "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str))) return result;
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (uint8_t*)msg, length))) return result;
+    if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (uint8_t*)message_cstr, message_length))) return result;
     if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response))) return result;
     if (!ewfl_str_starts_with((char*)response, "\r\n+SQNSMQTTPUBLISH: "))
     {
         EWF_LOG_ERROR("Unexpected NULL response.");
     }
     ewf_interface_release(interface_ptr, response);
-
+    for (unsigned i = 0; i < (2 * EWF_PLATFORM_TICKS_PER_SECOND); i++)
+    {
+        if (adapter_renesas_ryz014_ptr->mqtt_basic_publish) break;
+        ewf_interface_poll(interface_ptr);
+        ewf_platform_sleep(1);
+    }
+    adapter_renesas_ryz014_ptr->mqtt_basic_publish = false;
     return EWF_RESULT_OK;
 }

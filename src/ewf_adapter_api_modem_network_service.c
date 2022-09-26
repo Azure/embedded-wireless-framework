@@ -71,7 +71,7 @@ ewf_result ewf_adapter_modem_network_registration_read(ewf_adapter* adapter_ptr,
 
 	/* Read Network Registration status */
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CREG?\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr , &response_ptr, &response_length, 100))) return result;
+    if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr , &response_ptr, &response_length, 500))) return result;
     if (response_length < 5)
     {
         ewf_interface_release(interface_ptr, response_ptr);

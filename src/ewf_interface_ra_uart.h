@@ -27,11 +27,31 @@ extern "C" {
  ****************************************************************************/
 
 /**
+ * @defgroup group_interfaceuart_config RA UART configuration
+ * @{
+ */
+
+#ifndef EWF_INTERFACE_RA_UART_CONFIG_UART_RX_QUEUE_SIZE
+#define EWF_INTERFACE_RA_UART_CONFIG_UART_RX_QUEUE_SIZE      (2048)
+#endif
+
+#ifndef EWF_INTERFACE_RA_UART_CONFIG_RESPONSE_QUEUE_SIZE
+#define EWF_INTERFACE_RA_UART_CONFIG_RESPONSE_QUEUE_SIZE     (8)
+#endif
+
+#ifndef EWF_INTERFACE_RA_UART_CONFIG_URC_QUEUE_SIZE
+#define EWF_INTERFACE_RA_UART_CONFIG_URC_QUEUE_SIZE          (8)
+#endif
+
+/** @} *** group_interface_ra_uart_config */
+
+/**
  * @brief The RA UART interface implementation data structure type
  */
 typedef struct _ewf_interface_ra_uart
 {
     volatile uint8_t g_uart_event;
+    ewf_platform_queue* rx_queue_ptr;
 
 } ewf_interface_ra_uart;
 
@@ -76,16 +96,21 @@ do {                                                                            
 do {                                                                                                                                                    \
 static ewf_interface_ra_uart ewf_interface_ra_uart__implementation__##interface_name_symb = {0};                                              \
 static ewf_interface ewf_interface_ra_uart__interface__##interface_name_symb = {0};                                                           \
+EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \
+    ewf_interface_ra_uart__implementation__##interface_name_symb.rx_queue_ptr,                                                                   \
+    ewf_interface_ra_uart__uart_rx_queue__##interface_name_symb,                                                                                 \
+    uint8_t,                                                                                                                                        \
+	EWF_INTERFACE_RA_UART_CONFIG_UART_RX_QUEUE_SIZE);                                                                                            \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                 \
     ewf_interface_ra_uart__interface__##interface_name_symb.response_queue_ptr,                                                                    \
     ewf_interface_ra_uart__response_queue__##interface_name_symb,                                                                                  \
     ewf_interface_message,                                                                                                                         \
-    8);                                                                                                                                                 \
+	EWF_INTERFACE_RA_UART_CONFIG_RESPONSE_QUEUE_SIZE);                                                                                                                                                 \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                 \
     ewf_interface_ra_uart__interface__##interface_name_symb.urc_queue_ptr,                                                                         \
     ewf_interface_ra_uart__urc_queue__##interface_name_symb,                                                                                       \
     ewf_interface_message,                                                                                                                         \
-    8);                                                                                                                                                 \
+	EWF_INTERFACE_RA_UART_CONFIG_URC_QUEUE_SIZE);                                                                                                                                                 \
 ewf_interface_ra_uart__interface__##interface_name_symb.hardware_start = ewf_interface_ra_uart_hardware_start;                              \
 ewf_interface_ra_uart__interface__##interface_name_symb.hardware_stop = ewf_interface_ra_uart_hardware_stop;                                \
 ewf_interface_ra_uart__interface__##interface_name_symb.hardware_send = ewf_interface_ra_uart_hardware_send;                                \

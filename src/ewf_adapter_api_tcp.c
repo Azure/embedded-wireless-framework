@@ -13,7 +13,7 @@ do {                                                                            
     if ((adapter_ptr->tcp_api_ptr == NULL) ||                                       \
         (adapter_ptr->tcp_api_ptr->function_ptr == NULL))                           \
     {                                                                               \
-        EWF_LOG_ERROR("The function is not implemented.");                          \
+        EWF_LOG_ERROR("The function is not implemented.\n");                        \
         return EWF_RESULT_NOT_SUPPORTED;                                            \
     }                                                                               \
 } while(0)

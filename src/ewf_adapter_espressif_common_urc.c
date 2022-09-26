@@ -22,6 +22,8 @@ ewf_result ewf_adapter_espressif_common_urc_callback(ewf_interface* interface_pt
         return EWF_RESULT_OK;
     }
 
+    ewf_result result;
+
 #if EWF_ADAPTER_ESPRESSIF_COMMON_TCP_ENABLED || EWF_ADAPTER_ESPRESSIF_COMMON_UDP_ENABLED
     /* Call the internet URC callback */
     if (ewf_result_failed(result = ewf_adapter_espressif_common_internet_urc_callback(interface_ptr, buffer_ptr, buffer_length))) return result;

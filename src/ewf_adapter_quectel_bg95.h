@@ -20,6 +20,7 @@ extern "C" {
 
 /************************************************************************//**
  * @defgroup group_configuration_adapter_quectel_bg95 Quectel BG95 adapter configuration
+ * @ingroup group_adapter_quectel_bg95
  * @ingroup group_configuration
  * @brief Quectel BG95 adapter configuration
  * @{

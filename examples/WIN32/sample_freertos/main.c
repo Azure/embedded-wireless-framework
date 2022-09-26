@@ -24,22 +24,6 @@
  *
  */
 
-/******************************************************************************
- *
- * This project is provided as an example of how to create a FreeRTOS project
- * that does not need a heap.  configSUPPORT_STATIC_ALLOCATION is set to 1 to
- * allow RTOS objects to be created using statically allocated RAM, and
- * configSUPPORT_DYNAMIC_ALLOCATION is set to 0 to remove any build dependency
- * on the FreeRTOS heap.  When configSUPPORT_DYNAMIC_ALLOCATION is set to 0
- * pvPortMalloc() just equates to NULL, and calls to vPortFree() have no
- * effect.  See:
- *
- * https://www.FreeRTOS.org/a00111.html and
- * https://www.FreeRTOS.org/Static_Vs_Dynamic_Memory_Allocation.html
- *
- *******************************************************************************
- */
-
 /* Standard includes. */
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,27 +60,26 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
 */
 void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize );
 
-/* This demo only uses the standard demo tasks that use statically allocated
-RAM.  A 'check' task is also created to periodically inspect the demo tasks to
-ensure they are still running, and that no errors have been detected. */
-static void prvStartCheckTask( void );
-static void prvCheckTask( void *pvParameters );
+/* This is the main task. */
+static void prvMainTask( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-	/* This demo has configSUPPORT_STATIC_ALLOCATION set to 1 and
-	configSUPPORT_DYNAMIC_ALLOCATION set to 0, so the only standard temo tasks
-	created are the ones that only use static allocation.  This allow the
-	application to be built without including a FreeRTOS heap file (without one
-	of the heap files described on http://www.freertos.org/a00111.html */
-	vStartStaticallyAllocatedTasks();
+	#define MAIN_STACK_SIZE (1024)
 
-	/* Start a task that periodically inspects the tasks created by
-	vStartStaticallyAllocatedTasks() to ensure they are still running, and not
-	reporting any errors. */
-	prvStartCheckTask();
+	/* Allocate the data structure that will hold the task's TCB.  NOTE:  This is
+	declared static so it still exists after this function has returned. */
+	static StaticTask_t xMainTask;
+
+	/* Allocate the stack that will be used by the task.  NOTE:  This is declared
+	static so it still exists after this function has returned. */
+	static StackType_t ucTaskStack[MAIN_STACK_SIZE * sizeof(StackType_t)];
+
+	/* Create the task, which will use the RAM allocated by the linker to the
+	variables declared in this function. */
+	xTaskCreateStatic(prvMainTask, "Main", MAIN_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, ucTaskStack, &xMainTask);
 
 	/* Start the scheduler so the demo tasks start to execute. */
 	vTaskStartScheduler();
@@ -111,51 +94,22 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvStartCheckTask( void )
+static void prvMainTask( void *pvParameters )
 {
-/* Allocate the data structure that will hold the task's TCB.  NOTE:  This is
-declared static so it still exists after this function has returned. */
-static StaticTask_t xCheckTask;
-
-/* Allocate the stack that will be used by the task.  NOTE:  This is declared
-static so it still exists after this function has returned. */
-static StackType_t ucTaskStack[ configMINIMAL_STACK_SIZE * sizeof( StackType_t ) ];
-
-	/* Create the task, which will use the RAM allocated by the linker to the
-	variables declared in this function. */
-	xTaskCreateStatic( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, ucTaskStack, &xCheckTask );
-}
-/*-----------------------------------------------------------*/
-
-static void prvCheckTask( void *pvParameters )
-{
-const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
-static char *pcStatusMessage = "No errors";
-
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
 
 	for( ;; )
 	{
 		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelay( xCycleFrequency );
+        vTaskDelay(pdMS_TO_TICKS(1000UL));
 
-		/* Check the tasks that use static allocation are still executing. */
-		if( xAreStaticAllocationTasksStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Static allocation";
-		}
-
-		/* This is the only task that uses stdout so its ok to call printf()
-		directly. */
-		printf( "%s - tick count %d - number of tasks executing %d\r\n",
-													pcStatusMessage,
-													xTaskGetTickCount(),
-													uxTaskGetNumberOfTasks() );
+        /* This is the only task that uses stdout so its ok to call printf() directly. */
+        printf( "tick count %d\r\n", xTaskGetTickCount());
 	}
 }
-
 /*-----------------------------------------------------------*/
+
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
@@ -246,4 +200,3 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
 	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
-

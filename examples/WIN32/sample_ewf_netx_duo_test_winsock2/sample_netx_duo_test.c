@@ -13,7 +13,7 @@
 
 /* Define the thread for running Azure SDK on ThreadX (THREADX IoT Platform).  */
 #ifndef SAMPLE_STACK_SIZE
-#define SAMPLE_STACK_SIZE      (1024)
+#define SAMPLE_STACK_SIZE      (1024 * 4)
 #endif /* SAMPLE_STACK_SIZE  */
 
 #ifndef SAMPLE_THREAD_PRIORITY

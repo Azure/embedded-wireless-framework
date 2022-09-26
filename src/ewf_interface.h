@@ -72,7 +72,7 @@ struct _ewf_interface_message
 struct _ewf_interface_tokenizer_pattern
 {
     /**< a pointer to the next patter in the list, NULL if no further patters */
-    struct _ewf_interface_tokenizer_pattern* netx_ptr;
+    ewf_interface_tokenizer_pattern* netx_ptr;
 
     /**< a pointer to a NULL terminated string for the pattern */
     const char* pattern_str;
@@ -82,6 +82,12 @@ struct _ewf_interface_tokenizer_pattern
 
     /**< true if the pattern contains wildcards, false otherwise */
     bool has_wildcards;
+
+    /**< custom function for matching */
+    bool(*match_function)(const char* buffer, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr);
+
+    /**< pointer to custom data, that can be used by the match function */
+    void* data_ptr;
 };
 
 /** @brief The interface structure definition */
@@ -98,6 +104,9 @@ struct _ewf_interface
     /**< The access mutex used to synchronize access to internal state */
     ewf_platform_mutex global_mutex;
 #endif /* EWF_PLATFORM_HAS_THREADING */
+
+    /**< Current Context ID */
+    volatile uint32_t current_context;
 
     /**<
      * The current message being received
@@ -448,7 +457,7 @@ ewf_result ewf_interface_urc_process_message(ewf_interface* interface_ptr, uint8
  * @} *** group_interface_urc
  ****************************************************************************/
 
-  /************************************************************************//**
+/************************************************************************//**
  * @defgroup group_interface_polling Host interface polling calls
  * @brief The host interface polling calls
  * @{
@@ -557,6 +566,15 @@ ewf_result ewf_interface_verify_responses(ewf_interface* interface_ptr, uint32_t
  * @return #ewf_result success and error conditions
  */
 ewf_result ewf_interface_verify_response_starts_with(ewf_interface* interface_ptr, const char * expected_start_str);
+
+/**
+ * @brief Verify if interface response starts with expected string
+ * @param[in] expected_end_str a pointer to a NULL terminated string that will be compared
+ * against the interface response. If different, the function will return an error
+ * code, if equal or ends with expected string, the function will return a success code.
+ * @return #ewf_result success and error conditions
+ */
+ewf_result ewf_interface_verify_response_ends_with(ewf_interface* interface_ptr, const char* expected_end_str);
 
 /************************************************************************//**
  * @} *** group_interface_helpers

@@ -45,8 +45,7 @@ ewf_result ewf_adapter_modem_network_registration_check(ewf_adapter* adapter_ptr
 
 	while(--timeout)
 	{
-		if (ewf_result_failed(result = ewf_adapter_modem_network_registration_read(adapter_ptr, &n, &stat,NULL,NULL,NULL,NULL,NULL))) return result;
-
+		while(ewf_adapter_modem_network_registration_read(adapter_ptr, &n, &stat,NULL,NULL,NULL,NULL,NULL) != EWF_RESULT_OK);
 		/* Check if module is registered to network */
 		if((stat == EWF_REGISTERED_HOME)||(stat == EWF_REGISTERED_ROAMING))
 		{

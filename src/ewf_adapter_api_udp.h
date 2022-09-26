@@ -48,7 +48,7 @@ do {                                                                            
     if ((socket_ptr == NULL) ||                                                     \
         (socket_ptr->adapter_ptr == NULL))                                          \
     {                                                                               \
-        EWF_LOG_ERROR("The UDP socket pointer is invalid.");                        \
+        EWF_LOG_ERROR("The UDP socket pointer is invalid.\n");                      \
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                                \
     }                                                                               \
 } while(0)
@@ -61,8 +61,6 @@ do {                                                                            
 /** @brief The UDP API type */
 typedef struct _ewf_adapter_api_udp
 {
-
-
     ewf_result(*open)(ewf_adapter* adapter_ptr, ewf_socket_udp* socket_ptr);
     ewf_result(*close)(ewf_socket_udp* socket_ptr);
 
