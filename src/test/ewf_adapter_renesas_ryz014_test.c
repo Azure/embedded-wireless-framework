@@ -32,9 +32,9 @@ ewf_result ewf_adapter_renesas_ryz014_test(ewf_adapter* adapter_ptr)
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_RENESAS_RYZ014);
     ewf_result result;
 
-    uint32_t context_id = 1;
+
     // Activate the PDP context
-    if (ewf_result_failed(result = ewf_adapter_sequans_context_mode_change(adapter_ptr, context_id, 1)))
+    if (ewf_result_failed(result = ewf_adapter_modem_packet_service_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG_ERROR("Failed to activate the PDP context: ewf_result %d.\n", result);
         // continue despite the error
@@ -68,27 +68,30 @@ ewf_result ewf_adapter_renesas_ryz014_test(ewf_adapter* adapter_ptr)
         EWF_LOG_ERROR("Failed to run the adapter HTTP test: ewf_result %d.\n", result);
     }
 
+#if 0 /* TODO, under development */
     // Adapter tests - TCP
     result = ewf_adapter_test_api_tcp(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the adapter TCP test: ewf_result %d.\n", result);
     }
+#endif
 
     // Adapter tests - UDP
-    result = ewf_adapter_renesas_ryz014_test_api_udp(adapter_ptr);
+    result = ewf_adapter_test_api_udp(adapter_ptr);
+   // result = ewf_adapter_renesas_ryz014_test_api_udp(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
     }
-
+#if 0
     // Adapter tests - NVM
     result = ewf_adapter_renesas_ryz014_test_command_nvm(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the modem adapter NVM test: ewf_result %d.\n", result);
     }
-
+#endif
     return EWF_RESULT_OK;
 }
 
@@ -221,16 +224,26 @@ ewf_result ewf_adapter_renesas_ryz014_test_command_http(ewf_adapter* adapter_ptr
         timeout--;
     }
 
+    /* Clear the user URC callback */
     if (ewf_result_failed(result = ewf_interface_set_user_urc_callback(interface_ptr, NULL))) return result;
 
     if (timeout == 0)
     {
         return EWF_RESULT_UNEXPECTED_RESPONSE;
     }
-    else
+
+    /* Read the responses */
     {
          ewf_interface_send_commands(interface_ptr, "AT+SQNHTTPRCV=1,100\r",NULL);
-         ewf_interface_drop_all_responses(interface_ptr);
+
+         /* Wait for the read response time out */
+         timeout = EWF_PLATFORM_TICKS_PER_SECOND * 10;
+         while (timeout != 0)
+         {
+             ewf_interface_drop_all_responses(interface_ptr);
+             timeout--;
+             ewf_platform_sleep(1);
+         }
     }
 
     return EWF_RESULT_OK;

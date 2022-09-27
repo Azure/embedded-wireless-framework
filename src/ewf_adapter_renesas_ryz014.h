@@ -3,8 +3,7 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
-
- * brief The Embedded Wireless Framework Renesas RYZ014 adapter driver
+ * @brief The Embedded Wireless Framework Renesas RYZ014 adapter driver
  ****************************************************************************/
 
 #ifndef __ewf_adapter_renesas_ryz014__h__included__
@@ -20,11 +19,18 @@ extern "C" {
 #endif
 
 /************************************************************************//**
+ * @defgroup group_adapter_renesas_ryz014 The Renesas RYX014 adapter driver
+ * @ingroup group_adapter
+ * @brief The Renesas RYX014 adapter driver
+ * @{
+ ****************************************************************************/
+
+/**
  * @defgroup group_adapter_renesas_ryz014_config Renesas RYZ014 adapter configuration
  * @ingroup group_configuration_adapter
  * @brief Renesas RYZ014 adapter configuration
  * @{
- ****************************************************************************/
+ */
 
 #ifndef EWF_ADAPTER_RENESAS_RYZ014_NVM_ENABLED
 #define EWF_ADAPTER_RENESAS_RYZ014_NVM_ENABLED (1)
@@ -71,6 +77,8 @@ extern "C" {
 /** @brief The MQTT socket invalid value */
 #define EWF_ADAPTER_RENESAS_RYZ014_MQTT_SOCKET_INVALID (-1)
 
+#define EWF_RYZ014_SOCKET_MAX_SEND_SIZE                        1460
+#define EWF_RYZ014_SOCKET_MAX_RECEIVE_SIZE                     1500
 
 /* Trusted Certificate Authority certificate index, range 0-19  */
 #ifndef EWF_CA_CERTIFICATE_ID
@@ -96,10 +104,11 @@ extern "C" {
 #define  EWF_FILE_TYPE_CERTIFICATE                     ("certificate")
 #define  EWF_FILE_TYPE_PRIVATEKEY                      ("privatekey")
 
-/************************************************************************//**
- * @} *** group_adapter_renesas_ryz014_config
- ****************************************************************************/
+/** @} *** group_adapter_renesas_ryz014_config */
 
+#define EWF_CLOSE_LISTENING_SOCKET                     ("0")
+#define EWF_OPEN_LISTNEING_IPV4_SOCKET                 ("1")
+#define EWF_OPEN_LISTENING_IPV6_SOCKET                 ("2")
 /**
  * @defgroup group_adapter_renesas_ryz014_control Adapter control
  * @brief Renesas RYZ014 adapter control API
@@ -219,10 +228,10 @@ ewf_result ewf_adapter_renesas_ryz014_udp_open(ewf_adapter* adapter_ptr, ewf_soc
 ewf_result ewf_adapter_renesas_ryz014_udp_close(ewf_socket_udp* socket_ptr);
 ewf_result ewf_adapter_renesas_ryz014_udp_control(ewf_socket_udp* socket_ptr, const char* control_str, const uint8_t* buffer_ptr, uint32_t* buffer_length_ptr);
 ewf_result ewf_adapter_renesas_ryz014_udp_set_dtls_configuration(ewf_socket_udp* socket_ptr, uint32_t dtls_configuration_id);
-ewf_result ewf_adapter_renesas_ryz014_udp_bind(ewf_socket_udp* socket_ptr, uint32_t port);
+ewf_result ewf_adapter_renesas_ryz014_udp_bind(ewf_socket_udp* socket_ptr, uint32_t local_port);
 ewf_result ewf_adapter_renesas_ryz014_udp_shutdown(ewf_socket_udp* socket_ptr);
 ewf_result ewf_adapter_renesas_ryz014_udp_send_to(ewf_socket_udp* socket_ptr, const char* remote_address_str, uint32_t remote_port, const uint8_t* buffer_ptr, uint32_t buffer_length);
-ewf_result ewf_adapter_renesas_ryz014_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
+ewf_result ewf_adapter_renesas_ryz014_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address_str, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
 
 #endif /* EWF_ADAPTER_RENESAS_RYZ014_UDP_ENABLED */
 
@@ -278,7 +287,6 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_publish(ewf_adapter* adapter_pt
 #endif /* EWF_ADAPTER_RENESAS_RYZ014_MQTT_BASIC_ENABLED */
 
 /** @} *** group_adapter_renesas_ryz014_mqtt_basic */
-
 
 /**
  * @defgroup group_adapter_renesas_ryz014_nvm NVM functions
@@ -336,7 +344,6 @@ ewf_result ewf_adapter_renesas_ryz014_nvm_upload(ewf_adapter* adapter_ptr, const
  *
  ******************************************************************************/
 
-
 /**
  * @defgroup group_adapter_renesas_ryz014_data Renesas RYZ014 driver internal data
  * @brief Renesas RYZ014 adapter data structure
@@ -387,6 +394,8 @@ typedef struct _ewf_adapter_renesas_ryz014
     /** @brief Internal MQTT basic API socket 0 status  */
     volatile bool mqtt_basic_conn;
     volatile bool mqtt_basic_conn_error;
+    volatile bool mqtt_basic_publish;
+    volatile bool mqtt_basic_subscribe;
 
 #endif /* EWF_ADAPTER_RENESAS_RYZ014_MQTT_BASIC_ENABLED */
 
@@ -489,6 +498,10 @@ EWF_ADAPTER_RENESAS_RYZ014_INITIALIZE_MQTT_BASIC_API(adapter_ptr);              
 } while(0)
 
 /** @} *** group_adapter_renesas_ryz014_declaration */
+
+/************************************************************************//**
+ * @} *** group_adapter_renesas_ryz014
+ ****************************************************************************/
 
 #ifdef __cplusplus
 }

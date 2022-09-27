@@ -43,12 +43,6 @@ ewf_result ewf_adapter_sequans_autointernet(ewf_adapter* adapter_ptr, uint32_t m
  */
 ewf_result ewf_adapter_sequans_configure_pdp_context(ewf_adapter* adapter_ptr, uint32_t context_id, const char* const apn, const char* const pdp_type);
 
-/**
- * @brief Activate/Deactivate context
- * @return #ewf_result success and error conditions
- */
-ewf_result ewf_adapter_sequans_context_mode_change(ewf_adapter* adapter_ptr, uint32_t mode, uint32_t context_id);
-
 /************************************************************************//**
  * @} *** group_adapter_sequans
  ****************************************************************************/

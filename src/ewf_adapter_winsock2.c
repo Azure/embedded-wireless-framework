@@ -102,6 +102,12 @@ ewf_result ewf_adapter_winsock2_start(ewf_adapter* adapter_ptr)
                 implementation_ptr->ipv4_netmask.S_un.S_un_b.s_b3 = b;
                 implementation_ptr->ipv4_netmask.S_un.S_un_b.s_b4 = a;
 
+                /* Add a default DNS */ /* TODO */
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b1 = 50; // 8;
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b2 = 10; // 8;
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b3 = 50; // 8;
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b4 = 10; // 8;
+
                 /* We found our adapter */
                 valid_adapter = true;
                 break;
@@ -434,6 +440,10 @@ ewf_result ewf_adapter_winsock2_tcp_open(ewf_adapter* adapter_ptr, ewf_socket_tc
         return EWF_RESULT_INVALID_SOCKET;
     }
 
+    /* Make socket non-blocking */
+    u_long mode = 1;
+    ioctlsocket(ws2_socket_ptr->s, FIONBIO, &mode);
+
     EWF_LOG("[WINSOCK2][TCP][OPEN/RETURN][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
 
     return EWF_RESULT_OK;
@@ -500,6 +510,7 @@ ewf_result ewf_adapter_winsock2_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t po
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2* implementation_ptr = (ewf_adapter_winsock2*)adapter_ptr->implementation_ptr;
     ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
     if (ws2_socket_ptr == NULL)
@@ -514,10 +525,12 @@ ewf_result ewf_adapter_winsock2_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t po
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
+    EWF_LOG("[WINSOCK2][TCP][BIND/CALL][SOCKET 0x%08X][PORT %u]\n", ws2_socket_ptr->s, port);
+
     struct sockaddr_in bind_addr;
     bind_addr.sin_family = AF_INET;
     bind_addr.sin_port = htons(port);
-    bind_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    bind_addr.sin_addr.s_addr = htonl(implementation_ptr->ipv4_address.S_un.S_addr); //htonl(INADDR_ANY); //inet_addr("127.0.0.1");
 
     int iResult = bind(ws2_socket_ptr->s, (SOCKADDR*)&bind_addr, sizeof(bind_addr));
     if (iResult == SOCKET_ERROR)
@@ -525,6 +538,8 @@ ewf_result ewf_adapter_winsock2_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t po
         EWF_LOG_ERROR("bind failed with error: %d\n", WSAGetLastError());
         return EWF_RESULT_UNEXPECTED_RESPONSE;
     }
+
+    EWF_LOG("[WINSOCK2][TCP][BIND/RETURN][SOCKET 0x%08X][PORT %u]\n", ws2_socket_ptr->s, port);
 
     return EWF_RESULT_OK;
 }
@@ -549,12 +564,16 @@ ewf_result ewf_adapter_winsock2_tcp_listen(ewf_socket_tcp* socket_ptr)
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
+    EWF_LOG("[WINSOCK2][TCP][LISTEN/CALL][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
+
     int iResult = listen(ws2_socket_ptr->s, SOMAXCONN);
     if (iResult == SOCKET_ERROR)
     {
         EWF_LOG_ERROR("listen failed with error: %d\n", WSAGetLastError());
         return EWF_RESULT_UNEXPECTED_RESPONSE;
     }
+
+    EWF_LOG("[WINSOCK2][TCP][LISTEN/RETURN][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
 
     return EWF_RESULT_OK;
 }
@@ -646,7 +665,7 @@ ewf_result ewf_adapter_winsock2_tcp_connect(ewf_socket_tcp* socket_ptr, const ch
     char port_str[7];
     const char* port_cstr = ewfl_unsigned_to_str(port, port_str, sizeof(port_str));
 
-    ewf_result result;
+    ewf_result result = EWF_RESULT_OK;
     int iResult;
 
     struct addrinfo server_addrinfo;
@@ -671,21 +690,70 @@ ewf_result ewf_adapter_winsock2_tcp_connect(ewf_socket_tcp* socket_ptr, const ch
         EWF_LOG_ERROR("[WARNING] Ambiguous address resolved, using the first one.\n");
     }
 
+    /* Set the result to success before the next block */
+    result = EWF_RESULT_OK;
+
     /* Attmept to connect to the server. */
     iResult = connect(ws2_socket_ptr->s, addrinfo_result->ai_addr, (int)addrinfo_result->ai_addrlen);
     if (iResult == SOCKET_ERROR)
     {
-        EWF_LOG("connect failed with error: %d\n", WSAGetLastError());
-        freeaddrinfo(addrinfo_result);
-        return EWF_RESULT_CONNECTION_FAILED;
+        DWORD WSALastError = WSAGetLastError();
+        if (WSALastError != WSAEWOULDBLOCK)
+        {
+            EWF_LOG("connect failed with error: %d\n", WSALastError);
+            result = EWF_RESULT_CONNECTION_FAILED;
+        }
+        else
+        {
+            for(;;)
+            {
+                fd_set write_fds, except_fds;
+
+                FD_ZERO(&write_fds);
+                FD_SET(ws2_socket_ptr->s, &write_fds);
+
+                FD_ZERO(&except_fds);
+                FD_SET(ws2_socket_ptr->s, &except_fds);
+
+                /* Wait on select. */
+                struct timeval tv;
+                tv.tv_sec = 0;
+                tv.tv_usec = 0;
+
+                iResult = select(ws2_socket_ptr->s + 1, NULL, &write_fds, &except_fds, &tv);
+                if (iResult == SOCKET_ERROR)
+                {
+                    EWF_LOG_ERROR("select failed, return %d, error %d\n", iResult, WSAGetLastError());
+                    result = EWF_RESULT_CONNECTION_FAILED;
+                    break;
+                }
+
+                if (FD_ISSET(ws2_socket_ptr->s, &write_fds))
+                {
+                    EWF_LOG("[WINSOCK2][TCP][CONNECTED!]\n");
+                    result = EWF_RESULT_OK;
+                    break;
+                }
+
+                if (FD_ISSET(ws2_socket_ptr->s, &except_fds))
+                {
+                    EWF_LOG_ERROR("The socket connection failed.\n");
+                    result = EWF_RESULT_CONNECTION_FAILED;
+                    break;
+                }
+
+                /* Not ready yet, just sleep and try again. */
+                ewf_platform_sleep(1);
+            }
+        }
     }
 
     freeaddrinfo(addrinfo_result);
 
-    if (ws2_socket_ptr->s == INVALID_SOCKET)
+    if (result != EWF_RESULT_OK)
     {
         EWF_LOG_ERROR("Unable to connect to server!\n");
-        return EWF_RESULT_CONNECTION_FAILED;
+        return result;
     }
 
     EWF_LOG("[WINSOCK2][TCP][CONNECT/RETURN][OK]\n");
@@ -794,7 +862,7 @@ ewf_result ewf_adapter_winsock2_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t*
 
     EWF_LOG("[WINSOCK2][TCP][RECEIVE/CALL][SOCKET 0x%08X][BUFFER 0x%08p][LENGTH %u]\n", ws2_socket_ptr->s, buffer_ptr, *buffer_length_ptr);
 
-    if (!wait)
+    for(;;)
     {
         struct timeval timeout;
         timeout.tv_sec = 0;
@@ -804,15 +872,38 @@ ewf_result ewf_adapter_winsock2_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t*
         FD_ZERO(&fds);
         FD_SET(ws2_socket_ptr->s, &fds);
 
-        int iResult = select(0, &fds, 0, 0, &timeout);
-        if (iResult == 0)
-        {
-            *buffer_length_ptr = 0;
-            return EWF_RESULT_NO_DATA_AVAILABLE;
-        }
-        else if (iResult < 0)
+        int iResult = select(ws2_socket_ptr->s + 1, &fds, NULL, NULL, &timeout);
+        
+        if (iResult == SOCKET_ERROR)
         {
             EWF_LOG_ERROR("select failed with error: %d\n", WSAGetLastError());
+            return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
+        }
+
+        if (iResult == 0) /* Timeout */
+        {
+            if (wait)
+            {
+                /* Sleep and continue */
+                ewf_platform_sleep(1);
+                continue;
+            }
+            else
+            {
+                *buffer_length_ptr = 0;
+                EWF_LOG("[WINSOCK2][TCP][RECEIVE/CALL][NO DATA]\n");
+                return EWF_RESULT_NO_DATA_AVAILABLE;
+            }
+        }
+
+        if (FD_ISSET(ws2_socket_ptr->s, &fds))
+        {
+            /* Data is available! */
+            break;
+        }
+        else
+        {
+            EWF_LOG_ERROR("select returned unexpectedly.\n");
             return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
         }
     }
@@ -825,7 +916,7 @@ ewf_result ewf_adapter_winsock2_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t*
     }
     else if (iResult == SOCKET_ERROR)
     {
-        EWF_LOG_ERROR("recv failed with error: %d\n", WSAGetLastError());
+        EWF_LOG_ERROR("recv failed with error %u\n", WSAGetLastError());
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
@@ -896,6 +987,10 @@ ewf_result ewf_adapter_winsock2_udp_open(ewf_adapter* adapter_ptr, ewf_socket_ud
         return EWF_RESULT_INVALID_SOCKET;
     }
 
+    /* Make socket non-blocking */
+    u_long mode = 1;
+    ioctlsocket(ws2_socket_ptr->s, FIONBIO, &mode);
+
     EWF_LOG("[WINSOCK2][UDP][OPEN/RETURN][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
 
     return EWF_RESULT_OK;
@@ -960,6 +1055,7 @@ ewf_result ewf_adapter_winsock2_udp_bind(ewf_socket_udp* socket_ptr, uint32_t po
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_WINSOCK2);
+    ewf_adapter_winsock2* implementation_ptr = (ewf_adapter_winsock2*)adapter_ptr->implementation_ptr;
     ewf_adapter_winsock2_socket* ws2_socket_ptr = (ewf_adapter_winsock2_socket*)socket_ptr->data_ptr;
 
     if (ws2_socket_ptr == NULL)
@@ -974,18 +1070,21 @@ ewf_result ewf_adapter_winsock2_udp_bind(ewf_socket_udp* socket_ptr, uint32_t po
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
+    EWF_LOG("[WINSOCK2][UDP][BIND/CALL][SOCKET 0x%08X][PORT %u]\n", ws2_socket_ptr->s, port);
+
     struct sockaddr_in bind_addr;
     bind_addr.sin_family = AF_INET;
     bind_addr.sin_port = htons(port);
-    bind_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    bind_addr.sin_addr.s_addr = htonl(implementation_ptr->ipv4_address.S_un.S_addr); //htonl(INADDR_ANY); //inet_addr("127.0.0.1");
 
-    int iResult;
-    iResult = bind(ws2_socket_ptr->s, (SOCKADDR*)&bind_addr, sizeof(bind_addr));
+    int iResult = bind(ws2_socket_ptr->s, (SOCKADDR*)&bind_addr, sizeof(bind_addr));
     if (iResult == SOCKET_ERROR)
     {
         EWF_LOG_ERROR("bind failed with error: %d\n", WSAGetLastError());
         return EWF_RESULT_UNEXPECTED_RESPONSE;
     }
+
+    EWF_LOG("[WINSOCK2][UDP][BIND/RETURN][SOCKET 0x%08X][PORT %u]\n", ws2_socket_ptr->s, port);
 
     return EWF_RESULT_OK;
 }
@@ -1019,7 +1118,7 @@ ewf_result ewf_adapter_winsock2_udp_shutdown(ewf_socket_udp* socket_ptr)
         return EWF_RESULT_UNEXPECTED_RESPONSE;
     }
 
-    EWF_LOG("[WINSOCK2][UDP][SHUTDOWN/RETURN][OK]\n");
+    EWF_LOG("[WINSOCK2][UDP][SHUTDOWN/RETURN][SOCKET 0x%08X]\n", ws2_socket_ptr->s);
 
     return EWF_RESULT_OK;
 }
@@ -1072,11 +1171,30 @@ ewf_result ewf_adapter_winsock2_udp_send_to(ewf_socket_udp* socket_ptr, const ch
     }
 
 #ifdef EWF_DEBUG
-    uint32_t step = 64;
+    uint32_t step = 16;
     for (uint32_t i = 0; i < buffer_length; i += step)
     {
-        const char* str = ewfl_escape_str_to_str_buffer(buffer_ptr + i, step);
-        EWF_LOG("[WINSOCK2][UDP][SEND-TO/CALL][SOCKET 0x%08X][%04d][%s]\n", ws2_socket_ptr->s, i, str);
+        uint32_t step_buffer_length = (step > (buffer_length - i)) ? (buffer_length - i) : step;
+        EWF_LOG("[WINSOCK2][UDP][SEND-TO/CALL][SOCKET 0x%08X][%04d][", ws2_socket_ptr->s, i);
+        uint32_t j;
+        for (j = 0; j < step; j++)
+        {
+            if (j < step_buffer_length)
+            {
+                char c = (char)*(buffer_ptr + i + j);
+                EWF_LOG("%c", (32 <= c && c <= 127) ? c : '.');
+            }
+            else
+            {
+                EWF_LOG(" ");
+            }
+        }
+        EWF_LOG("]");
+        for (j = 0; j < step_buffer_length; j++)
+        {
+            EWF_LOG(" %02X", (uint32_t) *(buffer_ptr + i + j));
+        }
+        EWF_LOG("\n");
     }
 #endif
 
@@ -1092,7 +1210,7 @@ ewf_result ewf_adapter_winsock2_udp_send_to(ewf_socket_udp* socket_ptr, const ch
 
     freeaddrinfo(addrinfo_result);
 
-    EWF_LOG("[WINSOCK2][UDP][SEND-TO/RETURN][OK]\n");
+    EWF_LOG("[WINSOCK2][UDP][SEND-TO/RETURN][SOCKET 0x%08X][SERVER %s][PORT %u][BUFFER 0x%08p][LENGTH %u]\n", ws2_socket_ptr->s, remote_address_str, remote_port, buffer_ptr, buffer_length);
 
     return EWF_RESULT_OK;
 }
@@ -1134,7 +1252,7 @@ ewf_result ewf_adapter_winsock2_udp_receive_from(ewf_socket_udp* socket_ptr, cha
 
     EWF_LOG("[WINSOCK2][UDP][RECEIVE-FROM/CALL][SOCKET 0x%08X][BUFFER 0x%08p][LENGTH %u]\n", ws2_socket_ptr->s, buffer_ptr, *buffer_length_ptr);
 
-    if (!wait)
+    for (;;)
     {
         struct timeval timeout;
         timeout.tv_sec = 0;
@@ -1144,15 +1262,38 @@ ewf_result ewf_adapter_winsock2_udp_receive_from(ewf_socket_udp* socket_ptr, cha
         FD_ZERO(&fds);
         FD_SET(ws2_socket_ptr->s, &fds);
 
-        int iResult = select(0, &fds, 0, 0, &timeout);
-        if (iResult == 0)
-        {
-            *buffer_length_ptr = 0;
-            return EWF_RESULT_NO_DATA_AVAILABLE;
-        }
-        else if (iResult < 0)
+        int iResult = select(ws2_socket_ptr->s + 1, &fds, NULL, NULL, &timeout);
+
+        if (iResult == SOCKET_ERROR)
         {
             EWF_LOG_ERROR("select failed with error: %d\n", WSAGetLastError());
+            return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
+        }
+
+        if (iResult == 0) /* Timeout */
+        {
+            if (wait)
+            {
+                /* Sleep and continue */
+                ewf_platform_sleep(1);
+                continue;
+            }
+            else
+            {
+                *buffer_length_ptr = 0;
+                EWF_LOG("[WINSOCK2][UDP][RECEIVE/CALL][NO DATA]\n");
+                return EWF_RESULT_NO_DATA_AVAILABLE;
+            }
+        }
+
+        if (FD_ISSET(ws2_socket_ptr->s, &fds))
+        {
+            /* Data is available! */
+            break;
+        }
+        else
+        {
+            EWF_LOG_ERROR("select returned unexpectedly.\n");
             return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
         }
     }
@@ -1173,17 +1314,36 @@ ewf_result ewf_adapter_winsock2_udp_receive_from(ewf_socket_udp* socket_ptr, cha
 
     if (remote_port_ptr)
     {
-        *remote_port_ptr = remote_addr.sin_port;
+        *remote_port_ptr = ntohs(remote_addr.sin_port);
     }
 
-    EWF_LOG("[WINSOCK2][UDP][RECEIVE-FROM/RETURN][SOCKET 0x%08X][SERVER %s][PORT %u][LENGTH %u]\n", ws2_socket_ptr->s, remote_address ? remote_address : "unresolved", remote_addr.sin_port, *buffer_length_ptr);
+    EWF_LOG("[WINSOCK2][UDP][RECEIVE-FROM/RETURN][SOCKET 0x%08X][SERVER %s][PORT %u][LENGTH %u]\n", ws2_socket_ptr->s, remote_address ? remote_address : "unresolved", ntohs(remote_addr.sin_port), *buffer_length_ptr);
 
 #ifdef EWF_DEBUG
-    uint32_t step = 64;
+    uint32_t step = 16;
     for (uint32_t i = 0; i < *buffer_length_ptr; i += step)
     {
-        const char* str = ewfl_escape_str_to_str_buffer(buffer_ptr + i, step);
-        EWF_LOG("[WINSOCK2][UDP][RECEIVE-FROM/RETURN][SOCKET 0x%08X][%04d][%s]\n", ws2_socket_ptr->s, i, str);
+        uint32_t step_buffer_length = (step > (*buffer_length_ptr - i)) ? (*buffer_length_ptr - i) : step;
+        EWF_LOG("[WINSOCK2][UDP][RECEIVE-FROM/RETURN][SOCKET 0x%08X][%04d][", ws2_socket_ptr->s, i);
+        uint32_t j;
+        for (j = 0; j < step; j++)
+        {
+            if (j < step_buffer_length)
+            {
+                char c = (char)*(buffer_ptr + i + j);
+                EWF_LOG("%c", (32 <= c && c <= 127) ? c : '.');
+            }
+            else
+            {
+                EWF_LOG(" ");
+            }
+        }
+        EWF_LOG("]");
+        for (j = 0; j < step_buffer_length; j++)
+        {
+            EWF_LOG(" %02X", (uint8_t) * (buffer_ptr + i + j));
+        }
+        EWF_LOG("\n");
     }
 #endif
 

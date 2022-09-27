@@ -103,7 +103,7 @@ void sample_thread_entry(ULONG parameter)
     }
 
     // Activated the PDP context
-    if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_activate(adapter_ptr, 1)))
+    if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG_ERROR("Failed to activate the PDP context: ewf_result %d.\n", result);
         // continue

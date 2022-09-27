@@ -115,6 +115,8 @@ ewf_result ewf_adapter_modem_packet_service_activate(ewf_adapter* adapter_ptr, u
     char context_id_str[3];
     const char* context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
+    interface_ptr->current_context = context_id;
+
     /* Activate PDP context */
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGACT=1,", context_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;

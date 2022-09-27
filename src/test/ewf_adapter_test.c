@@ -3,7 +3,7 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @brief The Embedded Wireless Framework adapter driver test common code
+ * @brief The Embedded Wireless Framework adapter driver API test code.
  ****************************************************************************/
 
 #include "ewf_adapter.h"
@@ -111,26 +111,26 @@ ewf_result ewf_adapter_test_api_tcp_echo(ewf_adapter* adapter_ptr)
 
     ewf_result result = EWF_RESULT_OK;
 
-	ewf_socket_tcp socket_tcp = { 0 };
+    ewf_socket_tcp socket_tcp = { 0 };
 
-	static uint8_t receive_buffer[1500];
-	uint32_t receive_buffer_length;
+    static uint8_t receive_buffer[1500];
+    uint32_t receive_buffer_length;
 
-	if (ewf_result_failed(result = ewf_adapter_tcp_open(adapter_ptr, &socket_tcp))) return result;
-	if (ewf_result_failed(result = ewf_adapter_tcp_connect(&socket_tcp, EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR, EWF_ADAPTER_TEST_TCP_ECHO_SERVER_PORT))) return result;
-	for (int i = 0; i < EWF_ADAPTER_TEST_TCP_ITERATIONS; i++)
-	{
-		if (ewf_result_failed(result = ewf_adapter_tcp_send(&socket_tcp, (uint8_t*)EWF_ADAPTER_TEST_TCP_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_TCP_MESSAGE_STR)))) return result;
-		receive_buffer_length = sizeof(receive_buffer);
-		if (ewf_result_failed(result = ewf_adapter_tcp_receive(&socket_tcp, receive_buffer, &receive_buffer_length, true))) return result;
-		ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS);
-		if (ewf_result_failed(result = ewf_adapter_tcp_send(&socket_tcp, (uint8_t*)EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR)))) return result;
-		receive_buffer_length = sizeof(receive_buffer);
-		if (ewf_result_failed(result = ewf_adapter_tcp_receive(&socket_tcp, receive_buffer, &receive_buffer_length, true))) return result;
-		ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS);
-	}
-	if (ewf_result_failed(result = ewf_adapter_tcp_shutdown(&socket_tcp))) return result;
-	if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_open(adapter_ptr, &socket_tcp))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_connect(&socket_tcp, EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR, EWF_ADAPTER_TEST_TCP_ECHO_SERVER_PORT))) return result;
+    for (int i = 0; i < EWF_ADAPTER_TEST_TCP_ITERATIONS; i++)
+    {
+        if (ewf_result_failed(result = ewf_adapter_tcp_send(&socket_tcp, (uint8_t*)EWF_ADAPTER_TEST_TCP_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_TCP_MESSAGE_STR)))) return result;
+        receive_buffer_length = sizeof(receive_buffer);
+        if (ewf_result_failed(result = ewf_adapter_tcp_receive(&socket_tcp, receive_buffer, &receive_buffer_length, true))) return result;
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS);
+        if (ewf_result_failed(result = ewf_adapter_tcp_send(&socket_tcp, (uint8_t*)EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR)))) return result;
+        receive_buffer_length = sizeof(receive_buffer);
+        if (ewf_result_failed(result = ewf_adapter_tcp_receive(&socket_tcp, receive_buffer, &receive_buffer_length, true))) return result;
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS);
+    }
+    if (ewf_result_failed(result = ewf_adapter_tcp_shutdown(&socket_tcp))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp))) return result;
 
     return result;
 }
@@ -143,46 +143,46 @@ ewf_result ewf_adapter_test_api_tcp_client_server(ewf_adapter* adapter_ptr)
 
     ewf_result result = EWF_RESULT_OK;
 
-	ewf_socket_tcp socket_tcp_client = { 0 };
-	ewf_socket_tcp socket_tcp_server = { 0 };
-	ewf_socket_tcp socket_tcp_incomming = { 0 };
+    ewf_socket_tcp socket_tcp_client = { 0 };
+    ewf_socket_tcp socket_tcp_server = { 0 };
+    ewf_socket_tcp socket_tcp_incomming = { 0 };
 
-	static uint8_t receive_buffer[1500];
-	uint32_t receive_buffer_length;
+    static uint8_t receive_buffer[1500];
+    uint32_t receive_buffer_length;
 
-	uint32_t local_address;
+    uint32_t local_address;
 
-	if (ewf_result_failed(result = ewf_adapter_get_ipv4_address(adapter_ptr, &local_address))) return result;
+    if (ewf_result_failed(result = ewf_adapter_get_ipv4_address(adapter_ptr, &local_address))) return result;
 
-	char local_address_str[16];
-	sprintf(local_address_str, "%d.%d.%d.%d",
-		(int)(((uint8_t*)&local_address)[3]),
-		(int)(((uint8_t*)&local_address)[2]),
-		(int)(((uint8_t*)&local_address)[1]),
-		(int)(((uint8_t*)&local_address)[0]));
+    char local_address_str[16];
+    sprintf(local_address_str, "%d.%d.%d.%d",
+        (int)(((uint8_t*)&local_address)[3]),
+        (int)(((uint8_t*)&local_address)[2]),
+        (int)(((uint8_t*)&local_address)[1]),
+        (int)(((uint8_t*)&local_address)[0]));
 
-	if (ewf_result_failed(result = ewf_adapter_tcp_open(adapter_ptr, &socket_tcp_client))) return result;
-	if (ewf_result_failed(result = ewf_adapter_tcp_open(adapter_ptr, &socket_tcp_server))) return result;
-	if (ewf_result_failed(result = ewf_adapter_tcp_bind(&socket_tcp_server, EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT))) return result;
-	if (ewf_result_failed(result = ewf_adapter_tcp_listen(&socket_tcp_server))) return result;
-	if (ewf_result_failed(result = ewf_adapter_tcp_connect(&socket_tcp_client, local_address_str, EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT))) return result;
-	if (ewf_result_failed(result = ewf_adapter_tcp_accept(&socket_tcp_server, &socket_tcp_incomming))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_open(adapter_ptr, &socket_tcp_client))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_open(adapter_ptr, &socket_tcp_server))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_bind(&socket_tcp_server, EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_listen(&socket_tcp_server))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_connect(&socket_tcp_client, local_address_str, EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_accept(&socket_tcp_server, &socket_tcp_incomming))) return result;
 
-	for (int i = 0; i < EWF_ADAPTER_TEST_TCP_ITERATIONS; i++)
-	{
-		if (ewf_result_failed(result = ewf_adapter_tcp_send(
-			&socket_tcp_client,
-			(uint8_t*)EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR)))) return result;
-		receive_buffer_length = sizeof(receive_buffer);
-		if (ewf_result_failed(result = ewf_adapter_tcp_receive(
-			&socket_tcp_incomming,
-			receive_buffer, &receive_buffer_length,
-			true))) return result;
-		ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS);
-	}
-	if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp_server))) return result;
-	if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp_client))) return result;
-	if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp_incomming))) return result;
+    for (int i = 0; i < EWF_ADAPTER_TEST_TCP_ITERATIONS; i++)
+    {
+        if (ewf_result_failed(result = ewf_adapter_tcp_send(
+            &socket_tcp_client,
+            (uint8_t*)EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR)))) return result;
+        receive_buffer_length = sizeof(receive_buffer);
+        if (ewf_result_failed(result = ewf_adapter_tcp_receive(
+            &socket_tcp_incomming,
+            receive_buffer, &receive_buffer_length,
+            true))) return result;
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS);
+    }
+    if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp_server))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp_client))) return result;
+    if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp_incomming))) return result;
 
     return result;
 }
@@ -195,42 +195,42 @@ ewf_result ewf_adapter_test_api_udp_echo(ewf_adapter* adapter_ptr)
 
     ewf_result result = EWF_RESULT_OK;
 
-	ewf_socket_udp socket_udp = { 0 };
+    ewf_socket_udp socket_udp = { 0 };
 
-	static char remote_buffer_str[1024];
-	uint32_t remote_bufferewfl_str_length;
-	uint32_t remote_port = 0;
+    static char remote_buffer_str[1024];
+    uint32_t remote_bufferewfl_str_length;
+    uint32_t remote_port = 0;
 
-	static char receive_buffer[1500];
-	uint32_t receive_buffer_length;
+    static char receive_buffer[1500];
+    uint32_t receive_buffer_length;
 
-	if (ewf_result_failed(result = ewf_adapter_udp_open(adapter_ptr, &socket_udp))) return result;
-	for (int i = 0; i < EWF_ADAPTER_TEST_UDP_ITERATIONS; i++)
-	{
-		if (ewf_result_failed(result = ewf_adapter_udp_send_to(
-			&socket_udp,
-			EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR, EWF_ADAPTER_TEST_UDP_ECHO_SERVER_PORT,
-			(uint8_t*)EWF_ADAPTER_TEST_UDP_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_UDP_MESSAGE_STR)))) return result;
-		receive_buffer_length = sizeof(receive_buffer);
-		if (ewf_result_failed(result = ewf_adapter_udp_receive_from(
-			&socket_udp,
-			remote_buffer_str, &remote_bufferewfl_str_length, &remote_port,
-			receive_buffer, &receive_buffer_length,
-			true))) return result;
-		ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS);
-		if (ewf_result_failed(result = ewf_adapter_udp_send_to(
-			&socket_udp,
-			EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR, EWF_ADAPTER_TEST_UDP_ECHO_SERVER_PORT,
-			(uint8_t*)EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR)))) return result;
-		receive_buffer_length = sizeof(receive_buffer);
-		if (ewf_result_failed(result = ewf_adapter_udp_receive_from(
-			&socket_udp,
-			remote_buffer_str, &remote_bufferewfl_str_length, &remote_port,
-			receive_buffer, &receive_buffer_length,
-			true))) return result;
-		ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS);
-	}
-	if (ewf_result_failed(result = ewf_adapter_udp_close(&socket_udp))) return result;
+    if (ewf_result_failed(result = ewf_adapter_udp_open(adapter_ptr, &socket_udp))) return result;
+    for (int i = 0; i < EWF_ADAPTER_TEST_UDP_ITERATIONS; i++)
+    {
+        if (ewf_result_failed(result = ewf_adapter_udp_send_to(
+            &socket_udp,
+            EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR, EWF_ADAPTER_TEST_UDP_ECHO_SERVER_PORT,
+            (uint8_t*)EWF_ADAPTER_TEST_UDP_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_UDP_MESSAGE_STR)))) return result;
+        receive_buffer_length = sizeof(receive_buffer);
+        if (ewf_result_failed(result = ewf_adapter_udp_receive_from(
+            &socket_udp,
+            remote_buffer_str, &remote_bufferewfl_str_length, &remote_port,
+            receive_buffer, &receive_buffer_length,
+            true))) return result;
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS);
+        if (ewf_result_failed(result = ewf_adapter_udp_send_to(
+            &socket_udp,
+            EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR, EWF_ADAPTER_TEST_UDP_ECHO_SERVER_PORT,
+            (uint8_t*)EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR)))) return result;
+        receive_buffer_length = sizeof(receive_buffer);
+        if (ewf_result_failed(result = ewf_adapter_udp_receive_from(
+            &socket_udp,
+            remote_buffer_str, &remote_bufferewfl_str_length, &remote_port,
+            receive_buffer, &receive_buffer_length,
+            true))) return result;
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS);
+    }
+    if (ewf_result_failed(result = ewf_adapter_udp_close(&socket_udp))) return result;
 
     return result;
 }
@@ -243,46 +243,46 @@ ewf_result ewf_adapter_test_api_udp_client_server(ewf_adapter* adapter_ptr)
 
     ewf_result result = EWF_RESULT_OK;
 
-	ewf_socket_udp socket_udp_client = { 0 };
-	ewf_socket_udp socket_udp_server = { 0 };
+    ewf_socket_udp socket_udp_client = { 0 };
+    ewf_socket_udp socket_udp_server = { 0 };
 
-	static char remote_buffer_str[1024];
-	uint32_t remote_bufferewfl_str_length;
-	uint32_t remote_port = 0;
+    static char remote_buffer_str[1024];
+    uint32_t remote_buffer_str_length;
+    uint32_t remote_port = 0;
 
-	static char receive_buffer[1500];
-	uint32_t receive_buffer_length;
+    static char receive_buffer[1500];
+    uint32_t receive_buffer_length;
 
-	uint32_t local_address;
+    uint32_t local_address;
 
-	if (ewf_result_failed(result = ewf_adapter_get_ipv4_address(adapter_ptr, &local_address))) return result;
+    if (ewf_result_failed(result = ewf_adapter_get_ipv4_address(adapter_ptr, &local_address))) return result;
 
-	char local_address_str[16];
-	sprintf(local_address_str, "%d.%d.%d.%d",
-		(int)(((uint8_t*)&local_address)[3]),
-		(int)(((uint8_t*)&local_address)[2]),
-		(int)(((uint8_t*)&local_address)[1]),
-		(int)(((uint8_t*)&local_address)[0]));
+    char local_address_str[16];
+    sprintf(local_address_str, "%d.%d.%d.%d",
+        (int)(((uint8_t*)&local_address)[3]),
+        (int)(((uint8_t*)&local_address)[2]),
+        (int)(((uint8_t*)&local_address)[1]),
+        (int)(((uint8_t*)&local_address)[0]));
 
-	if (ewf_result_failed(result = ewf_adapter_udp_open(adapter_ptr, &socket_udp_client))) return result;
-	if (ewf_result_failed(result = ewf_adapter_udp_open(adapter_ptr, &socket_udp_server))) return result;
-	if (ewf_result_failed(result = ewf_adapter_udp_bind(&socket_udp_server, EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT))) return result;
-	for (int i = 0; i < EWF_ADAPTER_TEST_UDP_ITERATIONS; i++)
-	{
-		if (ewf_result_failed(result = ewf_adapter_udp_send_to(
-			&socket_udp_client,
-			local_address_str, EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT,
-			(uint8_t*)EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR)))) return result;
-		receive_buffer_length = sizeof(receive_buffer);
-		if (ewf_result_failed(result = ewf_adapter_udp_receive_from(
-			&socket_udp_server,
-			remote_buffer_str, &remote_bufferewfl_str_length, &remote_port,
-			receive_buffer, &receive_buffer_length,
-			true))) return result;
-		ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS);
-	}
-	if (ewf_result_failed(result = ewf_adapter_udp_close(&socket_udp_server))) return result;
-	if (ewf_result_failed(result = ewf_adapter_udp_close(&socket_udp_client))) return result;
+    if (ewf_result_failed(result = ewf_adapter_udp_open(adapter_ptr, &socket_udp_client))) return result;
+    if (ewf_result_failed(result = ewf_adapter_udp_open(adapter_ptr, &socket_udp_server))) return result;
+    if (ewf_result_failed(result = ewf_adapter_udp_bind(&socket_udp_server, EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT))) return result;
+    for (int i = 0; i < EWF_ADAPTER_TEST_UDP_ITERATIONS; i++)
+    {
+        if (ewf_result_failed(result = ewf_adapter_udp_send_to(
+            &socket_udp_client,
+            local_address_str, EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT,
+            (uint8_t*)EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR)))) return result;
+        receive_buffer_length = sizeof(receive_buffer);
+        if (ewf_result_failed(result = ewf_adapter_udp_receive_from(
+            &socket_udp_server,
+            remote_buffer_str, &remote_buffer_str_length, &remote_port,
+            receive_buffer, &receive_buffer_length,
+            true))) return result;
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS);
+    }
+    if (ewf_result_failed(result = ewf_adapter_udp_close(&socket_udp_server))) return result;
+    if (ewf_result_failed(result = ewf_adapter_udp_close(&socket_udp_client))) return result;
 
     return result;
 }

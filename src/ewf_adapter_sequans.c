@@ -53,44 +53,6 @@ ewf_result ewf_adapter_sequans_autointernet(ewf_adapter* adapter_ptr, uint32_t m
 	return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_sequans_context_mode_change(ewf_adapter* adapter_ptr, uint32_t mode, uint32_t context_id)
-{
-	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-	ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
-	EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-	ewf_result result;
-
-	if ((context_id < 1) || (8 < context_id))
-	{
-		EWF_LOG_ERROR("Context parameter out of range.");
-		return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-	}
-
-#ifdef EWF_DEBUG
-	if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGACT?\r"))) return result;
-	if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-#endif
-
-	char mode_str[3];
-	const char* mode_cstr = ewfl_unsigned_to_str(mode, mode_str, sizeof(mode_str));
-
-	char context_id_str[3];
-	const char* context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
-
-	const char * expected_response_arr[]= {"\r\nOK\r\n","\r\n+CME ERROR: 171\r\n"};
-
-	if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGACT=", mode_cstr,",",context_id_cstr,"\r", NULL))) return result;
-	if (ewf_result_failed(result = ewf_interface_verify_responses(interface_ptr, 2, expected_response_arr))) return result;
-
-#ifdef EWF_DEBUG
-	if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGACT?\r"))) return result;
-	if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-#endif
-
-	return EWF_RESULT_OK;
-}
-
 ewf_result ewf_adapter_sequans_configure_pdp_context(ewf_adapter* adapter_ptr, uint32_t context_id,const char * const apn, const char * const pdp_type)
 {
 	EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
@@ -99,7 +61,7 @@ ewf_result ewf_adapter_sequans_configure_pdp_context(ewf_adapter* adapter_ptr, u
 
 	ewf_result result;
 
-	if ((context_id < 2) || (8 < context_id))
+	if ((context_id < 1) || (8 < context_id))
 	{
 		EWF_LOG_ERROR("Context parameter out of range.");
 		return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;

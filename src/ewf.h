@@ -9,6 +9,20 @@
 #ifndef __ewf__h__included__
 #define __ewf__h__included__
 
+/************************************************************************//**
+ * Define the Doxygen groups order
+ * @defgroup group_ewf_ids
+ * @defgroup group_configuration The EWF configurable settings
+ * @brief The EWF configurable settings
+ * @defgroup group_ewf
+ * @defgroup group_lib
+ * @defgroup group_adapter_api
+ * @defgroup group_adapter
+ * @defgroup group_interface
+ * @defgroup group_allocator
+ * @defgroup group_platform
+ ****************************************************************************/
+
 #include "ewf.config.h"
 
 #include "ewf_ids.h"
@@ -24,12 +38,6 @@
 extern "C" {
 #endif
 
-/* Disable warning of parameter not used. */
-
-#ifndef EWF_PARAMETER_NOT_USED
-#define EWF_PARAMETER_NOT_USED(p) ((void)(p))
-#endif /* EWF_PARAMETER_NOT_USED */
-
 /************************************************************************//**
  * @defgroup group_ewf EWF result codes, status test macros and logging
  * @brief Definition of result codes, macros for their evaluation, logging macros and developer ID definitions
@@ -41,6 +49,12 @@ extern "C" {
  * @brief EWF result codes and type definitions
  * @{
  */
+
+/** @brief Success and error result codes specific to the EWF API. */
+enum _ewf_result;
+    
+/** @brief Success and error result codes specific to the EWF API. */
+typedef enum _ewf_result ewf_result;
 
 /**
  * @brief Success and error result codes specific to the EWF API.
@@ -90,12 +104,7 @@ enum _ewf_result
     EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED     = -601, /**< The modem not registered to network */
 };
 
-/**
- * @brief Success and error result codes specific to the EWF API.
- */
-typedef enum _ewf_result ewf_result;
-
-/** @} *** group_ewf_result_codes */
+/** @} // group_ewf_result_codes */
 
 /**
  * @defgroup group_ewf_result_macros EWF result macros
@@ -113,10 +122,12 @@ typedef enum _ewf_result ewf_result;
    */
 #define ewf_result_succeeded(code) ((code) >= EWF_RESULT_OK)
 
-/** @} *** group_ewf_result_macros */
+/** @} // group_ewf_result_macros */
 
 /**
  * @defgroup group_ewf_logging EWF logging macros
+ * @brief EWF logging macros
+ * @details
  * There are two macros used for logging information and errors.
  * These are EWF_LOG and EWF_LOG_ERROR.
  * You can define these symbols with your custom implementation before
@@ -153,35 +164,50 @@ do {                                                                            
 #endif
 #endif
 
-/** @} *** group_ewf_logging */
+/** @} // group_ewf_logging */
 
 /**
- * @defgroup group_ewf_types EWF generic types
+ * @defgroup group_ewf_types The EWF types
+ * @brief The EWF types
  * @{
  */
 
 /** @brief The adapter struct type declaration */
 struct _ewf_adapter;
 
-/** @brief The interface structure declaration */
-struct _ewf_interface;
-
-/** @breif The allocator structure declaration */
-struct _ewf_allocator;
-
 /** @brief The adapter type definition */
 typedef struct _ewf_adapter ewf_adapter;
+
+/** @brief The interface structure declaration */
+struct _ewf_interface;
 
 /** @brief The interface type definition */
 typedef struct _ewf_interface ewf_interface;
 
+/** @breif The allocator structure declaration */
+struct _ewf_allocator;
+
 /** @breif The allocator type definition */
 typedef struct _ewf_allocator ewf_allocator;
 
-/** @} *** group_ewf_types */
+/** @} // group_ewf_types */
+
+/* Disable warning of parameter not used. */
+
+/**
+ * @defgroup group_ewf_utils The EWF utilities
+ * @brief The EWF utilities
+ * @{
+ */
+
+#ifndef EWF_PARAMETER_NOT_USED
+#define EWF_PARAMETER_NOT_USED(p) ((void)(p))
+#endif /* EWF_PARAMETER_NOT_USED */
+
+/** @} // group_ewf_utils */
 
 /************************************************************************//**
- * @} *** group_ewf
+ * @} // group_ewf
  ****************************************************************************/
 
 #ifdef __cplusplus

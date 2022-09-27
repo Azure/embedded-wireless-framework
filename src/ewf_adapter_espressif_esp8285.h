@@ -12,7 +12,6 @@
 #include "ewf_adapter.h"
 #include "ewf_allocator.h"
 #include "ewf_interface.h"
-#include "ewf_adapter_espressif_common.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,8 +25,6 @@ extern "C" {
  ****************************************************************************/
 
 #define EWF_ADAPTER_ESPRESSIF_ESP8285_TLS_BASIC_ENABLED (0)
-#define EWF_ADAPTER_ESPRESSIF_ESP8285_TCP_ENABLED (0)
-#define EWF_ADAPTER_ESPRESSIF_ESP8285_UDP_ENABLED (0)
 #define EWF_ADAPTER_ESPRESSIF_ESP8285_MQTT_BASIC_ENABLED (0)
 
 #if !defined(EWF_ADAPTER_ESPRESSIF_ESP8285_TLS_ENABLED) && !defined(EWF_ADAPTER_ESPRESSIF_ESP8285_TLS_BASIC_ENABLED)
@@ -59,13 +56,14 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @} *** group_configuration_adapter_quectel_bg96
+ * @} *** group_configuration_adapter_espressif_esp8285
  ****************************************************************************/
+
 /* Include the ESPRESSIF common header here, to take the above configuration macros into account */
 #include "ewf_adapter_espressif_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_espressif_esp8285 The ESPRESSIF ESP8285 modem adapter driver
+ * @defgroup group_adapter_espressif_esp8285 The ESPRESSIF ESP8285 adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/
@@ -108,6 +106,73 @@ ewf_result ewf_adapter_espressif_esp8285_urc_callback(ewf_interface* interface_p
 
 /** @} *** group_adapter_espressif_esp8285_info */
 
+/**
+ * @defgroup group_adapter_espressif_esp8285_wifi_station Adapter information
+ * @brief ESPRESSIF ESP8285 adapter driver WiFi station API
+ * @{
+ */
+
+#define ewf_adapter_espressif_esp8285_wifi_station_connect          ewf_adapter_espressif_common_wifi_station_connect
+#define ewf_adapter_espressif_esp8285_wifi_station_disconnect       ewf_adapter_espressif_common_wifi_station_disconnect
+
+/** @} *** group_adapter_espressif_esp8285_wifi_station */
+
+/**
+ * @defgroup group_adapter_espressif_esp8285_internet Common internet functions (TCP+UDP)
+ * @brief Functions common to TCP and UDP in the Espressif ESP8285
+ * @{
+ */
+
+#define ewf_adapter_espressif_esp8285_internet_start                ewf_adapter_espressif_common_internet_start
+#define ewf_adapter_espressif_esp8285_internet_stop                 ewf_adapter_espressif_common_internet_stop
+
+#define ewf_adapter_espressif_esp8285_internet_urc_callback         ewf_adapter_espressif_common_internet_urc_callback
+
+/** @} *** group_adapter_espressif_esp8285_internet */
+
+/**
+ * @defgroup group_adapter_espressif_esp8285_tcp TCP API implementation
+ * @brief Espressif ESP8285 adapter TCP API
+ * @{
+ */
+
+#if EWF_ADAPTER_ESPRESSIF_ESP8285_TCP_ENABLED
+
+#define ewf_adapter_espressif_esp8285_tcp_open                      ewf_adapter_espressif_common_tcp_open
+#define ewf_adapter_espressif_esp8285_tcp_close                     ewf_adapter_espressif_common_tcp_close
+#define ewf_adapter_espressif_esp8285_tcp_control                   ewf_adapter_espressif_common_tcp_control
+#define ewf_adapter_espressif_esp8285_tcp_set_tls_configuration     ewf_adapter_espressif_common_tcp_set_tls_configuration
+#define ewf_adapter_espressif_esp8285_tcp_bind                      ewf_adapter_espressif_common_tcp_bind
+#define ewf_adapter_espressif_esp8285_tcp_listen                    ewf_adapter_espressif_common_tcp_listen
+#define ewf_adapter_espressif_esp8285_tcp_accept                    ewf_adapter_espressif_common_tcp_accept
+#define ewf_adapter_espressif_esp8285_tcp_connect                   ewf_adapter_espressif_common_tcp_connect
+#define ewf_adapter_espressif_esp8285_tcp_shutdown                  ewf_adapter_espressif_common_tcp_shutdown
+#define ewf_adapter_espressif_esp8285_tcp_send                      ewf_adapter_espressif_common_tcp_send
+#define ewf_adapter_espressif_esp8285_tcp_receive                   ewf_adapter_espressif_common_tcp_receive
+
+#endif /* EWF_ADAPTER_ESPRESSIF_ESP8285_TCP_ENABLED */
+
+/** @} *** group_adapter_espressif_esp8285_tcp */
+
+/**
+ * @defgroup group_adapter_espressif_esp8285_udp UDP API implementation
+ * @brief Espressif ESP8285 adapter UDP API
+ * @{
+ */
+
+#if EWF_ADAPTER_ESPRESSIF_ESP8285_UDP_ENABLED
+
+#define ewf_adapter_espressif_esp8285_udp_open                      ewf_adapter_espressif_common_udp_open
+#define ewf_adapter_espressif_esp8285_udp_close                     ewf_adapter_espressif_common_udp_close
+#define ewf_adapter_espressif_esp8285_udp_control                   ewf_adapter_espressif_common_udp_control
+#define ewf_adapter_espressif_esp8285_udp_set_dtls_configuration    ewf_adapter_espressif_common_udp_set_dtls_configuration
+#define ewf_adapter_espressif_esp8285_udp_bind                      ewf_adapter_espressif_common_udp_bind
+#define ewf_adapter_espressif_esp8285_udp_send_to                   ewf_adapter_espressif_common_udp_send_to
+#define ewf_adapter_espressif_esp8285_udp_receive_from              ewf_adapter_espressif_common_udp_receive_from
+
+#endif /* EWF_ADAPTER_ESPRESSIF_ESP8285_UDP_ENABLED */
+
+/** @} *** group_adapter_espressif_esp8285_udp */
 
 /******************************************************************************
  *
@@ -206,6 +271,7 @@ adapter_ptr = &(ewf_adapter_espressif_esp8285__##adapter_name_symb);            
 interface_ptr_param->adapter_ptr = adapter_ptr;                                                                                                             \
 EWF_ADAPTER_ESPRESSIF_ESP8285_INITIALIZE_HEADER(adapter_ptr);                                                                                               \
 ewf_adapter_espressif_esp8285__##adapter_name_symb.control_api_ptr = &ewf_adapter_espressif_esp8285_api_control;                                            \
+ewf_adapter_espressif_esp8285__##adapter_name_symb.wifi_station_api_ptr = &ewf_adapter_espressif_common_api_wifi_station;                                   \
 ewf_adapter_espressif_esp8285__##adapter_name_symb.info_api_ptr = &ewf_adapter_espressif_common_api_info;                                                   \
 EWF_ADAPTER_ESPRESSIF_ESP8285_INITIALIZE_TCP_API(adapter_ptr);                                                                                              \
 EWF_ADAPTER_ESPRESSIF_ESP8285_INITIALIZE_UDP_API(adapter_ptr);                                                                                              \

@@ -122,7 +122,7 @@ ewf_result ewf_adapter_renesas_ryz014_info(ewf_adapter* adapter_ptr)
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNSPCFG\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNSMQTTCFG=0\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNSCFG?\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     /* All ok! */
@@ -146,7 +146,10 @@ ewf_result ewf_adapter_renesas_ryz014_get_ipv4_address(ewf_adapter* adapter_ptr,
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGPADDR=1\r"))) return result;
+    char context_id_str[3];
+    const char* context_id_cstr = ewfl_unsigned_to_str(interface_ptr->current_context, context_id_str, sizeof(context_id_str));
+
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGPADDR=", context_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 1 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
 
     if (response)
@@ -158,11 +161,11 @@ ewf_result ewf_adapter_renesas_ryz014_get_ipv4_address(ewf_adapter* adapter_ptr,
         int address_d;
         int fields = sscanf((char*)response, "\r\n+CGPADDR: %d,\"%d.%d.%d.%d\"", &context_id, &address_a, &address_b, &address_c, &address_d);
         ewf_interface_release(interface_ptr, response);
-        // if (fields != 7)
-        // {
-        //     EWF_LOG_ERROR("Unexpected response format.");
-        //     return EWF_RESULT_UNEXPECTED_RESPONSE;
-        // }
+        if (fields < 5)
+        {
+            EWF_LOG_ERROR("Unexpected response format.");
+            return EWF_RESULT_UNEXPECTED_RESPONSE;
+        }
 
         *address_ptr =
             ((address_a & 0xFF) << 24) |
@@ -225,14 +228,17 @@ ewf_result ewf_adapter_renesas_ryz014_get_ipv4_dns(ewf_adapter* adapter_ptr, uin
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGCONTRDP\r"))) return result;
+    char context_id_str[3];
+    const char* context_id_cstr = ewfl_unsigned_to_str(interface_ptr->current_context, context_id_str, sizeof(context_id_str));
+
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGCONTRDP=", context_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 1 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
 
     if (response)
     {
         int context_id;
         int bearer_id;
-        char apn[51];
+        char apn[64];
 
         int dns1_a;
         int dns1_b;
@@ -246,11 +252,11 @@ ewf_result ewf_adapter_renesas_ryz014_get_ipv4_dns(ewf_adapter* adapter_ptr, uin
 
         int fields = sscanf(
             (char*)response,
-            "\r\n+CGCONTRDP: %d,%d,\"%51[^\"]\",\"%*d.%*d.%*d.%*d.%*d.%*d.%*d.%*d\",\"\",\"%d.%d.%d.%d\",\"%d.%d.%d.%d\"",
+            "\r\n+CGCONTRDP: %d,%d,\"%64[^\"]\",\"%*d.%*d.%*d.%*d.%*d.%*d.%*d.%*d\",\"\",\"%d.%d.%d.%d\",\"%d.%d.%d.%d\"",
             &context_id, &bearer_id, apn,
             &dns1_a, &dns1_b, &dns1_c, &dns1_d,
             &dns2_a, &dns2_b, &dns2_c, &dns2_d);
-        if (fields != 9)
+        if (fields < 9)
         {
             EWF_LOG_ERROR("Unexpected response format.");
             return EWF_RESULT_UNEXPECTED_RESPONSE;

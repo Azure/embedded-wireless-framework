@@ -55,17 +55,17 @@
 
 /* Interval to receive packets when there is no packet. The default value is 100 ticks which is 1s.  */
 #ifndef NX_DRIVER_THREAD_INTERVAL
-#define NX_DRIVER_THREAD_INTERVAL               100
+#define NX_DRIVER_THREAD_INTERVAL               1
 #endif /* NX_DRIVER_THREAD_INTERVAL */
 
 /* Define the maximum sockets at the same time.  */
 #ifndef NX_DRIVER_SOCKETS_MAXIMUM
-#define NX_DRIVER_SOCKETS_MAXIMUM               4
+#define NX_DRIVER_SOCKETS_MAXIMUM               8
 #endif
 
 /* Define maximum server pending connections.  */
 #ifndef NX_DRIVER_SERVER_LISTEN_COUNT
-#define NX_DRIVER_SERVER_LISTEN_COUNT           1
+#define NX_DRIVER_SERVER_LISTEN_COUNT           4
 #endif
 
 /* Define the maximum wait timeout in ms for socket send. This is limited by hardware TCP/IP.  */
@@ -97,25 +97,31 @@ typedef struct NX_DRIVER_INFORMATION_STRUCT
 typedef struct NX_DRIVER_SOCKET_STRUCT
 {
     VOID*   socket_ptr;
+
     union 
     {
         ewf_socket_tcp tcp_socket;
         ewf_socket_udp udp_socket;
     };
+
     UCHAR   protocol;
+
     UCHAR   tcp_connected;
     UCHAR   is_client;
+
     ULONG   local_ip;
-    ULONG   remote_ip;
     USHORT  local_port;
+
+    ULONG   remote_ip;
     USHORT  remote_port;
+
     USHORT  reseverd;
 
 } NX_DRIVER_SOCKET;
 
-static NX_DRIVER_INFORMATION nx_driver_information;
-static NX_DRIVER_SOCKET nx_driver_sockets[NX_DRIVER_SOCKETS_MAXIMUM];
-static TX_THREAD nx_driver_thread;
+static NX_DRIVER_INFORMATION nx_driver_information = { 0 };
+static NX_DRIVER_SOCKET nx_driver_sockets[NX_DRIVER_SOCKETS_MAXIMUM] = { 0 };
+static TX_THREAD nx_driver_thread = { 0 };
 static UCHAR nx_driver_thread_stack[NX_DRIVER_STACK_SIZE];
 extern ewf_adapter * adapter_ptr;
 
@@ -1026,7 +1032,10 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
             (adapter_ptr->struct_size != EWF_ADAPTER_STRUCT_SIZE) ||
             (adapter_ptr->struct_version != EWF_ADAPTER_VERSION))
         {
+            EWF_LOG("[NETX-DUO-DRIVER][INVALID ADAPTER POINTER!]\n");
+
             tx_thread_sleep(1);
+
             /* Wait until we have a valid adapter pointer */
             continue;
         }
@@ -1080,6 +1089,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
             {
                 if (nx_packet_allocate(pool_ptr, &packet_ptr, packet_type, NX_NO_WAIT))
                 {
+                    EWF_LOG("[NETX-DUO-DRIVER][NO PACKETS AVAILABLE!]\n");
 
                     /* Packet not available.  */
                     break;
@@ -1088,7 +1098,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                 /* Get available size of packet.  */
                 data_length = (uint16_t)(packet_ptr -> nx_packet_data_end - packet_ptr -> nx_packet_prepend_ptr);
 
-                /* Limit the data length to ES_WIFI_PAYLOAD_SIZE due to underlayer limitation.  */
+                /* Limit the data length to NX_DRIVER_IP_MTU.  */
                 if (data_length > NX_DRIVER_IP_MTU)
                 {
                     data_length = NX_DRIVER_IP_MTU;
@@ -1099,7 +1109,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                 /* Receive data without suspending.  */
                 if (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP)
                 {
-                    unsigned len = data_length;
+                    uint32_t len = data_length;
                     result = ewf_adapter_tcp_receive(
                         &nx_driver_sockets[i].tcp_socket,
                         (char*)(packet_ptr->nx_packet_prepend_ptr), 
@@ -1109,7 +1119,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                 }
                 else
                 {
-                    unsigned len = data_length;
+                    uint32_t len = data_length;
                     result = ewf_adapter_udp_receive_from(
                         &nx_driver_sockets[i].udp_socket,
                         NULL, NULL, NULL,
@@ -1119,8 +1129,17 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                     data_length = len;
                 }
 
+                if (result == EWF_RESULT_NO_DATA_RECEIVED || data_length == 0)
+                {
+
+                    /* No incoming data.  */
+                    nx_packet_release(packet_ptr);
+                    break;
+                }
+
                 if (ewf_result_failed(result))
                 {
+                    EWF_LOG("[NETX-DUO-DRIVER][RECEPTION FAILED]\n");
 
                     /* Connection error. Notify upper layer with Null packet.  */
                     if (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP)
@@ -1137,13 +1156,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                     break;
                 }
 
-                if (data_length == 0)
-                {
-
-                    /* No incoming data.  */
-                    nx_packet_release(packet_ptr);
-                    break;
-                }
+                EWF_LOG("[NETX-DUO-DRIVER][PACKET RECEIVED]\n");
 
                 /* Set packet length.  */
                 packet_ptr -> nx_packet_length = (ULONG)data_length;
@@ -1177,6 +1190,52 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
         /* Sleep some ticks to next loop.  */
         tx_thread_sleep(NX_DRIVER_THREAD_INTERVAL);
     }
+
+    EWF_LOG("[NETX-DUO-DRIVER][DRIVER THREAD IS BROKEN!]\n");
+}
+
+bool _nxd_address_to_string(NXD_ADDRESS* address_ptr, CHAR* buffer_ptr, UINT buffer_size)
+{
+    if (buffer_ptr == NULL || buffer_size == 0)
+    {
+        return false;
+    }
+    
+    buffer_ptr[0] = 0;
+
+    if (address_ptr == NULL)
+    {
+        return false;
+    }
+
+    switch(address_ptr->nxd_ip_version)
+    {
+    case NX_IP_VERSION_V4:
+        snprintf(buffer_ptr, buffer_size, "%u.%u.%u.%u",
+            (UINT)(address_ptr->nxd_ip_address.v4 >> 24) & 0xFF,
+            (UINT)(address_ptr->nxd_ip_address.v4 >> 16) & 0xFF,
+            (UINT)(address_ptr->nxd_ip_address.v4 >> 8) & 0xFF,
+            (UINT)address_ptr->nxd_ip_address.v4 & 0xFF);
+        break;
+
+    case NX_IP_VERSION_V6:
+        snprintf(buffer_ptr, buffer_size, "%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x",
+            (UINT)(address_ptr->nxd_ip_address.v6[0] >> 16) & 0xFFFF,
+            (UINT)(address_ptr->nxd_ip_address.v6[0]) & 0xFFFF,
+            (UINT)(address_ptr->nxd_ip_address.v6[1] >> 16) & 0xFFFF,
+            (UINT)(address_ptr->nxd_ip_address.v6[1]) & 0xFFFF,
+            (UINT)(address_ptr->nxd_ip_address.v6[2] >> 16) & 0xFFFF,
+            (UINT)(address_ptr->nxd_ip_address.v6[2]) & 0xFFFF,
+            (UINT)(address_ptr->nxd_ip_address.v6[3] >> 16) & 0xFFFF,
+            (UINT)(address_ptr->nxd_ip_address.v6[3]) & 0xFFFF);
+        break;
+
+    default:
+        snprintf(buffer_ptr, buffer_size, "UNKNOWN");
+        return false;
+    }
+
+    return true;
 }
 
 /**************************************************************************/
@@ -1241,12 +1300,39 @@ uint16_t sent_size;
 UINT i = 0;
 ewf_result result;
 
+#ifdef EWF_DEBUG
+    const char* nx_tcpip_offload_op_str = "Uninitialized";
+    switch(operation)
+    {
+    case NX_TCPIP_OFFLOAD_TCP_CLIENT_SOCKET_CONNECT:    nx_tcpip_offload_op_str = "NX_TCPIP_OFFLOAD_TCP_CLIENT_SOCKET_CONNECT";     break;
+    case NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_LISTEN:     nx_tcpip_offload_op_str = "NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_LISTEN";      break;
+    case NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_ACCEPT:     nx_tcpip_offload_op_str = "NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_ACCEPT";      break;
+    case NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_UNLISTEN:   nx_tcpip_offload_op_str = "NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_UNLISTEN";    break;
+    case NX_TCPIP_OFFLOAD_TCP_SOCKET_DISCONNECT:        nx_tcpip_offload_op_str = "NX_TCPIP_OFFLOAD_TCP_SOCKET_DISCONNECT";         break;
+    case NX_TCPIP_OFFLOAD_TCP_SOCKET_SEND:              nx_tcpip_offload_op_str = "NX_TCPIP_OFFLOAD_TCP_SOCKET_SEND";               break;
+    case NX_TCPIP_OFFLOAD_UDP_SOCKET_BIND:              nx_tcpip_offload_op_str = "NX_TCPIP_OFFLOAD_UDP_SOCKET_BIND";               break;
+    case NX_TCPIP_OFFLOAD_UDP_SOCKET_UNBIND:            nx_tcpip_offload_op_str = "NX_TCPIP_OFFLOAD_UDP_SOCKET_UNBIND";             break;
+    case NX_TCPIP_OFFLOAD_UDP_SOCKET_SEND:              nx_tcpip_offload_op_str = "NX_TCPIP_OFFLOAD_UDP_SOCKET_SEND";               break;
+    default:                                            nx_tcpip_offload_op_str = "Unknown";                                        break;
+    }
+    static char local_ip_str[45];
+    static char remote_ip_str[45];
+    local_ip_str[0] = 0;
+    remote_ip_str[0] = 0;
+    _nxd_address_to_string(local_ip, local_ip_str, sizeof(local_ip_str));
+    _nxd_address_to_string(remote_ip, remote_ip_str, sizeof(remote_ip_str));
+    EWF_LOG("[NETX-DUO-DRIVER][SOCKET %p][%s][PACKET %p][LOCAL %s %u][REMOTE %s %u][WAIT 0x%08X]\n",
+        socket_ptr, nx_tcpip_offload_op_str, packet_ptr, local_ip_str, local_port, remote_ip_str, remote_port ? *remote_port : 0, wait_option);
+#endif
+
     ewf_adapter* adapter_ptr = (ewf_adapter*)ip_ptr->nx_ip_reserved_ptr;
     if ((adapter_ptr == NULL) ||
         (adapter_ptr->struct_magic != EWF_ADAPTER_STRUCT_MAGIC) ||
         (adapter_ptr->struct_size != EWF_ADAPTER_STRUCT_SIZE) ||
         (adapter_ptr->struct_version != EWF_ADAPTER_VERSION))
     {
+        EWF_LOG("[NETX-DUO-DRIVER][INVALID ADAPTER POINTER]\n");
+
         /* We need a valid adapter pointer */
         return(NX_NOT_SUPPORTED);
     }
@@ -1261,12 +1347,7 @@ ewf_result result;
             if ((nx_driver_sockets[i].local_port == local_port) &&
                 (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP))
             {
-                if (nx_driver_sockets[i].tcp_connected == NX_TRUE)
-                {
-
-                    /* Previous connection not closed. Multiple connection is not supported.  */
-                    return(NX_NOT_SUPPORTED);
-                }
+                EWF_LOG("[NETX-DUO-DRIVER][ALREADY LISTENING %d]\n", i);
 
                 /* Find a duplicate listen. Just overwrite it.  */
                 ((NX_TCP_SOCKET*)socket_ptr) -> nx_tcp_socket_tcpip_offload_context = (VOID*)i;
@@ -1277,6 +1358,7 @@ ewf_result result;
     }
 
     if ((operation == NX_TCPIP_OFFLOAD_TCP_CLIENT_SOCKET_CONNECT) ||
+        (operation == NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_ACCEPT) ||
         (operation == NX_TCPIP_OFFLOAD_UDP_SOCKET_BIND) ||
         (operation == NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_LISTEN))
     {
@@ -1286,6 +1368,7 @@ ewf_result result;
         {
             if (nx_driver_sockets[i].socket_ptr == NX_NULL)
             {
+                EWF_LOG("[NETX-DUO-DRIVER][ENTRY FOUND %d]\n", i);
 
                 /* Find an empty entry.  */
                 nx_driver_sockets[i].socket_ptr = socket_ptr;
@@ -1295,6 +1378,7 @@ ewf_result result;
 
         if (i == NX_DRIVER_SOCKETS_MAXIMUM)
         {
+            EWF_LOG("[NETX-DUO-DRIVER][NO MORE ENTRIES]\n");
 
             /* No more entries.  */
             return(NX_NO_MORE_ENTRIES);
@@ -1304,6 +1388,14 @@ ewf_result result;
     switch (operation)
     {
     case NX_TCPIP_OFFLOAD_TCP_CLIENT_SOCKET_CONNECT:
+
+        EWF_LOG("[NETX-DUO-DRIVER][NX_TCPIP_OFFLOAD_TCP_CLIENT_SOCKET_CONNECT]\n");
+
+        if (remote_port == NULL)
+        {
+            EWF_LOG_ERROR("Unexpected NULL pointer.\n");
+            return(NX_NOT_SUCCESSFUL);
+        }
 
         /* Store the index of driver socket.  */
         ((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context = (VOID *)i;
@@ -1357,6 +1449,8 @@ ewf_result result;
 
     case NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_LISTEN:
 
+        EWF_LOG("[NETX-DUO-DRIVER][NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_LISTEN]\n");
+
         /* Store the index of driver socket.  */
         ((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context = (VOID *)i;
 
@@ -1382,7 +1476,7 @@ ewf_result result;
     case NX_TCPIP_OFFLOAD_TCP_SERVER_SOCKET_ACCEPT:
         i = (UINT)(((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context);
 
-#if 0 /* *** TODO *** */
+#if 0 /* TODO */
         /* Accept connection.  */
         status = WIFI_WaitServerConnection(i, 1, remote_ip_bytes, &nx_driver_sockets[i].remote_port);
 
@@ -1405,7 +1499,7 @@ ewf_result result;
                                                     remote_ip_bytes[2],
                                                     remote_ip_bytes[3]);
         nx_driver_sockets[i].remote_ip = remote_ip -> nxd_ip_address.v4;
-        *remote_port = (UINT)nx_driver_sockets[i].remote_port;
+        if(remote_port) *remote_port = (UINT)nx_driver_sockets[i].remote_port;
         nx_driver_sockets[i].tcp_connected = NX_TRUE;
         break;
 
@@ -1423,7 +1517,7 @@ ewf_result result;
                 nx_driver_sockets[i].socket_ptr = NX_NULL;
                 nx_driver_sockets[i].local_port = 0;
 
-#if 0 /* *** TODO *** */
+#if 0 /* TODO */
                 WIFI_StopServer(i);
 #endif
 
@@ -1433,7 +1527,11 @@ ewf_result result;
         break;
 
     case NX_TCPIP_OFFLOAD_TCP_SOCKET_DISCONNECT:
+
+        EWF_LOG("[NETX-DUO-DRIVER][NX_TCPIP_OFFLOAD_TCP_SOCKET_DISCONNECT]\n");
+
         i = (UINT)(((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context);
+        
         if (nx_driver_sockets[i].remote_port)
         {
 
@@ -1476,6 +1574,8 @@ ewf_result result;
 
     case NX_TCPIP_OFFLOAD_UDP_SOCKET_BIND:
 
+        EWF_LOG("[NETX-DUO-DRIVER][NX_TCPIP_OFFLOAD_UDP_SOCKET_BIND]\n");
+
         /* Note, send data from one port to multiple remotes are not supported.  */
         /* Store the index of driver socket.  */
         ((NX_UDP_SOCKET *)socket_ptr) -> nx_udp_socket_tcpip_offload_context = (VOID *)i;
@@ -1483,23 +1583,59 @@ ewf_result result;
         /* Reset the remote port to indicate the socket is not connected yet.  */
         nx_driver_sockets[i].remote_port = 0;
 
+        /* Set the local port to indicate the socket is bound */
+        nx_driver_sockets[i].local_port = local_port;
+
+        memset(&nx_driver_sockets[i].udp_socket, 0, sizeof(ewf_socket_udp));
+        result = ewf_adapter_udp_open(adapter_ptr, &nx_driver_sockets[i].udp_socket);
+        if (ewf_result_failed(result))
+        {
+            status = NX_NOT_SUCCESSFUL;
+        }
+        else
+        {
+            status = NX_SUCCESS;
+
+            result = ewf_adapter_udp_bind(&nx_driver_sockets[i].udp_socket, local_port);
+            if (ewf_result_failed(result))
+            {
+                status = NX_NOT_SUCCESSFUL;
+
+                nx_driver_sockets[i].local_port = 0;
+                ewf_adapter_udp_close(&nx_driver_sockets[i].udp_socket);
+            }
+            else
+            {
+                status = NX_SUCCESS;
+            }
+        }
+
 #ifdef NX_DEBUG
         printf("UDP socket %u bind to port: %u\r\n", i, local_port);
 #endif
-
-        status = NX_SUCCESS;
 
         break;
 
     case NX_TCPIP_OFFLOAD_UDP_SOCKET_UNBIND:
 
+        EWF_LOG("[NETX-DUO-DRIVER][NX_TCPIP_OFFLOAD_UDP_SOCKET_UNBIND]\n");
+
         i = (UINT)(((NX_UDP_SOCKET *)socket_ptr) -> nx_udp_socket_tcpip_offload_context);
 
-        if (nx_driver_sockets[i].remote_port)
+        if (nx_driver_sockets[i].local_port)
         {
 
+            /* Close the socket */
+            ewf_adapter_udp_close(&nx_driver_sockets[i].udp_socket);
+
+#ifdef NX_DEBUG
             printf("UDP socket %u unbind port: %u\r\n", i, local_port);
+#endif
         }
+
+        /* Clear the flags */
+        nx_driver_sockets[i].local_port = 0;
+        nx_driver_sockets[i].remote_port = 0;
 
         /* Reset socket to free this entry.  */
         nx_driver_sockets[i].socket_ptr = NX_NULL;
@@ -1508,7 +1644,16 @@ ewf_result result;
 
     case NX_TCPIP_OFFLOAD_UDP_SOCKET_SEND:
 
+        EWF_LOG("[NETX-DUO-DRIVER][NX_TCPIP_OFFLOAD_UDP_SOCKET_SEND]\n");
+
         i = (UINT)(((NX_UDP_SOCKET *)socket_ptr) -> nx_udp_socket_tcpip_offload_context);
+
+        if (remote_port == NULL)
+        {
+            EWF_LOG_ERROR("Unexpected NULL pointer.\n");
+            return(NX_NOT_SUCCESSFUL);
+        }
+
         if (nx_driver_sockets[i].remote_port == 0)
         {
             /* Store address and port.  */
@@ -1520,75 +1665,103 @@ ewf_result result;
             nx_driver_sockets[i].is_client = NX_TRUE;
         }
 
-        if ((packet_ptr -> nx_packet_length > NX_DRIVER_IP_MTU)
+        if ((packet_ptr->nx_packet_length > NX_DRIVER_IP_MTU)
 #ifndef NX_DISABLE_PACKET_CHAIN
-            || (packet_ptr -> nx_packet_next)
+            || (packet_ptr->nx_packet_next)
 #endif /* NX_DISABLE_PACKET_CHAIN */
-           )
+            )
         {
+            EWF_LOG_ERROR("Packet too long, length %lu\n", packet_ptr->nx_packet_length);
 
             /* Limitation in this driver. UDP packet must be in one packet.  */
-            return (NX_NOT_SUCCESSFUL);
+            status = NX_NOT_SUCCESSFUL;
+            break;
         }
 
-        /* Convert wait option from ticks to ms.  */
-        if (wait_option > (NX_DRIVER_SOCKET_SEND_TIMEOUT_MAXIMUM / 1000 * NX_IP_PERIODIC_RATE))
+        result = EWF_RESULT_OK;
+        
+        /* If the socket is not bound, create it */
+        if (nx_driver_sockets[i].local_port == 0)
         {
-            wait_option = NX_DRIVER_SOCKET_SEND_TIMEOUT_MAXIMUM;
-        }
-        else
-        {
-            wait_option = wait_option / NX_IP_PERIODIC_RATE * 1000;
+            /* No socket created yet */
+            memset(&nx_driver_sockets[i].udp_socket, 0, sizeof(ewf_socket_udp));
+            result = ewf_adapter_udp_open(adapter_ptr, &nx_driver_sockets[i].udp_socket);
         }
 
-        /* Convert remote IP to byte array.  */
-        remote_ip_bytes[0] = (remote_ip->nxd_ip_address.v4 >> 24) & 0xFF;
-        remote_ip_bytes[1] = (remote_ip->nxd_ip_address.v4 >> 16) & 0xFF;
-        remote_ip_bytes[2] = (remote_ip->nxd_ip_address.v4 >> 8) & 0xFF;
-        remote_ip_bytes[3] = (remote_ip->nxd_ip_address.v4) & 0xFF;
-
-        snprintf(server_address, sizeof(server_address), 
-            "%u.%u.%u.%u",
-            remote_ip_bytes[0],
-            remote_ip_bytes[1],
-            remote_ip_bytes[2],
-            remote_ip_bytes[3]);
-
-#ifdef NX_DEBUG
-        printf("UDP socket %u connect to: %u.%u.%u.%u:%u\r\n",
-            i, remote_ip_bytes[0], remote_ip_bytes[1],
-            remote_ip_bytes[2], remote_ip_bytes[3], *remote_port);
-#endif
-
-        /* Send data.  */
-        result = ewf_adapter_udp_send_to(
-            &nx_driver_sockets[i].udp_socket,
-            server_address, *remote_port,
-            (char const*)(uint8_t*)packet_ptr->nx_packet_prepend_ptr,
-            packet_ptr->nx_packet_length);
-        /* Check status.  */
         if (ewf_result_failed(result))
         {
-            return(NX_NOT_SUCCESSFUL);
+            status = NX_NOT_SUCCESSFUL;
         }
         else
         {
             status = NX_SUCCESS;
-            sent_size = packet_ptr->nx_packet_length;
-        }
 
-        /* Check status.  */
-        if ((sent_size != packet_ptr -> nx_packet_length))
-        {
-            return (NX_NOT_SUCCESSFUL);
-        }
+            /* Convert wait option from ticks to ms.  */
+            if (wait_option > (NX_DRIVER_SOCKET_SEND_TIMEOUT_MAXIMUM / 1000 * NX_IP_PERIODIC_RATE))
+            {
+                wait_option = NX_DRIVER_SOCKET_SEND_TIMEOUT_MAXIMUM;
+            }
+            else
+            {
+                wait_option = wait_option / NX_IP_PERIODIC_RATE * 1000;
+            }
 
-        /* Release the packet.  */
-        nx_packet_transmit_release(packet_ptr);
+            /* Convert remote IP to byte array.  */
+            remote_ip_bytes[0] = (remote_ip->nxd_ip_address.v4 >> 24) & 0xFF;
+            remote_ip_bytes[1] = (remote_ip->nxd_ip_address.v4 >> 16) & 0xFF;
+            remote_ip_bytes[2] = (remote_ip->nxd_ip_address.v4 >> 8) & 0xFF;
+            remote_ip_bytes[3] = (remote_ip->nxd_ip_address.v4) & 0xFF;
+
+            snprintf(server_address, sizeof(server_address),
+                "%u.%u.%u.%u",
+                remote_ip_bytes[0],
+                remote_ip_bytes[1],
+                remote_ip_bytes[2],
+                remote_ip_bytes[3]);
+
+#ifdef NX_DEBUG
+            printf("UDP socket %u connect to: %u.%u.%u.%u:%u\r\n",
+                i, remote_ip_bytes[0], remote_ip_bytes[1],
+                remote_ip_bytes[2], remote_ip_bytes[3], *remote_port);
+#endif
+
+            /* Send data.  */
+            result = ewf_adapter_udp_send_to(
+                &nx_driver_sockets[i].udp_socket,
+                server_address, *remote_port,
+                (char const*)(uint8_t*)packet_ptr->nx_packet_prepend_ptr,
+                packet_ptr->nx_packet_length);
+            /* Check status.  */
+            if (ewf_result_failed(result))
+            {
+                status = NX_NOT_SUCCESSFUL;
+            }
+            else
+            {
+                status = NX_SUCCESS;
+                sent_size = packet_ptr->nx_packet_length;
+            }
+
+            /* Release the packet.  */
+            nx_packet_transmit_release(packet_ptr);
+
+            /* If the socket is not bound, close it */
+            if (nx_driver_sockets[i].local_port == 0)
+            {
+                result = ewf_adapter_udp_close(&nx_driver_sockets[i].udp_socket);
+                if (ewf_result_failed(result))
+                {
+                    status = NX_NOT_SUCCESSFUL;
+                }
+            }
+        }
 
         break;
 
     case NX_TCPIP_OFFLOAD_TCP_SOCKET_SEND:
+
+        EWF_LOG("[NETX-DUO-DRIVER][NX_TCPIP_OFFLOAD_TCP_SOCKET_SEND]\n");
+
         i = (UINT)(((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context);
 
         /* Initialize the current packet to the input packet pointer.  */

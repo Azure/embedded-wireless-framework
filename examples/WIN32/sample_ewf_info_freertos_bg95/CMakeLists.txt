@@ -69,7 +69,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../common
     ${CMAKE_CURRENT_SOURCE_DIR}/../freertos/common/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../freertos/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../freertos/portable/MSVC-MingW

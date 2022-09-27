@@ -122,18 +122,41 @@ ewf_result ewf_adapter_bsd_sockets_get_ipv4_address(ewf_adapter* adapter_ptr, ui
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_bsd_sockets_get_ipv4_netmask(ewf_adapter* adapter_ptr, uint32_t* netmask)
+ewf_result ewf_adapter_bsd_sockets_get_ipv4_netmask(ewf_adapter* adapter_ptr, uint32_t* netmask_ptr)
 {
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_BSD_SOCKETS);
+
+    if (netmask_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The netmask pointer cannot be NULL.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    *netmask_ptr = 0xFFFFFFFF;
+
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_bsd_sockets_get_ipv4_gateway(ewf_adapter* adapter_ptr, uint32_t* gateway)
+ewf_result ewf_adapter_bsd_sockets_get_ipv4_gateway(ewf_adapter* adapter_ptr, uint32_t* gateway_ptr)
 {
-    return EWF_RESULT_OK;
+    return ewf_adapter_bsd_sockets_get_ipv4_address(adapter_ptr, gateway_ptr);
 }
 
-ewf_result ewf_adapter_bsd_sockets_get_ipv4_dns(ewf_adapter* adapter_ptr, uint32_t* dns)
+ewf_result ewf_adapter_bsd_sockets_get_ipv4_dns(ewf_adapter* adapter_ptr, uint32_t* dns_ptr)
 {
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_BSD_SOCKETS);
+
+    if (dns_ptr == NULL)
+    {
+        EWF_LOG_ERROR("The DNS pointer cannot be NULL.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    // Rather look into the resolver?
+    *dns_ptr = 0x08080808;
+
     return EWF_RESULT_OK;
 }
 
@@ -413,32 +436,32 @@ ewf_result ewf_adapter_bsd_sockets_tcp_connect(ewf_socket_tcp* socket_ptr, const
     server_addrinfo.ai_socktype = SOCK_STREAM;
     server_addrinfo.ai_protocol = IPPROTO_TCP;
 
-    struct addrinfo* addrinfo_result = NULL;
+    struct addrinfo* addrinfo_result_ptr = NULL;
     struct addrinfo* addrinfo_ptr = NULL;
 
     /* Resolve the server address and port */
-    ret = getaddrinfo(server_str, port_cstr, &server_addrinfo, &addrinfo_result);
-    if (ret < 0)
+    ret = getaddrinfo(server_str, port_cstr, &server_addrinfo, &addrinfo_result_ptr);
+    if (ret != 0)
     {
-        EWF_LOG_ERROR("getaddrinfo failed with error: %d\n", errno);
+        EWF_LOG_ERROR("getaddrinfo failed, server [%s], port [%s], return [%d], error: [%d]\n", server_str, port_cstr, ret, errno);
         return EWF_RESULT_CONNECTION_FAILED;
     }
 
-    if (addrinfo_result->ai_next)
+    if (addrinfo_result_ptr->ai_next)
     {
         EWF_LOG_ERROR("[WARNING] Ambiguous address resolved, using the first one.\n");
     }
 
     /* Attmept to connect to the server. */
-    ret = connect(bsd_socket_ptr->s, addrinfo_result->ai_addr, (int)addrinfo_result->ai_addrlen);
-    if (ret < 0)
+    ret = connect(bsd_socket_ptr->s, addrinfo_result_ptr->ai_addr, (int)addrinfo_result_ptr->ai_addrlen);
+
+    freeaddrinfo(addrinfo_result_ptr);
+
+    if (ret)
     {
-        EWF_LOG("connect failed with error: %d\n", errno);
-        freeaddrinfo(addrinfo_result);
+        EWF_LOG("connect failed, ret [%d], errno [%d]\n", ret, errno);
         return EWF_RESULT_CONNECTION_FAILED;
     }
-
-    freeaddrinfo(addrinfo_result);
 
     if (bsd_socket_ptr->s < 0)
     {
@@ -576,19 +599,18 @@ ewf_result ewf_adapter_bsd_sockets_tcp_receive(ewf_socket_tcp* socket_ptr, uint8
     int ret = recv(bsd_socket_ptr->s, buffer_ptr, *buffer_length_ptr, 0);
     if (ret == 0)
     {
-        EWF_LOG_ERROR("Connection closed");
-        return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
+        EWF_LOG_ERROR("recv returned zero.");
+        return EWF_RESULT_NO_DATA_AVAILABLE;
     }
     else if (ret < 0)
     {
-        EWF_LOG_ERROR("recv failed with error: %d\n", errno);
+        EWF_LOG_ERROR("recv failed, ret [%d], errno [%d]\n", ret, errno);
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 
     *buffer_length_ptr = ret;
 
     EWF_LOG("[BSD SOCKETS][TCP][RECEIVE/RETURN][SOCKET 0x%08X][LENGTH %u]\n", bsd_socket_ptr->s, *buffer_length_ptr);
-\
 
 #ifdef EWF_DEBUG
     uint32_t step = 64;
@@ -814,9 +836,9 @@ ewf_result ewf_adapter_bsd_sockets_udp_send_to(ewf_socket_udp* socket_ptr, const
 
     /* Resolve the server address and port */
     ret = getaddrinfo(remote_address_str, remote_port_cstr, &remote_addrinfo, &addrinfo_result);
-    if (ret != 0)
+    if (ret)
     {
-        EWF_LOG_ERROR("getaddrinfo failed with error: %d\n", ret);
+        EWF_LOG_ERROR("getaddrinfo failed, return %d, error: %d\n", ret, errno);
         return EWF_RESULT_CONNECTION_FAILED;
     }
 
@@ -912,9 +934,14 @@ ewf_result ewf_adapter_bsd_sockets_udp_receive_from(ewf_socket_udp* socket_ptr, 
     }
 
     int ret = recvfrom(bsd_socket_ptr->s, buffer_ptr, *buffer_length_ptr, 0, (struct sockaddr*)&remote_addr, &remote_addr_size);
-    if (ret < 0)
+    if (ret == 0)
     {
-        EWF_LOG_ERROR("recv failed with error: %d\n", errno);
+        EWF_LOG_ERROR("recvfrom returned zero.");
+        return EWF_RESULT_NO_DATA_AVAILABLE;
+    }
+    else if (ret < 0)
+    {
+        EWF_LOG_ERROR("recvfrom failed, ret [%d], errno [%d]\n", ret, errno);
         return EWF_RESULT_ADAPTER_RECEIVE_FAILED;
     }
 

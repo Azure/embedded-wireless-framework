@@ -16,17 +16,16 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- *
- * @defgroup group_adapter EWF Adapter API
- * @brief Adapters are the hardware or software devices uses to communicate with the network.
+ * @defgroup group_adapter_api The EWF Adapter APIs
+ * @brief The EWF Adapter APIs
  * @{
- *
  ****************************************************************************/
 
 /* Include the headers for the different adapter APIs */
 
 #include "ewf_adapter_api_urc.h"
 #include "ewf_adapter_api_control.h"
+#include "ewf_adapter_api_wifi_station.h"
 #include "ewf_adapter_api_info.h"
 #include "ewf_adapter_api_tls.h"
 #include "ewf_adapter_api_tls_basic.h"
@@ -36,7 +35,17 @@ extern "C" {
 #include "ewf_adapter_api_mqtt.h"
 #include "ewf_adapter_api_mqtt_basic.h"
 
-/** @brief The adapter structure definition */
+/************************************************************************//**
+ * @}
+ ****************************************************************************/
+
+/************************************************************************//**
+ * @defgroup group_adapter EWF Adapter API
+ * @brief Adapters are the hardware or software devices uses to communicate with the network.
+ * @{
+ ****************************************************************************/
+
+/** @brief The EWF network adapter control structure definition */
 struct _ewf_adapter
 {
 #ifdef EWF_PARAMETER_CHECKING
@@ -47,14 +56,30 @@ struct _ewf_adapter
 #endif /* EWF_PARAMETER_CHECKING */
 
     ewf_adapter_api_control* control_api_ptr;
+
+    union { /* Only adapter specific control APIs */
+        struct {
+            ewf_adapter_wifi_station_api* wifi_station_api_ptr;
+        };
+    };
+
     ewf_adapter_api_info* info_api_ptr;
-    ewf_adapter_api_tls_basic* tls_basic_api_ptr;
-    ewf_adapter_api_tls* tls_api_ptr;
+
+    union { /* Only one TLS API per adapter */
+        ewf_adapter_api_tls_basic* tls_basic_api_ptr;
+        ewf_adapter_api_tls* tls_api_ptr;
+    };
+
     ewf_adapter_api_dtls* dtls_api_ptr;
+
     ewf_adapter_api_tcp* tcp_api_ptr;
+
     ewf_adapter_api_udp* udp_api_ptr;
-    ewf_adapter_api_mqtt_basic* mqtt_basic_api_ptr;
-    ewf_adapter_api_mqtt* mqtt_api_ptr;
+
+    union { /* Only one MQTT API per adapter */
+        ewf_adapter_api_mqtt_basic* mqtt_basic_api_ptr;
+        ewf_adapter_api_mqtt* mqtt_api_ptr;
+    };
 
     /**<
      * a pointer to an interface, NULL if there is no associated interface
@@ -84,7 +109,7 @@ do {                                                                            
         (adapter_ptr->struct_version != EWF_ADAPTER_VERSION) ||                     \
         (adapter_ptr->implementation_ptr == NULL))                                  \
     {                                                                               \
-        EWF_LOG_ERROR("The adapter pointer is invalid.");                           \
+        EWF_LOG_ERROR("The adapter pointer is invalid.\n");                         \
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                                \
     }                                                                               \
 } while(0)
@@ -94,7 +119,7 @@ do {                                                                            
     if ((adapter_ptr == NULL) ||                                                    \
         (adapter_ptr->implementation_ptr == NULL))                                  \
     {                                                                               \
-        EWF_LOG_ERROR("The adapter pointer is invalid.");                           \
+        EWF_LOG_ERROR("The adapter pointer is invalid.\n");                         \
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                                \
     }                                                                               \
 } while(0)
@@ -109,7 +134,7 @@ do {                                                                            
         (adapter_ptr->struct_version != EWF_ADAPTER_VERSION) ||                     \
         (adapter_ptr->struct_type != adapter_type))                                 \
     {                                                                               \
-        EWF_LOG_ERROR("The adapter type is invalid.");                              \
+        EWF_LOG_ERROR("The adapter type is invalid.\n");                            \
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                                \
     }                                                                               \
 } while(0)
@@ -118,7 +143,7 @@ do {                                                                            
 #endif
 
 /************************************************************************//**
- * @} *** group_adapter
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

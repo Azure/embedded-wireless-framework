@@ -9,16 +9,16 @@
 #include "ewf_adapter_espressif_wroom_02.h"
 #include "ewf_adapter_espressif_common.c"
 
-ewf_adapter_api_control ewf_adapter_espressif_wroom02_api_control =
+ewf_adapter_api_control ewf_adapter_espressif_wroom_02_api_control =
 {
-    ewf_adapter_espressif_wroom02_start,
-    ewf_adapter_espressif_wroom02_stop,
+    ewf_adapter_espressif_wroom_02_start,
+    ewf_adapter_espressif_wroom_02_stop,
 };
 
-ewf_result ewf_adapter_espressif_wroom02_start(ewf_adapter* adapter_ptr)
+ewf_result ewf_adapter_espressif_wroom_02_start(ewf_adapter* adapter_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_ESPRESSIF_WROOM2);
+    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_ESPRESSIF_WROOM_02);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
@@ -34,10 +34,10 @@ ewf_result ewf_adapter_espressif_wroom02_start(ewf_adapter* adapter_ptr)
     return result;
 }
 
-ewf_result ewf_adapter_espressif_wroom02_stop(ewf_adapter* adapter_ptr)
+ewf_result ewf_adapter_espressif_wroom_02_stop(ewf_adapter* adapter_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_ESPRESSIF_WROOM2);
+    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_ESPRESSIF_WROOM_02);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
@@ -53,7 +53,7 @@ ewf_result ewf_adapter_espressif_wroom02_stop(ewf_adapter* adapter_ptr)
     return result;
 }
 
-ewf_result ewf_adapter_espressif_wroom02_urc_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
+ewf_result ewf_adapter_espressif_wroom_02_urc_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 

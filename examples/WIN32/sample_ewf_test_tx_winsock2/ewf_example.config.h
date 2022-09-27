@@ -35,8 +35,24 @@ extern "C" {
 
 /** @} *** group_example_configuration_allocator */
 
+/**
+ * @defgroup group_example_configuration_test_echo Echo test configuration
+ * @brief Echo test configuration settings used in examples
+ * @{
+ */
+
+#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-tcp.westus.azurecontainer.io"
+
+#define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      4000
+
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-udp.westus.azurecontainer.io"
+
+#define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
+
+/** @} *** group_example_configuration_test_echo */
+
 /************************************************************************//**
- * @}
+ * @} *** group_example_configuration
  ****************************************************************************/
 
 #ifdef __cplusplus

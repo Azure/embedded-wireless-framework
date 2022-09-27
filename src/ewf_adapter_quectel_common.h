@@ -79,6 +79,13 @@ extern "C" {
  ****************************************************************************/
 
 /************************************************************************//**
+ * @defgroup group_adapter_quectel_common Quectel common driver implementation
+ * @ingroup group_adapter
+ * @brief Quectel common adapter implementation
+ * @{
+ ****************************************************************************/
+
+/************************************************************************//**
  * @defgroup group_adapter_quectel_common_data Quectel common driver internal data
  * @brief Quectel common adapter data structure
  * @{
@@ -151,8 +158,8 @@ typedef struct _ewf_adapter_quectel_common
  ****************************************************************************/
 
 /************************************************************************//**
- * @defgroup group_adapter_quectel_common Quectel generic adapter functions
- * @ingroup group_adapter
+ * @defgroup group_adapter_quectel_common_functions Quectel generic adapter functions
+ * @brief Quectel generic adapter functions
  * @{
  ****************************************************************************/
 
@@ -348,7 +355,7 @@ ewf_result ewf_adapter_quectel_common_tls_basic_clean(ewf_adapter* adapter_ptr);
 
 #endif /* EWF_ADAPTER_QUECTEL_COMMON_TLS_BASIC_ENABLED */
 
- /** @} *** group_adapter_quectel_common_tls_basic */
+/** @} *** group_adapter_quectel_common_tls_basic */
 
 /**
  * @defgroup group_adapter_quectel_common_mqtt_basic MQTT basic API implementation
@@ -377,6 +384,10 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_publish(ewf_adapter* adapter_pt
 #endif /* EWF_ADAPTER_QUECTEL_COMMON_MQTT_BASIC_ENABLED */
 
 /** @} *** group_adapter_quectel_common_mqtt_basic */
+
+/************************************************************************//**
+ * @} *** group_adapter_quectel_common_functions
+ ****************************************************************************/
 
 /************************************************************************//**
  * @} *** group_adapter_quectel_common

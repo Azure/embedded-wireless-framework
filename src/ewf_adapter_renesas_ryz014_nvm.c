@@ -94,8 +94,10 @@ ewf_result ewf_adapter_renesas_ryz014_nvm_upload(ewf_adapter* adapter_ptr, const
         sizeof(tokenizer_pattern_str) - 1,
         false,
     };
+    char file_size_str[5];
+    const char* file_size_cstr = ewfl_unsigned_to_str(length, file_size_str, sizeof(file_size_str));
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSNVW=\"", filename_str, "\",", index, ",", ewflewfl_unsigned_to_str_buffer(length), "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSNVW=\"", filename_str, "\",", index, ",", file_size_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str))) return result;
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, data, length))) return result;

@@ -56,7 +56,7 @@ do {                                                                            
     if ((socket_ptr == NULL) ||                                                     \
         (socket_ptr->adapter_ptr == NULL))                                          \
     {                                                                               \
-        EWF_LOG_ERROR("The TCP socket pointer is invalid.");                        \
+        EWF_LOG_ERROR("The TCP socket pointer is invalid.\n");                      \
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                                \
     }                                                                               \
 } while(0)

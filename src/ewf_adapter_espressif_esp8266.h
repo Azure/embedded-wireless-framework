@@ -12,7 +12,6 @@
 #include "ewf_adapter.h"
 #include "ewf_allocator.h"
 #include "ewf_interface.h"
-#include "ewf_adapter_espressif_common.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,8 +25,6 @@ extern "C" {
  ****************************************************************************/
  
 #define EWF_ADAPTER_ESPRESSIF_ESP8266_TLS_BASIC_ENABLED (0)
-#define EWF_ADAPTER_ESPRESSIF_ESP8266_TCP_ENABLED (0)
-#define EWF_ADAPTER_ESPRESSIF_ESP8266_UDP_ENABLED (0)
 #define EWF_ADAPTER_ESPRESSIF_ESP8266_MQTT_BASIC_ENABLED (0)
 
 #if !defined(EWF_ADAPTER_ESPRESSIF_ESP8266_TLS_ENABLED) && !defined(EWF_ADAPTER_ESPRESSIF_ESP8266_TLS_BASIC_ENABLED)
@@ -59,13 +56,14 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @} *** group_configuration_adapter_quectel_bg96
+ * @} *** group_configuration_adapter_espressif_esp8266
  ****************************************************************************/
+
 /* Include the ESPRESSIF common header here, to take the above configuration macros into account */
 #include "ewf_adapter_espressif_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_espressif_esp8266 The ESPRESSIF ESP8266 modem adapter driver
+ * @defgroup group_adapter_espressif_esp8266 The ESPRESSIF ESP8266 adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/
@@ -99,15 +97,81 @@ ewf_result ewf_adapter_espressif_esp8266_urc_callback(ewf_interface* interface_p
  * @{
  */
 
-
-#define ewf_adapter_espressif_esp8266_info                     ewf_adapter_espressif_common_info
-#define ewf_adapter_espressif_esp8266_get_ipv4_address         ewf_adapter_espressif_common_get_ipv4_address
-#define ewf_adapter_espressif_esp8266_get_ipv4_netmask         ewf_adapter_espressif_common_get_ipv4_netmask
-#define ewf_adapter_espressif_esp8266_get_ipv4_gateway         ewf_adapter_espressif_common_get_ipv4_gateway
-#define ewf_adapter_espressif_esp8266_get_ipv4_dns             ewf_adapter_espressif_common_get_ipv4_dns
+#define ewf_adapter_espressif_esp8266_info                          ewf_adapter_espressif_common_info
+#define ewf_adapter_espressif_esp8266_get_ipv4_address              ewf_adapter_espressif_common_get_ipv4_address
+#define ewf_adapter_espressif_esp8266_get_ipv4_netmask              ewf_adapter_espressif_common_get_ipv4_netmask
+#define ewf_adapter_espressif_esp8266_get_ipv4_gateway              ewf_adapter_espressif_common_get_ipv4_gateway
+#define ewf_adapter_espressif_esp8266_get_ipv4_dns                  ewf_adapter_espressif_common_get_ipv4_dns
 
 /** @} *** group_adapter_espressif_esp8266_info */
 
+/**
+ * @defgroup group_adapter_espressif_esp8266_wifi_station Adapter information
+ * @brief ESPRESSIF ESP8266 adapter driver WiFi station API
+ * @{
+ */
+
+#define ewf_adapter_espressif_esp8266_wifi_station_connect          ewf_adapter_espressif_common_wifi_station_connect
+#define ewf_adapter_espressif_esp8266_wifi_station_disconnect       ewf_adapter_espressif_common_wifi_station_disconnect
+
+/** @} *** group_adapter_espressif_esp8266_wifi_station */
+
+/**
+ * @defgroup group_adapter_espressif_esp8266_internet Common internet functions (TCP+UDP)
+ * @brief Functions common to TCP and UDP in the Espressif ESP8266
+ * @{
+ */
+
+#define ewf_adapter_espressif_esp8266_internet_start                ewf_adapter_espressif_common_internet_start
+#define ewf_adapter_espressif_esp8266_internet_stop                 ewf_adapter_espressif_common_internet_stop
+
+#define ewf_adapter_espressif_esp8266_internet_urc_callback         ewf_adapter_espressif_common_internet_urc_callback
+
+/** @} *** group_adapter_espressif_esp8266_internet */
+
+/**
+ * @defgroup group_adapter_espressif_esp8266_tcp TCP API implementation
+ * @brief Espressif ESP8266 adapter TCP API
+ * @{
+ */
+
+#if EWF_ADAPTER_ESPRESSIF_ESP8266_TCP_ENABLED
+
+#define ewf_adapter_espressif_esp8266_tcp_open                      ewf_adapter_espressif_common_tcp_open
+#define ewf_adapter_espressif_esp8266_tcp_close                     ewf_adapter_espressif_common_tcp_close
+#define ewf_adapter_espressif_esp8266_tcp_control                   ewf_adapter_espressif_common_tcp_control
+#define ewf_adapter_espressif_esp8266_tcp_set_tls_configuration     ewf_adapter_espressif_common_tcp_set_tls_configuration
+#define ewf_adapter_espressif_esp8266_tcp_bind                      ewf_adapter_espressif_common_tcp_bind
+#define ewf_adapter_espressif_esp8266_tcp_listen                    ewf_adapter_espressif_common_tcp_listen
+#define ewf_adapter_espressif_esp8266_tcp_accept                    ewf_adapter_espressif_common_tcp_accept
+#define ewf_adapter_espressif_esp8266_tcp_connect                   ewf_adapter_espressif_common_tcp_connect
+#define ewf_adapter_espressif_esp8266_tcp_shutdown                  ewf_adapter_espressif_common_tcp_shutdown
+#define ewf_adapter_espressif_esp8266_tcp_send                      ewf_adapter_espressif_common_tcp_send
+#define ewf_adapter_espressif_esp8266_tcp_receive                   ewf_adapter_espressif_common_tcp_receive
+
+#endif /* EWF_ADAPTER_ESPRESSIF_ESP8266_TCP_ENABLED */
+
+/** @} *** group_adapter_espressif_esp8266_tcp */
+
+/**
+ * @defgroup group_adapter_espressif_esp8266_udp UDP API implementation
+ * @brief Espressif ESP8266 adapter UDP API
+ * @{
+ */
+
+#if EWF_ADAPTER_ESPRESSIF_ESP8266_UDP_ENABLED
+
+#define ewf_adapter_espressif_esp8266_udp_open                      ewf_adapter_espressif_common_udp_open
+#define ewf_adapter_espressif_esp8266_udp_close                     ewf_adapter_espressif_common_udp_close
+#define ewf_adapter_espressif_esp8266_udp_control                   ewf_adapter_espressif_common_udp_control
+#define ewf_adapter_espressif_esp8266_udp_set_dtls_configuration    ewf_adapter_espressif_common_udp_set_dtls_configuration
+#define ewf_adapter_espressif_esp8266_udp_bind                      ewf_adapter_espressif_common_udp_bind
+#define ewf_adapter_espressif_esp8266_udp_send_to                   ewf_adapter_espressif_common_udp_send_to
+#define ewf_adapter_espressif_esp8266_udp_receive_from              ewf_adapter_espressif_common_udp_receive_from
+
+#endif /* EWF_ADAPTER_ESPRESSIF_ESP8266_UDP_ENABLED */
+
+/** @} *** group_adapter_espressif_esp8266_udp */
 
 /******************************************************************************
  *
@@ -185,7 +249,7 @@ adapter_ptr->mqtt_basic_api_ptr = &ewf_adapter_espressif_common_api_mqtt_basic; 
 #define EWF_ADAPTER_ESPRESSIF_ESP8266_INITIALIZE_MQTT_BASIC_API(adapter_ptr)
 #endif /* EWF_ADAPTER_ESPRESSIF_ESP8266_MQTT_BASIC_ENABLED */
 
- /**
+/**
  * @brief Declare a ESPRESSIF 8266 adapter
  * @param[in,out] adapter_ptr a pointer to an adapter that will be initialized to point to the one statically declared by the macro
  * @param[in] adapter_name_symb a unique symbol name that will be used as a name suffix for the statically declared data
@@ -206,6 +270,7 @@ adapter_ptr = &(ewf_adapter_espressif_esp8266__##adapter_name_symb);            
 interface_ptr_param->adapter_ptr = adapter_ptr;                                                                                                             \
 EWF_ADAPTER_ESPRESSIF_ESP8266_INITIALIZE_HEADER(adapter_ptr);                                                                                               \
 ewf_adapter_espressif_esp8266__##adapter_name_symb.control_api_ptr = &ewf_adapter_espressif_esp8266_api_control;                                            \
+ewf_adapter_espressif_esp8266__##adapter_name_symb.wifi_station_api_ptr = &ewf_adapter_espressif_common_api_wifi_station;                                   \
 ewf_adapter_espressif_esp8266__##adapter_name_symb.info_api_ptr = &ewf_adapter_espressif_common_api_info;                                                   \
 EWF_ADAPTER_ESPRESSIF_ESP8266_INITIALIZE_TCP_API(adapter_ptr);                                                                                              \
 EWF_ADAPTER_ESPRESSIF_ESP8266_INITIALIZE_UDP_API(adapter_ptr);                                                                                              \

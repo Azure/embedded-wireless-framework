@@ -116,9 +116,9 @@ struct _ewf_platform_mutex
  */
 #define EWF_PLATFORM_MUTEX_STATIC_DECLARE(mutex_ptr, mutex_name_symb)                                                           \
 do {                                                                                                                            \
-static struct _ewf_platform_mutex _ewf_platform_mutex__##mutex_name_symb = {0};                                               	\
+static struct _ewf_platform_mutex _ewf_platform_mutex__##mutex_name_symb = {0};                                                 \
 _ewf_platform_mutex__##mutex_name_symb.name_cstr = #mutex_name_symb;                                                            \
-mutex_ptr = &(_ewf_platform_mutex__##mutex_name_symb);                                                                  		\
+mutex_ptr = &(_ewf_platform_mutex__##mutex_name_symb);                                                                          \
 } while(0)
 
 /**
@@ -140,14 +140,14 @@ struct _ewf_platform_queue
  * @param[in] item_type type queue item type
  * @param[in] item_count the maximum number item the queue can contain
  */
-#define EWF_PLATFORM_QUEUE_STATIC_DECLARE(queue_ptr, queue_name_symb, item_type, item_count)                                  	\
+#define EWF_PLATFORM_QUEUE_STATIC_DECLARE(queue_ptr, queue_name_symb, item_type, item_count)                                    \
 do {                                                                                                                            \
 static ULONG _ewf_platform_queue__buffer__##queue_name_symb[sizeof(item_type) * item_count];                                    \
-static ewf_platform_queue _ewf_platform_queue__##queue_name_symb = {0};                                                       	\
+static ewf_platform_queue _ewf_platform_queue__##queue_name_symb = {0};                                                         \
 _ewf_platform_queue__##queue_name_symb.name_cstr = #queue_name_symb;                                                            \
 _ewf_platform_queue__##queue_name_symb.message_size = sizeof(item_type);                                                        \
-_ewf_platform_queue__##queue_name_symb.queue_start = _ewf_platform_queue__buffer__##queue_name_symb;                          	\
-_ewf_platform_queue__##queue_name_symb.queue_size = sizeof(_ewf_platform_queue__buffer__##queue_name_symb);          			\
+_ewf_platform_queue__##queue_name_symb.queue_start = _ewf_platform_queue__buffer__##queue_name_symb;                            \
+_ewf_platform_queue__##queue_name_symb.queue_size = sizeof(_ewf_platform_queue__buffer__##queue_name_symb);                     \
 queue_ptr = &(_ewf_platform_queue__##queue_name_symb);                                                                          \
 } while(0)
 

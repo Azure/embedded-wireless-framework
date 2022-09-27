@@ -41,10 +41,10 @@ void ewf_test_thread_entry(void)
     EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
 
     // Release the RYZ014A from reset
-    ewf_platform_sleep(50);
+    ewf_platform_sleep(100);
     R_IOPORT_PinWrite(&g_ioport_ctrl, PMOD2_IO1, BSP_IO_LEVEL_LOW);
     EWF_LOG("Waiting for the module to Power Reset!\r\n");
-    ewf_platform_sleep(300);
+    ewf_platform_sleep(400);
 
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
@@ -59,16 +59,12 @@ void ewf_test_thread_entry(void)
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
     }
+    ewf_platform_sleep(200);
 
-    /* Wait for the modem functionality to be up, increase/decrease the sleep time as required by modem and network,
+    /* Wait for the modem to be registered to network
      * Refer system integration guide for more info */
-    uint32_t wait_time_seconds = 15;
-
-    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, wait_time_seconds)))
-    {
-        EWF_LOG_ERROR("Failed to register modem to network within timeout specified, ewf_result %d.\n", result);
-        return;
-    }
+    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, (uint32_t)-1));
+    ewf_platform_sleep(200);
 
     /* Disable network Registration URC */
     if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))

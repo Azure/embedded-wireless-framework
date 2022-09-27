@@ -22,7 +22,6 @@
 static volatile uint8_t g_uart_event = {0};
 
 static ewf_interface* g_interface_ptr = NULL;
-static ewf_platform_queue* _rx_queue_ptr = NULL;
 static uint8_t _rx_buffer[sizeof(uint8_t)];
 
 /**
@@ -31,17 +30,27 @@ static uint8_t _rx_buffer[sizeof(uint8_t)];
  */
 void user_uart_callback(uart_callback_args_t *p_args)
 {
-    /* Logged the event in global variable */
-    g_uart_event = (uint8_t)p_args->event;
+	/* Logged the event in global variable */
+	g_uart_event = (uint8_t) p_args->event;
+	if (g_interface_ptr)
+	{
+		ewf_interface_ra_uart *implementation_ptr = g_interface_ptr->implementation_ptr;
 
-    /* If received a character, process it */
-    if(UART_EVENT_RX_CHAR & p_args->event)
-    {
-      /* Read Received character. RXNE flag is cleared by reading of RDR register */
-    	_rx_buffer[0]= (uint8_t ) p_args->data;
+		/* If received a character, process it */
+		if (UART_EVENT_RX_CHAR & p_args->event)
+		{
+			/* Read Received character. RXNE flag is cleared by reading of RDR register */
+			_rx_buffer[0] = (uint8_t ) p_args->data;
 
-  	  ewf_platform_queue_enqueue(_rx_queue_ptr, _rx_buffer, sizeof(uint8_t), false);
-    }
+			ewf_result result = ewf_platform_queue_enqueue(implementation_ptr->rx_queue_ptr, _rx_buffer,
+					sizeof(uint8_t), false);
+			if (ewf_result_failed(result))
+			{
+				EWF_LOG_ERROR("Failed to enqueue a received byte on the RA UART callback, ewf_result %d.\n",result);
+				// continue, try again...
+			}
+		}
+	}
 }
 
 /******************************************************************************
@@ -53,19 +62,23 @@ void user_uart_callback(uart_callback_args_t *p_args)
 ewf_result ewf_interface_ra_uart_hardware_start(ewf_interface* interface_ptr)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    EWF_INTERFACE_VALIDATE_POINTER_TYPE(interface_ptr, EWF_INTERFACE_TYPE_RA_UART);
+    ewf_interface_ra_uart* implementation_ptr = interface_ptr->implementation_ptr;
 
-    fsp_err_t result = FSP_SUCCESS;
+    fsp_err_t status = FSP_SUCCESS;
 
-    EWF_PLATFORM_QUEUE_STATIC_DECLARE(_rx_queue_ptr, ra_uart_rx_queue, uint8_t, 256);
-    ewf_platform_queue_create(_rx_queue_ptr);
+    ewf_result result = ewf_platform_queue_create(implementation_ptr->rx_queue_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to create the RA UART reception queue, ewf_result %d.\n", result);
+        return result;
+    }
 
     /* Save the interface pointer */
     g_interface_ptr = interface_ptr;
 
     /* Initialize UART channel */
-    result = R_SCI_UART_Open (&g_uart0_ctrl, &g_uart0_cfg);
-    if (FSP_SUCCESS != result)
+    status = R_SCI_UART_Open (&g_uart0_ctrl, &g_uart0_cfg);
+    if (FSP_SUCCESS != status)
       return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
 
    return EWF_RESULT_OK;
@@ -129,6 +142,7 @@ ewf_result ewf_interface_ra_uart_hardware_send(ewf_interface* interface_ptr, con
 ewf_result ewf_interface_ra_uart_hardware_receive(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+    ewf_interface_ra_uart* implementation_ptr = interface_ptr->implementation_ptr;
 
     /* Expect a valid buffer */
     if (!buffer_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
@@ -139,7 +153,7 @@ ewf_result ewf_interface_ra_uart_hardware_receive(ewf_interface* interface_ptr, 
     for (uint32_t i = 0; i < *buffer_length_ptr; i++)
     {
     	uint32_t dequeue_size = sizeof(uint8_t);
-    	ewf_result result = ewf_platform_queue_dequeue(_rx_queue_ptr, &(buffer_ptr[i]), &dequeue_size, wait);
+    	ewf_result result = ewf_platform_queue_dequeue(implementation_ptr->rx_queue_ptr, &(buffer_ptr[i]), &dequeue_size, wait);
         if (result == EWF_RESULT_EMPTY_QUEUE)
         {
             return result;
