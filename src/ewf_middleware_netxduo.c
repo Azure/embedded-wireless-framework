@@ -42,7 +42,7 @@
 #endif /* NX_ENABLE_TCPIP_OFFLOAD */
 
 #ifndef NX_DRIVER_IP_MTU
-#define NX_DRIVER_IP_MTU                        1500
+#define NX_DRIVER_IP_MTU                        1460
 #endif /* NX_DRIVER_IP_MTU */
 
 #ifndef NX_DRIVER_RECEIVE_QUEUE_SIZE
@@ -1795,7 +1795,7 @@ ewf_result result;
             /* Send data.  */
             ewf_result result = ewf_adapter_tcp_send(
               &nx_driver_sockets[i].tcp_socket,
-              (char const *)(uint8_t *)current_packet-> nx_packet_prepend_ptr,
+              (char const *)(uint8_t *)current_packet-> nx_packet_prepend_ptr + offset,
               packet_size);
             /* Check status.  */
             if (ewf_result_failed(result))
