@@ -728,7 +728,10 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
             }
             else
             {
-                *buffer_length_ptr = (uint32_t)((*buffer_length_ptr >= recieve_actual_lenght) ? recieve_actual_lenght : *buffer_length_ptr);
+                if (*buffer_length_ptr >= recieve_actual_lenght)
+                {
+                    *buffer_length_ptr = recieve_actual_lenght;
+                }
                 memcpy(buffer_ptr, p, *buffer_length_ptr);
             }
         }

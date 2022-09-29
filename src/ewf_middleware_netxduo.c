@@ -1016,7 +1016,7 @@ UINT packet_type;
 UINT status;
 NXD_ADDRESS local_ip;
 NXD_ADDRESS remote_ip;
-static uint32_t data_length;
+uint32_t data_length;
 int32_t size;
 NX_IP *ip_ptr = nx_driver_information.nx_driver_information_ip_ptr;
 NX_INTERFACE *interface_ptr = nx_driver_information.nx_driver_information_interface;
