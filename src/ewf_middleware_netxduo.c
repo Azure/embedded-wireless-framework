@@ -1016,7 +1016,7 @@ UINT packet_type;
 UINT status;
 NXD_ADDRESS local_ip;
 NXD_ADDRESS remote_ip;
-uint16_t data_length;
+uint32_t data_length;
 int32_t size;
 NX_IP *ip_ptr = nx_driver_information.nx_driver_information_ip_ptr;
 NX_INTERFACE *interface_ptr = nx_driver_information.nx_driver_information_interface;
@@ -1096,7 +1096,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                 }
 
                 /* Get available size of packet.  */
-                data_length = (uint16_t)(packet_ptr -> nx_packet_data_end - packet_ptr -> nx_packet_prepend_ptr);
+                data_length = packet_ptr -> nx_packet_data_end - packet_ptr -> nx_packet_prepend_ptr;
 
                 /* Limit the data length to NX_DRIVER_IP_MTU.  */
                 if (data_length > NX_DRIVER_IP_MTU)
@@ -1109,24 +1109,20 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                 /* Receive data without suspending.  */
                 if (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP)
                 {
-                    uint32_t len = data_length;
                     result = ewf_adapter_tcp_receive(
                         &nx_driver_sockets[i].tcp_socket,
                         (char*)(packet_ptr->nx_packet_prepend_ptr), 
-                        &len,
+                        &data_length,
                         false);
-                    data_length = len;
                 }
                 else
                 {
-                    uint32_t len = data_length;
                     result = ewf_adapter_udp_receive_from(
                         &nx_driver_sockets[i].udp_socket,
                         NULL, NULL, NULL,
                         (char*)(packet_ptr->nx_packet_prepend_ptr),
-                        &len,
+                        &data_length,
                         false);
-                    data_length = len;
                 }
 
                 if (result == EWF_RESULT_NO_DATA_RECEIVED || data_length == 0)
@@ -1159,7 +1155,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                 EWF_LOG("[NETX-DUO-DRIVER][PACKET RECEIVED]\n");
 
                 /* Set packet length.  */
-                packet_ptr -> nx_packet_length = (ULONG)data_length;
+                packet_ptr -> nx_packet_length = data_length;
                 packet_ptr -> nx_packet_append_ptr = packet_ptr -> nx_packet_prepend_ptr + data_length;
                 packet_ptr -> nx_packet_ip_interface = interface_ptr;
 
