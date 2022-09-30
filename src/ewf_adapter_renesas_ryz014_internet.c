@@ -595,12 +595,16 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_send(ewf_socket_tcp* socket_ptr, const
 
 ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
 {
+    ewf_adapter* adapter_ptr;
+    static ewf_interface* interface_ptr;
+    ewf_adapter_renesas_ryz014_internet_socket* internet_socket_ptr;
+
     EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr);
-    ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
+    adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    ewf_adapter_renesas_ryz014_internet_socket* internet_socket_ptr = (ewf_adapter_renesas_ryz014_internet_socket*)socket_ptr->data_ptr;
+    internet_socket_ptr = (ewf_adapter_renesas_ryz014_internet_socket*)socket_ptr->data_ptr;
 
     ewf_result result;
     uint8_t* response_ptr;
