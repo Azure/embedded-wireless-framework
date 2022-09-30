@@ -891,6 +891,8 @@ ewf_result ewf_interface_send_command(ewf_interface* interface_ptr, const char *
 
 ewf_result ewf_interface_send_commands(ewf_interface* interface_ptr, const char * command_str, ...)
 {
+    printf("ewf_adapter_renesas_ryz014_tcp_receive: interface_ptr: %d, interface_ptr->struct_magic: %d, interface_ptr->struct_size: %d, interface_ptr->struct_version: %d, interface_ptr->implementation_ptr: %d\n",
+                (int)interface_ptr, (int) interface_ptr->struct_magic, (int)interface_ptr->struct_size, (int)interface_ptr->struct_version, (int)interface_ptr->implementation_ptr);
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
     ewf_result result = EWF_RESULT_OK;
