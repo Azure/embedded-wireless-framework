@@ -50,7 +50,7 @@
 #endif /* NX_DRIVER_RECEIVE_QUEUE_SIZE */
 
 #ifndef NX_DRIVER_STACK_SIZE
-#define NX_DRIVER_STACK_SIZE                    1024
+#define NX_DRIVER_STACK_SIZE                    2048
 #endif /* NX_DRIVER_STACK_SIZE  */
 
 /* Interval to receive packets when there is no packet. The default value is 100 ticks which is 1s.  */
