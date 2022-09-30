@@ -673,6 +673,7 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
     const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
     char* read_length_cstr = ewfl_unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
 
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSRECV=",socket_cstr,",",read_length_cstr,"\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr , &response_ptr, &response_length, 500))) return result;
 
