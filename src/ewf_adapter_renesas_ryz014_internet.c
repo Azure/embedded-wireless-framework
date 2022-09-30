@@ -651,6 +651,7 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
     else
     {
         ewf_interface_poll(interface_ptr);
+        EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
         if (internet_socket_ptr->recv)
         {
             internet_socket_ptr->recv = false;
@@ -661,6 +662,8 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
         }
         internet_socket_ptr->recv = false;
     }
+
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
     uint32_t response_overhead = 32; /* Conservative estimate */
 
