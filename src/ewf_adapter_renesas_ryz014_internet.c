@@ -599,8 +599,6 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
-    printf("\newf_adapter_renesas_ryz014_tcp_receive: interface_ptr: %d, interface_ptr->struct_magic: %d, interface_ptr->struct_size: %d, interface_ptr->struct_version: %d, interface_ptr->implementation_ptr: %d\n",
-                (int)interface_ptr, (int) interface_ptr->struct_magic, (int)interface_ptr->struct_size, (int)interface_ptr->struct_version, (int)interface_ptr->implementation_ptr);
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
     ewf_adapter_renesas_ryz014_internet_socket* internet_socket_ptr = (ewf_adapter_renesas_ryz014_internet_socket*)socket_ptr->data_ptr;
 
@@ -675,10 +673,6 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
     const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
     char* read_length_cstr = ewfl_unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
 
-    printf("\newf_adapter_renesas_ryz014_tcp_receive: interface_ptr: %d, interface_ptr->struct_magic: %d, interface_ptr->struct_size: %d, interface_ptr->struct_version: %d, interface_ptr->implementation_ptr: %d\n",
-                (int)interface_ptr, (int) interface_ptr->struct_magic, (int)interface_ptr->struct_size, (int)interface_ptr->struct_version, (int)interface_ptr->implementation_ptr);
-    
-                 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSRECV=",socket_cstr,",",read_length_cstr,"\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr , &response_ptr, &response_length, 500))) return result;
 
