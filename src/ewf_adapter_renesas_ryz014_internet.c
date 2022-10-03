@@ -593,7 +593,7 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_send(ewf_socket_tcp* socket_ptr, const
 
 }
 
-ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t* const buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
+ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t* buffer_ptr, uint32_t* const buffer_length_ptr, bool wait)
 {
     ewf_adapter* adapter_ptr;
     static ewf_interface* interface_ptr;
