@@ -598,7 +598,6 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
     ewf_adapter* adapter_ptr;
     static ewf_interface* interface_ptr;
     ewf_adapter_renesas_ryz014_internet_socket* internet_socket_ptr;
-    static uint32_t* buffer_len_ptr;
 
     EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr);
     adapter_ptr = socket_ptr->adapter_ptr;
@@ -606,8 +605,6 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
     interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
     internet_socket_ptr = (ewf_adapter_renesas_ryz014_internet_socket*)socket_ptr->data_ptr;
-
-    buffer_len_ptr = buffer_length_ptr;
 
     ewf_result result;
     uint8_t* response_ptr;
@@ -619,13 +616,13 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    if (!buffer_len_ptr)
+    if (!buffer_length_ptr)
     {
         EWF_LOG_ERROR("The length pointer cannot be NULL.");
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    if (*buffer_len_ptr == 0)
+    if (*buffer_length_ptr == 0)
     {
         EWF_LOG_ERROR("The buffer length cannot be 0.");
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
@@ -672,7 +669,7 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
 
     /* Read at most the buffer size, take into account the message overhead */
     uint32_t read_length = interface_ptr->message_allocator_ptr->block_size - response_overhead;
-    read_length = (*buffer_len_ptr < read_length) ? *buffer_len_ptr : read_length;
+    read_length = (*buffer_length_ptr < read_length) ? *buffer_length_ptr : read_length;
     read_length = (read_length > EWF_RYZ014_SOCKET_MAX_RECEIVE_SIZE) ? (EWF_RYZ014_SOCKET_MAX_RECEIVE_SIZE) : (read_length);
     char read_length_str[5];
     char socket_str[3];
@@ -715,7 +712,7 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
         recieve_actual_lenght = ewfl_str_to_unsigned(p);
         if (recieve_actual_lenght == 0)
         {
-            *buffer_len_ptr = 0;
+            *buffer_length_ptr = 0;
         }
         else
         {
@@ -734,11 +731,11 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
             }
             else
             {
-                if (*buffer_len_ptr >= recieve_actual_lenght)
+                if (*buffer_length_ptr >= recieve_actual_lenght)
                 {
-                    *buffer_len_ptr = recieve_actual_lenght;
+                    *buffer_length_ptr = recieve_actual_lenght;
                 }
-                memcpy(buffer_ptr, p, *buffer_len_ptr);
+                memcpy(buffer_ptr, p, *buffer_length_ptr);
             }
         }
         ewf_interface_release(interface_ptr, response_ptr);
