@@ -208,7 +208,7 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_accept(ewf_socket_tcp* socket_ptr, ewf
 ewf_result ewf_adapter_renesas_ryz014_tcp_connect(ewf_socket_tcp* socket_ptr, const char* const server, uint32_t port);
 ewf_result ewf_adapter_renesas_ryz014_tcp_shutdown(ewf_socket_tcp* socket_ptr);
 ewf_result ewf_adapter_renesas_ryz014_tcp_send(ewf_socket_tcp* socket_ptr, const uint8_t* buffer_ptr, uint32_t buffer_length);
-ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t* buffer_ptr, uint32_t* const buffer_length, bool wait);
+ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length, bool wait);
 
 #endif /* EWF_ADAPTER_RENESAS_RYZ014_TCP_ENABLED */
 
