@@ -15,7 +15,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define EWF_MAX_RESPONSE_WAIT_TICKS 5000
+#define EWF_MAX_RESPONSE_WAIT_TICKS 15000
 
 /************************************************************************//**
  *
