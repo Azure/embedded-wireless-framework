@@ -42,7 +42,7 @@
 #endif /* NX_ENABLE_TCPIP_OFFLOAD */
 
 #ifndef NX_DRIVER_IP_MTU
-#define NX_DRIVER_IP_MTU                        1460
+#define NX_DRIVER_IP_MTU                        1500
 #endif /* NX_DRIVER_IP_MTU */
 
 #ifndef NX_DRIVER_RECEIVE_QUEUE_SIZE
@@ -1143,8 +1143,8 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                     /* Connection error. Notify upper layer with Null packet.  */
                     if (nx_driver_sockets[i].protocol == NX_PROTOCOL_TCP)
                     {
-                        // _nx_tcp_socket_driver_packet_receive(nx_driver_sockets[i].socket_ptr, NX_NULL);
-                        // nx_driver_sockets[i].tcp_connected = NX_FALSE;
+                        _nx_tcp_socket_driver_packet_receive(nx_driver_sockets[i].socket_ptr, NX_NULL);
+                        nx_driver_sockets[i].tcp_connected = NX_FALSE;
                     }
                     else
                     {
