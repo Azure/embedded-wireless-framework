@@ -856,7 +856,7 @@ ewf_result ewf_adapter_renesas_ryz014_udp_bind(ewf_socket_udp* socket_ptr, uint3
 
 
     /* Configure socket connection and open socket connect to remote address */
-    if (ewf_result_failed(result = _ewf_adapter_renesas_ryz014_internet_socket_open(adapter_ptr, internet_socket_ptr, 1, "157.165.5.1", local_port, local_port,2)))
+    if (ewf_result_failed(result = _ewf_adapter_renesas_ryz014_internet_socket_open(adapter_ptr, internet_socket_ptr, 1, "127.0.0.1", local_port, local_port,2)))
     {
         EWF_LOG_ERROR("Failed to open UDP socket.");
         return EWF_RESULT_CONNECTION_FAILED;
