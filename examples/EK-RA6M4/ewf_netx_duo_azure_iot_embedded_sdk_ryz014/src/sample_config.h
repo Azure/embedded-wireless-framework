@@ -30,17 +30,15 @@ TODO`s: Configure core settings of application for your IoTHub.
 */
 
 /* Defined, DPS is enabled.  */
-/*
-#define ENABLE_DPS_SAMPLE
-*/
+//#define ENABLE_DPS_SAMPLE
 
 /* Defined, telemetry is disabled.  */
 // This is defined to run the telemetry messaging on pressing event on the Push buttons S0 and S1 on the RA6M4-EK board instead of the dummy telemetry.
-#define DISABLE_TELEMETRY_SAMPLE
+//#define DISABLE_TELEMETRY_SAMPLE
 
 /* Defined, C2D is disabled.  */
 // This is defined to run the C2D messaging to turn ON/OFF the Green LED RA6M4-EK board instead of the dummy c2d message processing
-#define DISABLE_C2D_SAMPLE
+//#define DISABLE_C2D_SAMPLE
 
 /* Defined, Direct method is disabled.  */
 /*
@@ -82,9 +80,15 @@ TODO`s: Configure core settings of application for your IoTHub.
 #endif /* ENABLE_DPS_SAMPLE */
 
 /* Optional SYMMETRIC KEY.  */
+#ifndef ENABLE_DPS_SAMPLE
+#ifndef DEVICE_SYMMETRIC_KEY
+#define DEVICE_SYMMETRIC_KEY                        ""
+#endif
+#else
 #ifndef DEVICE_SYMMETRIC_KEY
 #define DEVICE_SYMMETRIC_KEY                        ""
 #endif /* DEVICE_SYMMETRIC_KEY */
+#endif
 
 /* Optional module ID.  */
 #ifndef MODULE_ID
@@ -109,7 +113,7 @@ END TODO section
 
 /* Define the Azure RTOS IOT thread stack and priority.  */
 #ifndef NX_AZURE_IOT_STACK_SIZE
-#define NX_AZURE_IOT_STACK_SIZE                     (4096)
+#define NX_AZURE_IOT_STACK_SIZE                     (8192)
 #endif /* NX_AZURE_IOT_STACK_SIZE */
 
 #ifndef NX_AZURE_IOT_THREAD_PRIORITY
@@ -131,19 +135,6 @@ END TODO section
 
 /* Define sample properties count.  */
 #define MAX_PROPERTY_COUNT                          (2)
-
-/* Generally, IoTHub Client and DPS Client do not run at the same time, user can use union as below to
-   share the memory between IoTHub Client and DPS Client. */
-/* NOTE: If user can not make sure sharing memory is safe, IoTHub Client and DPS Client must be defined seperately.  */
-typedef union SAMPLE_CLIENT_UNION
-{
- NX_AZURE_IOT_HUB_CLIENT                         iothub_client;
-
-#ifdef ENABLE_DPS_SAMPLE
- NX_AZURE_IOT_PROVISIONING_CLIENT                prov_client;
-#endif /* ENABLE_DPS_SAMPLE */
-
-} SAMPLE_CLIENT;
 
 #ifdef __cplusplus
 }

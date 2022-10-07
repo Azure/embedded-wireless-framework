@@ -147,6 +147,9 @@ struct _ewf_interface
 
     /* *** Tokenizer data *** */
 
+    /**< A pointer to the first on a list of tokenizer patterns for tokenizing messages */
+    ewf_interface_tokenizer_pattern* message_tokenizer_pattern_ptr;
+
     /**< A pointer to the first on a list of tokenizer patterns for tokenizing command responses, they complete commands and end the command mode */
     ewf_interface_tokenizer_pattern* command_response_end_tokenizer_pattern_ptr;
 
@@ -347,6 +350,22 @@ ewf_result ewf_interface_default_timeout_get(ewf_interface * interface_ptr, uint
   * @brief Functions for setting up and controlling the interface tokenizer
   * @{
   ****************************************************************************/
+
+/**
+ * @brief Set the interface message tokenizer pattern
+ * @param[in] interface_ptr a pointer to the interface data structure
+ * @param[in] tokenizer_patter_ptr a pointer to a tokenizer pattern that will be set in the interface as the message tokenizer pattern
+ * @return #ewf_result status code
+ */
+ewf_result ewf_interface_tokenizer_message_pattern_set(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern* tokenizer_patter_ptr);
+
+/**
+ * @brief Get the interface message tokenizer pattern
+ * @param[in] interface_ptr a pointer to the interface data structure
+ * @param[in,out] tokenizer_patter_ptr_ptr a pointer to a pointer to a tokenizer pattern that will get the current message tokenizer pattern
+ * @return #ewf_result status code
+ */
+ewf_result ewf_interface_tokenizer_message_pattern_get(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern** tokenizer_patter_ptr_ptr);
 
 /**
  * @brief Set the interface command response end tokenizer pattern

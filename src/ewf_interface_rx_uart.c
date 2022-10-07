@@ -64,7 +64,7 @@ ewf_result ewf_interface_rx_uart_hardware_start(ewf_interface* interface_ptr)
 	sci_err_t   sci_err;
 #if defined(__CCRX__) || defined(__ICCRX__) || defined(__RX__)
 	/* UART Transmit Interrupt priority */
-	uint8_t     priority = 14;
+	uint8_t     priority = 13;
 #endif
 
 	R_SCI_PinSet_SCI0();
@@ -76,7 +76,7 @@ ewf_result ewf_interface_rx_uart_hardware_start(ewf_interface* interface_ptr)
 	ewf_rx_sci_config.async.parity_en    = SCI_PARITY_OFF;
 	ewf_rx_sci_config.async.parity_type  = SCI_EVEN_PARITY;
 	ewf_rx_sci_config.async.stop_bits    = SCI_STOPBITS_1;
-	ewf_rx_sci_config.async.int_priority = 15;    // 1=lowest, 15=highest
+	ewf_rx_sci_config.async.int_priority = 14;    // 1=lowest, 15=highest
 
 	/* OPEN ASYNC CHANNEL
 	 *  Provide address of the config structure,

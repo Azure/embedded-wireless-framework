@@ -28,6 +28,7 @@
 #define MAX_TEMP_COUNT                        1
 #define MAX_PB_COUNT                          1
 
+#if 0
 extern SAMPLE_CLIENT  client;
 #define iothub_client client.iothub_client
 /* Define sample properties.  */
@@ -127,7 +128,7 @@ int sendMessage_pb(uint16_t switch_num, UINT msg_id)
     return 0;
 }
 
-
+#endif
  /*********************************************************************************************************************
   * convert float to string format and store it in buffer
   *********************************************************************************************************************/

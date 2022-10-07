@@ -27,17 +27,17 @@
 #include "sample_config.h"
 #include "usr_app.h"
 
-#define iothub_client client.iothub_client
+//#define iothub_client client.iothub_client
 #define MAX_LED_COUNT 1
 
-extern SAMPLE_CLIENT client;
+//extern SAMPLE_CLIENT client;
 /* Define LED properties.  */
 static const CHAR *led_properties[MAX_LED_COUNT][2] = {{ "LED", "ON" }};
 
 /* Cloud2Device Thread entry function */
 void c2d_thread_entry(void)
 {
-
+#if 0
     NX_PACKET *packet_ptr;
     UINT status = RESET_VALUE;
     USHORT property_buf_size = RESET_VALUE;
@@ -75,4 +75,5 @@ void c2d_thread_entry(void)
         tx_queue_send (&g_topic_queue, &led_action_data, USR_MSQ_WAIT);
         nx_packet_release (packet_ptr);
     }
+#endif
 }

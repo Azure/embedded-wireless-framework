@@ -62,9 +62,9 @@ Includes   <System Includes> , "Project Includes"
 
 #include "ewf_example.config.h"
 
-#include "sample_azure_iot_embedded_sdk.c"
+//#include "sample_azure_iot_embedded_sdk.c"
 /* Include the sample.  */
-//extern VOID sample_entry(NX_IP* ip_ptr, NX_PACKET_POOL* pool_ptr, NX_DNS* dns_ptr, UINT (*unix_time_callback)(ULONG *unix_time));
+extern VOID sample_entry(NX_IP* ip_ptr, NX_PACKET_POOL* pool_ptr, NX_DNS* dns_ptr, UINT (*unix_time_callback)(ULONG *unix_time));
 
 /* Define user configurable symbols. */
 #ifndef SAMPLE_IP_STACK_SIZE
@@ -88,11 +88,6 @@ Includes   <System Includes> , "Project Includes"
 #ifndef SAMPLE_IP_THREAD_PRIORITY
 #define SAMPLE_IP_THREAD_PRIORITY     (1)
 #endif /* SAMPLE_IP_THREAD_PRIORITY */
-
-
-#ifndef SAMPLE_SNTP_SERVER_NAME
-#define SAMPLE_SNTP_SERVER_NAME           "0.pool.ntp.org"    /* SNTP Server.  */
-#endif /* SAMPLE_SNTP_SERVER_NAME */
 
 #ifndef SAMPLE_SNTP_SYNC_MAX
 #define SAMPLE_SNTP_SYNC_MAX             (10)
@@ -133,9 +128,20 @@ ULONG sample_pool_stack[SAMPLE_POOL_SIZE / sizeof(ULONG) + 4];
 ULONG sample_pool_stack_size = sizeof(sample_pool_stack);
 ULONG sample_arp_cache_area[SAMPLE_ARP_CACHE_SIZE / sizeof(ULONG)];
 
+static const CHAR *sntp_servers[] =
+{
+    "0.pool.ntp.org",
+    "1.pool.ntp.org",
+    "2.pool.ntp.org",
+    "3.pool.ntp.org",
+};
+static UINT sntp_server_index;
+
 static UINT dns_create();;
 UINT unix_time_get(ULONG *unix_time);
 static UINT sntp_time_sync();
+static UINT sntp_time_sync_internal(ULONG sntp_server_address);
+
 
 /* New Thread entry function */
 void application_thread_entry(ULONG entry_input)
@@ -343,28 +349,20 @@ void application_thread_entry(ULONG entry_input)
         EWF_LOG("DNS Create Failed: %u\r\n", status);
         exit(status);
     }
+
     /* Sync up time by SNTP at start up.  */
-    for (UINT i = 0; i < SAMPLE_SNTP_SYNC_MAX; i++)
-    {
+    status = sntp_time_sync();
 
-         /* Start SNTP to sync the local time.  */
-         status = 1;//sntp_time_sync();
-
-         /* Check status.  */
-         if(status == NX_SUCCESS)
-             break;
-    }
-
-     /* Check status.  */
+    /* Check status.  */
     if (status)
     {
-    	EWF_LOG_ERROR("SNTP Time Sync failed: %d\r\n",status);
-    	EWF_LOG_ERROR("Set Time to default value: SAMPLE_SYSTEM_TIME.");
-         unix_time_base = SAMPLE_SYSTEM_TIME;
+        printf("SNTP Time Sync failed.\r\n");
+        printf("Set Time to default value: SAMPLE_SYSTEM_TIME.");
+        unix_time_base = SAMPLE_SYSTEM_TIME;
     }
     else
     {
-         EWF_LOG("SNTP Time Sync successfully.\r\n");
+        printf("SNTP Time Sync successfully.\r\n");
     }
 
     ULONG   unix_time = 0;
@@ -409,13 +407,7 @@ UINT    dns_server_address_size = 12;
     }
 #endif /* NX_DNS_CLIENT_USER_CREATE_PACKET_POOL */
 
-#ifndef SAMPLE_DHCP_DISABLE
-    /* Retrieve DNS server address.  */
-    nx_dhcp_interface_user_option_retrieve(&g_dhcp_client0, 0, NX_DHCP_OPTION_DNS_SVR, (UCHAR *)(dns_server_address),
-                                           &dns_server_address_size);
-#else
     dns_server_address[0] = g_dns_address;
-#endif /* SAMPLE_DHCP_DISABLE */
 
     /* Add an IPv4 server address to the Client list. */
     status = nx_dns_server_add(&dns_0, dns_server_address[0]);
@@ -435,32 +427,13 @@ UINT    dns_server_address_size = 12;
     return(NX_SUCCESS);
 }
 
-/* Sync up the local time.  */
-static UINT sntp_time_sync()
-{
 
+/* Sync up the local time.  */
+static UINT sntp_time_sync_internal(ULONG sntp_server_address)
+{
 UINT    status;
 UINT    server_status;
-ULONG   sntp_server_address;
 UINT    i;
-
-
-    EWF_LOG("SNTP Time Sync...\r\n");
-
-#ifndef SAMPLE_SNTP_SERVER_ADDRESS
-    /* Look up SNTP Server address. */
-    status = nx_dns_host_by_name_get(&dns_0, (UCHAR *)SAMPLE_SNTP_SERVER_NAME, &sntp_server_address, 5 * NX_IP_PERIODIC_RATE);
-
-    /* Check status.  */
-    if (status)
-    {
-        return(status);
-    }
-
-
-#else /* !SAMPLE_SNTP_SERVER_ADDRESS */
-    sntp_server_address = SAMPLE_SNTP_SERVER_ADDRESS;
-#endif /* SAMPLE_SNTP_SERVER_ADDRESS */
 
     /* Create the SNTP Client to run in broadcast mode.. */
     status =  nx_sntp_client_create(&sntp_client_0, &ip_0, 0, &pool_0,
@@ -555,6 +528,51 @@ UINT    i;
     nx_sntp_client_delete(&sntp_client_0);
 
     /* Return success.  */
+    return(NX_NOT_SUCCESSFUL);
+}
+
+static UINT sntp_time_sync()
+{
+UINT status;
+ULONG gateway_address;
+ULONG sntp_server_address[3];
+#ifndef SAMPLE_DHCP_DISABLE
+UINT  sntp_server_address_size = sizeof(sntp_server_address);
+#endif
+
+
+    /* Sync time by NTP server array.  */
+    for (UINT i = 0; i < SAMPLE_SNTP_SYNC_MAX; i++)
+    {
+        printf("SNTP Time Sync...%s\r\n", sntp_servers[sntp_server_index]);
+
+        /* Make sure the network is still valid.  */
+        while (nx_ip_gateway_address_get(&ip_0, &gateway_address))
+        {
+            tx_thread_sleep(NX_IP_PERIODIC_RATE);
+        }
+
+        /* Look up SNTP Server address. */
+        status = nx_dns_host_by_name_get(&dns_0, (UCHAR *)sntp_servers[sntp_server_index], &sntp_server_address[0], 5 * NX_IP_PERIODIC_RATE);
+
+        /* Check status.  */
+        if (status == NX_SUCCESS)
+        {
+
+            /* Start SNTP to sync the local time.  */
+            status = sntp_time_sync_internal(sntp_server_address[0]);
+
+            /* Check status.  */
+            if(status == NX_SUCCESS)
+            {
+                return(NX_SUCCESS);
+            }
+        }
+
+        /* Switch SNTP server every time.  */
+        sntp_server_index = (sntp_server_index + 1) % (sizeof(sntp_servers) / sizeof(sntp_servers[0]));
+    }
+
     return(NX_NOT_SUCCESSFUL);
 }
 

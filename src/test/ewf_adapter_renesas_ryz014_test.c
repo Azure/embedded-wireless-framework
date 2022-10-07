@@ -68,14 +68,12 @@ ewf_result ewf_adapter_renesas_ryz014_test(ewf_adapter* adapter_ptr)
         EWF_LOG_ERROR("Failed to run the adapter HTTP test: ewf_result %d.\n", result);
     }
 
-#if 0 /* TODO, under development */
     // Adapter tests - TCP
     result = ewf_adapter_test_api_tcp(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the adapter TCP test: ewf_result %d.\n", result);
     }
-#endif
 
     // Adapter tests - UDP
     result = ewf_adapter_test_api_udp(adapter_ptr);
@@ -84,14 +82,14 @@ ewf_result ewf_adapter_renesas_ryz014_test(ewf_adapter* adapter_ptr)
     {
         EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
     }
-#if 0
+
     // Adapter tests - NVM
     result = ewf_adapter_renesas_ryz014_test_command_nvm(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the modem adapter NVM test: ewf_result %d.\n", result);
     }
-#endif
+
     return EWF_RESULT_OK;
 }
 
@@ -112,7 +110,7 @@ ewf_result ewf_adapter_renesas_ryz014_test_command_ping(ewf_adapter* adapter_ptr
     if (ewf_result_failed (result = ewf_interface_drop_response(interface_ptr))) return result;
 
     if (ewf_result_failed (result = ewf_interface_send_command(interface_ptr, "AT+PING=\"www.microsoft.com\"\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 3)))
+    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 500)))
     {
         ewf_interface_release(interface_ptr, response);
         ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 3);
@@ -137,7 +135,7 @@ ewf_result ewf_adapter_renesas_ryz014_test_command_dns(ewf_adapter* adapter_ptr)
     uint32_t length;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNDNSLKUP=\"www.microsoft.com\"\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 30)))
+    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 500)))
     {
         ewf_interface_release(interface_ptr, (uint8_t*)response);
         ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 3);
@@ -164,14 +162,18 @@ ewf_result ewf_adapter_renesas_ryz014_test_command_ntp(ewf_adapter* adapter_ptr)
 
     /* Automatic timezone update */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CTZU?\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response_str, &response_length, 3)))
+    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response_str, &response_length, 100)))
     {
         ewf_interface_release(interface_ptr, response_str);
         ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 3);
     }
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CCLK?\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response_str, &response_length, 100)))
+    {
+        ewf_interface_release(interface_ptr, response_str);
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 3);
+    }
 
     return EWF_RESULT_OK;
 }

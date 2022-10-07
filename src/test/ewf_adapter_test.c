@@ -10,6 +10,29 @@
 #include "ewf_adapter_test.h"
 #include "ewf_lib.h"
 
+ewf_result ewf_adapter_test(ewf_adapter* adapter_ptr)
+{
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+
+    ewf_result result = EWF_RESULT_OK;
+
+    // Adapter tests - TCP
+    result = ewf_adapter_test_api_tcp(adapter_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to run the adapter TCP test: ewf_result %d.\n", result);
+    }
+
+    // Adapter tests - UDP
+    result = ewf_adapter_test_api_udp(adapter_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
+    }
+
+    return result;
+}
+
 /**
  * @brief TCP API test
  */

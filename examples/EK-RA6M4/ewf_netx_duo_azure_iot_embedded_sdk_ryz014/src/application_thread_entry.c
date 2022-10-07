@@ -25,7 +25,6 @@
 #include "common_utils.h"
 #include <usr_app.h>
 #include <usr_hal.h>
-#include <usr_network.h>
 
 #define SAMPLE_DHCP_DISABLE
 
@@ -34,6 +33,7 @@
 #include "nxd_dhcp_client.h"
 #endif /* SAMPLE_DHCP_DISABLE */
 #include "nxd_dns.h"
+#include "nxd_sntp_client.h"
 #include "nx_secure_tls_api.h"
 
 #include "sample_config.h"
@@ -62,7 +62,49 @@
 
 #include "ewf_middleware_netxduo.c"
 
-char ewf_log_buffer[512];
+
+#define USR_IP_TASK_STACK_SIZE   (2048)
+#define USR_IP_THREAD_PRIORITY   (1)
+#define USR_ARP_CACHE_SIZE       (520 * 1)
+
+#ifndef SAMPLE_PACKET_COUNT
+#define SAMPLE_PACKET_COUNT           (60)
+#endif /* SAMPLE_PACKET_COUNT  */
+
+#ifndef SAMPLE_PACKET_SIZE
+#define SAMPLE_PACKET_SIZE            (EWF_CONFIG_ADAPTER_MTU)
+#endif /* SAMPLE_PACKET_SIZE  */
+
+
+#define SAMPLE_POOL_SIZE              ((SAMPLE_PACKET_SIZE + sizeof(NX_PACKET)) * SAMPLE_PACKET_COUNT)
+
+#ifndef SAMPLE_SNTP_SERVER_NAME
+#define SAMPLE_SNTP_SERVER_NAME           "0.pool.ntp.org"    /* SNTP Server.  */
+#endif /* SAMPLE_SNTP_SERVER_NAME */
+
+#ifndef SAMPLE_SNTP_SYNC_MAX
+#define SAMPLE_SNTP_SYNC_MAX             (10)
+#endif /* SAMPLE_SNTP_SYNC_MAX */
+
+#ifndef SAMPLE_SNTP_UPDATE_MAX
+#define SAMPLE_SNTP_UPDATE_MAX            (10)
+#endif /* SAMPLE_SNTP_UPDATE_MAX */
+
+#ifndef SAMPLE_SNTP_UPDATE_INTERVAL
+#define SAMPLE_SNTP_UPDATE_INTERVAL       (NX_IP_PERIODIC_RATE / 2)
+#endif /* SAMPLE_SNTP_UPDATE_INTERVAL */
+
+/* Default time. GMT+01: Saturday, December 31, 2022 10:28:30 PM, Epoch timestamp: 1663884227.  */
+#ifndef SAMPLE_SYSTEM_TIME
+#define SAMPLE_SYSTEM_TIME                1672525710
+#endif /* SAMPLE_SYSTEM_TIME  */
+
+/* Seconds between Unix Epoch (1/1/1970) and NTP Epoch (1/1/1999) */
+#define SAMPLE_UNIX_TO_NTP_EPOCH_SECOND   (0x83AA7E80)
+
+#define BUFFER_PLACE_IN_SECTION BSP_PLACE_IN_SECTION(".ns_buffer.eth")
+
+char ewf_log_buffer[1024];
 
 ULONG g_ip_address = 0;
 ULONG g_network_mask = 0;
@@ -89,7 +131,7 @@ uint8_t g_ip0_arp_cache_memory[USR_ARP_CACHE_SIZE] BSP_ALIGN_VARIABLE(4);
 
 /* Packet pool instance (If this is a Trustzone part, the memory must be placed in Non-secure memory). */
 NX_PACKET_POOL g_packet_pool0;
-uint8_t g_packet_pool0_pool_memory[G_PACKET_POOL0_PACKET_NUM * (G_PACKET_POOL0_PACKET_SIZE + sizeof(NX_PACKET))] BSP_ALIGN_VARIABLE(4) ETHER_BUFFER_PLACE_IN_SECTION;
+uint8_t g_packet_pool0_pool_memory[SAMPLE_POOL_SIZE] BSP_ALIGN_VARIABLE(4) BUFFER_PLACE_IN_SECTION;
 
 
 static UINT dns_create();;
@@ -103,10 +145,7 @@ extern TX_THREAD c2d_thread;
 void application_thread_entry(void)
 {
     UINT status = EXIT_SUCCESS;
-    uint16_t switch_num = RESET_VALUE;
-    char temp_str[MAX_PROPERTY_LEN] =  { RESET_VALUE };
-    mqtt_rx_payload_t mq_data =  { RESET_VALUE };
-    static UINT message_id = RESET_VALUE;
+
     fsp_pack_version_t version = {RESET_VALUE};
 
     /* version get API for FLEX pack information */
@@ -142,7 +181,7 @@ void application_thread_entry(void)
     EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
 
     // Release the RYZ014A from reset
-    ewf_platform_sleep(50);
+    ewf_platform_sleep(100);
     R_IOPORT_PinWrite(&g_ioport_ctrl, PMOD2_IO1, BSP_IO_LEVEL_LOW);
     EWF_LOG("Waiting for the module to Power Reset!\r\n");
     ewf_platform_sleep(300);
@@ -225,9 +264,9 @@ void application_thread_entry(void)
 
     /* Create a packet pool.  */
     status = nx_packet_pool_create (&g_packet_pool0, "g_packet_pool0 Packet Pool",
-                                    G_PACKET_POOL0_PACKET_SIZE,
+                                    SAMPLE_PACKET_SIZE,
                                     &g_packet_pool0_pool_memory[0],
-                                    G_PACKET_POOL0_PACKET_NUM * (G_PACKET_POOL0_PACKET_SIZE + sizeof(NX_PACKET)));
+                                    SAMPLE_POOL_SIZE);
 
     if (EXIT_SUCCESS != status)
     {
@@ -254,7 +293,7 @@ void application_thread_entry(void)
     g_ip0.nx_ip_reserved_ptr = adapter_ptr;
 
     /* Enable ARP and supply ARP cache memory for IP Instance 0.  */
-    status = nx_arp_enable(&g_ip0, &g_ip0_arp_cache_memory, G_IP0_ARP_CACHE_SIZE);
+    status = nx_arp_enable(&g_ip0, &g_ip0_arp_cache_memory,  sizeof(g_ip0_arp_cache_memory));
 
     /* Check for ARP enable errors.  */
     if (status)
@@ -331,7 +370,7 @@ void application_thread_entry(void)
     {
 
          /* Start SNTP to sync the local time.  */
-         status = sntp_time_sync();
+         status = 1;//sntp_time_sync(); /* Work in progress */
 
          /* Check status.  */
          if(status == NX_SUCCESS)
@@ -359,7 +398,7 @@ void application_thread_entry(void)
     nx_secure_tls_initialize();
 
     sample_entry (&g_ip0, &g_packet_pool0, &g_dns0, unix_time_get);
-
+#if 0
     /* Resume the thread represented by "c2d_thread". */
     status = tx_thread_resume (&c2d_thread);
 
@@ -434,6 +473,7 @@ void application_thread_entry(void)
         }
     }
     while (1);
+#endif
 }
 
 static UINT dns_create()

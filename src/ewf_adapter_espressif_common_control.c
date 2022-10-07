@@ -79,17 +79,19 @@ static ewf_interface_tokenizer_pattern ewf_adapter_espressif_common_command_resp
 
 static ewf_interface_tokenizer_pattern* ewf_adapter_espressif_common_command_response_end_tokenizer_pattern_ptr = &ewf_adapter_espressif_common_command_response_end_tokenizer_pattern1;
 
-char ewf_adapter_espressif_common_urc_tokenizer_pattern2_str[] = "\r\n";
+char ewf_adapter_espressif_common_urc_tokenizer_pattern1_str[] = "\r\nOK\r\n";
 
-static ewf_interface_tokenizer_pattern ewf_adapter_espressif_common_urc_tokenizer_pattern2 =
+static ewf_interface_tokenizer_pattern ewf_adapter_espressif_common_urc_tokenizer_pattern1 =
 {
     NULL,
-    ewf_adapter_espressif_common_urc_tokenizer_pattern2_str,
-    sizeof(ewf_adapter_espressif_common_urc_tokenizer_pattern2_str)-1,
+    ewf_adapter_espressif_common_urc_tokenizer_pattern1_str,
+    sizeof(ewf_adapter_espressif_common_urc_tokenizer_pattern1_str) - 1,
     false,
     NULL,
     NULL,
 };
+
+static ewf_interface_tokenizer_pattern* ewf_adapter_espressif_common_urc_tokenizer_pattern_ptr = &ewf_adapter_espressif_common_urc_tokenizer_pattern1;
 
 /*
  * Note: 
@@ -98,8 +100,9 @@ static ewf_interface_tokenizer_pattern ewf_adapter_espressif_common_urc_tokenize
  * The code is prepared for that. Use an instance specific state structure instead of the global static here.
  */
 
-struct _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function_state
+struct _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_state
 {
+    ewf_interface* interface_ptr;
     bool prefix_matches;
     bool parsed;
     uint32_t link_id;
@@ -107,17 +110,17 @@ struct _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function_state
     uint32_t total_expected_urc_length;
 };
 
-static struct _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function_state ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function_state = { 0 };
+static struct _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_state ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_state = { 0 };
 
-static bool _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function(const char* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
+static bool _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function(const char* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
 {
     if (!buffer_ptr) return false;
     if (!buffer_length) return false;
     if (!pattern_ptr) return false;
     if (!stop_ptr) return false;
 
-    struct _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function_state* state_ptr =
-        (struct _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function_state*)pattern_ptr->data_ptr;
+    struct _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_state* state_ptr =
+        (struct _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_state*)pattern_ptr->data_ptr;
 
     /* Initialize the state on a new buffer */
     if (buffer_length == 1)
@@ -131,14 +134,17 @@ static bool _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function(
     /* Add a NULL terminator - explicit const override */
     ((char*)buffer_ptr)[buffer_length] = 0;
 
+    /* Define the message prefix and calculate its length */
     const char prefix_str[] = "\r\n+IPD,";
     const uint32_t prefix_length = sizeof(prefix_str) - 1;
 
+    /* If the buffer is smaller than the prefix, then it is not yet for us */
     if (buffer_length < prefix_length)
     {
         return false;
     }
 
+    /* If the buffer contains as many characters as the prefix, then look if it is for us */
     if (buffer_length == prefix_length)
     {
         if (ewfl_buffer_equals_buffer(buffer_ptr, prefix_str, prefix_length))
@@ -147,6 +153,8 @@ static bool _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function(
             return false;
         }
     }
+
+    /* At this point the buffer it is longer than the prefix */
 
     /* We did not match the prefix in previous runs, just ignore the rest of the incomming characters */
     if (!state_ptr->prefix_matches)
@@ -159,17 +167,20 @@ static bool _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function(
         *stop_ptr = true;
     }
 
-    /* From this point we have a matching prefix */
+    /* At this point we have a matching prefix */
 
+    /* If the message parameters were not yet parsed, then do it now */
     if (!state_ptr->parsed)
     {
+        /* Look for the message parameter terminator: ':' */
         if (buffer_ptr[buffer_length - 1] != ':')
         {
             return false;
         }
         else
         {
-            int count = sscanf(buffer_ptr, "\r\n+IPD,%u,%u:", &state_ptr->link_id, &state_ptr->length);
+            /* The message is complete, try to parse it */
+            int count = sscanf(buffer_ptr, "\r\n+IPD,%lu,%lu:", &state_ptr->link_id, &state_ptr->length);
             if (count != 2)
             {
                 EWF_LOG_ERROR("Unexpected response format!\n");
@@ -183,25 +194,33 @@ static bool _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function(
 
     /* From this point we parsed data */
 
+    /* Is the message complete? */
     if (buffer_length >= state_ptr->total_expected_urc_length)
     {
+        /* Set the interface to URC mode */
+        if (state_ptr->interface_ptr) state_ptr->interface_ptr->command_mode = false;
+
+        /* Signal the match */
         return true;
     }
-
-    return false;
+    else
+    {
+        /* Not yet matched */
+        return false;
+    }
 }
 
-static ewf_interface_tokenizer_pattern ewf_adapter_espressif_common_urc_tokenizer_pattern1 =
+static ewf_interface_tokenizer_pattern ewf_adapter_espressif_common_message_tokenizer_pattern1 =
 {
     NULL,
     NULL,
     0,
     false,
-    _ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function,
-    &ewf_adapter_espressif_common_urc_tokenizer_pattern1_match_function_state
+    _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function,
+    &ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_state
 };
 
-static ewf_interface_tokenizer_pattern* ewf_adapter_espressif_common_urc_tokenizer_pattern_ptr = &ewf_adapter_espressif_common_urc_tokenizer_pattern1;
+static ewf_interface_tokenizer_pattern* ewf_adapter_espressif_common_message_tokenizer_pattern_ptr = &ewf_adapter_espressif_common_message_tokenizer_pattern1;
 
 ewf_result ewf_adapter_espressif_common_start(ewf_adapter* adapter_ptr)
 {
@@ -226,6 +245,13 @@ ewf_result ewf_adapter_espressif_common_start(ewf_adapter* adapter_ptr)
     }
 
     /* Initialize the interface tokenizer patterns */
+
+    ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_state.interface_ptr = interface_ptr;
+    if (ewf_result_failed(result = ewf_interface_tokenizer_message_pattern_set(interface_ptr, ewf_adapter_espressif_common_message_tokenizer_pattern_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to set the interface message tokenizer pattern: ewf_result %d.\n", result);
+        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
+    }
 
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, ewf_adapter_espressif_common_command_response_end_tokenizer_pattern_ptr)))
     {

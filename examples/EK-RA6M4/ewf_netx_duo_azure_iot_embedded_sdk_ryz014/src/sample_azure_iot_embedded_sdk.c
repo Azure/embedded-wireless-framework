@@ -11,9 +11,9 @@
 
 #include "common_utils.h"
 #include <common_data.h>
-#include <application_thread.h>
-#include <nx_azure_iot.h>
-#include "usr_network.h"
+//#include <application_thread.h>
+//#include <nx_azure_iot.h>
+//#include "usr_network.h"
 #include <stdio.h>
 
 #include "nx_api.h"
@@ -28,29 +28,29 @@
 #include "ewf.config.h"
 
 
-ULONG nx_azure_iot_thread_stack[NX_AZURE_IOT_STACK_SIZE / sizeof(ULONG)];
-UCHAR nx_azure_iot_tls_metadata_buffer[NX_AZURE_IOT_TLS_METADATA_BUFFER_SIZE];
-NX_SECURE_X509_CERT root_ca_cert;
+static ULONG nx_azure_iot_thread_stack[NX_AZURE_IOT_STACK_SIZE / sizeof(ULONG)];
+static UCHAR nx_azure_iot_tls_metadata_buffer[NX_AZURE_IOT_TLS_METADATA_BUFFER_SIZE];
+static NX_SECURE_X509_CERT root_ca_cert;
 
 
 /* Define the prototypes for AZ IoT.  */
 extern NX_AZURE_IOT                          nx_azure_iot;
 
-///* Generally, IoTHub Client and DPS Client do not run at the same time, user can use union as below to
-//   share the memory between IoTHub Client and DPS Client.
-//
-//   NOTE: If user can not make sure sharing memory is safe, IoTHub Client and DPS Client must be defined seperately.  */
-//typedef union SAMPLE_CLIENT_UNION
-//{
-//    NX_AZURE_IOT_HUB_CLIENT                         iothub_client;
-//
-//#ifdef ENABLE_DPS_SAMPLE
-//    NX_AZURE_IOT_PROVISIONING_CLIENT                prov_client;
-//#endif /* ENABLE_DPS_SAMPLE */
-//
-//} SAMPLE_CLIENT;
+/* Generally, IoTHub Client and DPS Client do not run at the same time, user can use union as below to
+   share the memory between IoTHub Client and DPS Client.
 
-SAMPLE_CLIENT                                client;
+   NOTE: If user can not make sure sharing memory is safe, IoTHub Client and DPS Client must be defined seperately.  */
+typedef union SAMPLE_CLIENT_UNION
+{
+    NX_AZURE_IOT_HUB_CLIENT                         iothub_client;
+
+#ifdef ENABLE_DPS_SAMPLE
+    NX_AZURE_IOT_PROVISIONING_CLIENT                prov_client;
+#endif /* ENABLE_DPS_SAMPLE */
+
+} SAMPLE_CLIENT;
+
+static SAMPLE_CLIENT                                client;
 
 #define iothub_client client.iothub_client
 #ifdef ENABLE_DPS_SAMPLE

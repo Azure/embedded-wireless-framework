@@ -60,7 +60,7 @@
 #define RESET_VALUE             (0x00)
 #define PRE_INIT_VALUE          (0xFF)
 
-#define KIT_NAME                "EK-RA6M5"
+#define KIT_NAME                "EK-RA6M4"
 
 #define AP_VERSION              ("1.0")
 #define MODULE_NAME             "Azure IoT C-SDK"
@@ -75,7 +75,7 @@
 
 
 #define AP_INFO                 "\r\nThis Application project demonstrates the IOT functionalities of Azure IOT SDK Client"\
-                                "\r\nusing Azure RTOS and NetX Duo with Ethernet Interface Module running on Renesas RA MCU's" \
+                                "\r\nusing Azure RTOS and NetX Duo with RYZ014 running on Renesas RA MCU's" \
 							    "\r\n********************************************************************************\r\n"\
                                 "\r\n\r\n"
 

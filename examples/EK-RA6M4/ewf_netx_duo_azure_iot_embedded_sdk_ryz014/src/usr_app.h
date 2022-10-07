@@ -63,12 +63,6 @@
 			vLoggingPrintf("\r\n"); \
 		} while(0)
 
-
-/* IP instance */
-extern NX_IP g_ip0;
-/* DNS instance */
-extern NX_DNS g_dns0;
-
 fsp_err_t usr_hal_init(void);
 UINT usr_packet_pool_init(void);
 UINT usr_netx_init(void);

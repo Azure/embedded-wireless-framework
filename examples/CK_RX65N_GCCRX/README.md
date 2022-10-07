@@ -1,11 +1,11 @@
-# Embeed Wireless Framework examples for Renesas RX
+# Embedded Wireless Framework examples for Renesas RX
 The purpose of these examples is to show the use of EWF with the Renesas RX family of microcontrollers.
 Embedded Wireless framework(EWF) is meant to simplify connecting small devices to the internet using different connectivity adapters.
 An adapter is the device or software used to connect the application using the EWF API to the internet.
 An adapter can be a cellular modem, a WiFi adapter, an Ethernet adapter, a WinSock software layer, a BSD software layer or other type of device or software.
 The EWF API is described in the Doxygen documentation generated out of the common code.
 The source files of the EWF are located in the \src directory at the root of this repository.
-The current set of examples use the CK-RX65N board evaluation board and a ryz014 modem.
+The current set of examples use the CK-RX65N board evaluation board and a ryz014a modem.
 
 
 ## Prerequisites
@@ -17,18 +17,18 @@ The current set of examples use the CK-RX65N board evaluation board and a ryz014
 ## Prepare Azure Resources
 Follow steps in [README_NETX_AZURE.md](README_NETX_AZURE.md) to create Azure resources that will be used to run the examples in the next steps of this document.
 
-# Getting started - RYZ014
+# Getting started - RYZ014A
 To get started with the examples, please follow these steps:
-1. Acquire the necessary hardware and software: the Evaluation Kit CK-RX65N board, a Renesas RYZ014A PMOD, e2-studio with latest FIT modules, openssl, J-Link RTT viewer, Azure IoT Explorer(recommend to use v0.13.5 as latest version 0.14.x cannot show data correctly).
-2. Connect to RYZ014 PMOD to CK-RX65N board on PMOD2 connector. Connect Host PC via USB cable to USB Debug pin (J14) and  another USB cable to USB-Serial pin (J20). Also connect micro USB cable to RYZ014 micro USB pin.
+1. Acquire the necessary hardware and software: the Evaluation Kit CK-RX65N board, a Renesas RYZ014AA PMOD, e2-studio with latest FIT modules, openssl, J-Link RTT viewer, Azure IoT Explorer(recommend to use v0.13.5 as latest version 0.14.x cannot show data correctly).
+2. Connect to RYZ014A PMOD to CK-RX65N board on PMOD2 connector. Connect Host PC via USB cable to USB Debug pin (J14) and  another USB cable to USB-Serial pin (J20). Also connect micro USB cable to RYZ014A micro USB pin.
 3. Review and edit as necessary the files ewf.config.h and ewf_example.config.h in the different examples. Edit these files to match your configuration. Specially edit the variables EWF_CONFIG_SIM_PIN, EWF_CONFIG_IOT_HUB_HOSTNAME, EWF_CONFIG_IOT_HUB_DEVICEID.
-4. Start e2 studio and create a workspace in \examples\CK_RX65N_GCCRX cloud kit, import all the ryz014 examples into the workspace and build all examples.
+4. Start e2 studio and create a workspace in \examples\CK_RX65N_GCCRX cloud kit, import all the ryz014a examples into the workspace and build all examples.
 5. Open Terminal at com port connection from the board and set it to 115200 8N1.
 7. Run the ewf_info_tx_ryz014 example to verify basic communication with the modem, check the output on the terminal for progress and possible errors.
 
-# Examples using Azure RTOS NetX Duo with EWF (offload TCP/IP driver) on RYZ014
+# Examples using Azure RTOS NetX Duo with EWF (offload TCP/IP driver) on RYZ014A
 
-These examples run Azure RTOS NetX Duo on top of TCP/IP stack from RYZ014 modem. Hardware setup is same as that used for "Getting Started" examples above.  
+These examples run Azure RTOS NetX Duo on top of TCP/IP stack from RYZ014A modem. Hardware setup is same as that used for "Getting Started" examples above.  
 > _NOTE:_
 1. The examples based on Offload TCP/IP driver have base time hardcoded (SAMPLE_SYSTEM_TIME).  These exampeles will be updated to use time from Network Synchronization using NTP servers in the future.
 2. These examples require, user to wait about a minute or more depending on the time required network registration and cloud connection before performing any operations( Telemetry, Cloud to Device, Direct Method..) using Azure IOT explorer.  

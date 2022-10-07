@@ -342,6 +342,40 @@ ewf_result ewf_interface_default_timeout_get(ewf_interface* interface_ptr, uint3
     return EWF_RESULT_OK;
 }
 
+ewf_result ewf_interface_tokenizer_message_pattern_set(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern* tokenizer_patter_ptr)
+{
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+    ewf_result result;
+    if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
+    {
+        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
+        return EWF_RESULT_IRRECOVERABLE_ERROR;
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
+
+    interface_ptr->message_tokenizer_pattern_ptr = tokenizer_patter_ptr;
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+    if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
+    {
+        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
+        return EWF_RESULT_IRRECOVERABLE_ERROR;
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
+
+    return EWF_RESULT_OK;
+}
+
+ewf_result ewf_interface_tokenizer_message_pattern_get(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern** tokenizer_patter_ptr_ptr)
+{
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+    if (tokenizer_patter_ptr_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    *tokenizer_patter_ptr_ptr = interface_ptr->message_tokenizer_pattern_ptr;
+    return EWF_RESULT_OK;
+}
+
 ewf_result ewf_interface_tokenizer_command_response_end_pattern_set(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern* tokenizer_patter_ptr)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
@@ -540,7 +574,8 @@ ewf_result ewf_interface_urc_processing(ewf_interface* interface_ptr)
     uint8_t* buffer_ptr;
     uint32_t buffer_length;
 
-    if (ewf_result_failed(result = ewf_interface_receive_urc(interface_ptr, &buffer_ptr, &buffer_length, 0)))
+    result = ewf_interface_receive_urc(interface_ptr, &buffer_ptr, &buffer_length, 0);
+    if (ewf_result_failed(result))
     {
         if (result != EWF_RESULT_EMPTY_QUEUE)
         {
@@ -550,7 +585,18 @@ ewf_result ewf_interface_urc_processing(ewf_interface* interface_ptr)
         return result;
     }
 
-    if (ewf_result_failed(result = ewf_interface_release(interface_ptr, buffer_ptr)))
+    result = ewf_interface_urc_process_message(
+        interface_ptr,
+        interface_ptr->current_message.buffer_ptr,
+        interface_ptr->current_message.buffer_length);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to process the URC, ewf_result %d.\n", result);
+        // continue, to release the packet
+    }
+
+    result = ewf_interface_release(interface_ptr, buffer_ptr);
+    if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to release a buffer, ewf_result %d.\n", result);
         return result;
@@ -625,9 +671,9 @@ static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface*
             if (pattern_ptr->has_wildcards)
             {
                 if (ewfl_buffer_ends_with_wildcard_string(
-                    (const char*)interface_ptr->current_message.buffer_ptr,
+                    interface_ptr->current_message.buffer_ptr,
                     interface_ptr->current_message.buffer_length,
-                    pattern_ptr->pattern_str,
+                    (const uint8_t*)pattern_ptr->pattern_str,
                     pattern_ptr->patter_length))
                 {
                     *match_ptr = true;
@@ -637,9 +683,9 @@ static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface*
             else
             {
                 if (ewfl_buffer_ends_with(
-                    (const char*)interface_ptr->current_message.buffer_ptr,
+                    interface_ptr->current_message.buffer_ptr,
                     interface_ptr->current_message.buffer_length,
-                    pattern_ptr->pattern_str,
+                    (const uint8_t*)pattern_ptr->pattern_str,
                     pattern_ptr->patter_length))
                 {
                     *match_ptr = true;
@@ -698,88 +744,119 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
         /* Add a (temporary?) NULL terminator */
         interface_ptr->current_message.buffer_ptr[interface_ptr->current_message.buffer_length] = 0;
 
-        /* In command mode - Check for end of command and regular tokenizer patterns */
-        if (interface_ptr->command_mode == true)
+        /* Do we have a match? */
+        bool match = false;
+
+        /* Match the current message, generic */
+        if (interface_ptr->message_tokenizer_pattern_ptr)
         {
-            bool match = false;
+            bool saved_command_mode = interface_ptr->command_mode;
 
-            if (interface_ptr->command_response_end_tokenizer_pattern_ptr)
+            if (ewf_result_failed(
+                result = _ewf_interface_match_current_message_to_pattern(
+                    interface_ptr,
+                    interface_ptr->message_tokenizer_pattern_ptr,
+                    &match)))
             {
-                if (ewf_result_failed(
-                    result = _ewf_interface_match_current_message_to_pattern(
-                        interface_ptr,
-                        interface_ptr->command_response_end_tokenizer_pattern_ptr,
-                        &match)))
+                EWF_LOG_ERROR("Error while matching the current message to the message tokenizer pattern, ewf_result %d.\n", result);
+            }
+            else
+            {
+                if (match)
                 {
-                    EWF_LOG_ERROR("Error while matching the current message to the command response end tokenizer pattern, ewf_result %d.\n", result);
+                    /* queue a buffer */
+                    _ewf_interface_queue_current_message(interface_ptr);
                 }
-                else
-                {
-                    if (match)
-                    {
-                        /* queue a buffer */
-                        _ewf_interface_queue_current_message(interface_ptr);
+            }
 
-                        /* and exit command mode */
-                        interface_ptr->command_mode = false;
+            interface_ptr->command_mode = saved_command_mode;
+        }
+
+        if (!match)
+        {
+            /* In command mode - Check for end of command and regular tokenizer patterns */
+            if (interface_ptr->command_mode == true)
+            {
+                bool match = false;
+
+                if (interface_ptr->command_response_end_tokenizer_pattern_ptr)
+                {
+                    if (ewf_result_failed(
+                        result = _ewf_interface_match_current_message_to_pattern(
+                            interface_ptr,
+                            interface_ptr->command_response_end_tokenizer_pattern_ptr,
+                            &match)))
+                    {
+                        EWF_LOG_ERROR("Error while matching the current message to the command response end tokenizer pattern, ewf_result %d.\n", result);
+                    }
+                    else
+                    {
+                        if (match)
+                        {
+                            /* queue a buffer */
+                            _ewf_interface_queue_current_message(interface_ptr);
+
+                            /* and exit command mode */
+                            interface_ptr->command_mode = false;
 
 #ifdef EWF_LOG_VERBOSE
-                        EWF_LOG("[COMMAND MODE: FALSE]\n");
+                            EWF_LOG("[COMMAND MODE: FALSE]\n");
 #endif
+                        }
                     }
                 }
-            }
 
-            if (interface_ptr->command_response_tokenizer_pattern_ptr)
-            {
-                if (ewf_result_failed(
-                    result = _ewf_interface_match_current_message_to_pattern(
-                        interface_ptr,
-                        interface_ptr->command_response_tokenizer_pattern_ptr,
-                        &match)))
+                if (interface_ptr->command_response_tokenizer_pattern_ptr)
                 {
-                    EWF_LOG_ERROR("Error while matching the current message to the command response tokenizer pattern.");
-                }
-                else
-                {
-                    if (match)
+                    if (ewf_result_failed(
+                        result = _ewf_interface_match_current_message_to_pattern(
+                            interface_ptr,
+                            interface_ptr->command_response_tokenizer_pattern_ptr,
+                            &match)))
                     {
-                        /* queue a buffer and stay in command mode */
-                        _ewf_interface_queue_current_message(interface_ptr);
+                        EWF_LOG_ERROR("Error while matching the current message to the command response tokenizer pattern.");
                     }
-                }
-            }
-        }
-
-        /* In URC mode - Check for URC tokenizer patterns */
-        else
-        {
-            bool match = false;
-
-            if (interface_ptr->urc_tokenizer_pattern_ptr)
-            {
-                if (ewf_result_failed(
-                    result = _ewf_interface_match_current_message_to_pattern(
-                        interface_ptr,
-                        interface_ptr->urc_tokenizer_pattern_ptr,
-                        &match)))
-                {
-                    EWF_LOG_ERROR("Error while matching the current message to the URC tokenizer pattern.");
-                }
-                else
-                {
-                    if (match)
+                    else
                     {
-                        _ewf_interface_queue_current_message(interface_ptr);
+                        if (match)
+                        {
+                            /* queue a buffer and stay in command mode */
+                            _ewf_interface_queue_current_message(interface_ptr);
+                        }
                     }
                 }
             }
-        }
 
-        /* If the buffer is still full, queue it */
-        if (interface_ptr->current_message.buffer_length >= (interface_ptr->message_allocator_ptr->block_size - 1))
-        {
-            _ewf_interface_queue_current_message(interface_ptr);
+            /* In URC mode - Check for URC tokenizer patterns */
+            else
+            {
+                bool match = false;
+
+                if (interface_ptr->urc_tokenizer_pattern_ptr)
+                {
+                    if (ewf_result_failed(
+                        result = _ewf_interface_match_current_message_to_pattern(
+                            interface_ptr,
+                            interface_ptr->urc_tokenizer_pattern_ptr,
+                            &match)))
+                    {
+                        EWF_LOG_ERROR("Error while matching the current message to the URC tokenizer pattern.");
+                    }
+                    else
+                    {
+                        if (match)
+                        {
+                            _ewf_interface_queue_current_message(interface_ptr);
+                        }
+                    }
+                }
+            }
+
+            /* If the buffer is still full, queue it */
+            if (interface_ptr->current_message.buffer_length >= (interface_ptr->message_allocator_ptr->block_size - 1))
+            {
+                _ewf_interface_queue_current_message(interface_ptr);
+            }
         }
     }
 
@@ -799,10 +876,9 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
  *
  ****************************************************************************/
 
-
 ewf_result ewf_interface_poll(ewf_interface* interface_ptr)
 {
-	return ewf_interface_receive_poll(interface_ptr);
+    return ewf_interface_receive_poll(interface_ptr);
 }
 
 ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr)
