@@ -1,0 +1,6 @@
+var searchData=
+[
+  ['common_20interface_20api_1380',['Common Interface API',['../group__group__interface__common.html',1,'']]],
+  ['common_20internet_20functions_20_28tcp_2budp_29_1381',['Common internet functions (TCP+UDP)',['../group__group__adapter__espressif__common__internet.html',1,'(Global Namespace)'],['../group__group__adapter__espressif__esp8266__internet.html',1,'(Global Namespace)'],['../group__group__adapter__espressif__esp8285__internet.html',1,'(Global Namespace)'],['../group__group__adapter__espressif__wroom__02__internet.html',1,'(Global Namespace)'],['../group__group__adapter__quectel__bg95__internet.html',1,'(Global Namespace)'],['../group__group__adapter__quectel__bg96__internet.html',1,'(Global Namespace)'],['../group__group__adapter__quectel__common__internet.html',1,'(Global Namespace)'],['../group__group__adapter__renesas__ryz014__internet.html',1,'(Global Namespace)']]],
+  ['context_20activation_2c_20deactivation_20and_20configuration_1382',['Context activation, deactivation and configuration',['../group__group__adapter__quectel__bg95__context.html',1,'(Global Namespace)'],['../group__group__adapter__quectel__bg96__context.html',1,'(Global Namespace)'],['../group__group__adapter__quectel__common__context.html',1,'(Global Namespace)']]]
+];
