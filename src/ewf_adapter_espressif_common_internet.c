@@ -192,7 +192,7 @@ ewf_result ewf_adapter_espressif_common_internet_urc_callback(ewf_interface* int
                     /* check for the data marker */
                     if (*data_ptr == ':')
                     {
-                        *data_ptr++;
+                        data_ptr++;
                         break;
                     }
 
@@ -267,11 +267,11 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_open(ewf_adapter* adapt
     param_str[0] = 0;
     if (ewfl_str_equals_str("TCP", service_type_str) && keep_alive != 0)
     {
-        sprintf(param_str, ",%u\r\n", keep_alive);
+        sprintf(param_str, ",%lu\r\n", keep_alive);
     }
     else if (ewfl_str_equals_str("UDP", service_type_str) && local_port != 0)
     {
-        sprintf(param_str, ",%u,2\r\n", local_port);
+        sprintf(param_str, ",%lu,2\r\n", local_port);
     }
     else
     {
@@ -305,7 +305,7 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_open(ewf_adapter* adapt
 
     char expected_ok_str[] = "\r\nOK\r\n";
 
-    bool ok_found = ewfl_buffer_ends_with(response_ptr, response_length, expected_ok_str, sizeof(expected_ok_str) - 1);
+    bool ok_found = ewfl_buffer_ends_with(response_ptr, response_length, (uint8_t*)expected_ok_str, sizeof(expected_ok_str) - 1);
 
     ewf_interface_release(interface_ptr, response_ptr);
 
@@ -359,8 +359,6 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-    ewf_result result;
 
     if (!buffer_ptr)
     {
@@ -520,7 +518,6 @@ ewf_result ewf_adapter_espressif_common_tcp_control(ewf_socket_tcp* socket_ptr, 
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
 
     return EWF_RESULT_OK;
 }
@@ -532,7 +529,6 @@ ewf_result ewf_adapter_espressif_common_tcp_set_tls_configuration(ewf_socket_tcp
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
 
     return EWF_RESULT_OK;
 }
@@ -556,7 +552,6 @@ ewf_result ewf_adapter_espressif_common_tcp_listen(ewf_socket_tcp* socket_ptr)
     EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr);
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-    ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
 
     return EWF_RESULT_OK;
 }
@@ -613,11 +608,6 @@ ewf_result ewf_adapter_espressif_common_tcp_receive(ewf_socket_tcp* socket_ptr, 
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
     ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
-
-    ewf_result result;
-
-    uint8_t* response_ptr;
-    uint32_t response_length;
 
     if (!buffer_ptr)
     {
@@ -809,11 +799,6 @@ ewf_result ewf_adapter_espressif_common_udp_receive_from(ewf_socket_udp* socket_
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
     ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
-
-    ewf_result result;
-
-    uint8_t* response_ptr;
-    uint32_t response_length;
 
     if (!buffer_ptr)
     {

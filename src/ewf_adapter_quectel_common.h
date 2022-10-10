@@ -22,6 +22,10 @@ extern "C" {
  * @{
  ****************************************************************************/
 
+#ifndef EWF_ADAPTER_QUECTEL_COMMON_DEFAULT_TIMEOUT
+#define EWF_ADAPTER_QUECTEL_COMMON_DEFAULT_TIMEOUT (EWF_PLATFORM_TICKS_PER_SECOND * 10)
+#endif
+
 #ifndef EWF_ADAPTER_QUECTEL_COMMON_UFS_ENABLED
 #define EWF_ADAPTER_QUECTEL_COMMON_UFS_ENABLED (1)
 #endif
@@ -113,7 +117,8 @@ typedef struct _ewf_adapter_quectel_common_internet_socket
     volatile bool open_error;
     volatile bool conn;
     volatile bool conn_error;
-    volatile bool recv;
+    volatile uint32_t recv_count;
+    void* socket_ptr;
 
 } ewf_adapter_quectel_common_internet_socket;
 
@@ -130,6 +135,8 @@ typedef struct _ewf_adapter_quectel_common_mqtt_socket
 /** @brief The Quectel common adapter data structure */
 typedef struct _ewf_adapter_quectel_common
 {
+    uint32_t default_timeout;
+
 #if EWF_ADAPTER_QUECTEL_COMMON_TCP_ENABLED || EWF_ADAPTER_QUECTEL_COMMON_UDP_ENABLED
     /**< The internal pool of internet sockets */
     ewf_adapter_quectel_common_internet_socket internet_socket_pool[EWF_ADAPTER_QUECTEL_COMMON_INTERNET_SOCKET_POOL_SIZE];

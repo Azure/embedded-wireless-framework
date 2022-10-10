@@ -86,9 +86,15 @@ TODO`s: Configure core settings of application for your IoTHub.
 #endif /* ENABLE_DPS_SAMPLE */
 
 /* Optional SYMMETRIC KEY.  */
+#ifndef ENABLE_DPS_SAMPLE
+#ifndef DEVICE_SYMMETRIC_KEY
+#define DEVICE_SYMMETRIC_KEY                        ""
+#endif
+#else
 #ifndef DEVICE_SYMMETRIC_KEY
 #define DEVICE_SYMMETRIC_KEY                        ""
 #endif /* DEVICE_SYMMETRIC_KEY */
+#endif
 
 /* Optional module ID.  */
 #ifndef MODULE_ID

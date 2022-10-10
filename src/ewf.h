@@ -50,16 +50,10 @@ extern "C" {
  * @{
  */
 
-/** @brief Success and error result codes specific to the EWF API. */
-enum _ewf_result;
-    
-/** @brief Success and error result codes specific to the EWF API. */
-typedef enum _ewf_result ewf_result;
-
 /**
  * @brief Success and error result codes specific to the EWF API.
  */
-enum _ewf_result
+typedef enum _ewf_result
 {
     /* Non error results - positive or zero */
 
@@ -102,7 +96,8 @@ enum _ewf_result
     EWF_RESULT_ALLOCATOR_INITIALIZATION_FAILED  = -501, /**< The allocator initialization failed. */
 
     EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED     = -601, /**< The modem not registered to network */
-};
+
+} ewf_result;
 
 /** @} // group_ewf_result_codes */
 

@@ -20,6 +20,19 @@ ewf_result ewf_adapter_renesas_ryz014_urc_callback(ewf_interface* interface_ptr,
 
     ewf_result result;
 
+    /* Ignore empty URCs */
+    if (ewfl_str_equals_str((char*)buffer_ptr, "\r\n"))
+    {
+        return EWF_RESULT_OK;
+    }
+
+    /* Skip leading \r\n */
+    if (buffer_length >= 2 && buffer_ptr[0] == '\r' && buffer_ptr[1] == '\n')
+    {
+        buffer_length -= 2;
+        buffer_ptr += 2;
+    }
+
     if (ewfl_str_starts_with((char*)buffer_ptr, "+CREG:"))
     {
         return EWF_RESULT_OK;

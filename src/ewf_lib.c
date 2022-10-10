@@ -130,47 +130,47 @@ bool ewfl_str_ends_with(const char* str, const char* suffix_str)
     return true;
 }
 
-bool ewfl_buffer_starts_with(const char* buffer_ptr, uint32_t buffer_length, const char* prefix_str, uint32_t prefix_length)
+bool ewfl_buffer_starts_with(const uint8_t* buffer_ptr, uint32_t buffer_length, const uint8_t* prefix_ptr, uint32_t prefix_length)
 {
     if (!buffer_ptr) return false;
     if (!buffer_length) return false;
-    if (!prefix_str) return false;
+    if (!prefix_ptr) return false;
     if (!prefix_length) return false;
     if (prefix_length > buffer_length) return false;
-    const char* buffer_iter = buffer_ptr;
-    const char* prefix_iter = prefix_str;
-    for (; (buffer_iter < (buffer_ptr + buffer_length)) && (prefix_iter < (prefix_str + prefix_length)); buffer_iter--, prefix_iter--)
+    const uint8_t* buffer_iter = buffer_ptr;
+    const uint8_t* prefix_iter = prefix_ptr;
+    for (; (buffer_iter < (buffer_ptr + buffer_length)) && (prefix_iter < (prefix_ptr + prefix_length)); buffer_iter--, prefix_iter--)
         if (*buffer_iter != *prefix_iter) 
             return false;
     return true;
 }
 
-bool ewfl_buffer_ends_with(const char* buffer_ptr, uint32_t buffer_length, const char* suffix_str, uint32_t suffix_length)
+bool ewfl_buffer_ends_with(const uint8_t* buffer_ptr, uint32_t buffer_length, const uint8_t* suffix_ptr, uint32_t suffix_length)
 {
     if (!buffer_ptr) return false;
     if (!buffer_length) return false;
-    if (!suffix_str) return false;
+    if (!suffix_ptr) return false;
     if (!suffix_length) return false;
     if (suffix_length > buffer_length) return false;
-    const char* buffer_tail = &(buffer_ptr[buffer_length-1]);
-    const char* suffix_tail = &(suffix_str[suffix_length-1]);
-    for (; (buffer_tail != buffer_ptr) && (suffix_tail != suffix_str); buffer_tail--, suffix_tail--)
+    const uint8_t* buffer_tail = &(buffer_ptr[buffer_length-1]);
+    const uint8_t* suffix_tail = &(suffix_ptr[suffix_length-1]);
+    for (; (buffer_tail != buffer_ptr) && (suffix_tail != suffix_ptr); buffer_tail--, suffix_tail--)
     {
         if (*buffer_tail != *suffix_tail) return false;
     }
     return true;
 }
 
-bool ewfl_buffer_ends_with_wildcard_string(const char* buffer_ptr, uint32_t buffer_length, const char* suffix_str, uint32_t suffix_length)
+bool ewfl_buffer_ends_with_wildcard_string(const uint8_t* buffer_ptr, uint32_t buffer_length, const uint8_t* suffix_ptr, uint32_t suffix_length)
 {
     if (!buffer_ptr) return false;
     if (!buffer_length) return false;
-    if (!suffix_str) return false;
+    if (!suffix_ptr) return false;
     if (!suffix_length) return false;
     if (suffix_length > buffer_length) return false;
-    const char* buffer_tail = &(buffer_ptr[buffer_length - 1]);
-    const char* suffix_tail = &(suffix_str[suffix_length - 1]);
-    for (; (buffer_tail != buffer_ptr) && (suffix_tail != suffix_str); buffer_tail--, suffix_tail--)
+    const uint8_t* buffer_tail = &(buffer_ptr[buffer_length - 1]);
+    const uint8_t* suffix_tail = &(suffix_ptr[suffix_length - 1]);
+    for (; (buffer_tail != buffer_ptr) && (suffix_tail != suffix_ptr); buffer_tail--, suffix_tail--)
     {
         if (*suffix_tail == '?')
         {

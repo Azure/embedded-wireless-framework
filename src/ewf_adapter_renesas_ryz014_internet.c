@@ -159,8 +159,6 @@ ewf_result ewf_adapter_renesas_ryz014_internet_urc_callback(ewf_interface* inter
     		{
     			char* parse_str = urc_str + ewfl_str_length(match_str);
     			uint32_t socket_connect_id = atoi(parse_str);
-                adapter_renesas_ryz014_ptr->internet_socket_pool[socket_connect_id - 1].used = false;
-    			adapter_renesas_ryz014_ptr->internet_socket_pool[socket_connect_id - 1].conn = false;
     			adapter_renesas_ryz014_ptr->internet_socket_pool[socket_connect_id - 1].conn_error = true;
     			return EWF_RESULT_OK;
     		}
@@ -482,6 +480,8 @@ static ewf_result _ewf_adapter_renesas_ryz014_socket_ext_send(ewf_interface* int
         tokenizer_pattern1_str,
         sizeof(tokenizer_pattern1_str) - 1,
         false,
+        NULL,
+        NULL,
     };
     char tokenizer_pattern2_str[] = "\r\nOK\r\n";
     ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
@@ -489,6 +489,8 @@ static ewf_result _ewf_adapter_renesas_ryz014_socket_ext_send(ewf_interface* int
         tokenizer_pattern2_str,
         sizeof(tokenizer_pattern2_str) - 1,
         false,
+        NULL,
+        NULL,
     };
 
     buffer_length = (buffer_length > EWF_RYZ014_SOCKET_MAX_SEND_SIZE) ? EWF_RYZ014_SOCKET_MAX_SEND_SIZE : buffer_length;
@@ -543,6 +545,8 @@ static ewf_result _ewf_adapter_renesas_ryz014_socket_send(ewf_interface* interfa
         tokenizer_pattern1_str,
         sizeof(tokenizer_pattern1_str) - 1,
         false,
+        NULL,
+        NULL,
     };
     char tokenizer_pattern2_str[] = "\r\nOK\r\n";
     ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
@@ -550,14 +554,17 @@ static ewf_result _ewf_adapter_renesas_ryz014_socket_send(ewf_interface* interfa
         tokenizer_pattern2_str,
         sizeof(tokenizer_pattern2_str) - 1,
         false,
+        NULL,
+        NULL,
     };
 
     buffer_length = (buffer_length > EWF_RYZ014_SOCKET_MAX_SEND_SIZE) ? EWF_RYZ014_SOCKET_MAX_SEND_SIZE : buffer_length;
 
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern1))) return result;
 
+
     char socket_str[3];
-    char len_str[5];
+    const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
 
     char remote_port_str[7];
     const char* remote_port_cstr = ewfl_unsigned_to_str(remote_port, remote_port_str, sizeof(remote_port_str));
@@ -565,14 +572,16 @@ static ewf_result _ewf_adapter_renesas_ryz014_socket_send(ewf_interface* interfa
     if (ewf_result_failed(result = ewf_interface_send_commands(
             interface_ptr,
             "AT+SQNSSEND=",
-            ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str)), ",",
+			socket_cstr, ",",
             "\"",remote_address_str,"\",", remote_port_cstr, "\r",
             NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern1_str))) return result;
 
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern2))) return result;
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (const uint8_t*)buffer_ptr, buffer_length))) return result;
-    if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (const uint8_t*)"\x1a", ewfl_str_length("\x1a")))) return result;
+    //if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (const uint8_t*)"\x1A", ewfl_str_length("\x1A")))) return result;
+    uint8_t ctrl_z = 0x1A;
+    if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (const uint8_t*)&ctrl_z, sizeof(ctrl_z)))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern2_str))) return result;
 
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
@@ -589,6 +598,14 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_send(ewf_socket_tcp* socket_ptr, const
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
     ewf_adapter_renesas_ryz014_internet_socket* internet_socket_ptr = (ewf_adapter_renesas_ryz014_internet_socket*)socket_ptr->data_ptr;
 
+    /* Check if socket was closed by remote host */
+    if (internet_socket_ptr->conn_error == true)
+    {
+        _ewf_adapter_renesas_ryz014_internet_socket_close(adapter_ptr, internet_socket_ptr);
+        EWF_LOG_ERROR("Socket is closed by remote.");
+        return EWF_RESULT_CONNECTION_FAILED;
+
+    }
     return _ewf_adapter_renesas_ryz014_socket_ext_send(interface_ptr, internet_socket_ptr, buffer_ptr, buffer_length);
 
 }
@@ -640,10 +657,6 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
                 internet_socket_ptr->recv = false;
                 break;
             }
-            else if(internet_socket_ptr->conn == false)
-			{
-                return EWF_RESULT_CONNECTION_FAILED;
-			}
             ewf_interface_poll(interface_ptr);
             ewf_platform_sleep(1);
         }
@@ -727,7 +740,7 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, ui
             }
             else
             {
-                if (*buffer_length_ptr >= recieve_actual_lenght)
+                if(*buffer_length_ptr >= recieve_actual_lenght)
                 {
                     *buffer_length_ptr = recieve_actual_lenght;
                 }
@@ -846,15 +859,6 @@ ewf_result ewf_adapter_renesas_ryz014_udp_bind(ewf_socket_udp* socket_ptr, uint3
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
-
-//    char local_port_str[7];
-//    const char* local_port_cstr = ewfl_unsigned_to_str(local_port, local_port_str, sizeof(local_port_str));
-//    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSLUDP=", socket_cstr, ",",EWF_OPEN_LISTNEING_IPV4_SOCKET,",", local_port_cstr, "\r", NULL)))
-//        return result;
-//    if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n")))
-//        return result;
-
-
     /* Configure socket connection and open socket connect to remote address */
     if (ewf_result_failed(result = _ewf_adapter_renesas_ryz014_internet_socket_open(adapter_ptr, internet_socket_ptr, 1, "127.0.0.1", local_port, local_port,2)))
     {
@@ -893,7 +897,19 @@ ewf_result ewf_adapter_renesas_ryz014_udp_send_to(ewf_socket_udp* socket_ptr, co
 
     if(internet_socket_ptr->conn == false)
     {
-        return EWF_RESULT_CONNECTION_FAILED;
+        char socket_str[3];
+        const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
+
+        /* Configure socket connection and dial a socket */
+        if (ewf_result_failed(result = _ewf_adapter_renesas_ryz014_internet_socket_open(adapter_ptr, internet_socket_ptr, 1, "127.0.0.1", remote_port, remote_port,2)))
+        {
+            EWF_LOG_ERROR("Failed to dial UDP socket.");
+            return EWF_RESULT_CONNECTION_FAILED;
+        }
+        internet_socket_ptr->port = remote_port;
+        internet_socket_ptr->conn = true;
+        internet_socket_ptr->used = true;
+        internet_socket_ptr->conn_error = false;
     }
 
     return _ewf_adapter_renesas_ryz014_socket_send(interface_ptr, internet_socket_ptr, remote_address_str, remote_port, buffer_ptr, buffer_length);
@@ -949,10 +965,6 @@ ewf_result ewf_adapter_renesas_ryz014_udp_receive_from(ewf_socket_udp* socket_pt
             {
                 internet_socket_ptr->recv = false;
                 break;
-            }
-            else if(internet_socket_ptr->conn == false)
-            {
-                return EWF_RESULT_CONNECTION_FAILED;
             }
             ewf_interface_poll(interface_ptr);
             ewf_platform_sleep(1);
@@ -1038,7 +1050,10 @@ ewf_result ewf_adapter_renesas_ryz014_udp_receive_from(ewf_socket_udp* socket_pt
             }
             else
             {
-                *buffer_length_ptr = (uint32_t)((*buffer_length_ptr >= recieve_actual_lenght) ? recieve_actual_lenght : *buffer_length_ptr);
+                if(*buffer_length_ptr >= recieve_actual_lenght)
+                {
+                    *buffer_length_ptr = recieve_actual_lenght;
+                }
                 memcpy(buffer_ptr, p, *buffer_length_ptr);
             }
         }

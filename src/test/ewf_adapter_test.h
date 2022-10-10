@@ -113,7 +113,6 @@ extern "C" {
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"    \
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"    \
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"    \
-    "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"    \
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #endif
 
@@ -126,7 +125,7 @@ extern "C" {
 #endif
 
 #ifndef EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR
-#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR           "example-test-ewf-socat-udp-echo.westus.azurecontainer.io"
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR           ""
 #endif
 
 #ifndef EWF_ADAPTER_TEST_UDP_ECHO_SERVER_PORT

@@ -150,7 +150,7 @@ ewf_result ewf_adapter_renesas_ryz014_get_ipv4_address(ewf_adapter* adapter_ptr,
     const char* context_id_cstr = ewfl_unsigned_to_str(interface_ptr->current_context, context_id_str, sizeof(context_id_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGPADDR=", context_id_cstr, "\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 1 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
+    if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 3 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
 
     if (response)
     {

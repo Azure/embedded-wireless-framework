@@ -118,20 +118,20 @@ bool ewfl_str_ends_with(const char* str, const char* suffix_str);
  * @brief Checks if a buffer starts with a string
  * @return true if the buffer starts with the prefix, false otherwise.
  */
-bool ewfl_buffer_starts_with(const char* buffer, uint32_t buffer_length, const char* prefix_str, uint32_t prefix_length);
+bool ewfl_buffer_starts_with(const uint8_t* buffer_ptr, uint32_t buffer_length, const uint8_t* prefix_ptr, uint32_t prefix_length);
 
 /**
  * @brief Checks if a buffer ends with a string
  * @return true if the buffer ends with the suffix, false otherwise.
  */
-bool ewfl_buffer_ends_with(const char * buffer, uint32_t buffer_length, const char * suffix_str, uint32_t suffix_length);
+bool ewfl_buffer_ends_with(const uint8_t* buffer_ptr, uint32_t buffer_length, const uint8_t* suffix_ptr, uint32_t suffix_length);
 
 /**
  * @brief Checks if a buffer ends with a string containing wildcards
  * The current version supports question marks '?'to match single characters.
  * @return true if the buffer ends with the suffix, false otherwise.
  */
-bool ewfl_buffer_ends_with_wildcard_string(const char* buffer, uint32_t buffer_length, const char* suffix_str, uint32_t suffix_length);
+bool ewfl_buffer_ends_with_wildcard_string(const uint8_t* buffer_ptr, uint32_t buffer_length, const uint8_t* suffix_ptr, uint32_t suffix_length);
 
 /**
  * @brief Checks if two strings are equal.

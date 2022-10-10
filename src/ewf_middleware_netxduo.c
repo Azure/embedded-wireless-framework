@@ -42,7 +42,11 @@
 #endif /* NX_ENABLE_TCPIP_OFFLOAD */
 
 #ifndef NX_DRIVER_IP_MTU
+#ifdef EWF_CONFIG_ADAPTER_MTU
+#define NX_DRIVER_IP_MTU                        EWF_CONFIG_ADAPTER_MTU
+#else
 #define NX_DRIVER_IP_MTU                        1500
+#endif /* EWF_CONFIG_ADAPTER_MTU */
 #endif /* NX_DRIVER_IP_MTU */
 
 #ifndef NX_DRIVER_RECEIVE_QUEUE_SIZE
