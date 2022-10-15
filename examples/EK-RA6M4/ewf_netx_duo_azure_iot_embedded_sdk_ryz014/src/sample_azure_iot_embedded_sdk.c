@@ -128,7 +128,7 @@ static VOID printf_packet(NX_PACKET *packet_ptr)
 {
     while (packet_ptr != NX_NULL)
     {
-        EWF_LOG("%.*s", (INT)(packet_ptr -> nx_packet_append_ptr - packet_ptr -> nx_packet_prepend_ptr),
+        IotLog("%.*s", (INT)(packet_ptr -> nx_packet_append_ptr - packet_ptr -> nx_packet_prepend_ptr),
                (CHAR *)packet_ptr -> nx_packet_prepend_ptr);
         packet_ptr = packet_ptr -> nx_packet_next;
     }
@@ -140,11 +140,11 @@ static VOID connection_status_callback(NX_AZURE_IOT_HUB_CLIENT *hub_client_ptr, 
     NX_PARAMETER_NOT_USED(hub_client_ptr);
     if (status)
     {
-        EWF_LOG("Disconnected from IoTHub!: error code = 0x%08x\r\n", status);
+        IotLog("Disconnected from IoTHub!: error code = 0x%08x\r\n", status);
     }
     else
     {
-        EWF_LOG("Connected to IoTHub.\r\n");
+        IotLog("Connected to IoTHub.\r\n");
     }
 }
 
@@ -169,12 +169,12 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
     if ((status = sample_dps_entry(&iothub_hostname, &iothub_hostname_length,
                                    &iothub_device_id, &iothub_device_id_length)))
     {
-        EWF_LOG("Failed on sample_dps_entry!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on sample_dps_entry!: error code = 0x%08x\r\n", status);
         return(status);
     }
 #endif /* ENABLE_DPS_SAMPLE */
 
-    EWF_LOG("IoTHub Host Name: %s; Device ID: %s.\r\n",iothub_hostname, iothub_device_id);
+    IotLog("IoTHub Host Name: %s; Device ID: %s.\r\n",iothub_hostname, iothub_device_id);
 
     /* Initialize IoTHub client.  */
     if ((status = nx_azure_iot_hub_client_initialize(iothub_client_ptr, &nx_azure_iot,
@@ -189,7 +189,7 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
                                                      sizeof(nx_azure_iot_tls_metadata_buffer),
                                                      &root_ca_cert)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_initialize!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_initialize!: error code = 0x%08x\r\n", status);
         return(status);
     }
 
@@ -202,13 +202,13 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
                                                         (UCHAR *)sample_device_private_key_ptr, (USHORT)sample_device_private_key_len,
                                                         DEVICE_KEY_TYPE)))
     {
-        EWF_LOG("Failed on nx_secure_x509_certificate_initialize!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_secure_x509_certificate_initialize!: error code = 0x%08x\r\n", status);
     }
 
     /* Set device certificate.  */
     else if ((status = nx_azure_iot_hub_client_device_cert_set(iothub_client_ptr, &device_certificate)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_device_cert_set!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_device_cert_set!: error code = 0x%08x\r\n", status);
     }
 #else
 
@@ -217,7 +217,7 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
                                                             (UCHAR *)DEVICE_SYMMETRIC_KEY,
                                                             sizeof(DEVICE_SYMMETRIC_KEY) - 1)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_symmetric_key_set!\r\n");
+        IotLog("Failed on nx_azure_iot_hub_client_symmetric_key_set!\r\n");
     }
 #endif /* USE_DEVICE_CERTIFICATE */
 
@@ -225,22 +225,22 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
     else if ((status = nx_azure_iot_hub_client_connection_status_callback_set(iothub_client_ptr,
                                                                               connection_status_callback)))
     {
-        EWF_LOG("Failed on connection_status_callback!\r\n");
+        IotLog("Failed on connection_status_callback!\r\n");
     }    
     else if ((status = nx_azure_iot_hub_client_cloud_message_enable(iothub_client_ptr)))
     {
-        EWF_LOG("C2D receive enable failed!: error code = 0x%08x\r\n", status);
+        IotLog("C2D receive enable failed!: error code = 0x%08x\r\n", status);
     }
 #ifndef DISABLE_DIRECT_METHOD_SAMPLE
     else if ((status = nx_azure_iot_hub_client_direct_method_enable(iothub_client_ptr)))
     {
-        EWF_LOG("Direct method receive enable failed!: error code = 0x%08x\r\n", status);
+        IotLog("Direct method receive enable failed!: error code = 0x%08x\r\n", status);
     }
 #endif /* DISABLE_DIRECT_METHOD_SAMPLE */
 #ifndef DISABLE_DEVICE_TWIN_SAMPLE
     else if ((status = nx_azure_iot_hub_client_device_twin_enable(iothub_client_ptr)))
     {
-        EWF_LOG("device twin enabled failed!: error code = 0x%08x\r\n", status);
+        IotLog("device twin enabled failed!: error code = 0x%08x\r\n", status);
     }
 #endif /* DISABLE_DEVICE_TWIN_SAMPLE */
 
@@ -256,7 +256,7 @@ static void log_callback(az_log_classification classification, UCHAR *msg, UINT 
 {
     if (classification == AZ_LOG_IOT_AZURERTOS)
     {
-        EWF_LOG("%.*s", msg_len, (CHAR *)msg);
+        IotLog("%.*s", msg_len, (CHAR *)msg);
     }
 }
 
@@ -271,7 +271,7 @@ void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, NX_DNS *dns_ptr, UINT
                                       nx_azure_iot_thread_stack, sizeof(nx_azure_iot_thread_stack),
                                       NX_AZURE_IOT_THREAD_PRIORITY, unix_time_callback)))
     {
-        EWF_LOG("Failed on nx_azure_iot_create!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_create!: error code = 0x%08x\r\n", status);
         return;
     }
 
@@ -280,21 +280,21 @@ void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, NX_DNS *dns_ptr, UINT
                                                         (USHORT)_nx_azure_iot_root_cert_size,
                                                         NX_NULL, 0, NULL, 0, NX_SECURE_X509_KEY_TYPE_NONE)))
     {
-        EWF_LOG("Failed to initialize ROOT CA certificate!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to initialize ROOT CA certificate!: error code = 0x%08x\r\n", status);
         nx_azure_iot_delete(&nx_azure_iot);
         return;
     }
     
     if ((status = sample_initialize_iothub(&iothub_client)))
     {
-        EWF_LOG("Failed to initialize iothub client: error code = 0x%08x\r\n", status);
+        IotLog("Failed to initialize iothub client: error code = 0x%08x\r\n", status);
         nx_azure_iot_delete(&nx_azure_iot);
         return;
     }
 
     if (nx_azure_iot_hub_client_connect(&iothub_client, NX_TRUE, NX_WAIT_FOREVER))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_connect!\r\n");
+        IotLog("Failed on nx_azure_iot_hub_client_connect!\r\n");
         nx_azure_iot_hub_client_deinitialize(&iothub_client);
         nx_azure_iot_delete(&nx_azure_iot);
         return;
@@ -309,7 +309,7 @@ void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, NX_DNS *dns_ptr, UINT
                                    SAMPLE_THREAD_PRIORITY, SAMPLE_THREAD_PRIORITY,
                                    1, TX_AUTO_START)))
     {
-        EWF_LOG("Failed to create telemetry sample thread!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to create telemetry sample thread!: error code = 0x%08x\r\n", status);
     }
 #endif /* DISABLE_TELEMETRY_SAMPLE */
 
@@ -322,7 +322,7 @@ void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, NX_DNS *dns_ptr, UINT
                                    SAMPLE_THREAD_PRIORITY, SAMPLE_THREAD_PRIORITY,
                                    1, TX_AUTO_START)))
     {
-        EWF_LOG("Failed to create c2d sample thread!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to create c2d sample thread!: error code = 0x%08x\r\n", status);
     }
 #endif /* DISABLE_C2D_SAMPLE */
 
@@ -335,7 +335,7 @@ void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, NX_DNS *dns_ptr, UINT
                                    SAMPLE_THREAD_PRIORITY, SAMPLE_THREAD_PRIORITY,
                                    1, TX_AUTO_START)))
     {
-        EWF_LOG("Failed to create direct method sample thread!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to create direct method sample thread!: error code = 0x%08x\r\n", status);
     }
 #endif /* DISABLE_DIRECT_METHOD_SAMPLE */
 
@@ -348,7 +348,7 @@ void sample_entry(NX_IP *ip_ptr, NX_PACKET_POOL *pool_ptr, NX_DNS *dns_ptr, UINT
                                    SAMPLE_THREAD_PRIORITY, SAMPLE_THREAD_PRIORITY,
                                    1, TX_AUTO_START)))
     {
-        EWF_LOG("Failed to create device twin sample thread!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to create device twin sample thread!: error code = 0x%08x\r\n", status);
     }
 #endif /* DISABLE_DEVICE_TWIN_SAMPLE */
 
@@ -367,7 +367,7 @@ static UINT sample_dps_entry(UCHAR **iothub_hostname, UINT *iothub_hostname_leng
 {
 UINT status;
 
-    EWF_LOG("Start Provisioning Client...\r\n");
+    IotLog("Start Provisioning Client...\r\n");
 
     /* Initialize IoT provisioning client.  */
     if ((status = nx_azure_iot_provisioning_client_initialize(&prov_client, &nx_azure_iot,
@@ -382,7 +382,7 @@ UINT status;
                                                               sizeof(nx_azure_iot_tls_metadata_buffer),
                                                               &root_ca_cert)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_initialize!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_initialize!: error code = 0x%08x\r\n", status);
         return(status);
     }
 
@@ -396,13 +396,13 @@ UINT status;
     if ((status = nx_secure_x509_certificate_initialize(&device_certificate, (UCHAR *)sample_device_cert_ptr, (USHORT)sample_device_cert_len, NX_NULL, 0,
                                                         (UCHAR *)sample_device_private_key_ptr, (USHORT)sample_device_private_key_len, DEVICE_KEY_TYPE)))
     {
-        EWF_LOG("Failed on nx_secure_x509_certificate_initialize!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_secure_x509_certificate_initialize!: error code = 0x%08x\r\n", status);
     }
 
     /* Set device certificate.  */
     else if ((status = nx_azure_iot_provisioning_client_device_cert_set(&prov_client, &device_certificate)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_device_cert_set!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_device_cert_set!: error code = 0x%08x\r\n", status);
     }
 #else
 
@@ -410,14 +410,14 @@ UINT status;
     if ((status = nx_azure_iot_provisioning_client_symmetric_key_set(&prov_client, (UCHAR *)DEVICE_SYMMETRIC_KEY,
                                                                      sizeof(DEVICE_SYMMETRIC_KEY) - 1)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_symmetric_key_set!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_symmetric_key_set!: error code = 0x%08x\r\n", status);
     }
 #endif /* USE_DEVICE_CERTIFICATE */
 
     /* Register device */
     else if ((status = nx_azure_iot_provisioning_client_register(&prov_client, NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_register!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_register!: error code = 0x%08x\r\n", status);
     }
 
     /* Get Device info */
@@ -425,13 +425,13 @@ UINT status;
                                                                                sample_iothub_hostname, iothub_hostname_length,
                                                                                sample_iothub_device_id, iothub_device_id_length)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_iothub_device_info_get!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_iothub_device_info_get!: error code = 0x%08x\r\n", status);
     }
     else
     {
         *iothub_hostname = sample_iothub_hostname;
         *iothub_device_id = sample_iothub_device_id;
-        EWF_LOG("Registered Device Successfully.\r\n");
+        IotLog("Registered Device Successfully.\r\n");
     }
 
     /* Destroy Provisioning Client.  */
@@ -460,7 +460,7 @@ NX_PACKET *packet_ptr;
         /* Create a telemetry message packet.  */
         if ((status = nx_azure_iot_hub_client_telemetry_message_create(&iothub_client, &packet_ptr, NX_WAIT_FOREVER)))
         {
-            EWF_LOG("Telemetry message create failed!: error code = 0x%08x\r\n", status);
+            IotLog("Telemetry message create failed!: error code = 0x%08x\r\n", status);
             break;
         }
 
@@ -475,7 +475,7 @@ NX_PACKET *packet_ptr;
                                                                    (USHORT)strlen(sample_properties[index][1]),
                                                                    NX_WAIT_FOREVER)))
             {
-                EWF_LOG("Telemetry property add failed!: error code = 0x%08x\r\n", status);
+                IotLog("Telemetry property add failed!: error code = 0x%08x\r\n", status);
                 break;
             }
         }
@@ -490,11 +490,11 @@ NX_PACKET *packet_ptr;
         if (nx_azure_iot_hub_client_telemetry_send(&iothub_client, packet_ptr,
                                                    (UCHAR *)buffer, buffer_length, NX_WAIT_FOREVER))
         {
-            EWF_LOG("Telemetry message send failed!: error code = 0x%08x\r\n", status);
+            IotLog("Telemetry message send failed!: error code = 0x%08x\r\n", status);
             nx_azure_iot_hub_client_telemetry_message_delete(packet_ptr);
             break;
         }
-        EWF_LOG("Telemetry message send: %s.\r\n", buffer);
+        IotLog("Telemetry message send: %s.\r\n", buffer);
 
         tx_thread_sleep(5 * NX_IP_PERIODIC_RATE);
     }
@@ -517,7 +517,7 @@ const UCHAR *property_buf;
     {
         if ((status = nx_azure_iot_hub_client_cloud_message_receive(&iothub_client, &packet_ptr, NX_WAIT_FOREVER)))
         {
-            EWF_LOG("C2D receive failed!: error code = 0x%08x\r\n", status);
+            IotLog("C2D receive failed!: error code = 0x%08x\r\n", status);
             break;
         }
 
@@ -526,13 +526,13 @@ const UCHAR *property_buf;
                                                                          (USHORT)strlen(sample_properties[0][0]),
                                                                          &property_buf, &property_buf_size)) == NX_AZURE_IOT_SUCCESS)
         {
-            EWF_LOG("Receive property: %s = %.*s\r\n", sample_properties[0][0],
+            IotLog("Receive property: %s = %.*s\r\n", sample_properties[0][0],
                    (INT)property_buf_size, property_buf);
         }
 
-        EWF_LOG("Receive message: ");
+        IotLog("Receive message: ");
         printf_packet(packet_ptr);
-        EWF_LOG("\r\n");
+        IotLog("\r\n");
 
         nx_packet_release(packet_ptr);
     }
@@ -560,20 +560,20 @@ VOID *context_ptr;
                                                                             &context_ptr, &context_length,
                                                                             &packet_ptr, NX_WAIT_FOREVER)))
         {
-            EWF_LOG("Direct method receive failed!: error code = 0x%08x\r\n", status);
+            IotLog("Direct method receive failed!: error code = 0x%08x\r\n", status);
             break;
         }
 
-        EWF_LOG("Receive method call: %.*s, with payload:", (INT)method_name_length, (CHAR *)method_name_ptr);
+        IotLog("Receive method call: %.*s, with payload:", (INT)method_name_length, (CHAR *)method_name_ptr);
         printf_packet(packet_ptr);
-        EWF_LOG("\r\n");
+        IotLog("\r\n");
 
         if ((status = nx_azure_iot_hub_client_direct_method_message_response(&iothub_client, 200 /* method status */,
                                                                              context_ptr, context_length,
                                                                              (UCHAR *)method_response_payload, sizeof(method_response_payload) - 1,
                                                                              NX_WAIT_FOREVER)))
         {
-            EWF_LOG("Direct method response failed!: error code = 0x%08x\r\n", status);
+            IotLog("Direct method response failed!: error code = 0x%08x\r\n", status);
             nx_packet_release(packet_ptr);
             break;
         }
@@ -597,19 +597,19 @@ ULONG reported_property_version;
 
     if ((status = nx_azure_iot_hub_client_device_twin_properties_request(&iothub_client, NX_WAIT_FOREVER)))
     {
-        EWF_LOG("device twin document request failed!: error code = 0x%08x\r\n", status);
+        IotLog("device twin document request failed!: error code = 0x%08x\r\n", status);
         return;
     }
 
     if ((status = nx_azure_iot_hub_client_device_twin_properties_receive(&iothub_client, &packet_ptr, NX_WAIT_FOREVER)))
     {
-        EWF_LOG("device twin document receive failed!: error code = 0x%08x\r\n", status);
+        IotLog("device twin document receive failed!: error code = 0x%08x\r\n", status);
         return;
     }
 
-    EWF_LOG("Receive twin properties :");
+    IotLog("Receive twin properties :");
     printf_packet(packet_ptr);
-    EWF_LOG("\r\n");
+    IotLog("\r\n");
     nx_packet_release(packet_ptr);
 
     /* Loop to receive device twin message.  */
@@ -618,13 +618,13 @@ ULONG reported_property_version;
         if ((status = nx_azure_iot_hub_client_device_twin_desired_properties_receive(&iothub_client, &packet_ptr,
                                                                                      NX_WAIT_FOREVER)))
         {
-            EWF_LOG("Receive desired property receive failed!: error code = 0x%08x\r\n", status);
+            IotLog("Receive desired property receive failed!: error code = 0x%08x\r\n", status);
             break;
         }
 
-        EWF_LOG("Receive desired property call: ");
+        IotLog("Receive desired property call: ");
         printf_packet(packet_ptr);
-        EWF_LOG("\r\n");
+        IotLog("\r\n");
         nx_packet_release(packet_ptr);
 
         if ((status = nx_azure_iot_hub_client_device_twin_reported_properties_send(&iothub_client,
@@ -633,13 +633,13 @@ ULONG reported_property_version;
                                                                                    &reported_property_version,
                                                                                    NX_WAIT_FOREVER)))
         {
-            EWF_LOG("Device twin reported properties failed!: error code = 0x%08x\r\n", status);
+            IotLog("Device twin reported properties failed!: error code = 0x%08x\r\n", status);
             break;
         }
 
         if ((response_status < 200) || (response_status >= 300))
         {
-            EWF_LOG("device twin report properties failed with code : %d\r\n", response_status);
+            IotLog("device twin report properties failed with code : %d\r\n", response_status);
             break;
         }
     }

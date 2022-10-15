@@ -167,9 +167,9 @@ void application_thread_entry(ULONG entry_input)
 	PORTA.PDR.BIT.B1= 1;
 	tx_thread_sleep (200);
 	PORTA.PODR.BIT.B1= 0;
-	EWF_LOG("Waiting for the module to Power Reset!\r\n");
+	printf("Waiting for the module to Power Reset!\r\n");
 	ewf_platform_sleep(300);
-	EWF_LOG("Ready\r\n");
+	printf("Ready\r\n");
 
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
@@ -273,7 +273,7 @@ void application_thread_entry(ULONG entry_input)
     }
 
     /* Save the adapter pointer in the IP instance */
-    ip_0.nx_ip_reserved_ptr = adapter_ptr;
+    ip_0.nx_ip_interface->nx_interface_additional_link_info = adapter_ptr;
 
     /* Enable ARP and supply ARP cache memory for IP Instance 0.  */
     status = nx_arp_enable(&ip_0, (VOID *)&sample_arp_cache_area[0], sizeof(sample_arp_cache_area));
@@ -418,7 +418,7 @@ UINT    dns_server_address_size = 12;
     }
 
     /* Output DNS Server address.  */
-    EWF_LOG("DNS Server address: %lu.%lu.%lu.%lu\r\n",
+    printf("DNS Server address: %lu.%lu.%lu.%lu\r\n",
            (dns_server_address[0] >> 24),
            (dns_server_address[0] >> 16 & 0xFF),
            (dns_server_address[0] >> 8 & 0xFF),
@@ -427,153 +427,143 @@ UINT    dns_server_address_size = 12;
     return(NX_SUCCESS);
 }
 
-
-/* Sync up the local time.  */
+/* Sync up the local time. */
 static UINT sntp_time_sync_internal(ULONG sntp_server_address)
 {
-UINT    status;
-UINT    server_status;
-UINT    i;
+  UINT status;
+  UINT server_status;
+  UINT i;
 
-    /* Create the SNTP Client to run in broadcast mode.. */
-    status =  nx_sntp_client_create(&sntp_client_0, &ip_0, 0, &pool_0,
-                                    NX_NULL,
-                                    NX_NULL,
-                                    NX_NULL /* no random_number_generator callback */);
+  /* Create the SNTP Client to run in broadcast mode.. */
+  status = nx_sntp_client_create(&sntp_client_0, &ip_0, 0, &pool_0, NX_NULL, NX_NULL,
+                                 NX_NULL /* no random_number_generator callback */);
 
-    /* Check status.  */
-    if (status)
-    {
-        return(status);
-    }
-
+  /* Check status. */
+  if (status == NX_SUCCESS)
+  {
     /* Use the IPv4 service to initialize the Client and set the IPv4 SNTP server. */
     status = nx_sntp_client_initialize_unicast(&sntp_client_0, sntp_server_address);
 
-    /* Check status.  */
-    if (status)
+    /* Check status. */
+    if (status != NX_SUCCESS)
     {
-        nx_sntp_client_delete(&sntp_client_0);
-        return(status);
+      nx_sntp_client_delete(&sntp_client_0);
+      return (status);
     }
 
     /* Set local time to 0 */
     status = nx_sntp_client_set_local_time(&sntp_client_0, 0, 0);
 
-    /* Check status.  */
-    if (status)
+    /* Check status. */
+    if (status != NX_SUCCESS)
     {
-        nx_sntp_client_delete(&sntp_client_0);
-        return(status);
+      nx_sntp_client_delete(&sntp_client_0);
+      return (status);
     }
 
     /* Run Unicast client */
     status = nx_sntp_client_run_unicast(&sntp_client_0);
 
-    /* Check status.  */
-    if (status)
+    /* Check status. */
+    if (status != NX_SUCCESS)
     {
-        nx_sntp_client_stop(&sntp_client_0);
-        nx_sntp_client_delete(&sntp_client_0);
-        return(status);
+      nx_sntp_client_stop(&sntp_client_0);
+      nx_sntp_client_delete(&sntp_client_0);
+      return (status);
     }
 
     /* Wait till updates are received */
-    for (i = 0; i < SAMPLE_SNTP_UPDATE_MAX; i++)
+    for (i = 0U; i < SAMPLE_SNTP_UPDATE_MAX; i++)
     {
+      /* First verify we have a valid SNTP service running. */
+      status = nx_sntp_client_receiving_updates(&sntp_client_0, &server_status);
 
-        /* First verify we have a valid SNTP service running. */
-        status = nx_sntp_client_receiving_updates(&sntp_client_0, &server_status);
+      /* Check status. */
+      if ((status == NX_SUCCESS) && (server_status == NX_TRUE))
+      {
+        /* Server status is good. Now get the Client local time. */
+        ULONG sntp_seconds;
+        ULONG sntp_fraction;
+        ULONG system_time_in_second;
 
-        /* Check status.  */
-        if ((status == NX_SUCCESS) && (server_status == NX_TRUE))
+        /* Get the local time. */
+        status = nx_sntp_client_get_local_time(&sntp_client_0, &sntp_seconds, &sntp_fraction, NX_NULL);
+
+        /* Check status. */
+        if (status != NX_SUCCESS)
         {
-
-            /* Server status is good. Now get the Client local time. */
-            ULONG sntp_seconds, sntp_fraction;
-            ULONG system_time_in_second;
-
-            /* Get the local time.  */
-            status = nx_sntp_client_get_local_time(&sntp_client_0, &sntp_seconds, &sntp_fraction, NX_NULL);
-
-            /* Check status.  */
-            if (status != NX_SUCCESS)
-            {
-                continue;
-            }
-
-            /* Get the system time in second.  */
-            system_time_in_second = tx_time_get() / TX_TIMER_TICKS_PER_SECOND;
-
-            /* Convert to Unix epoch and minus the current system time.  */
-            unix_time_base = (sntp_seconds - (system_time_in_second + SAMPLE_UNIX_TO_NTP_EPOCH_SECOND));
-
-            /* Time sync successfully.  */
-
-            /* Stop and delete SNTP.  */
-            nx_sntp_client_stop(&sntp_client_0);
-            nx_sntp_client_delete(&sntp_client_0);
-
-            return(NX_SUCCESS);
+          continue;
         }
 
-        /* Sleep.  */
-        tx_thread_sleep(SAMPLE_SNTP_UPDATE_INTERVAL);
+        /* Get the system time in second. */
+        system_time_in_second = tx_time_get() / TX_TIMER_TICKS_PER_SECOND;
+
+        /* Convert to Unix epoch and minus the current system time. */
+        unix_time_base = (sntp_seconds - (system_time_in_second + SAMPLE_UNIX_TO_NTP_EPOCH_SECOND));
+
+        /* Time sync successfully. */
+
+        /* Stop and delete SNTP. */
+        nx_sntp_client_stop(&sntp_client_0);
+        nx_sntp_client_delete(&sntp_client_0);
+
+        return (NX_SUCCESS);
+      }
+
+      /* Sleep.  */
+      tx_thread_sleep(SAMPLE_SNTP_UPDATE_INTERVAL);
     }
 
-    /* Time sync failed.  */
-
-    /* Stop and delete SNTP.  */
+    /* Time sync failed. - Return not success. */
+    status = NX_NOT_SUCCESSFUL;
+    /* Stop and delete SNTP. */
     nx_sntp_client_stop(&sntp_client_0);
     nx_sntp_client_delete(&sntp_client_0);
+  }
 
-    /* Return success.  */
-    return(NX_NOT_SUCCESSFUL);
+  return (status);
 }
 
-static UINT sntp_time_sync()
+/* Sync up the local time.  */
+static UINT sntp_time_sync(void)
 {
-UINT status;
-ULONG gateway_address;
-ULONG sntp_server_address[3];
-#ifndef SAMPLE_DHCP_DISABLE
-UINT  sntp_server_address_size = sizeof(sntp_server_address);
-#endif
+  UINT  status;
+  ULONG gateway_address;
+  ULONG sntp_server_address;
 
+  /* Sync time by SNTP server array. */
+  for (UINT i = 0U; i < SAMPLE_SNTP_SYNC_MAX; i++)
+  {
+    printf("SNTP Time Sync...%s\r\n", sntp_servers[sntp_server_index]);
 
-    /* Sync time by NTP server array.  */
-    for (UINT i = 0; i < SAMPLE_SNTP_SYNC_MAX; i++)
+    /* Make sure the network is still valid. */
+    while (nx_ip_gateway_address_get(&ip_0, &gateway_address))
     {
-        printf("SNTP Time Sync...%s\r\n", sntp_servers[sntp_server_index]);
-
-        /* Make sure the network is still valid.  */
-        while (nx_ip_gateway_address_get(&ip_0, &gateway_address))
-        {
-            tx_thread_sleep(NX_IP_PERIODIC_RATE);
-        }
-
-        /* Look up SNTP Server address. */
-        status = nx_dns_host_by_name_get(&dns_0, (UCHAR *)sntp_servers[sntp_server_index], &sntp_server_address[0], 5 * NX_IP_PERIODIC_RATE);
-
-        /* Check status.  */
-        if (status == NX_SUCCESS)
-        {
-
-            /* Start SNTP to sync the local time.  */
-            status = sntp_time_sync_internal(sntp_server_address[0]);
-
-            /* Check status.  */
-            if(status == NX_SUCCESS)
-            {
-                return(NX_SUCCESS);
-            }
-        }
-
-        /* Switch SNTP server every time.  */
-        sntp_server_index = (sntp_server_index + 1) % (sizeof(sntp_servers) / sizeof(sntp_servers[0]));
+      tx_thread_sleep(NX_IP_PERIODIC_RATE);
     }
 
-    return(NX_NOT_SUCCESSFUL);
+    /* Look up SNTP Server address. */
+    status = nx_dns_host_by_name_get(&dns_0, (UCHAR *)sntp_servers[sntp_server_index], &sntp_server_address,
+                                     (5 * NX_IP_PERIODIC_RATE));
+
+    /* Check status. */
+    if (status == NX_SUCCESS)
+    {
+      /* Start SNTP to sync the local time. */
+      status = sntp_time_sync_internal(sntp_server_address);
+
+      /* Check status.  */
+      if (status == NX_SUCCESS)
+      {
+        return (NX_SUCCESS);
+      }
+    }
+
+    /* Switch SNTP server every time.  */
+    sntp_server_index = (sntp_server_index + 1) % (sizeof(sntp_servers) / sizeof(sntp_servers[0]));
+  }
+
+  return (NX_NOT_SUCCESSFUL);
 }
 
 UINT unix_time_get(ULONG *unix_time)

@@ -134,7 +134,7 @@ ULONG reported_property_version;
     /* Build telemetry JSON payload */
     if (nx_azure_iot_json_writer_with_buffer_init(&json_writer, scratch_buffer, sizeof(scratch_buffer)))
     {
-        EWF_LOG("Failed to create json writer\r\n");
+        IotLog("Failed to create json writer\r\n");
         return;
     }
 
@@ -145,7 +145,7 @@ ULONG reported_property_version;
                                                                     (UCHAR *)description,
                                                                     strlen(description), version, &json_writer))
     {
-        EWF_LOG("Failed to create reported response\r\n");
+        IotLog("Failed to create reported response\r\n");
     }
     else
     {
@@ -156,7 +156,7 @@ ULONG reported_property_version;
                                                                          &reported_property_version,
                                                                          (5 * NX_IP_PERIODIC_RATE)))
         {
-            EWF_LOG("Failed to send reported response\r\n");
+            IotLog("Failed to send reported response\r\n");
         }
     }
 
@@ -206,7 +206,7 @@ UINT dm_status;
     if (pnp_command_name_length != (sizeof(get_max_min_report) - 1) ||
         strncmp((CHAR *)pnp_command_name_ptr, (CHAR *)get_max_min_report, pnp_command_name_length) != 0)
     {
-        EWF_LOG("PnP command=%.*s is not supported on thermostat component\r\n", pnp_command_name_length, pnp_command_name_ptr);
+        IotLog("PnP command=%.*s is not supported on thermostat component\r\n", pnp_command_name_length, pnp_command_name_ptr);
         dm_status = 404;
     }
     else
@@ -243,14 +243,14 @@ UINT buffer_length;
                                                                    handle -> component_name_length,
                                                                    &packet_ptr, NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Telemetry message create failed!: error code = 0x%08x\r\n", status);
+        IotLog("Telemetry message create failed!: error code = 0x%08x\r\n", status);
         return(status);
     }
 
     /* Build telemetry JSON payload */
     if (nx_azure_iot_json_writer_with_buffer_init(&json_writer, scratch_buffer, sizeof(scratch_buffer)))
     {
-        EWF_LOG("Telemetry message failed to build message\r\n");
+        IotLog("Telemetry message failed to build message\r\n");
         nx_azure_iot_hub_client_telemetry_message_delete(packet_ptr);
         return(NX_NOT_SUCCESSFUL);
     }
@@ -263,7 +263,7 @@ UINT buffer_length;
                                                                   DOUBLE_DECIMAL_PLACE_DIGITS) ||
        nx_azure_iot_json_writer_append_end_object(&json_writer))
     {
-        EWF_LOG("Telemetry message failed to build message\r\n");
+        IotLog("Telemetry message failed to build message\r\n");
         nx_azure_iot_json_writer_deinit(&json_writer);
         nx_azure_iot_hub_client_telemetry_message_delete(packet_ptr);
         return(NX_NOT_SUCCESSFUL);
@@ -273,14 +273,14 @@ UINT buffer_length;
     if ((status = nx_azure_iot_hub_client_telemetry_send(iothub_client_ptr, packet_ptr,
                                                          (UCHAR *)scratch_buffer, buffer_length, NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Telemetry message send failed!: error code = 0x%08x\r\n", status);
+        IotLog("Telemetry message send failed!: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_writer);
         nx_azure_iot_hub_client_telemetry_message_delete(packet_ptr);
         return(status);
     }
 
     nx_azure_iot_json_writer_deinit(&json_writer);
-    EWF_LOG("Thermostat %.*s Telemetry message send: %.*s.\r\n", handle -> component_name_length,
+    IotLog("Thermostat %.*s Telemetry message send: %.*s.\r\n", handle -> component_name_length,
            handle -> component_name_ptr, buffer_length, scratch_buffer);
 
     return(status);
@@ -300,7 +300,7 @@ ULONG reported_property_version;
                                                             scratch_buffer,
                                                             sizeof(scratch_buffer))))
     {
-        EWF_LOG("Failed to initialize json writer\r\n");
+        IotLog("Failed to initialize json writer\r\n");
         return(NX_NOT_SUCCESSFUL);
     }
 
@@ -309,7 +309,7 @@ ULONG reported_property_version;
                                                                   append_max_temp, (VOID *)handle,
                                                                   &json_builder)))
     {
-        EWF_LOG("Failed to build reported property!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to build reported property!: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_builder);
         return(status);
     }
@@ -322,7 +322,7 @@ ULONG reported_property_version;
                                                                                &reported_property_version,
                                                                                (5 * NX_IP_PERIODIC_RATE))))
     {
-        EWF_LOG("Device twin reported properties failed!: error code = 0x%08x\r\n", status);
+        IotLog("Device twin reported properties failed!: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_builder);
         return(status);
     }
@@ -331,7 +331,7 @@ ULONG reported_property_version;
 
     if ((response_status < 200) || (response_status >= 300))
     {
-        EWF_LOG("device twin report properties failed with code : %d\r\n", response_status);
+        IotLog("device twin report properties failed with code : %d\r\n", response_status);
         return(NX_NOT_SUCCESSFUL);
     }
 
@@ -362,7 +362,7 @@ const CHAR *description;
     if (property_name_length != (sizeof(target_temp_property_name) - 1) ||
         strncmp((CHAR *)property_name_ptr, (CHAR *)target_temp_property_name, property_name_length) != 0)
     {
-        EWF_LOG("PnP property=%.*s is not supported on thermostat component\r\n",
+        IotLog("PnP property=%.*s is not supported on thermostat component\r\n",
                property_name_length, property_name_ptr);
         status_code = 404;
         description = temp_response_description_failed;

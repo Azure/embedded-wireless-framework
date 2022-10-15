@@ -25,7 +25,7 @@ extern "C" {
  ****************************************************************************/
 
  /** Define this symbol to enable compilation of debug code. When this symbol is not defined, debug code is not present and the footprint is reduced.  */
-#define EWF_DEBUG
+//#define EWF_DEBUG
 
 /** Define this symbol to enable verbose logging */
 //#define EWF_LOG_VERBOSE
@@ -39,14 +39,18 @@ extern "C" {
 //#define EWF_PLATFORM_FREERTOS
 //#define EWF_PLATFORM_WIN32
 
-/* Override the EWF_LOG definition to change formating for the logs on Renesas RA */
-extern char ewf_log_buffer[512];
+/* Override the EWF_LOG reroute logs to RTT viewer  Renesas RA */
+#ifdef EWF_DEBUG
+extern char ewf_log_buffer[1024];
 unsigned SEGGER_RTT_WriteString(unsigned BufferIndex, const char* s);
 #define EWF_LOG(...)                                                          \
-		do {                                                                  \
-			snprintf(ewf_log_buffer, sizeof(ewf_log_buffer), __VA_ARGS__);    \
-			SEGGER_RTT_WriteString(0, ewf_log_buffer);                        \
-		} while(0)
+        do {                                                                  \
+            snprintf(ewf_log_buffer, sizeof(ewf_log_buffer), __VA_ARGS__);    \
+            SEGGER_RTT_WriteString(0, ewf_log_buffer);                        \
+        } while(0)
+#else
+#define EWF_LOG(...)
+#endif
 
 /************************************************************************//**
  * @} *** group_configuration

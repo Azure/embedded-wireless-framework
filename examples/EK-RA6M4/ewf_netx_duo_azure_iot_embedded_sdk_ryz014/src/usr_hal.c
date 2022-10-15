@@ -165,7 +165,7 @@ void led_on_off(e_led_type_t ltype, e_led_state_t lled_state)
     /* Get pin to toggle */
     uint32_t pin = RESET_VALUE;
     /* Holds level to set for pins */
-    bsp_io_level_t pin_level = LED_OFF;
+    bsp_io_level_t pin_level = (bsp_io_level_t)LED_OFF;
 
     /* LED type structure */
     bsp_leds_t leds = g_bsp_leds;
@@ -175,7 +175,7 @@ void led_on_off(e_led_type_t ltype, e_led_state_t lled_state)
 	if(((LED_ON == lled_state) || (LED_OFF == lled_state)) && 
 	   ((LED_GREEN == ltype) || (LED_BLUE == ltype) || (LED_RED == ltype)))
 	{
-        pin_level = lled_state;
+        pin_level = (bsp_io_level_t)lled_state;
         pin = leds.p_leds[ltype];
 
         /* Write to this pin */
@@ -197,7 +197,7 @@ void led_toggle(e_led_type_t ltype)
 	/* Get pin to toggle */
 	uint32_t pin = RESET_VALUE;
 	/* Holds level to set for pins */
-	static bsp_io_level_t pin_level[3] = {LED_OFF};
+	static bsp_io_level_t pin_level[3] = {(bsp_io_level_t)LED_OFF};
 
     /* LED type structure */
     bsp_leds_t leds = g_bsp_leds;
@@ -213,11 +213,11 @@ void led_toggle(e_led_type_t ltype)
 
         if (LED_OFF == (e_led_state_t) pin_level[ltype])
         {
-            pin_level[ltype] = LED_ON;
+            pin_level[ltype] = (bsp_io_level_t)LED_ON;
         }
         else
         {
-            pin_level[ltype] = LED_OFF;
+            pin_level[ltype] = (bsp_io_level_t)LED_OFF;
         }
     }
 

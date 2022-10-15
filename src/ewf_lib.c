@@ -269,3 +269,35 @@ char * ewfl_adapter_response_str_extract(char * str)
 
     return response_str;
 }
+
+char * ewfl_find_chars_with_terms(char* str, char* chars_str, char* terms_str)
+{
+    if (!str) return NULL;
+    if (!chars_str) return NULL;
+    if (!chars_str[0]) return NULL; /* at least one valid character is necessary */
+    
+    char* p = str;
+    for (; *p; p++)
+    {
+        for (char* char_ptr = chars_str; *char_ptr; char_ptr++)
+        {
+            if (*p == *char_ptr)
+            {
+                return p;
+            }
+        }
+
+        if (terms_str)
+        {
+            for (char* term_ptr = terms_str; *term_ptr; term_ptr++)
+            {
+                if (*p == *term_ptr)
+                {
+                    return NULL;
+                }
+            }
+        }
+    }
+
+    return NULL;
+}

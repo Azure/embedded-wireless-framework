@@ -777,7 +777,7 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
             /* In command mode - Check for end of command and regular tokenizer patterns */
             if (interface_ptr->command_mode == true)
             {
-                bool match = false;
+                match = false;
 
                 if (interface_ptr->command_response_end_tokenizer_pattern_ptr)
                 {
@@ -814,7 +814,7 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
                             interface_ptr->command_response_tokenizer_pattern_ptr,
                             &match)))
                     {
-                        EWF_LOG_ERROR("Error while matching the current message to the command response tokenizer pattern.");
+                        EWF_LOG_ERROR("Error while matching the current message to the command response tokenizer pattern, ewf_result %d.\n", result);
                     }
                     else
                     {
@@ -830,7 +830,7 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
             /* In URC mode - Check for URC tokenizer patterns */
             else
             {
-                bool match = false;
+                match = false;
 
                 if (interface_ptr->urc_tokenizer_pattern_ptr)
                 {

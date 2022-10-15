@@ -36,28 +36,28 @@ ewf_result ewf_adapter_modem_network_registration_check(ewf_adapter* adapter_ptr
 
     if(!timeout)
     {
-    	return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-	ewf_result result = EWF_RESULT_OK;
-	uint32_t n;
-	ewf_network_status stat = EWF_NOT_REGISTERED_NOT_SEARCHING;
+    ewf_result result = EWF_RESULT_OK;
+    uint32_t n;
+    ewf_network_status stat = EWF_NOT_REGISTERED_NOT_SEARCHING;
 
-	while(--timeout)
-	{
-		while(ewf_adapter_modem_network_registration_read(adapter_ptr, &n, &stat,NULL,NULL,NULL,NULL,NULL) != EWF_RESULT_OK);
-		/* Check if module is registered to network */
-		if((stat == EWF_REGISTERED_HOME)||(stat == EWF_REGISTERED_ROAMING))
-		{
-			break;
-		}
-		ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 1U);
-	}
+    while(--timeout)
+    {
+        while(ewf_adapter_modem_network_registration_read(adapter_ptr, &n, &stat,NULL,NULL,NULL,NULL,NULL) != EWF_RESULT_OK);
+        /* Check if module is registered to network */
+        if((stat == EWF_REGISTERED_HOME)||(stat == EWF_REGISTERED_ROAMING))
+        {
+            break;
+        }
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 1U);
+    }
     if (!timeout)
     {
 
-		EWF_LOG_ERROR("Failed to register to Network, ewf_result %d.\n", result);
-		return EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED;
+        EWF_LOG_ERROR("Failed to register to Network, ewf_result %d.\n", result);
+        return EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED;
     }
 
     return EWF_RESULT_OK;

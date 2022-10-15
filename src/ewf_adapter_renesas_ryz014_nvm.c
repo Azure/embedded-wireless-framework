@@ -93,6 +93,8 @@ ewf_result ewf_adapter_renesas_ryz014_nvm_upload(ewf_adapter* adapter_ptr, const
         tokenizer_pattern_str ,
         sizeof(tokenizer_pattern_str) - 1,
         false,
+        NULL,
+        NULL,
     };
     char file_size_str[5];
     const char* file_size_cstr = ewfl_unsigned_to_str(length, file_size_str, sizeof(file_size_str));

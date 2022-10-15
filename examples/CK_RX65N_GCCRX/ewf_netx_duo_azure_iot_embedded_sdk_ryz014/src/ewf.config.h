@@ -44,7 +44,11 @@ extern "C" {
 /* Enable CK-RX65N UART confif */
 #define EWF_RENESAS_RX65N_CK_ENABLE
 
-#define EWF_LOG demo_printf
+#ifdef EWF_DEBUG
+#define EWF_LOG       demo_printf
+#else
+#define EWF_LOG(...)
+#endif
 
 /************************************************************************//**
  * @} *** group_configuration

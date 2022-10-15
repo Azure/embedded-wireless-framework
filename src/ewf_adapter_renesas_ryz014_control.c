@@ -210,15 +210,16 @@ ewf_result ewf_adapter_renesas_ryz014_start(ewf_adapter* adapter_ptr)
 
     /* Initialize the interface tokenizer patterns */
 
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, ewf_adapter_renesas_ryz014_command_response_end_tokenizer_pattern_ptr)))
-    {
-        EWF_LOG_ERROR("Failed to set the interface command response end tokenizer pattern: ewf_result %d.\n", result);
-        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
-    }
-
+    ewf_adapter_renesas_ryz014_message_tokenizer_pattern1_match_function_state.interface_ptr = interface_ptr;
     if (ewf_result_failed(result = ewf_interface_tokenizer_message_pattern_set(interface_ptr, ewf_adapter_renesas_ryz014_message_tokenizer_pattern_ptr)))
     {
         EWF_LOG_ERROR("Failed to set the interface message tokenizer pattern: ewf_result %d.\n", result);
+        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
+    }
+
+    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, ewf_adapter_renesas_ryz014_command_response_end_tokenizer_pattern_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to set the interface command response end tokenizer pattern: ewf_result %d.\n", result);
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
 

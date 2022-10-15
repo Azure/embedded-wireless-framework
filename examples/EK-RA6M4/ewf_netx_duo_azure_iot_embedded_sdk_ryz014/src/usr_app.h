@@ -47,7 +47,7 @@
 #define IotLogErr       APP_ERR_PRINT
 #define IotLogWarn      APP_WARN_PRINT
 #define IotLogDebug     APP_DBG_PRINT
-#define IotLog          APP_PRINT
+#define IotLog          APP_OUTPUT_PRINT /* APP_PRINT */
 #define IotLogErrTrap  APP_ERR_TRAP
 
 #define LIBRARY_LOG_LEVEL IOT_LOG_ERROR

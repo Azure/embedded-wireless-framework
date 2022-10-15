@@ -252,27 +252,29 @@ ewf_result ewf_adapter_espressif_common_get_ipv4_dns(ewf_adapter* adapter_ptr, u
 
     result = EWF_RESULT_OK;
 
+    /* Default DNS */
+#if 0
+    int dns1_a = 8;
+    int dns1_b = 8;
+    int dns1_c = 8;
+    int dns1_d = 8;
+#else
+    int dns1_a = 10;
+    int dns1_b = 50;
+    int dns1_c = 10;
+    int dns1_d = 50;
+#endif
+
     response_ptr[response_length] = 0;
     char* match_str = strstr((char*)response_ptr, "+CIPDNS_CUR");
     if (!match_str)
     {
-        EWF_LOG_ERROR("No DNS address information found int he response.\n");
-        result = EWF_RESULT_UNEXPECTED_RESPONSE;
+        EWF_LOG_ERROR("No DNS address information found in the response, using the default.\n");
+        
+        // result = EWF_RESULT_UNEXPECTED_RESPONSE; // Do not fail
     }
     else
     {
-        int dns1_a;
-        int dns1_b;
-        int dns1_c;
-        int dns1_d;
-
-        /*
-        int dns2_a;
-        int dns2_b;
-        int dns2_c;
-        int dns2_d;
-        */
-
         int fields = sscanf(
             (char*)response_ptr,
             "+CIPDNS_CUR: \"%d.%d.%d.%d\"\r\n",
@@ -289,13 +291,13 @@ ewf_result ewf_adapter_espressif_common_get_ipv4_dns(ewf_adapter* adapter_ptr, u
                 result = EWF_RESULT_UNEXPECTED_RESPONSE;
             }
         }
-
-        *dns_ptr =
-            ((dns1_a & 0xFF) << 24) |
-            ((dns1_b & 0xFF) << 16) |
-            ((dns1_c & 0xFF) << 8) |
-            (dns1_d & 0xFF);
     }
+
+    *dns_ptr =
+        ((dns1_a & 0xFF) << 24) |
+        ((dns1_b & 0xFF) << 16) |
+        ((dns1_c & 0xFF) << 8) |
+        (dns1_d & 0xFF);
 
     ewf_interface_release(interface_ptr, response_ptr);
 
