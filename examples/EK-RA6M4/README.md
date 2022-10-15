@@ -1,4 +1,4 @@
-# Embedded Wireless Framework examples for Renesas RA
+# Embeed Wireless Framework examples for Renesas RA
 The purpose of these examples is to show the use of EWF with the Renesas RA family of microcontrollers.
 Embedded Wireless framework(EWF) is meant to simplify connecting small devices to the internet using different connectivity adapters.
 An adapter is the device or software used to connect the application using the EWF API to the internet.

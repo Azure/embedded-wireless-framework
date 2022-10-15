@@ -16,8 +16,8 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_lib The EWF Library
- * @brief The EWF library
+ * @defgroup group_lib EWF Library
+ * @brief EWF library
  * @{
  ****************************************************************************/
 
@@ -214,6 +214,17 @@ char * ewfl_str_remove_suffix_str(char* str, const char * suffix_str);
  * @return pointer to the trimmed string.
  */
 char* ewfl_adapter_response_str_extract(char* str);
+
+/**
+ * @brief Find the next matching character from several of many in a string, break and fail on matching custom terminators
+ *
+ * @param str the string to search
+ * @param i the index to start from
+ * @param chars_str a NULL terminated strinc containing the characters to match
+ * @param terms_str a NULL terminated string containing the character to match for termination
+ * @return a pointer to the match, NULL otherwise
+ */
+char* ewfl_find_chars_with_terms(char* str, char* chars_str, char* term_str);
 
 /************************************************************************//**
  * @} *** group_lib_string

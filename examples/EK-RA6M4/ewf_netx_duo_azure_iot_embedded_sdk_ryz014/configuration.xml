@@ -398,14 +398,6 @@
         </stack>
       </stack>
     </context>
-    <context id="rtos.threadx.thread.704639200">
-      <property id="_symbol" value="c2d_thread"/>
-      <property id="rtos.threadx.thread.name" value="Cloud2Device Thread"/>
-      <property id="rtos.threadx.thread.stack" value="2048"/>
-      <property id="rtos.threadx.thread.priority" value="2"/>
-      <property id="rtos.threadx.thread.autostart" value="rtos.threadx.thread.autostart.disabled"/>
-      <property id="rtos.threadx.thread.timeslice" value="1"/>
-    </context>
     <config id="config.driver.ioport">
       <property id="config.driver.ioport.checking" value="config.driver.ioport.checking.system"/>
     </config>
@@ -677,14 +669,14 @@
       <property id="config.azure.nxd_sntp_client.ignore_max_adjust_startup" value="config.azure.nxd_sntp_client.ignore_max_adjust_startup.enable"/>
       <property id="config.azure.nxd_sntp_client.max_time_lapse" value="7200"/>
       <property id="config.azure.nxd_sntp_client.update_timeout_interval" value="1"/>
-      <property id="config.azure.nxd_sntp_client.unicast_poll_interval" value="36"/>
+      <property id="config.azure.nxd_sntp_client.unicast_poll_interval" value="3600"/>
       <property id="config.azure.nxd_sntp_client.exp_backoff_rate" value="2"/>
       <property id="config.azure.nxd_sntp_client.rtt_required" value="config.azure.nxd_sntp_client.rtt_required.disable"/>
       <property id="config.azure.nxd_sntp_client.maximum_root_dispersion" value="50000"/>
       <property id="config.azure.nxd_sntp_client.invalid_update_limit" value="3"/>
       <property id="config.azure.nxd_sntp_client.randomize_on_startup" value="config.azure.nxd_sntp_client.randomize_on_startup.disable"/>
       <property id="config.azure.nxd_sntp_client.client_sleep_interval" value="1"/>
-      <property id="config.azure.nxd_sntp_client.cur_year" value="2022"/>
+      <property id="config.azure.nxd_sntp_client.cur_year" value="2015"/>
       <property id="config.azure.nxd_tftp_common.error_string_max" value="64"/>
       <property id="config.azure.nxd_tftp_common.time_to_live" value="128"/>
       <property id="config.azure.nxd_tftp_common.tos" value="config.azure.nxd_tftp_common.tos.normal"/>

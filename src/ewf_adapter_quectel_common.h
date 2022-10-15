@@ -109,26 +109,25 @@ typedef enum _ewf_adapter_common_internet_socket_service_type
 /** @brief Internal structure for internet socket status  */
 typedef struct _ewf_adapter_quectel_common_internet_socket
 {
-    uint32_t id;
-    uint32_t port;
-    volatile ewf_adapter_quectel_common_internet_socket_service_type type;
-    volatile bool used;
-    volatile bool open;
-    volatile bool open_error;
-    volatile bool conn;
-    volatile bool conn_error;
-    volatile uint32_t recv_count;
     void* socket_ptr;
+    uint32_t id;
+    uint16_t local_port;
+    ewf_adapter_quectel_common_internet_socket_service_type type;
+    volatile bool used : 1;
+    volatile bool open : 1;
+    volatile bool open_error : 1;
+    volatile bool conn : 1;
+    volatile bool conn_error : 1;
 
 } ewf_adapter_quectel_common_internet_socket;
 
 /** @brief Internal structure for MQTT socket status  */
 typedef struct _ewf_adapter_quectel_common_mqtt_socket
 {
-    volatile bool open;
-    volatile bool open_error;
-    volatile bool conn;
-    volatile bool conn_error;
+    volatile bool open : 1;
+    volatile bool open_error : 1;
+    volatile bool conn : 1;
+    volatile bool conn_error : 1;
 
 } ewf_adapter_quectel_common_mqtt_socket;
 
@@ -307,7 +306,7 @@ ewf_result ewf_adapter_quectel_common_tcp_open(ewf_adapter* adapter_ptr, ewf_soc
 ewf_result ewf_adapter_quectel_common_tcp_close(ewf_socket_tcp* socket_ptr);
 ewf_result ewf_adapter_quectel_common_tcp_control(ewf_socket_tcp* socket_ptr, const char* control_str, const uint8_t* buffer_ptr, uint32_t* buffer_length_ptr);
 ewf_result ewf_adapter_quectel_common_tcp_set_tls_configuration(ewf_socket_tcp* socket_ptr, uint32_t tls_configuration_id);
-ewf_result ewf_adapter_quectel_common_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t port);
+ewf_result ewf_adapter_quectel_common_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t local_port);
 ewf_result ewf_adapter_quectel_common_tcp_listen(ewf_socket_tcp* socket_ptr);
 ewf_result ewf_adapter_quectel_common_tcp_accept(ewf_socket_tcp* socket_ptr, ewf_socket_tcp* socket_new_ptr);
 ewf_result ewf_adapter_quectel_common_tcp_connect(ewf_socket_tcp* socket_ptr, const char* const server, uint32_t port);

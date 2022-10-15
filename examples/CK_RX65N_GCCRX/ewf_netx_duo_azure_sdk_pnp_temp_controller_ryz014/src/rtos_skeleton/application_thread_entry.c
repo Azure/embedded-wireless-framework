@@ -62,6 +62,9 @@ Includes   <System Includes> , "Project Includes"
 
 #include "ewf_example.config.h"
 
+/* Include the sample.  */
+extern VOID sample_entry(NX_IP* ip_ptr, NX_PACKET_POOL* pool_ptr, NX_DNS* dns_ptr, UINT (*unix_time_callback)(ULONG *unix_time));
+
 
 /* Define user configurable symbols. */
 #ifndef SAMPLE_IP_STACK_SIZE
@@ -264,7 +267,7 @@ void application_thread_entry(ULONG entry_input)
     }
 
     /* Save the adapter pointer in the IP instance */
-    ip_0.nx_ip_reserved_ptr = adapter_ptr;
+    ip_0.nx_ip_interface->nx_interface_additional_link_info = adapter_ptr;
 
     /* Enable ARP and supply ARP cache memory for IP Instance 0.  */
     status = nx_arp_enable(&ip_0, (VOID *)&sample_arp_cache_area[0], sizeof(sample_arp_cache_area));
@@ -345,7 +348,7 @@ void application_thread_entry(ULONG entry_input)
     {
 
          /* Start SNTP to sync the local time.  */
-         status = 1;//sntp_time_sync();
+         status = sntp_time_sync();
 
          /* Check status.  */
          if(status == NX_SUCCESS)

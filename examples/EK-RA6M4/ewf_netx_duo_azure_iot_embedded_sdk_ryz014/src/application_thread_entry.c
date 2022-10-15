@@ -62,28 +62,31 @@
 
 #include "ewf_middleware_netxduo.c"
 
-
-#define USR_IP_TASK_STACK_SIZE   (2048)
-#define USR_IP_THREAD_PRIORITY   (1)
-#define USR_ARP_CACHE_SIZE       (520 * 1)
+/* Define user configurable symbols. */
+#ifndef SAMPLE_IP_STACK_SIZE
+#define SAMPLE_IP_STACK_SIZE            (2048)
+#endif /* SAMPLE_IP_STACK_SIZE  */
 
 #ifndef SAMPLE_PACKET_COUNT
-#define SAMPLE_PACKET_COUNT           (60)
+#define SAMPLE_PACKET_COUNT             (32)
 #endif /* SAMPLE_PACKET_COUNT  */
 
 #ifndef SAMPLE_PACKET_SIZE
-#define SAMPLE_PACKET_SIZE            (EWF_CONFIG_ADAPTER_MTU)
+#define SAMPLE_PACKET_SIZE              (1536)
 #endif /* SAMPLE_PACKET_SIZE  */
 
+#define SAMPLE_POOL_SIZE                ((SAMPLE_PACKET_SIZE + sizeof(NX_PACKET)) * SAMPLE_PACKET_COUNT)
 
-#define SAMPLE_POOL_SIZE              ((SAMPLE_PACKET_SIZE + sizeof(NX_PACKET)) * SAMPLE_PACKET_COUNT)
+#ifndef SAMPLE_ARP_CACHE_SIZE
+#define SAMPLE_ARP_CACHE_SIZE           (512)
+#endif /* SAMPLE_ARP_CACHE_SIZE  */
 
-#ifndef SAMPLE_SNTP_SERVER_NAME
-#define SAMPLE_SNTP_SERVER_NAME           "0.pool.ntp.org"    /* SNTP Server.  */
-#endif /* SAMPLE_SNTP_SERVER_NAME */
+#ifndef SAMPLE_IP_THREAD_PRIORITY
+#define SAMPLE_IP_THREAD_PRIORITY       (1)
+#endif /* SAMPLE_IP_THREAD_PRIORITY */
 
 #ifndef SAMPLE_SNTP_SYNC_MAX
-#define SAMPLE_SNTP_SYNC_MAX             (10)
+#define SAMPLE_SNTP_SYNC_MAX             (30)
 #endif /* SAMPLE_SNTP_SYNC_MAX */
 
 #ifndef SAMPLE_SNTP_UPDATE_MAX
@@ -91,12 +94,12 @@
 #endif /* SAMPLE_SNTP_UPDATE_MAX */
 
 #ifndef SAMPLE_SNTP_UPDATE_INTERVAL
-#define SAMPLE_SNTP_UPDATE_INTERVAL       (NX_IP_PERIODIC_RATE / 2)
+#define SAMPLE_SNTP_UPDATE_INTERVAL       (NX_IP_PERIODIC_RATE/2)
 #endif /* SAMPLE_SNTP_UPDATE_INTERVAL */
 
-/* Default time. GMT+01: Saturday, December 31, 2022 10:28:30 PM, Epoch timestamp: 1663884227.  */
+/* Default time. GMT: Friday, Jan 1, 2022 12:00:00 AM. Epoch timestamp: 1640995200.  */
 #ifndef SAMPLE_SYSTEM_TIME
-#define SAMPLE_SYSTEM_TIME                1672525710
+#define SAMPLE_SYSTEM_TIME                1640995200
 #endif /* SAMPLE_SYSTEM_TIME  */
 
 /* Seconds between Unix Epoch (1/1/1970) and NTP Epoch (1/1/1999) */
@@ -113,33 +116,38 @@ ULONG g_dns_address = 0;
 
 
 /* IP instance */
- NX_IP g_ip0;
+static NX_IP g_ip0;
 /* DNS instance */
- NX_DNS g_dns0;
-/* DHCP instance. */
-// NX_DHCP g_dhcp_client0;
+static NX_DNS g_dns0;
 /* SNTP Instance */
- NX_SNTP_CLIENT   g_sntp_client0;
+static NX_SNTP_CLIENT   g_sntp_client0;
 /* System clock time for UTC.  */
- ULONG    unix_time_base;
+ULONG    unix_time_base;
 
 /* Stack memory for g_ip0. */
-uint8_t g_ip0_stack_memory[USR_IP_TASK_STACK_SIZE] BSP_PLACE_IN_SECTION(".stack.g_ip0") BSP_ALIGN_VARIABLE(BSP_STACK_ALIGNMENT);
+//uint8_t g_ip0_stack_memory[SAMPLE_IP_STACK_SIZE] BSP_PLACE_IN_SECTION(".stack.g_ip0") BSP_ALIGN_VARIABLE(BSP_STACK_ALIGNMENT);
+static ULONG g_ip0_stack_memory[SAMPLE_IP_STACK_SIZE/ sizeof(ULONG)];
 
 /* ARP cache memory for g_ip0. */
-uint8_t g_ip0_arp_cache_memory[USR_ARP_CACHE_SIZE] BSP_ALIGN_VARIABLE(4);
+//uint8_t g_ip0_arp_cache_memory[SAMPLE_ARP_CACHE_SIZE] BSP_ALIGN_VARIABLE(4);
+static ULONG g_ip0_arp_cache_memory[SAMPLE_ARP_CACHE_SIZE / sizeof(ULONG)];
 
 /* Packet pool instance (If this is a Trustzone part, the memory must be placed in Non-secure memory). */
 NX_PACKET_POOL g_packet_pool0;
 uint8_t g_packet_pool0_pool_memory[SAMPLE_POOL_SIZE] BSP_ALIGN_VARIABLE(4) BUFFER_PLACE_IN_SECTION;
 
+static const CHAR *sntp_servers[] =
+{
+  "0.pool.ntp.org",
+  "1.pool.ntp.org",
+  "2.pool.ntp.org",
+  "3.pool.ntp.org",
+};
+static UINT sntp_server_index;
 
 static UINT dns_create();;
 UINT unix_time_get(ULONG *unix_time);
 static UINT sntp_time_sync();
-static double mcu_temp __attribute__ ((used)) = RESET_VALUE;
-
-extern TX_THREAD c2d_thread;
 
 /* application_thread_entry function */
 void application_thread_entry(void)
@@ -279,8 +287,8 @@ void application_thread_entry(void)
     status = nx_ip_create(&g_ip0, "NetX IP Instance 0",
                           g_ip_address, g_network_mask,
                           &g_packet_pool0, nx_driver_ewf_adapter,
-                          &g_ip0_stack_memory[0], USR_IP_TASK_STACK_SIZE,
-                          USR_IP_THREAD_PRIORITY);
+                          (UCHAR*)g_ip0_stack_memory, SAMPLE_IP_STACK_SIZE,
+                          SAMPLE_IP_THREAD_PRIORITY);
 
     /* Check for IP create errors.  */
     if (NX_SUCCESS != status)
@@ -290,10 +298,10 @@ void application_thread_entry(void)
     }
 
     /* Save the adapter pointer in the IP instance */
-    g_ip0.nx_ip_reserved_ptr = adapter_ptr;
+    g_ip0.nx_ip_interface->nx_interface_additional_link_info = adapter_ptr;
 
     /* Enable ARP and supply ARP cache memory for IP Instance 0.  */
-    status = nx_arp_enable(&g_ip0, &g_ip0_arp_cache_memory,  sizeof(g_ip0_arp_cache_memory));
+    status = nx_arp_enable(&g_ip0, (VOID *)g_ip0_arp_cache_memory,  sizeof(g_ip0_arp_cache_memory));
 
     /* Check for ARP enable errors.  */
     if (status)
@@ -365,17 +373,9 @@ void application_thread_entry(void)
         IotLog("DNS Create Failed: %u\r\n", status);
         exit(status);
     }
-    /* Sync up time by SNTP at start up.  */
-    for (UINT i = 0; i < SAMPLE_SNTP_SYNC_MAX; i++)
-    {
 
-         /* Start SNTP to sync the local time.  */
-         status = 1;//sntp_time_sync(); /* Work in progress */
-
-         /* Check status.  */
-         if(status == NX_SUCCESS)
-             break;
-    }
+    /* Sync up time by SNTP at start up. */
+    status = sntp_time_sync();
 
      /* Check status.  */
     if (status)
@@ -398,82 +398,6 @@ void application_thread_entry(void)
     nx_secure_tls_initialize();
 
     sample_entry (&g_ip0, &g_packet_pool0, &g_dns0, unix_time_get);
-#if 0
-    /* Resume the thread represented by "c2d_thread". */
-    status = tx_thread_resume (&c2d_thread);
-
-    do
-    {
-        status = tx_queue_receive (&g_topic_queue, (VOID*) &mq_data, TX_WAIT_FOREVER);
-
-        if (TX_SUCCESS == status)
-        {
-            switch (mq_data.id)
-            {
-                case ID_PB:
-                {
-                    IotLog("Push Button S%d Pressed\t",mq_data.value.pb_data.pb_num);
-                    switch_num = mq_data.value.pb_data.pb_num;
-                    if (EXIT_SUCCESS != sendMessage_pb (switch_num, message_id++))
-                    {
-                        IotLogErr("** Push Button Message Publish failed **\r\n");
-                    }
-                    else
-                    {
-                        ACTIVITY_INDICATION
-                    }
-                }
-                break;
-
-                case ID_TEMPERATURE:
-                {
-                    mcu_temp = ((((float) mq_data.value.adc_data.adc_value) * 0.353793f) - 467.39f);
-                    print_float (temp_str, sizeof(temp_str), mcu_temp);
-                    IotLog("MCU Temperature %s \t",temp_str);
-                    if (EXIT_SUCCESS != sendMessage_ts (temp_str, message_id++))
-                    {
-                        IotLogErr("** Temperature Sensor Message Publish failed **\r\n");
-                    }
-                    else
-                    {
-                        ACTIVITY_INDICATION
-                        ;
-                    }
-                }
-                break;
-
-                case ID_LED_ACT:
-                {
-                    IotLog("Topic Received from Cloud %s \r\n",mq_data.value.led_data.led_act_topic_msg);
-                    if (RESET_VALUE == strcmp ((char*) mq_data.value.led_data.led_act_topic_msg, "ON"))
-                    {
-                        led_on_off (LED_GREEN, LED_ON);
-                        IotLog("\r\nGreen LED ON\r\n");
-                    }
-                    else if (RESET_VALUE == strcmp ((char*) mq_data.value.led_data.led_act_topic_msg, "OFF"))
-                    {
-                        led_on_off (LED_GREEN, LED_OFF);
-                        IotLog("\r\nGreen LED OFF\r\n");
-                    }
-                    else
-                    {
-                        IotLog("\r\nMsg Topic didn't match !!!\r\n");
-                    }
-                    ACTIVITY_INDICATION
-                }
-                break;
-
-                default:
-                {
-                    IotLogErr("** Error in MQTT Messages.. MQTT Client Cleanup started  **\r\n");
-                }
-                break;
-            }
-            memset (&mq_data.value.led_data.led_act_topic_msg, '\0', sizeof(mqtt_rx_payload_t));
-        }
-    }
-    while (1);
-#endif
 }
 
 static UINT dns_create()
@@ -481,7 +405,6 @@ static UINT dns_create()
 
 UINT    status;
 ULONG   dns_server_address[3];
-UINT    dns_server_address_size = 12;
 
     /* Create a DNS instance for the Client.  Note this function will create
        the DNS Client packet pool for creating DNS message packets intended
@@ -531,128 +454,143 @@ UINT    dns_server_address_size = 12;
     return(NX_SUCCESS);
 }
 
-
-/* Sync up the local time.  */
-static UINT sntp_time_sync()
+/* Sync up the local time. */
+static UINT sntp_time_sync_internal(ULONG sntp_server_address)
 {
+  UINT status;
+  UINT server_status;
+  UINT i;
 
-UINT    status;
-UINT    server_status;
-ULONG   sntp_server_address;
-UINT    i;
+  /* Create the SNTP Client to run in broadcast mode.. */
+  status = nx_sntp_client_create(&g_sntp_client0, &g_ip0, 0, &g_packet_pool0, NX_NULL, NX_NULL,
+                                 NX_NULL /* no random_number_generator callback */);
 
-
-    IotLog("SNTP Time Sync...\r\n");
-
-#ifndef SAMPLE_SNTP_SERVER_ADDRESS
-    /* Look up SNTP Server address. */
-    status = nx_dns_host_by_name_get(&g_dns0, (UCHAR *)SAMPLE_SNTP_SERVER_NAME, &sntp_server_address, 5 * NX_IP_PERIODIC_RATE);
-
-    /* Check status.  */
-    if (status)
-    {
-        return(status);
-    }
-
-
-#else /* !SAMPLE_SNTP_SERVER_ADDRESS */
-    sntp_server_address = SAMPLE_SNTP_SERVER_ADDRESS;
-#endif /* SAMPLE_SNTP_SERVER_ADDRESS */
-
-    /* Create the SNTP Client to run in broadcast mode.. */
-    status =  nx_sntp_client_create(&g_sntp_client0, &g_ip0, 0, &g_packet_pool0,
-                                    NX_NULL,
-                                    NX_NULL,
-                                    NX_NULL /* no random_number_generator callback */);
-
-    /* Check status.  */
-    if (status)
-    {
-        return(status);
-    }
-
+  /* Check status. */
+  if (status == NX_SUCCESS)
+  {
     /* Use the IPv4 service to initialize the Client and set the IPv4 SNTP server. */
     status = nx_sntp_client_initialize_unicast(&g_sntp_client0, sntp_server_address);
 
-    /* Check status.  */
-    if (status)
+    /* Check status. */
+    if (status != NX_SUCCESS)
     {
-        nx_sntp_client_delete(&g_sntp_client0);
-        return(status);
+      nx_sntp_client_delete(&g_sntp_client0);
+      return (status);
     }
 
     /* Set local time to 0 */
     status = nx_sntp_client_set_local_time(&g_sntp_client0, 0, 0);
 
-    /* Check status.  */
-    if (status)
+    /* Check status. */
+    if (status != NX_SUCCESS)
     {
-        nx_sntp_client_delete(&g_sntp_client0);
-        return(status);
+      nx_sntp_client_delete(&g_sntp_client0);
+      return (status);
     }
 
     /* Run Unicast client */
     status = nx_sntp_client_run_unicast(&g_sntp_client0);
 
-    /* Check status.  */
-    if (status)
+    /* Check status. */
+    if (status != NX_SUCCESS)
     {
-        nx_sntp_client_stop(&g_sntp_client0);
-        nx_sntp_client_delete(&g_sntp_client0);
-        return(status);
+      nx_sntp_client_stop(&g_sntp_client0);
+      nx_sntp_client_delete(&g_sntp_client0);
+      return (status);
     }
 
     /* Wait till updates are received */
-    for (i = 0; i < SAMPLE_SNTP_UPDATE_MAX; i++)
+    for (i = 0U; i < SAMPLE_SNTP_UPDATE_MAX; i++)
     {
+      /* First verify we have a valid SNTP service running. */
+      status = nx_sntp_client_receiving_updates(&g_sntp_client0, &server_status);
 
-        /* First verify we have a valid SNTP service running. */
-        status = nx_sntp_client_receiving_updates(&g_sntp_client0, &server_status);
+      /* Check status. */
+      if ((status == NX_SUCCESS) && (server_status == NX_TRUE))
+      {
+        /* Server status is good. Now get the Client local time. */
+        ULONG sntp_seconds;
+        ULONG sntp_fraction;
+        ULONG system_time_in_second;
 
-        /* Check status.  */
-        if ((status == NX_SUCCESS) && (server_status == NX_TRUE))
+        /* Get the local time. */
+        status = nx_sntp_client_get_local_time(&g_sntp_client0, &sntp_seconds, &sntp_fraction, NX_NULL);
+
+        /* Check status. */
+        if (status != NX_SUCCESS)
         {
-
-            /* Server status is good. Now get the Client local time. */
-            ULONG sntp_seconds, sntp_fraction;
-            ULONG system_time_in_second;
-
-            /* Get the local time.  */
-            status = nx_sntp_client_get_local_time(&g_sntp_client0, &sntp_seconds, &sntp_fraction, NX_NULL);
-
-            /* Check status.  */
-            if (status != NX_SUCCESS)
-            {
-                continue;
-            }
-
-            /* Get the system time in second.  */
-            system_time_in_second = tx_time_get() / TX_TIMER_TICKS_PER_SECOND;
-
-            /* Convert to Unix epoch and minus the current system time.  */
-            unix_time_base = (sntp_seconds - (system_time_in_second + SAMPLE_UNIX_TO_NTP_EPOCH_SECOND));
-
-            /* Time sync successfully.  */
-
-            /* Stop and delete SNTP.  */
-            nx_sntp_client_stop(&g_sntp_client0);
-            nx_sntp_client_delete(&g_sntp_client0);
-
-            return(NX_SUCCESS);
+          continue;
         }
 
-        /* Sleep.  */
-        tx_thread_sleep(SAMPLE_SNTP_UPDATE_INTERVAL);
+        /* Get the system time in second. */
+        system_time_in_second = tx_time_get() / TX_TIMER_TICKS_PER_SECOND;
+
+        /* Convert to Unix epoch and minus the current system time. */
+        unix_time_base = (sntp_seconds - (system_time_in_second + SAMPLE_UNIX_TO_NTP_EPOCH_SECOND));
+
+        /* Time sync successfully. */
+
+        /* Stop and delete SNTP. */
+        nx_sntp_client_stop(&g_sntp_client0);
+        nx_sntp_client_delete(&g_sntp_client0);
+
+        return (NX_SUCCESS);
+      }
+
+      /* Sleep.  */
+      tx_thread_sleep(SAMPLE_SNTP_UPDATE_INTERVAL);
     }
 
-    /* Time sync failed.  */
-
-    /* Stop and delete SNTP.  */
+    /* Time sync failed. - Return not success. */
+    status = NX_NOT_SUCCESSFUL;
+    /* Stop and delete SNTP. */
     nx_sntp_client_stop(&g_sntp_client0);
     nx_sntp_client_delete(&g_sntp_client0);
+  }
 
-    /* Return success.  */
-    return(NX_NOT_SUCCESSFUL);
+  return (status);
+}
+
+/* Sync up the local time.  */
+static UINT sntp_time_sync(void)
+{
+  UINT  status;
+  ULONG gateway_address;
+  ULONG sntp_server_address;
+
+  /* Sync time by SNTP server array. */
+  for (UINT i = 0U; i < SAMPLE_SNTP_SYNC_MAX; i++)
+  {
+    IotLog("SNTP Time Sync...%s\r\n", sntp_servers[sntp_server_index]);
+
+    /* Make sure the network is still valid. */
+    while (nx_ip_gateway_address_get(&g_ip0, &gateway_address))
+    {
+      tx_thread_sleep(NX_IP_PERIODIC_RATE);
+    }
+
+    /* Look up SNTP Server address. */
+    status = nx_dns_host_by_name_get(&g_dns0, (UCHAR *)sntp_servers[sntp_server_index], &sntp_server_address,
+                                     (5 * NX_IP_PERIODIC_RATE));
+
+    /* Check status. */
+    if (status == NX_SUCCESS)
+    {
+      /* Start SNTP to sync the local time. */
+      status = sntp_time_sync_internal(sntp_server_address);
+
+      /* Check status.  */
+      if (status == NX_SUCCESS)
+      {
+        return (NX_SUCCESS);
+      }
+    }
+
+    /* Switch SNTP server every time.  */
+    sntp_server_index = (sntp_server_index + 1) % (sizeof(sntp_servers) / sizeof(sntp_servers[0]));
+  }
+
+  return (NX_NOT_SUCCESSFUL);
 }
 
 UINT unix_time_get(ULONG *unix_time)

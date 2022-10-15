@@ -3,7 +3,6 @@
 #include "tx_api.h"
 
 extern void application_thread_create(void);
-extern void c2d_thread_create(void);
 
 uint32_t g_fsp_common_thread_count;
 bool g_fsp_common_initialized;
@@ -59,7 +58,6 @@ void tx_application_define(void *first_unused_memory)
     }
 
     application_thread_create ();
-    c2d_thread_create ();
 
 #ifdef TX_USER_ENABLE_TRACE
 					TX_USER_ENABLE_TRACE;

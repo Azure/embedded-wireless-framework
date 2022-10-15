@@ -262,6 +262,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.515290901.326203308" name="Remove command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.515290901"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.unit.285933088.1127128431" name="FPU Type" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.unit.285933088"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.166689996.1502021654" name="Float ABI" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.166689996"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1552867020" name="GNU Arm Cross Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1622256701">
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1907942874" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -399,7 +400,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ra"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ra_gen"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="c2d_thread_entry.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -665,6 +666,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.880254250.1038439331" name="Remove command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.880254250"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.unit.8212642.1449334183" name="FPU Type" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.unit.8212642"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.2065826534.1348924437" name="Float ABI" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.2065826534"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.612893900" name="GNU Arm Cross Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1695560667">
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.755094882" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -802,7 +804,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ra"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ra_gen"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="c2d_thread_entry.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

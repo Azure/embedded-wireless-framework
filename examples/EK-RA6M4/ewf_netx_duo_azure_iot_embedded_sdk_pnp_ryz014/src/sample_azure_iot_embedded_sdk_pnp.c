@@ -154,13 +154,13 @@ UINT request_id;
     if (nx_azure_iot_hub_client_reported_properties_create(hub_client_ptr,
                                                            &packet_ptr, NX_WAIT_FOREVER))
     {
-        EWF_LOG("Failed to build reported response\r\n");
+        IotLog("Failed to build reported response\r\n");
         return;
     }
 
     if (nx_azure_iot_json_writer_init(&json_writer, packet_ptr, NX_WAIT_FOREVER))
     {
-        EWF_LOG("Failed to build reported response\r\n");
+        IotLog("Failed to build reported response\r\n");
         nx_packet_release(packet_ptr);
         return;
     }
@@ -177,7 +177,7 @@ UINT request_id;
         nx_azure_iot_hub_client_reported_properties_status_end(hub_client_ptr, &json_writer) ||
         nx_azure_iot_json_writer_append_end_object(&json_writer))
     {
-        EWF_LOG("Failed to build reported response\r\n");
+        IotLog("Failed to build reported response\r\n");
         nx_packet_release(packet_ptr);
     }
     else
@@ -187,7 +187,7 @@ UINT request_id;
                                                              &response_status, NX_NULL,
                                                              (5 * NX_IP_PERIODIC_RATE)))
         {
-            EWF_LOG("Failed to send reported response\r\n");
+            IotLog("Failed to send reported response\r\n");
             nx_packet_release(packet_ptr);
         }
     }
@@ -317,7 +317,7 @@ UCHAR time_buf[32];
                                                                    sizeof(fake_end_report_time) - 1) ||
         nx_azure_iot_json_writer_append_end_object(out_json_writer_ptr))
     {
-        EWF_LOG("Failed to build getMaxMinReport response \r\n");
+        IotLog("Failed to build getMaxMinReport response \r\n");
         status = NX_NOT_SUCCESSFUL;
     }
     else
@@ -333,12 +333,12 @@ static VOID connection_status_callback(NX_AZURE_IOT_HUB_CLIENT *hub_client_ptr, 
     NX_PARAMETER_NOT_USED(hub_client_ptr);
     if (status)
     {
-        EWF_LOG("Disconnected from IoTHub!: error code = 0x%08x\r\n", status);
+        IotLog("Disconnected from IoTHub!: error code = 0x%08x\r\n", status);
         tx_event_flags_set(&sample_events, SAMPLE_DISCONNECT_EVENT, TX_OR);
     }
     else
     {
-        EWF_LOG("Connected to IoTHub.\r\n");
+        IotLog("Connected to IoTHub.\r\n");
         tx_event_flags_set(&sample_events, SAMPLE_CONNECTED_EVENT, TX_OR);
     }
 
@@ -388,12 +388,12 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
     if ((status = sample_dps_entry(&prov_client, &iothub_hostname, &iothub_hostname_length,
                                    &iothub_device_id, &iothub_device_id_length)))
     {
-        EWF_LOG("Failed on sample_dps_entry!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on sample_dps_entry!: error code = 0x%08x\r\n", status);
         return(status);
     }
 #endif /* ENABLE_DPS_SAMPLE */
 
-    EWF_LOG("IoTHub Host Name: %.*s; Device ID: %.*s.\r\n",
+    IotLog("IoTHub Host Name: %.*s; Device ID: %.*s.\r\n",
            iothub_hostname_length, iothub_hostname, iothub_device_id_length, iothub_device_id);
 
     /* Initialize IoTHub client.  */
@@ -409,7 +409,7 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
                                                      sizeof(nx_azure_iot_tls_metadata_buffer),
                                                      &root_ca_cert)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_initialize!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_initialize!: error code = 0x%08x\r\n", status);
         return(status);
     }
 
@@ -418,17 +418,17 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
                                                        (const UCHAR *)SAMPLE_PNP_MODEL_ID,
                                                        sizeof(SAMPLE_PNP_MODEL_ID) - 1)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_model_id_set!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_model_id_set!: error code = 0x%08x\r\n", status);
     }
     
     /* Add more CA certificates.  */
     else if ((status = nx_azure_iot_hub_client_trusted_cert_add(iothub_client_ptr, &root_ca_cert_2)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_trusted_cert_add!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_trusted_cert_add!: error code = 0x%08x\r\n", status);
     }
     else if ((status = nx_azure_iot_hub_client_trusted_cert_add(iothub_client_ptr, &root_ca_cert_3)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_trusted_cert_add!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_trusted_cert_add!: error code = 0x%08x\r\n", status);
     }
 
 #if (USE_DEVICE_CERTIFICATE == 1)
@@ -440,13 +440,13 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
                                                              (UCHAR *)sample_device_private_key_ptr, (USHORT)sample_device_private_key_len,
                                                              DEVICE_KEY_TYPE)))
     {
-        EWF_LOG("Failed on nx_secure_x509_certificate_initialize!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_secure_x509_certificate_initialize!: error code = 0x%08x\r\n", status);
     }
 
     /* Set device certificate.  */
     else if ((status = nx_azure_iot_hub_client_device_cert_set(iothub_client_ptr, &device_certificate)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_device_cert_set!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_device_cert_set!: error code = 0x%08x\r\n", status);
     }
 #else
 
@@ -455,46 +455,46 @@ UINT iothub_device_id_length = sizeof(DEVICE_ID) - 1;
                                                                  (UCHAR *)DEVICE_SYMMETRIC_KEY,
                                                                  sizeof(DEVICE_SYMMETRIC_KEY) - 1)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_symmetric_key_set!\r\n");
+        IotLog("Failed on nx_azure_iot_hub_client_symmetric_key_set!\r\n");
     }
 #endif /* USE_DEVICE_CERTIFICATE */
 
     /* Enable command and properties features.  */
     else if ((status = nx_azure_iot_hub_client_command_enable(iothub_client_ptr)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_command_enable!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_command_enable!: error code = 0x%08x\r\n", status);
     }
     else if ((status = nx_azure_iot_hub_client_properties_enable(iothub_client_ptr)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_properties_enable!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_properties_enable!: error code = 0x%08x\r\n", status);
     }
 
     /* Set connection status callback.  */
     else if ((status = nx_azure_iot_hub_client_connection_status_callback_set(iothub_client_ptr,
                                                                               connection_status_callback)))
     {
-        EWF_LOG("Failed on connection_status_callback!\r\n");
+        IotLog("Failed on connection_status_callback!\r\n");
     }
     else if ((status = nx_azure_iot_hub_client_receive_callback_set(iothub_client_ptr,
                                                                     NX_AZURE_IOT_HUB_COMMAND,
                                                                     message_receive_callback_command,
                                                                     NX_NULL)))
     {
-        EWF_LOG("device command callback set!: error code = 0x%08x\r\n", status);
+        IotLog("device command callback set!: error code = 0x%08x\r\n", status);
     }
     else if ((status = nx_azure_iot_hub_client_receive_callback_set(iothub_client_ptr,
                                                                     NX_AZURE_IOT_HUB_PROPERTIES,
                                                                     message_receive_callback_properties,
                                                                     NX_NULL)))
     {
-        EWF_LOG("device properties callback set!: error code = 0x%08x\r\n", status);
+        IotLog("device properties callback set!: error code = 0x%08x\r\n", status);
     }
     else if ((status = nx_azure_iot_hub_client_receive_callback_set(iothub_client_ptr,
                                                                     NX_AZURE_IOT_HUB_WRITABLE_PROPERTIES,
                                                                     message_receive_callback_writable_properties,
                                                                     NX_NULL)))
     {
-        EWF_LOG("device writable properties callback set!: error code = 0x%08x\r\n", status);
+        IotLog("device writable properties callback set!: error code = 0x%08x\r\n", status);
     }
 
     if (status)
@@ -538,13 +538,13 @@ NX_AZURE_IOT_JSON_WRITER json_writer;
             return;
         }
 
-        EWF_LOG("Received command: %.*s", (INT)command_name_length, (CHAR *)command_name_ptr);
-        EWF_LOG("\r\n");
+        IotLog("Received command: %.*s", (INT)command_name_length, (CHAR *)command_name_ptr);
+        IotLog("\r\n");
 
         if ((status = nx_azure_iot_json_reader_init(&json_reader,
                                                     packet_ptr)))
         {
-            EWF_LOG("Failed to initialize json reader \r\n");
+            IotLog("Failed to initialize json reader \r\n");
             nx_packet_release(packet_ptr);
             return;
         }
@@ -553,7 +553,7 @@ NX_AZURE_IOT_JSON_WRITER json_writer;
                                                                 scratch_buffer,
                                                                 sizeof(scratch_buffer))))
         {
-            EWF_LOG("Failed to initialize json writer response \r\n");
+            IotLog("Failed to initialize json writer response \r\n");
             nx_packet_release(packet_ptr);
             return;
         }
@@ -579,7 +579,7 @@ NX_AZURE_IOT_JSON_WRITER json_writer;
                                                                        context_ptr, context_length, scratch_buffer,
                                                                        response_payload, NX_WAIT_FOREVER)))
         {
-            EWF_LOG("Command response failed!: error code = 0x%08x\r\n", status);
+            IotLog("Command response failed!: error code = 0x%08x\r\n", status);
         }
     }
 }
@@ -600,16 +600,16 @@ ULONG properties_version;
                                                                       &packet_ptr,
                                                                       NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Receive writable property receive failed!: error code = 0x%08x\r\n", status);
+        IotLog("Receive writable property receive failed!: error code = 0x%08x\r\n", status);
         return;
     }
 
-    EWF_LOG("Received writable property");
-    EWF_LOG("\r\n");
+    IotLog("Received writable property");
+    IotLog("\r\n");
 
     if ((status = nx_azure_iot_json_reader_init(&json_reader, packet_ptr)))
     {
-        EWF_LOG("Init json reader failed!: error code = 0x%08x\r\n", status);
+        IotLog("Init json reader failed!: error code = 0x%08x\r\n", status);
         nx_packet_release(packet_ptr);
         return;
     }
@@ -619,14 +619,14 @@ ULONG properties_version;
                                                                  NX_AZURE_IOT_HUB_WRITABLE_PROPERTIES,
                                                                  &properties_version)))
     {
-        EWF_LOG("Properties version get failed!: error code = 0x%08x\r\n", status);
+        IotLog("Properties version get failed!: error code = 0x%08x\r\n", status);
         nx_packet_release(packet_ptr);
         return;
     }
 
     if ((status = nx_azure_iot_json_reader_init(&json_reader, packet_ptr)))
     {
-        EWF_LOG("Init json reader failed!: error code = 0x%08x\r\n", status);
+        IotLog("Init json reader failed!: error code = 0x%08x\r\n", status);
         nx_packet_release(packet_ptr);
         return;
     }
@@ -635,7 +635,7 @@ ULONG properties_version;
                                                  NX_AZURE_IOT_HUB_WRITABLE_PROPERTIES, properties_version);
     if (status && (status != NX_AZURE_IOT_NOT_FOUND))
     {
-        EWF_LOG("Failed to parse value\r\n");
+        IotLog("Failed to parse value\r\n");
     }
 
     nx_packet_release(packet_ptr);
@@ -664,13 +664,13 @@ ULONG reported_property_version;
     if ((status = nx_azure_iot_hub_client_reported_properties_create(hub_client_ptr,
                                                                      &packet_ptr, NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Failed create reported properties: error code = 0x%08x\r\n", status);
+        IotLog("Failed create reported properties: error code = 0x%08x\r\n", status);
         return;
     }
     
     if ((status = nx_azure_iot_json_writer_init(&json_writer, packet_ptr, NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Failed init json writer: error code = 0x%08x\r\n", status);
+        IotLog("Failed init json writer: error code = 0x%08x\r\n", status);
         nx_packet_release(packet_ptr);
         return;
     }
@@ -682,7 +682,7 @@ ULONG reported_property_version;
                                                                              device_max_temp, DOUBLE_DECIMAL_PLACE_DIGITS)) ||
         (status = nx_azure_iot_json_writer_append_end_object(&json_writer)))
     {
-        EWF_LOG("Build reported property failed: error code = 0x%08x\r\n", status);
+        IotLog("Build reported property failed: error code = 0x%08x\r\n", status);
         nx_packet_release(packet_ptr);
         return;
     }
@@ -693,14 +693,14 @@ ULONG reported_property_version;
                                                                    &reported_property_version,
                                                                    (5 * NX_IP_PERIODIC_RATE))))
     {
-        EWF_LOG("Reported properties failed!: error code = 0x%08x\r\n", status);
+        IotLog("Reported properties failed!: error code = 0x%08x\r\n", status);
         nx_packet_release(packet_ptr);
         return;
     }
 
     if ((response_status < 200) || (response_status >= 300))
     {
-        EWF_LOG("Reported properties failed with code : %d\r\n", response_status);
+        IotLog("Reported properties failed with code : %d\r\n", response_status);
         return;
     }
 
@@ -723,16 +723,16 @@ ULONG writable_properties_version;
                                                              &packet_ptr,
                                                              NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Get all properties receive failed!: error code = 0x%08x\r\n", status);
+        IotLog("Get all properties receive failed!: error code = 0x%08x\r\n", status);
         return;
     }
 
-    EWF_LOG("Received all properties");
-    EWF_LOG("\r\n");
+    IotLog("Received all properties");
+    IotLog("\r\n");
 
     if ((status = nx_azure_iot_json_reader_init(&json_reader, packet_ptr)))
     {
-        EWF_LOG("Init json reader failed!: error code = 0x%08x\r\n", status);
+        IotLog("Init json reader failed!: error code = 0x%08x\r\n", status);
         nx_packet_release(packet_ptr);
         return;
     }
@@ -741,14 +741,14 @@ ULONG writable_properties_version;
                                                                  NX_AZURE_IOT_HUB_PROPERTIES,
                                                                  &writable_properties_version)))
     {
-        EWF_LOG("Properties version get failed!: error code = 0x%08x\r\n", status);
+        IotLog("Properties version get failed!: error code = 0x%08x\r\n", status);
         nx_packet_release(packet_ptr);
         return;
     }
 
     if ((status = nx_azure_iot_json_reader_init(&json_reader, packet_ptr)))
     {
-        EWF_LOG("Init json reader failed!: error code = 0x%08x\r\n", status);
+        IotLog("Init json reader failed!: error code = 0x%08x\r\n", status);
         nx_packet_release(packet_ptr);
         return;
     }
@@ -757,7 +757,7 @@ ULONG writable_properties_version;
                                                  NX_AZURE_IOT_HUB_PROPERTIES, writable_properties_version);
     if (status && (status != NX_AZURE_IOT_NOT_FOUND))
     {
-        EWF_LOG("Failed to parse value\r\n");
+        IotLog("Failed to parse value\r\n");
     }
 
     nx_packet_release(packet_ptr);
@@ -780,14 +780,14 @@ UINT buffer_length;
                                                                    &packet_ptr,
                                                                    NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Telemetry message create failed!: error code = 0x%08x\r\n", status);
+        IotLog("Telemetry message create failed!: error code = 0x%08x\r\n", status);
         return;
     }
 
     /* Build telemetry JSON payload.  */
     if(nx_azure_iot_json_writer_with_buffer_init(&json_writer, scratch_buffer, sizeof(scratch_buffer)))
     {
-        EWF_LOG("Telemetry message failed to build message\r\n");
+        IotLog("Telemetry message failed to build message\r\n");
         nx_azure_iot_hub_client_telemetry_message_delete(packet_ptr);
         return;
     }
@@ -800,7 +800,7 @@ UINT buffer_length;
                                                                    DOUBLE_DECIMAL_PLACE_DIGITS) ||
          nx_azure_iot_json_writer_append_end_object(&json_writer))
     {
-        EWF_LOG("Telemetry message failed to build message\r\n");
+        IotLog("Telemetry message failed to build message\r\n");
         nx_azure_iot_hub_client_telemetry_message_delete(packet_ptr);
         return;
     }
@@ -810,12 +810,12 @@ UINT buffer_length;
                                                          (UCHAR *)scratch_buffer, buffer_length,
                                                          SAMPLE_WAIT_OPTION)))
     {
-        EWF_LOG("Telemetry message send failed!: error code = 0x%08x\r\n", status);
+        IotLog("Telemetry message send failed!: error code = 0x%08x\r\n", status);
         nx_azure_iot_hub_client_telemetry_message_delete(packet_ptr);
         return;
     }
 
-    EWF_LOG("Telemetry message send: %.*s.\r\n", buffer_length, scratch_buffer);
+    IotLog("Telemetry message send: %.*s.\r\n", buffer_length, scratch_buffer);
 }
 
 #ifdef ENABLE_DPS_SAMPLE
@@ -825,7 +825,7 @@ static UINT sample_dps_entry(NX_AZURE_IOT_PROVISIONING_CLIENT *prov_client_ptr,
 {
 UINT status;
 
-    EWF_LOG("Start Provisioning Client...\r\n");
+    IotLog("Start Provisioning Client...\r\n");
 
     /* Initialize IoT provisioning client.  */
     if ((status = nx_azure_iot_provisioning_client_initialize(prov_client_ptr, &nx_azure_iot,
@@ -840,7 +840,7 @@ UINT status;
                                                               sizeof(nx_azure_iot_tls_metadata_buffer),
                                                               &root_ca_cert)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_initialize!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_initialize!: error code = 0x%08x\r\n", status);
         return(status);
     }
 
@@ -851,11 +851,11 @@ UINT status;
     /* Add more CA certificates.  */
     if ((status = nx_azure_iot_provisioning_client_trusted_cert_add(prov_client_ptr, &root_ca_cert_2)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_trusted_cert_add!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_trusted_cert_add!: error code = 0x%08x\r\n", status);
     }
     else if ((status = nx_azure_iot_provisioning_client_trusted_cert_add(prov_client_ptr, &root_ca_cert_3)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_trusted_cert_add!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_trusted_cert_add!: error code = 0x%08x\r\n", status);
     }
 
 #if (USE_DEVICE_CERTIFICATE == 1)
@@ -864,13 +864,13 @@ UINT status;
     else if ((status = nx_secure_x509_certificate_initialize(&device_certificate, (UCHAR *)sample_device_cert_ptr, (USHORT)sample_device_cert_len, NX_NULL, 0,
                                                              (UCHAR *)sample_device_private_key_ptr, (USHORT)sample_device_private_key_len, DEVICE_KEY_TYPE)))
     {
-        EWF_LOG("Failed on nx_secure_x509_certificate_initialize!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_secure_x509_certificate_initialize!: error code = 0x%08x\r\n", status);
     }
 
     /* Set device certificate.  */
     else if ((status = nx_azure_iot_provisioning_client_device_cert_set(prov_client_ptr, &device_certificate)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_device_cert_set!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_device_cert_set!: error code = 0x%08x\r\n", status);
     }
 #else
 
@@ -878,18 +878,18 @@ UINT status;
     else if ((status = nx_azure_iot_provisioning_client_symmetric_key_set(prov_client_ptr, (UCHAR *)DEVICE_SYMMETRIC_KEY,
                                                                           sizeof(DEVICE_SYMMETRIC_KEY) - 1)))
     {
-        EWF_LOG("Failed on nx_azure_iot_hub_client_symmetric_key_set!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_hub_client_symmetric_key_set!: error code = 0x%08x\r\n", status);
     }
 #endif /* USE_DEVICE_CERTIFICATE */
     else if ((status = nx_azure_iot_provisioning_client_registration_payload_set(prov_client_ptr, (UCHAR *)SAMPLE_PNP_DPS_PAYLOAD,
                                                                                  sizeof(SAMPLE_PNP_DPS_PAYLOAD) - 1)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_registration_payload_set!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_registration_payload_set!: error code = 0x%08x\r\n", status);
     }
     /* Register device.  */
     else if ((status = nx_azure_iot_provisioning_client_register(prov_client_ptr, NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_register!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_register!: error code = 0x%08x\r\n", status);
     }
 
     /* Get Device info.  */
@@ -897,13 +897,13 @@ UINT status;
                                                                                sample_iothub_hostname, iothub_hostname_length,
                                                                                sample_iothub_device_id, iothub_device_id_length)))
     {
-        EWF_LOG("Failed on nx_azure_iot_provisioning_client_iothub_device_info_get!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_provisioning_client_iothub_device_info_get!: error code = 0x%08x\r\n", status);
     }
     else
     {
         *iothub_hostname = sample_iothub_hostname;
         *iothub_device_id = sample_iothub_device_id;
-        EWF_LOG("Registered Device Successfully.\r\n");
+        IotLog("Registered Device Successfully.\r\n");
     }
 
     /* Destroy Provisioning Client.  */
@@ -920,11 +920,11 @@ UINT status;
     /* Request all properties.  */
     if ((status = nx_azure_iot_hub_client_properties_request(hub_client_ptr, NX_WAIT_FOREVER)))
     {
-        EWF_LOG("Properties request failed!: error code = 0x%08x\r\n", status);
+        IotLog("Properties request failed!: error code = 0x%08x\r\n", status);
     }
     else
     {
-        EWF_LOG("Sent properties request.\r\n");
+        IotLog("Sent properties request.\r\n");
     }
 }
 
@@ -953,7 +953,7 @@ static void log_callback(az_log_classification classification, UCHAR *msg, UINT 
 {
     if (classification == AZ_LOG_IOT_AZURERTOS)
     {
-        EWF_LOG("%.*s", msg_len, (CHAR *)msg);
+        IotLog("%.*s", msg_len, (CHAR *)msg);
     }
 }
 
@@ -970,7 +970,7 @@ ULONG app_events;
                                       nx_azure_iot_thread_stack, sizeof(nx_azure_iot_thread_stack),
                                       NX_AZURE_IOT_THREAD_PRIORITY, unix_time_callback)))
     {
-        EWF_LOG("Failed on nx_azure_iot_create!: error code = 0x%08x\r\n", status);
+        IotLog("Failed on nx_azure_iot_create!: error code = 0x%08x\r\n", status);
         return;
     }
 
@@ -979,7 +979,7 @@ ULONG app_events;
                                                         (USHORT)_nx_azure_iot_root_cert_size,
                                                         NX_NULL, 0, NULL, 0, NX_SECURE_X509_KEY_TYPE_NONE)))
     {
-        EWF_LOG("Failed to initialize ROOT CA certificate!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to initialize ROOT CA certificate!: error code = 0x%08x\r\n", status);
         nx_azure_iot_delete(&nx_azure_iot);
         return;
     }
@@ -988,7 +988,7 @@ ULONG app_events;
                                                         (USHORT)_nx_azure_iot_root_cert_size_2,
                                                         NX_NULL, 0, NULL, 0, NX_SECURE_X509_KEY_TYPE_NONE)))
     {
-        EWF_LOG("Failed to initialize ROOT CA certificate!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to initialize ROOT CA certificate!: error code = 0x%08x\r\n", status);
         nx_azure_iot_delete(&nx_azure_iot);
         return;
     }
@@ -997,7 +997,7 @@ ULONG app_events;
                                                         (USHORT)_nx_azure_iot_root_cert_size_3,
                                                         NX_NULL, 0, NULL, 0, NX_SECURE_X509_KEY_TYPE_NONE)))
     {
-        EWF_LOG("Failed to initialize ROOT CA certificate!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to initialize ROOT CA certificate!: error code = 0x%08x\r\n", status);
         nx_azure_iot_delete(&nx_azure_iot);
         return;
     }

@@ -642,14 +642,14 @@ FSP Configuration
     SNTP: Client: Ignore maximum time adjust limit at startup: True
     SNTP: Client: Maximum time lapse without valid update (seconds): 7200
     SNTP: Client: 'Update time remaining' timer update interval (seconds): 1
-    SNTP: Client: Starting poll interval for unicast update request (seconds): 36
+    SNTP: Client: Starting poll interval for unicast update request (seconds): 3600
     SNTP: Client: Poll interval increment after failed time update: 2
     SNTP: Client: Calculate round trip time of messages: False
     SNTP: Client: Maximum server clock inaccuracy to accept (to disable set 0): 50000
     SNTP: Client: Invalid message limit to mark server invalid: 3
     SNTP: Client: Randomize update request interval on startup: False
     SNTP: Client: Internal Task sleep interval (ticks): 1
-    SNTP: Client: Current calendar year: 2022
+    SNTP: Client: Current calendar year: 2015
     TFTP: Common: Maximum error string length (bytes): 64
     TFTP: Common: Time to live: 128
     TFTP: Common: Type of Service for UDP requests: Normal
@@ -1010,14 +1010,6 @@ FSP Configuration
           Instance "Azure RTOS NetX Crypto HW Acceleration (rm_netx_secure_crypto)"
             Instance "SCE Compatibility Mode"
         Instance "Azure RTOS NetX Duo Common"
-  Thread "Cloud2Device Thread"
-    Symbol: c2d_thread
-    Name: Cloud2Device Thread
-    Stack size (bytes): 2048
-    Priority: 2
-    Auto start: Disabled
-    Time slicing interval (ticks): 1
-    
   Object "g_topic_queue Queue"
     Name: Topic Queue
     Symbol: g_topic_queue

@@ -291,6 +291,8 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_publish(ewf_adapter* adapter_pt
         tokenizer_pattern_str ,
         sizeof(tokenizer_pattern_str) - 1,
         false,
+        NULL,
+        NULL,
     };
     char message_length_str[6];
     if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
