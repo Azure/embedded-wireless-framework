@@ -389,9 +389,6 @@ typedef struct _ewf_adapter_renesas_ryz014
     /**< The user URC callback, called to process URC not handled by the driver */
     ewf_adapter_urc_user_callback user_urc_callback;
 
-    /** @brief The current context ID  */
-    volatile uint32_t current_context_id; /* 0 is uninitialize or invalid  */
-
 #if EWF_ADAPTER_RENESAS_RYZ014_TCP_ENABLED || EWF_ADAPTER_RENESAS_RYZ014_UDP_ENABLED
     /**< The internal pool of internet sockets */
     ewf_adapter_renesas_ryz014_internet_socket internet_socket_pool [EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_POOL_SIZE];
