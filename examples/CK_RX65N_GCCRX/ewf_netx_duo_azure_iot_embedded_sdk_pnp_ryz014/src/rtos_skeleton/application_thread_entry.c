@@ -75,7 +75,7 @@ Includes   <System Includes> , "Project Includes"
 #endif /* SAMPLE_PACKET_COUNT  */
 
 #ifndef SAMPLE_PACKET_SIZE
-#define SAMPLE_PACKET_SIZE            (1560)
+#define SAMPLE_PACKET_SIZE            (1536)
 #endif /* SAMPLE_PACKET_SIZE  */
 
 #define SAMPLE_POOL_SIZE              ((SAMPLE_PACKET_SIZE + sizeof(NX_PACKET)) * SAMPLE_PACKET_COUNT)
@@ -128,7 +128,7 @@ ULONG            unix_time_base;
 
 /* Define the stack/cache for ThreadX.  */
 ULONG sample_ip_stack[SAMPLE_IP_STACK_SIZE / sizeof(ULONG)];
-ULONG sample_pool_stack[SAMPLE_POOL_SIZE / sizeof(ULONG) + 4];
+ULONG sample_pool_stack[SAMPLE_POOL_SIZE / sizeof(ULONG)];
 ULONG sample_pool_stack_size = sizeof(sample_pool_stack);
 ULONG sample_arp_cache_area[SAMPLE_ARP_CACHE_SIZE / sizeof(ULONG)];
 
@@ -266,7 +266,7 @@ void application_thread_entry(ULONG entry_input)
     }
 
     /* Save the adapter pointer in the IP instance */
-    ip_0.nx_ip_reserved_ptr = adapter_ptr;
+    ip_0.nx_ip_interface->nx_interface_additional_link_info = adapter_ptr;
 
     /* Enable ARP and supply ARP cache memory for IP Instance 0.  */
     status = nx_arp_enable(&ip_0, (VOID *)&sample_arp_cache_area[0], sizeof(sample_arp_cache_area));
@@ -347,7 +347,7 @@ void application_thread_entry(ULONG entry_input)
     {
 
          /* Start SNTP to sync the local time.  */
-         status = 1;//sntp_time_sync();
+         status = sntp_time_sync();
 
          /* Check status.  */
          if(status == NX_SUCCESS)

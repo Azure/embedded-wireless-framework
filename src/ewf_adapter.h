@@ -16,8 +16,8 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_adapter_api The EWF Adapter APIs
- * @brief The EWF Adapter APIs
+ * @defgroup group_adapter_api EWF APIs
+ * @brief EWF APIs
  * @{
  ****************************************************************************/
 

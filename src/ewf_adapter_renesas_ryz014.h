@@ -70,6 +70,10 @@ extern "C" {
 /** @brief The Internet socket invalid value */
 #define EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_INVALID (-1)
 
+/** @brief The Internet socket transmission protocol values */
+#define EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_TCP     (0)
+#define EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_UDP     (1)
+
 /** @brief The total number of supported MQTT sockets in the adapter.
  * Only one MQTT client is supported in RYZ014 */
 #define EWF_ADAPTER_RENESAS_RYZ014_MQTT_SOCKET_POOL_SIZE (1)
@@ -77,8 +81,10 @@ extern "C" {
 /** @brief The MQTT socket invalid value */
 #define EWF_ADAPTER_RENESAS_RYZ014_MQTT_SOCKET_INVALID (-1)
 
-#define EWF_RYZ014_SOCKET_MAX_SEND_SIZE                        1460
-#define EWF_RYZ014_SOCKET_MAX_RECEIVE_SIZE                     1500
+#define EWF_ADAPTER_RENESAS_RYZ014_SOCKET_MAX_SEND_SIZE                        (1460)
+#define EWF_ADAPTER_RENESAS_RYZ014_SOCKET_MAX_RECEIVE_SIZE                     (1500)
+#define EWF_ADAPTER_RENESAS_RYZ014_SOCKET_COMMAND_MODE                         ("1")
+#define EWF_ADAPTER_RENESAS_RYZ014_SOCKET_ONLINE_DATA_MODE                     ("0")
 
 /* Trusted Certificate Authority certificate index, range 0-19  */
 #ifndef EWF_CA_CERTIFICATE_ID
@@ -202,10 +208,10 @@ ewf_result ewf_adapter_renesas_ryz014_tcp_open(ewf_adapter* adapter_ptr, ewf_soc
 ewf_result ewf_adapter_renesas_ryz014_tcp_close(ewf_socket_tcp* socket_ptr);
 ewf_result ewf_adapter_renesas_ryz014_tcp_control(ewf_socket_tcp* socket_ptr, const char* control_str, const uint8_t* buffer_ptr, uint32_t* buffer_length_ptr);
 ewf_result ewf_adapter_renesas_ryz014_tcp_set_tls_configuration(ewf_socket_tcp* socket_ptr, uint32_t tls_configuration_id);
-ewf_result ewf_adapter_renesas_ryz014_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t port);
+ewf_result ewf_adapter_renesas_ryz014_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t local_port);
 ewf_result ewf_adapter_renesas_ryz014_tcp_listen(ewf_socket_tcp* socket_ptr);
 ewf_result ewf_adapter_renesas_ryz014_tcp_accept(ewf_socket_tcp* socket_ptr, ewf_socket_tcp* socket_new_ptr);
-ewf_result ewf_adapter_renesas_ryz014_tcp_connect(ewf_socket_tcp* socket_ptr, const char* const server, uint32_t port);
+ewf_result ewf_adapter_renesas_ryz014_tcp_connect(ewf_socket_tcp* socket_ptr, const char* const server, uint32_t remote_port);
 ewf_result ewf_adapter_renesas_ryz014_tcp_shutdown(ewf_socket_tcp* socket_ptr);
 ewf_result ewf_adapter_renesas_ryz014_tcp_send(ewf_socket_tcp* socket_ptr, const uint8_t* buffer_ptr, uint32_t buffer_length);
 ewf_result ewf_adapter_renesas_ryz014_tcp_receive(ewf_socket_tcp* socket_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length, bool wait);
@@ -364,8 +370,9 @@ typedef enum _ewf_adapter_bg96_internet_socket_service_type
 /** @brief Internal structure for internet socket status  */
 typedef struct _ewf_adapter_renesas_ryz014_socket
 {
+  void* socket_ptr;
   uint32_t id;
-  uint32_t port;
+  uint32_t local_port;
   volatile ewf_adapter_renesas_ryz014_internet_socket_service_type type;
   volatile bool used;
   volatile bool open;
@@ -381,9 +388,6 @@ typedef struct _ewf_adapter_renesas_ryz014
 {
     /**< The user URC callback, called to process URC not handled by the driver */
     ewf_adapter_urc_user_callback user_urc_callback;
-
-    /** @brief The current context ID  */
-    volatile uint32_t current_context_id; /* 0 is uninitialize or invalid  */
 
 #if EWF_ADAPTER_RENESAS_RYZ014_TCP_ENABLED || EWF_ADAPTER_RENESAS_RYZ014_UDP_ENABLED
     /**< The internal pool of internet sockets */

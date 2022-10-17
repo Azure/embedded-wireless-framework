@@ -71,9 +71,9 @@ ewf_result ewf_adapter_renesas_ryz014_tls_basic_init(ewf_adapter* adapter_ptr)
     /* Secure profile configuration */
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSPCFG=", EWF_SECURITY_PROFILE_ID, ",3,\"\",1,", EWF_CA_CERTIFICATE_ID, ",", EWF_CLIENT_CERTIFICATE_ID, ",", EWF_PRIVATE_KEY_ID, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_str))) return result;
-    if (ewfl_buffer_ends_with((const char *)response_str,
+    if (ewfl_buffer_ends_with(response_str,
     		ewfl_str_length((const char *)response_str),
-			expected_suffix_str,
+			(uint8_t*)expected_suffix_str,
 			ewfl_str_length((const char *)expected_suffix_str)))
     {
         return EWF_RESULT_OK;

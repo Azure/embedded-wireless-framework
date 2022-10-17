@@ -69,6 +69,11 @@ ewf_result ewf_allocator_c_heap_release(ewf_allocator* allocator_ptr, void* p)
 
     if (!p) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
+    if ((ewf_allocator_c_heap_ptr->allocated_count - ewf_allocator_c_heap_ptr->released_count) == 0)
+    {
+        EWF_LOG_ERROR("Trying to free more memory blocks than the ones that were allocated with the C heap allocator!");
+    }
+
     free(p);
 
     ewf_allocator_c_heap_ptr->released_count++;

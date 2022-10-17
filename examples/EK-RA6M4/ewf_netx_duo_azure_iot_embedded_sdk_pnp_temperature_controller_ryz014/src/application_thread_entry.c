@@ -62,7 +62,7 @@
 
 #include "ewf_middleware_netxduo.c"
 
-char ewf_log_buffer[512];
+char ewf_log_buffer[1024];
 
 ULONG g_ip_address = 0;
 ULONG g_network_mask = 0;
@@ -245,7 +245,7 @@ void application_thread_entry(void)
     }
 
     /* Save the adapter pointer in the IP instance */
-    g_ip0.nx_ip_reserved_ptr = adapter_ptr;
+    g_ip0.nx_ip_interface->nx_interface_additional_link_info = adapter_ptr;
 
     /* Enable ARP and supply ARP cache memory for IP Instance 0.  */
     status = nx_arp_enable(&g_ip0, &g_ip0_arp_cache_memory, G_IP0_ARP_CACHE_SIZE);

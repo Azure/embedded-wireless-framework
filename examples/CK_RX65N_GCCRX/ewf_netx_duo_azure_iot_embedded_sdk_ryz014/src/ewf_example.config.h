@@ -90,7 +90,7 @@ extern "C" {
  */
 
 /* MTU size should be equal to the modems maximum socket send size */
-#define EWF_CONFIG_ADAPTER_MTU                                       1460
+#define EWF_CONFIG_ADAPTER_MTU                                       (1460)
 
 /** @} */
 

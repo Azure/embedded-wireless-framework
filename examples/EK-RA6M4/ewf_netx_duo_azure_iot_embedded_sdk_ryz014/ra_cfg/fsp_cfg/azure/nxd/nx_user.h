@@ -407,14 +407,14 @@ void srand(unsigned int);
 #define NX_SNTP_CLIENT_IGNORE_MAX_ADJUST_STARTUP   (NX_TRUE)
 #define NX_SNTP_CLIENT_MAX_TIME_LAPSE              (7200)
 #define NX_SNTP_UPDATE_TIMEOUT_INTERVAL            (1)
-#define NX_SNTP_CLIENT_UNICAST_POLL_INTERVAL       (36)
+#define NX_SNTP_CLIENT_UNICAST_POLL_INTERVAL       (3600)
 #define NX_SNTP_CLIENT_EXP_BACKOFF_RATE            (2)
 #define NX_SNTP_CLIENT_RTT_REQUIRED                (NX_FALSE)
 #define NX_SNTP_CLIENT_MAX_ROOT_DISPERSION         (50000)
 #define NX_SNTP_CLIENT_INVALID_UPDATE_LIMIT        (3)
 #define NX_SNTP_CLIENT_RANDOMIZE_ON_STARTUP        (NX_FALSE)
 #define NX_SNTP_CLIENT_SLEEP_INTERVAL              (1)
-#define NX_SNTP_CURRENT_YEAR                       (2022)
+#define NX_SNTP_CURRENT_YEAR                       (2015)
 
 /* TFTP Common Configuration */
 #define NX_TFTP_ERROR_STRING_MAX                    (64)

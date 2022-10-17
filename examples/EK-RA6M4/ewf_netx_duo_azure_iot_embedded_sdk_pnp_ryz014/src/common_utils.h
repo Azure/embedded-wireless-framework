@@ -81,6 +81,12 @@
 
 #define SEGGER_INDEX            (0)
 
+extern char ewf_log_buffer[1024];
+#define APP_OUTPUT_PRINT(...)                                                 \
+        do {                                                                  \
+            snprintf(ewf_log_buffer, sizeof(ewf_log_buffer), __VA_ARGS__);    \
+            SEGGER_RTT_WriteString(0, ewf_log_buffer);                        \
+        } while(0)
 
 #define APP_PRINT(fn_, ...)         if(LOG_TERMINAL == RTT_TERMINAL)\
 	                                    SEGGER_RTT_printf (SEGGER_INDEX,(fn_), ##__VA_ARGS__);\
