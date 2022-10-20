@@ -89,7 +89,7 @@ typedef enum _ewf_adapter_common_internet_socket_service_type
 typedef struct _ewf_adapter_espressif_common_internet_socket
 {
     uint32_t id;
-    uint32_t port;
+    uint32_t local_port;
     volatile ewf_adapter_espressif_common_internet_socket_service_type type;
     volatile bool used;
     volatile bool open;
@@ -97,8 +97,7 @@ typedef struct _ewf_adapter_espressif_common_internet_socket
     volatile bool conn;
     volatile bool conn_error;
     volatile bool recv;
-    uint32_t recv_size;
-    uint8_t recv_buffer[EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE];
+    ewf_platform_queue* recv_queue_ptr;
 
 } ewf_adapter_espressif_common_internet_socket;
 

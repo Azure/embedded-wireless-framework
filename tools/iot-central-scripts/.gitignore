@@ -1,0 +1,5 @@
+*.json
+temp*.txt
+*.pem
+*.pem.h
+*.cfg

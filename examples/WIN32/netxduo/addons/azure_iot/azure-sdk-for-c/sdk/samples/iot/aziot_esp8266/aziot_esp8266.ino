@@ -37,6 +37,7 @@ static const char* device_key = IOT_CONFIG_DEVICE_KEY;
 static const int port = 8883;
 
 static WiFiClientSecure wifi_client;
+static X509List cert((const char*)ca_pem);
 static PubSubClient mqtt_client(wifi_client);
 static az_iot_hub_client client;
 static char sas_token[200];
@@ -77,7 +78,7 @@ static void initializeTime()
   {
     delay(500);
     Serial.print(".");
-    now = time(nullptr);
+    now = time(NULL);
   }
   Serial.println("done!");
 }
@@ -107,12 +108,7 @@ void receivedCallback(char* topic, byte* payload, unsigned int length)
 
 static void initializeClients()
 {
-  if (!wifi_client.setCACert((const uint8_t*)ca_pem, ca_pem_len))
-  {
-    Serial.println("setCACert() FAILED");
-    return;
-  }
-
+  wifi_client.setTrustAnchors(&cert);
   if (az_result_failed(az_iot_hub_client_init(
           &client,
           az_span_create((uint8_t*)host, strlen(host)),
@@ -236,7 +232,7 @@ static int connectToAzureIoTHub()
     {
       Serial.print("failed, status code =");
       Serial.print(mqtt_client.state());
-      Serial.println(". Try again in 5 seconds.");
+      Serial.println(". Trying again in 5 seconds.");
       // Wait 5 seconds before retrying
       delay(5000);
     }
@@ -279,7 +275,7 @@ void setup()
 static char* getTelemetryPayload()
 {
   az_span temp_span = az_span_create(telemetry_payload, sizeof(telemetry_payload));
-  temp_span = az_span_copy(temp_span, AZ_SPAN_FROM_STR("{ \"deviceId\": \"" IOT_CONFIG_DEVICE_ID "\", \"msgCount\": "));
+  temp_span = az_span_copy(temp_span, AZ_SPAN_FROM_STR("{ \"msgCount\": "));
   (void)az_span_u32toa(temp_span, telemetry_send_count++, &temp_span);  
   temp_span = az_span_copy(temp_span, AZ_SPAN_FROM_STR(" }"));
   temp_span = az_span_copy_u8(temp_span, '\0');

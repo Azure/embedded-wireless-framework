@@ -4924,7 +4924,7 @@ UINT        authorization_decoded_size;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_http_server_retrieve_basic_authorization        PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -4960,6 +4960,10 @@ UINT        authorization_decoded_size;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s),  fixed   */
+/*                                            the HTTP Server state issue */
+/*                                            with basic authorization,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_http_server_retrieve_basic_authorization(NX_PACKET *packet_ptr, CHAR *authorization_request_ptr)
@@ -5024,6 +5028,9 @@ CHAR    *buffer_ptr;
         /* No, authorization is not present.  Return a zero length.  */
         return(length);
     }
+
+    /* Set the found flag back to false.  */
+    found =  NX_FALSE;
 
     /* Now remove any extra blanks.  */
     while ((buffer_ptr < (CHAR *) packet_ptr -> nx_packet_append_ptr) && (*buffer_ptr == ' '))
@@ -6628,7 +6635,7 @@ UINT  _nxe_http_server_get_entity_header(NX_HTTP_SERVER *server_ptr, NX_PACKET *
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_http_server_get_entity_header                   PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -6670,6 +6677,9 @@ UINT  _nxe_http_server_get_entity_header(NX_HTTP_SERVER *server_ptr, NX_PACKET *
 /*  09-30-2020     Yuxin Zhou               Modified comment(s), and      */
 /*                                            fixed write underflow,      */
 /*                                            resulting in version 6.1    */
+/*  04-25-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            verified memmove use cases, */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_http_server_get_entity_header(NX_HTTP_SERVER *server_ptr, NX_PACKET **packet_pptr, UCHAR *entity_header_buffer, ULONG buffer_size)
@@ -6773,7 +6783,7 @@ UINT                        index;
             /* Leave boundary string only. */
             memmove(&multipart_ptr -> nx_http_server_multipart_boundary[4],
                     &multipart_ptr -> nx_http_server_multipart_boundary[index],
-                    quotation_index - index + 1);
+                    quotation_index - index + 1); /* Use case of memmove is verified.  */
         }
         else
         {

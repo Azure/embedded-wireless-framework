@@ -32,6 +32,17 @@ cmake --build build -j 8
 
 Open this directory with Visual Studio and you are ready to go!
 
+# EWF examples to conect to IoT Central
+Connects the device to IoT Central application and then sends telemetry data to the central application.
+- **sample_ewf_iot_pnp_provisioning_tx_bg96**
+- **sample_ewf_iot_provisioning_tx_bg96**
+
+Follow steps in [README_IoT_CENTRAL.md](../../tools/iot-central-scripts/README_IOT_CENTRAL.md) to create Azure IoT Central application that will be used to run the example.
+To create device certificates follow steps in [README_CREATE_CERTIFICATES.md](../../tools/iot-central-scripts/readme_create_certificate.md).
+Once certifcates are created, upload them to the device in the IoT Central as meantioned in the corresponding readme document above. Copy the .h files to the certificates example project and provision the certificates. Then run the **sample_ewf_iot_provisioning_tx_bg96** or **sample_ewf_iot_pnp_provisioning_tx_bg96** project to connect to IoT Central
+
+>Note : This example currently only sends dummy telemetry data. Cloud to device messaging (command processing and response sending to IoT Central) will be added in future.
+
 # Azure RTOS samples on x86 using CMake (also included in this package)
 
 ## Overview

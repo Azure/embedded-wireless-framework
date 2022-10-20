@@ -154,7 +154,7 @@ UINT    status;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_create                                     PORTABLE C      */ 
-/*                                                           6.1.8        */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -205,12 +205,21 @@ UINT    status;
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
 /*  08-02-2021     Yuxin Zhou               Modified comment(s), and      */
-/*                                            improved the code,           */
+/*                                            improved the code,          */
 /*                                            resulting in version 6.1.8  */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            multiple client instances,  */
+/*                                            resulting in version 6.1.10 */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), cleaned  */
+/*                                            up error check logic, and   */
+/*                                            properly terminated thread, */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_dhcp_create(NX_DHCP *dhcp_ptr, NX_IP *ip_ptr, CHAR *name_ptr)
 {
+
+TX_INTERRUPT_SAVE_AREA
 
 UINT    status;
 #ifdef NX_DHCP_CLIENT_ENABLE_HOST_NAME_CHECK
@@ -322,16 +331,8 @@ UINT    label_length = 0;
     }
 
     /* Create the pool and check the status */
-    status =  nx_packet_pool_create(&dhcp_ptr -> nx_dhcp_pool, "NetX DHCP Client", NX_DHCP_PACKET_PAYLOAD, 
-                                    dhcp_ptr -> nx_dhcp_pool_area, NX_DHCP_PACKET_POOL_SIZE);
-
-    /* Determine if it was successful.  */
-    if (status != NX_SUCCESS)
-    {
-
-        /* No, return error status.  */
-        return(status);
-    }
+    nx_packet_pool_create(&dhcp_ptr -> nx_dhcp_pool, "NetX DHCP Client", NX_DHCP_PACKET_PAYLOAD, 
+                          dhcp_ptr -> nx_dhcp_pool_area, NX_DHCP_PACKET_POOL_SIZE);
 
     /* Set an internal packet pool pointer to the newly created packet pool. */
     dhcp_ptr -> nx_dhcp_packet_pool_ptr = &dhcp_ptr -> nx_dhcp_pool;
@@ -345,39 +346,13 @@ UINT    label_length = 0;
 #endif /* NX_DHCP_CLIENT_USER_CREATE_PACKET_POOL  */
 
     /* Create the Socket and check the status */
-    status = nx_udp_socket_create(ip_ptr, &(dhcp_ptr -> nx_dhcp_socket), "NetX DHCP Client",
-                                  NX_DHCP_TYPE_OF_SERVICE, NX_DHCP_FRAGMENT_OPTION, NX_DHCP_TIME_TO_LIVE, NX_DHCP_QUEUE_DEPTH);
-
-    /* Was the socket creation successful?  */
-    if (status != NX_SUCCESS)
-    {
-
-#ifndef NX_DHCP_CLIENT_USER_CREATE_PACKET_POOL 
-        /* Delete the packet pool.  */
-        nx_packet_pool_delete(dhcp_ptr -> nx_dhcp_packet_pool_ptr);
-#endif
-
-        /* No, return error status.  */
-        return(status);
-    }
-
+    nx_udp_socket_create(ip_ptr, &(dhcp_ptr -> nx_dhcp_socket), "NetX DHCP Client",
+                         NX_DHCP_TYPE_OF_SERVICE, NX_DHCP_FRAGMENT_OPTION, NX_DHCP_TIME_TO_LIVE, NX_DHCP_QUEUE_DEPTH);
 
     /* Set the UDP socket receive callback function.  */
-    status = nx_udp_socket_receive_notify(&(dhcp_ptr -> nx_dhcp_socket), _nx_dhcp_udp_receive_notify);
+    nx_udp_socket_receive_notify(&(dhcp_ptr -> nx_dhcp_socket), _nx_dhcp_udp_receive_notify);
 
-    /* Check status.  */
-    if (status != NX_SUCCESS) 
-    {
-
-
-#ifndef NX_DHCP_CLIENT_USER_CREATE_PACKET_POOL 
-        /* Delete the packet pool.  */
-        nx_packet_pool_delete(dhcp_ptr -> nx_dhcp_packet_pool_ptr);
-#endif
-
-        /* Delete the UDP socket.  */
-        nx_udp_socket_delete(&(dhcp_ptr -> nx_dhcp_socket));
-    }
+    dhcp_ptr -> nx_dhcp_socket.nx_udp_socket_reserved_ptr = (VOID*)dhcp_ptr;
 
     /* Create the ThreadX activity timeout timer.  This will be used to periodically check to see if
        a client connection has gone silent and needs to be terminated.  */
@@ -461,6 +436,9 @@ UINT    label_length = 0;
     if (status != TX_SUCCESS)
     {
 
+        /* First put the thread into TERMINATE state. */
+        tx_thread_terminate(&(dhcp_ptr -> nx_dhcp_thread));
+
         /* Delete the thread.  */
         tx_thread_delete(&(dhcp_ptr -> nx_dhcp_thread));
 
@@ -482,11 +460,21 @@ UINT    label_length = 0;
         return(status);
     }
 
+    /* Otherwise, the DHCP initialization was successful.  Place the
+       DHCP control block on the list of created DHCP instances.  */
+    TX_DISABLE
+
     /* Update the dhcp structure ID.  */
     dhcp_ptr -> nx_dhcp_id =  NX_DHCP_ID;
 
-    /* Save the DHCP instance.  */
+    /* Setup this DHCP's created links.  */
+    dhcp_ptr -> nx_dhcp_created_next = _nx_dhcp_created_ptr;
+
+    /* Place the new DHCP control block on the head of created DHCPs.  */
     _nx_dhcp_created_ptr = dhcp_ptr;
+
+    /* Restore previous interrupt posture.  */
+    TX_RESTORE
 
     /* Default enable DHCP on the primary interface (0).  */
     _nx_dhcp_interface_enable(dhcp_ptr, 0);
@@ -1156,7 +1144,7 @@ UINT status;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_interface_reinitialize                     PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -1202,6 +1190,9 @@ UINT status;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT _nx_dhcp_interface_reinitialize(NX_DHCP *dhcp_ptr, UINT iface_index)
@@ -1233,10 +1224,10 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
     {
 
         /* Get the IP address.  */
-        status = nx_ip_interface_address_get(dhcp_ptr -> nx_dhcp_ip_ptr, iface_index, &ip_address, &network_mask);
+        nx_ip_interface_address_get(dhcp_ptr -> nx_dhcp_ip_ptr, iface_index, &ip_address, &network_mask);
 
         /* Check if the IP address is set by DHCP.  */
-        if ((status == NX_SUCCESS) && (ip_address == interface_record -> nx_dhcp_ip_address))
+        if (ip_address == interface_record -> nx_dhcp_ip_address)
         {
 
             /* Clear the IP address.  */
@@ -1670,7 +1661,7 @@ UINT    status;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_delete                                     PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -1714,12 +1705,18 @@ UINT    status;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            multiple client instances,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_dhcp_delete(NX_DHCP *dhcp_ptr)
 {
 
+TX_INTERRUPT_SAVE_AREA
+
 UINT    i;
+NX_DHCP *dhcp_previous;
 
     /* Get the DHCP mutex.  */
     tx_mutex_get(&(dhcp_ptr -> nx_dhcp_mutex), TX_WAIT_FOREVER);
@@ -1769,8 +1766,33 @@ UINT    i;
     /* Delete the DHCP mutex.  */
     tx_mutex_delete(&(dhcp_ptr -> nx_dhcp_mutex));
 
+    /* Disable interrupts.  */
+    TX_DISABLE
+
     /* Clear the dhcp structure ID. */
     dhcp_ptr -> nx_dhcp_id =  0;
+
+    /* Remove the DHCP instance from the created list.  */
+    if (_nx_dhcp_created_ptr == dhcp_ptr)
+    {
+        _nx_dhcp_created_ptr = _nx_dhcp_created_ptr -> nx_dhcp_created_next;
+    }
+    else
+    {
+        for (dhcp_previous = _nx_dhcp_created_ptr;
+             dhcp_previous -> nx_dhcp_created_next;
+             dhcp_previous = dhcp_previous -> nx_dhcp_created_next)
+        {
+            if (dhcp_previous -> nx_dhcp_created_next == dhcp_ptr)
+            {
+                dhcp_previous -> nx_dhcp_created_next  = dhcp_ptr -> nx_dhcp_created_next;
+                break;
+            }
+        }
+    }
+
+    /* Restore interrupts.  */
+    TX_RESTORE
 
     /* Return a successful status.  */
     return(NX_SUCCESS);
@@ -2304,7 +2326,7 @@ UINT status;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_interface_decline                          PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -2344,13 +2366,15 @@ UINT status;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT _nx_dhcp_interface_decline(NX_DHCP *dhcp_ptr, UINT iface_index)
 {
 
 UINT                      status; 
-UINT                      original_state;
 NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 
 
@@ -2378,9 +2402,6 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
         return(NX_DHCP_NOT_BOUND);
     }
 
-    /* Get the original state.  */
-    original_state = interface_record -> nx_dhcp_state;
-
     /* Send the decline DHCP request.  */
     _nx_dhcp_send_request_internal(dhcp_ptr, interface_record, NX_DHCP_TYPE_DHCPDECLINE);
 
@@ -2396,25 +2417,20 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
     /* Set the retransmission interval.  */
     interface_record -> nx_dhcp_rtr_interval = 0;
 
-    /* Check if the state is changed.  */
-    if (original_state != interface_record -> nx_dhcp_state)
+    /* Determine if the application has specified a routine for DHCP state change notification.  */
+    if (dhcp_ptr -> nx_dhcp_state_change_callback)
     {
 
-        /* Determine if the application has specified a routine for DHCP state change notification.  */
-        if (dhcp_ptr -> nx_dhcp_state_change_callback)
-        {
+        /* Yes, call the application's state change notify function with the new state.  */
+        (dhcp_ptr -> nx_dhcp_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_state);
+    }
 
-            /* Yes, call the application's state change notify function with the new state.  */
-            (dhcp_ptr -> nx_dhcp_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_state);
-        }
+    /* Determine if the application has specified a routine for DHCP interface state change notification.  */
+    if (dhcp_ptr -> nx_dhcp_interface_state_change_callback)
+    {
 
-        /* Determine if the application has specified a routine for DHCP interface state change notification.  */
-        if (dhcp_ptr -> nx_dhcp_interface_state_change_callback)
-        {
-
-            /* Yes, call the application's state change notify function with the new state.  */
-            (dhcp_ptr -> nx_dhcp_interface_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_interface_index, interface_record -> nx_dhcp_state);
-        }
+        /* Yes, call the application's state change notify function with the new state.  */
+        (dhcp_ptr -> nx_dhcp_interface_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_interface_index, interface_record -> nx_dhcp_state);
     }
 
     /* Release the DHCP mutex.  */
@@ -2632,7 +2648,7 @@ UINT status;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_interface_release                          PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -2673,13 +2689,16 @@ UINT status;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_dhcp_interface_release(NX_DHCP *dhcp_ptr, UINT iface_index)
 {
 
 UINT                     i;
-UINT                      status, original_state; 
+UINT                     status;
 NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 
 
@@ -2710,34 +2729,26 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
         return(NX_DHCP_NOT_BOUND);
     }
 
-    /* Get the original state.  */
-    original_state = interface_record -> nx_dhcp_state;
-
     /* Send the release DHCP request.  */
     _nx_dhcp_send_request_internal(dhcp_ptr, interface_record, NX_DHCP_TYPE_DHCPRELEASE);
 
-    /* Reinitialize DHCP.  */
+    /* Reinitialize DHCP. Note: the state is changed to NX_DHCP_STATE_NOT_STARTED in this function. */
     _nx_dhcp_interface_reinitialize(dhcp_ptr, iface_index); 
 
-    /* Check if the state is changed.  */
-    if (original_state != interface_record -> nx_dhcp_state)
+    /* Determine if the application has specified a routine for DHCP state change notification.  */
+    if (dhcp_ptr -> nx_dhcp_state_change_callback)
     {
 
-        /* Determine if the application has specified a routine for DHCP state change notification.  */
-        if (dhcp_ptr -> nx_dhcp_state_change_callback)
-        {
+        /* Yes, call the application's state change notify function with the new state.  */
+        (dhcp_ptr -> nx_dhcp_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_state);
+    }
 
-            /* Yes, call the application's state change notify function with the new state.  */
-            (dhcp_ptr -> nx_dhcp_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_state);
-        }
+    /* Determine if the application has specified a routine for DHCP interface state change notification.  */
+    if (dhcp_ptr -> nx_dhcp_interface_state_change_callback)
+    {
 
-        /* Determine if the application has specified a routine for DHCP interface state change notification.  */
-        if (dhcp_ptr -> nx_dhcp_interface_state_change_callback)
-        {
-
-            /* Yes, call the application's state change notify function with the new state.  */
-            (dhcp_ptr -> nx_dhcp_interface_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_interface_index, interface_record -> nx_dhcp_state);
-        }
+        /* Yes, call the application's state change notify function with the new state.  */
+        (dhcp_ptr -> nx_dhcp_interface_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_interface_index, interface_record -> nx_dhcp_state);
     }
 
     /* Check if other interfaces are running DHCP.  */
@@ -2757,20 +2768,15 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
             return(NX_SUCCESS);
         }
     }
-                 
-    /* Has DHCP stopped on all interfaces? */
-    if (i == NX_DHCP_CLIENT_MAX_RECORDS) 
-    {
+           
+    /* Yes, stop DHCP Thread. */
+    tx_thread_suspend(&(dhcp_ptr -> nx_dhcp_thread));
 
-        /* Yes, stop DHCP Thread. */
-        tx_thread_suspend(&(dhcp_ptr -> nx_dhcp_thread));
+    /* Deactivate DHCP Timer.  */
+    tx_timer_deactivate(&(dhcp_ptr -> nx_dhcp_timer));
 
-        /* Deactivate DHCP Timer.  */
-        tx_timer_deactivate(&(dhcp_ptr -> nx_dhcp_timer));
-
-        /* Unbind UDP socket.  */
-        nx_udp_socket_unbind(&(dhcp_ptr -> nx_dhcp_socket));
-    }
+    /* Unbind UDP socket.  */
+    nx_udp_socket_unbind(&(dhcp_ptr -> nx_dhcp_socket));
 
     /* Release the DHCP mutex.  */
     tx_mutex_put(&(dhcp_ptr -> nx_dhcp_mutex));
@@ -4013,7 +4019,7 @@ UINT status;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_interface_stop                             PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -4059,6 +4065,9 @@ UINT status;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT _nx_dhcp_interface_stop(NX_DHCP *dhcp_ptr, UINT iface_index)
@@ -4066,7 +4075,6 @@ UINT _nx_dhcp_interface_stop(NX_DHCP *dhcp_ptr, UINT iface_index)
 
 UINT                     i;
 UINT                     status;
-UINT                     original_state;
 NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 
 
@@ -4085,9 +4093,6 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
         return(status);
     }
 
-    /* Get the original state.  */
-    original_state = interface_record -> nx_dhcp_state;
-
     /* Determine if DHCP is started.  */
     if (interface_record -> nx_dhcp_state == NX_DHCP_STATE_NOT_STARTED)
     {
@@ -4102,25 +4107,20 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
     /* Set the state to NX_DHCP_STATE_NOT_STARTED.  */
     interface_record -> nx_dhcp_state = NX_DHCP_STATE_NOT_STARTED;
 
-    /* Check if the state is changed.  */
-    if (original_state != interface_record -> nx_dhcp_state)
+    /* Determine if the application has specified a routine for DHCP state change notification.  */
+    if (dhcp_ptr -> nx_dhcp_state_change_callback)
     {
 
-        /* Determine if the application has specified a routine for DHCP state change notification.  */
-        if (dhcp_ptr -> nx_dhcp_state_change_callback)
-        {
+        /* Yes, call the application's state change notify function with the new state.  */
+        (dhcp_ptr -> nx_dhcp_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_state);
+    }
 
-            /* Yes, call the application's state change notify function with the new state.  */
-            (dhcp_ptr -> nx_dhcp_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_state);
-        }
+    /* Determine if the application has specified a routine for DHCP interface state change notification.  */
+    if (dhcp_ptr -> nx_dhcp_interface_state_change_callback)
+    {
 
-        /* Determine if the application has specified a routine for DHCP interface state change notification.  */
-        if (dhcp_ptr -> nx_dhcp_interface_state_change_callback)
-        {
-
-            /* Yes, call the application's state change notify function with the new state.  */
-            (dhcp_ptr -> nx_dhcp_interface_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_interface_index, interface_record->nx_dhcp_state);
-        }
+        /* Yes, call the application's state change notify function with the new state.  */
+        (dhcp_ptr -> nx_dhcp_interface_state_change_callback)(dhcp_ptr, interface_record -> nx_dhcp_interface_index, interface_record->nx_dhcp_state);
     }
 
     /* Check if other interfaces are running DHCP.  */
@@ -4140,20 +4140,15 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
             return(NX_SUCCESS);
         }
     }
-                 
-    /* Has DHCP stopped on all interfaces? */
-    if (i == NX_DHCP_CLIENT_MAX_RECORDS) 
-    {
 
-        /* Yes, stop DHCP Thread. */
-        tx_thread_suspend(&(dhcp_ptr -> nx_dhcp_thread));
+    /* Yes, stop DHCP Thread. */
+    tx_thread_suspend(&(dhcp_ptr -> nx_dhcp_thread));
 
-        /* Deactivate DHCP Timer.  */
-        tx_timer_deactivate(&(dhcp_ptr -> nx_dhcp_timer));
+    /* Deactivate DHCP Timer.  */
+    tx_timer_deactivate(&(dhcp_ptr -> nx_dhcp_timer));
 
-        /* Unbind UDP socket.  */
-        nx_udp_socket_unbind(&(dhcp_ptr -> nx_dhcp_socket));
-    }
+    /* Unbind UDP socket.  */
+    nx_udp_socket_unbind(&(dhcp_ptr -> nx_dhcp_socket));
 
     /* Release the DHCP mutex.  */
     tx_mutex_put(&(dhcp_ptr->nx_dhcp_mutex));
@@ -4961,7 +4956,7 @@ UINT  _nx_dhcp_user_option_add_callback_set(NX_DHCP *dhcp_ptr, UINT (*dhcp_user_
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_udp_receive_notify                         PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -4995,15 +4990,20 @@ UINT  _nx_dhcp_user_option_add_callback_set(NX_DHCP *dhcp_ptr, UINT (*dhcp_user_
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            multiple client instances,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 VOID _nx_dhcp_udp_receive_notify(NX_UDP_SOCKET *socket_ptr)
 {
 
-    NX_PARAMETER_NOT_USED(socket_ptr);
+NX_DHCP *dhcp_ptr;
+
+    dhcp_ptr = (NX_DHCP *)(socket_ptr -> nx_udp_socket_reserved_ptr);
 
     /* Set the data received event flag.  */
-    tx_event_flags_set(&(_nx_dhcp_created_ptr -> nx_dhcp_events), NX_DHCP_CLIENT_RECEIVE_EVENT, TX_OR);
+    tx_event_flags_set(&(dhcp_ptr -> nx_dhcp_events), NX_DHCP_CLIENT_RECEIVE_EVENT, TX_OR);
 }
 
 
@@ -5237,7 +5237,7 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_packet_process                             PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -5287,6 +5287,9 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 VOID  _nx_dhcp_packet_process(NX_DHCP *dhcp_ptr, NX_DHCP_INTERFACE_RECORD *interface_record, NX_PACKET *packet_ptr)
@@ -5354,20 +5357,7 @@ ULONG       probing_delay;
     /* Initialize the offset to the beginning of the packet buffer. */
     offset = 0;
     status = nx_packet_data_extract_offset(packet_ptr, offset, (VOID *)new_packet_ptr -> nx_packet_prepend_ptr, (packet_ptr) -> nx_packet_length, &bytes_copied);
-
-    /* Check status.  */
-    if ((status != NX_SUCCESS) || (bytes_copied == 0))
-    {
-
-        /* Release the allocated packet we'll never send. */
-        nx_packet_release(new_packet_ptr);
-
-        /* Release the original packet. */
-        nx_packet_release(packet_ptr);
-
-        /* Error extracting packet buffer, return error status.  */
-        return;
-    }
+    NX_ASSERT((status == NX_SUCCESS) && (bytes_copied > 0));
 
     /* Update the new packet with the bytes copied.  For chained packets, this will reflect the total
        'datagram' length. */
@@ -5449,10 +5439,6 @@ ULONG       probing_delay;
 
                 /* This will modify the timeout by up to +/- 1 second as recommended by RFC 2131, Section 4.1, Page 24. */
                 interface_record -> nx_dhcp_timeout = _nx_dhcp_add_randomize(interface_record -> nx_dhcp_timeout);
-
-                /* Check if the timeout is zero.  */
-                if (interface_record -> nx_dhcp_timeout == 0)
-                    interface_record -> nx_dhcp_timeout = 1;
 
                 /* Update the state to Requesting state.  */
                 interface_record -> nx_dhcp_state = NX_DHCP_STATE_REQUESTING;
@@ -5571,10 +5557,6 @@ ULONG       probing_delay;
                     /* Use the minimum value, Wait one second to begain in INIT state and forms a DHCP Discovery message.  */
                     interface_record -> nx_dhcp_timeout = NX_IP_PERIODIC_RATE;
                     interface_record -> nx_dhcp_rtr_interval = 0;
-
-                    /* Check if the timeout is less than 1 second.  */
-                    if (interface_record -> nx_dhcp_timeout < NX_IP_PERIODIC_RATE)
-                        interface_record -> nx_dhcp_timeout = NX_IP_PERIODIC_RATE;
                 }
             }
             break;
@@ -5767,7 +5749,7 @@ ULONG       probing_delay;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_timeout_process                            PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -5811,6 +5793,9 @@ ULONG       probing_delay;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 VOID _nx_dhcp_timeout_process(NX_DHCP *dhcp_ptr)
@@ -5926,10 +5911,6 @@ NX_IP           *ip_ptr;
                         /* This will modify the timeout by up to +/- 1 second as recommended by RFC 2131, Section 4.1, Page 24. */
                         interface_record -> nx_dhcp_timeout = _nx_dhcp_add_randomize(interface_record -> nx_dhcp_timeout);
 
-                        /* Check if the timeout is zero.  */
-                        if (interface_record -> nx_dhcp_timeout == 0)
-                            interface_record -> nx_dhcp_timeout = 1;
-
                         break;
                     }
 
@@ -5953,10 +5934,6 @@ NX_IP           *ip_ptr;
                         /* This will modify the timeout by up to +/- 1 second as recommended by RFC 2131, Section 4.1, Page 24. */
                         interface_record -> nx_dhcp_timeout = _nx_dhcp_add_randomize(interface_record -> nx_dhcp_timeout);
 
-                        /* Check if the timeout is zero.  */
-                        if (interface_record -> nx_dhcp_timeout == 0)
-                            interface_record -> nx_dhcp_timeout = 1;
-
                         break;
                     }
 
@@ -5979,10 +5956,6 @@ NX_IP           *ip_ptr;
 
                         /* This will modify the timeout by up to +/- 1 second as recommended by RFC 2131, Section 4.1, Page 24. */
                         interface_record -> nx_dhcp_timeout = _nx_dhcp_add_randomize(interface_record -> nx_dhcp_timeout);
-
-                        /* Check if the timeout is zero.  */
-                        if (interface_record -> nx_dhcp_timeout == 0)
-                            interface_record -> nx_dhcp_timeout = 1;
 
                         break;
                     }
@@ -6551,7 +6524,7 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_send_request_internal                      PORTABLE C      */ 
-/*                                                           6.1.8        */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -6611,6 +6584,10 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*                                            adding additional request   */
 /*                                            option in parameter request,*/
 /*                                            resulting in version 6.1.8  */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), corrected*/
+/*                                            the logic of adding server  */
+/*                                            identifier option,          */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 static UINT  _nx_dhcp_send_request_internal(NX_DHCP *dhcp_ptr, NX_DHCP_INTERFACE_RECORD *interface_record, UINT dhcp_message_type)
@@ -6829,7 +6806,8 @@ UINT            name_length;
             /* Should add server ID if not renewing.  */
             if ((interface_record -> nx_dhcp_state != NX_DHCP_STATE_RENEWING) &&
                 (interface_record -> nx_dhcp_state != NX_DHCP_STATE_REBINDING) && 
-                (interface_record -> nx_dhcp_server_ip != NX_BOOTP_BC_ADDRESS)
+                (interface_record -> nx_dhcp_server_ip != NX_BOOTP_BC_ADDRESS) && 
+                (interface_record -> nx_dhcp_server_ip != NX_BOOTP_NO_ADDRESS)
                )
             {
 
@@ -7014,7 +6992,7 @@ UINT            name_length;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_client_send_with_zero_source_address       PORTABLE C      */ 
-/*                                                           6.1.8        */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -7052,6 +7030,15 @@ UINT            name_length;
 /*  08-02-2021     Yuxin Zhou               Modified comment(s), and      */
 /*                                            supported new ip filter,    */
 /*                                            resulting in version 6.1.8  */
+/*  04-25-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            set the IP header pointer,  */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            and solve inconformity with */
+/*                                            udp socket send and ip      */
+/*                                            header add,                 */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 static UINT  _nx_dhcp_client_send_with_zero_source_address(NX_DHCP *dhcp_ptr, UINT iface_index, NX_PACKET *packet_ptr)
@@ -7063,7 +7050,9 @@ NX_UDP_HEADER  *udp_header_ptr;
 NX_IPV4_HEADER *ip_header_ptr;
 NX_INTERFACE   *interface_ptr;
 ULONG           ip_src_addr, ip_dest_addr;
-UINT            compute_checksum;
+#if defined(NX_DISABLE_UDP_TX_CHECKSUM) || defined(NX_DISABLE_IP_TX_CHECKSUM) || defined(NX_ENABLE_INTERFACE_CAPABILITY)
+UINT            compute_checksum = 1;
+#endif /* defined(NX_DISABLE_UDP_TX_CHECKSUM) || defined(NX_DISABLE_IP_TX_CHECKSUM) || defined(NX_ENABLE_INTERFACE_CAPABILITY) */
 ULONG           checksum;
 ULONG           val;
 NX_IP_DRIVER    driver_request;
@@ -7131,18 +7120,16 @@ NX_IP_DRIVER    driver_request;
 
 #ifdef NX_DISABLE_UDP_TX_CHECKSUM
     compute_checksum = 0;
-#else /* NX_DISABLE_UDP_TX_CHECKSUM */
-    compute_checksum = 1;
 #endif /* NX_DISABLE_UDP_TX_CHECKSUM */
 
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
     if (interface_ptr -> nx_interface_capability_flag & NX_INTERFACE_CAPABILITY_UDP_TX_CHECKSUM)
         compute_checksum = 0;
-    else
-        compute_checksum = 1;
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
+#if defined(NX_DISABLE_UDP_TX_CHECKSUM) || defined(NX_ENABLE_INTERFACE_CAPABILITY)
     if (compute_checksum)
+#endif /* defined(NX_DISABLE_UDP_TX_CHECKSUM) || defined(NX_ENABLE_INTERFACE_CAPABILITY) */
     {
         /* Yes, we need to compute the UDP checksum.  */
         checksum = _nx_ip_checksum_compute(packet_ptr,
@@ -7183,6 +7170,8 @@ NX_IP_DRIVER    driver_request;
 
     /* Setup the IP header pointer.  */
     ip_header_ptr =  (NX_IPV4_HEADER *) packet_ptr -> nx_packet_prepend_ptr; 
+    packet_ptr -> nx_packet_ip_header = packet_ptr -> nx_packet_prepend_ptr;
+    packet_ptr -> nx_packet_ip_header_length = sizeof(NX_IPV4_HEADER);
 
     /* Build the first 32-bit word of the IP header.  */
     ip_header_ptr -> nx_ip_header_word_0 =  (NX_IP_VERSION | socket_ptr -> nx_udp_socket_type_of_service | (0xFFFF & packet_ptr -> nx_packet_length));
@@ -7206,21 +7195,22 @@ NX_IP_DRIVER    driver_request;
     NX_CHANGE_ULONG_ENDIAN(ip_header_ptr -> nx_ip_header_word_2);
     NX_CHANGE_ULONG_ENDIAN(ip_header_ptr -> nx_ip_header_source_ip);
     NX_CHANGE_ULONG_ENDIAN(ip_header_ptr -> nx_ip_header_destination_ip);
-     
+
 #ifdef NX_DISABLE_IP_TX_CHECKSUM
     compute_checksum = 0;
-#else /* NX_DISABLE_IP_TX_CHECKSUM */
+#elif defined(NX_ENABLE_INTERFACE_CAPABILITY)
+    /* Re-initialize the value back to the default initial value (i.e. 1) */
     compute_checksum = 1;
-#endif /* NX_DISABLE_IP_TX_CHECKSUM */
+#endif /* defined(NX_DISABLE_IP_TX_CHECKSUM) */
 
 #ifdef NX_ENABLE_INTERFACE_CAPABILITY
     if (packet_ptr -> nx_packet_address.nx_packet_interface_ptr -> nx_interface_capability_flag & NX_INTERFACE_CAPABILITY_IPV4_TX_CHECKSUM)
         compute_checksum = 0;
-    else
-        compute_checksum = 1;
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
+#if defined(NX_DISABLE_IP_TX_CHECKSUM) || defined(NX_ENABLE_INTERFACE_CAPABILITY)
     if (compute_checksum)
+#endif /* defined(NX_DISABLE_IP_TX_CHECKSUM) || defined(NX_ENABLE_INTERFACE_CAPABILITY) */
     {
         checksum = _nx_ip_checksum_compute(packet_ptr, NX_IP_VERSION_V4, 20, NULL, NULL);
 
@@ -7632,7 +7622,7 @@ ULONG       value;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_get_option_value                           PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -7672,6 +7662,9 @@ ULONG       value;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 static UINT  _nx_dhcp_get_option_value(UCHAR *bootp_message, UINT option, ULONG *value, UINT length)
@@ -7686,45 +7679,43 @@ UINT   option_length;
     option_message = &bootp_message[NX_BOOTP_OFFSET_OPTIONS];
     option_length = length - NX_BOOTP_OFFSET_OPTIONS;
 
-    /* Find the option.  */
-    if ((option != NX_DHCP_OPTION_PAD) && (option != NX_DHCP_OPTION_END))
+    /* There is no need to check whether the option is PAD or END here since no caller will pass these 2 options
+       and for denfensive purpose, the function below could check them and guarantee appropriate behaviour */
+
+    /* Search the buffer for the option.  */
+    data =  _nx_dhcp_search_buffer(option_message, option, option_length);
+
+    /* Check to see if the option was found.  */
+    if (data != NX_NULL)
     {
 
-        /* Search the buffer for the option.  */
-        data =  _nx_dhcp_search_buffer(option_message, option, option_length);
-
-        /* Check to see if the option was found.  */
-        if (data != NX_NULL)
+        /* Check for the proper size.  */
+        if (*data > 4)
         {
 
-            /* Check for the proper size.  */
-            if (*data > 4)
+            /* Check for the gateway option.  */
+            if (option == NX_DHCP_OPTION_GATEWAYS)
             {
 
-                /* Check for the gateway option.  */
-                if (option == NX_DHCP_OPTION_GATEWAYS)
-                {
+                /* Pickup the first gateway address.  */
+                *value =  _nx_dhcp_get_data(data + 1, 4);
 
-                    /* Pickup the first gateway address.  */
-                    *value =  _nx_dhcp_get_data(data + 1, 4);
-
-                    /* For now, just disregard any additional gateway addresses.  */
-                    return(NX_SUCCESS);
-                }
-                else
-                {
-
-                    /* Invalid size, return error.  */
-                    return(NX_SIZE_ERROR);
-                }
+                /* For now, just disregard any additional gateway addresses.  */
+                return(NX_SUCCESS);
             }
             else
             {
 
-                /* Get the actual value.  */
-                *value = _nx_dhcp_get_data(data + 1, *data);
-                return(NX_SUCCESS);  
+                /* Invalid size, return error.  */
+                return(NX_SIZE_ERROR);
             }
+        }
+        else
+        {
+
+            /* Get the actual value.  */
+            *value = _nx_dhcp_get_data(data + 1, *data);
+            return(NX_SUCCESS);  
         }
     }
 
@@ -7934,7 +7925,7 @@ static UINT  _nx_dhcp_add_option_parameter_request(NX_DHCP *dhcp_ptr, UCHAR *boo
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_add_randomize                              PORTABLE C      */  
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -7968,6 +7959,9 @@ static UINT  _nx_dhcp_add_option_parameter_request(NX_DHCP *dhcp_ptr, UCHAR *boo
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 static ULONG _nx_dhcp_add_randomize(ULONG timeout)
@@ -7990,7 +7984,7 @@ ULONG adjustment;
         if (timeout > (NX_IP_PERIODIC_RATE - adjustment))
             timeout -= (ULONG)(NX_IP_PERIODIC_RATE - adjustment);
         else
-            timeout = 0;
+            timeout = 1; /* Set 1 here since the minmum tick for timeout shall be larger than 0 */
     }
     else
     {
@@ -8148,7 +8142,7 @@ static ULONG _nx_dhcp_update_renewal_timeout(ULONG timeout)
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_search_buffer                              PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -8188,6 +8182,9 @@ static ULONG _nx_dhcp_update_renewal_timeout(ULONG timeout)
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 static UCHAR  *_nx_dhcp_search_buffer(UCHAR *option_message, UINT option, UINT length)
@@ -8204,9 +8201,14 @@ UINT    size;
     /* Search as long as there are valid options.   */
     while (i < length - 1)
     {
+        /* Jump out when it reaches END option */
+        if (*data == NX_DHCP_OPTION_END)
+        {
+            break;
+        }
 
         /* Simply skip any padding */
-        if (*data == NX_DHCP_OPTION_PAD)
+        else if (*data == NX_DHCP_OPTION_PAD)
         {
 
             data++;
@@ -8314,7 +8316,7 @@ ULONG   value = 0;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_store_data                                 PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -8352,41 +8354,18 @@ ULONG   value = 0;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s),          */
+/*                                            improved internal logic,    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 static VOID  _nx_dhcp_store_data(UCHAR *data, UINT size, ULONG value)
 {
-
-    /* Make sure that data is left justified.  */
-    switch (size)
-    {
-    
-        case 1:
-
-            value <<= 24;
-            break;
-
-        case 2:
-
-            value <<= 16;
-            break;
-
-        case 3:
-      
-            value <<= 8;
-            break;
-
-        default:
-            break;
-    }
-
     /* Store the value.  */
     while (size-- > 0)
     {
-
-        *data = (UCHAR) ((value >> 24) & 0xff);
-        data++;
-        value <<= 8;
+        *(data + size) = (UCHAR)(value & 0xff);
+        value >>= 8;
     }
 }
 
@@ -8758,7 +8737,7 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_dhcp_ip_conflict                                PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -8795,21 +8774,44 @@ NX_DHCP_INTERFACE_RECORD *interface_record = NX_NULL;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            multiple client instances,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 VOID  _nx_dhcp_ip_conflict(NX_IP *ip_ptr, UINT iface_index, ULONG ip_address, ULONG physical_msw, ULONG physical_lsw)
 {
 
-    NX_PARAMETER_NOT_USED(ip_ptr);
+TX_INTERRUPT_SAVE_AREA
+
+NX_DHCP *dhcp_ptr;
+
     NX_PARAMETER_NOT_USED(ip_address);
     NX_PARAMETER_NOT_USED(physical_msw);
     NX_PARAMETER_NOT_USED(physical_lsw);
 
-    /* Set the interface index.  */
-    _nx_dhcp_created_ptr -> nx_dhcp_interface_conflict_flag |= (UINT)(1 << iface_index);
+    /* Disable interrupts.  */
+    TX_DISABLE
 
-    /* Set the address conflict event flag.  */
-    tx_event_flags_set(&(_nx_dhcp_created_ptr -> nx_dhcp_events), NX_DHCP_CLIENT_CONFLICT_EVENT, TX_OR);
+    /* Find the DHCP client.  */
+    for (dhcp_ptr = _nx_dhcp_created_ptr; dhcp_ptr; dhcp_ptr = dhcp_ptr -> nx_dhcp_created_next)
+    {
+        if (dhcp_ptr -> nx_dhcp_ip_ptr == ip_ptr)
+        {
+
+            /* Set the interface index.  */
+            dhcp_ptr -> nx_dhcp_interface_conflict_flag |= (UINT)(1 << iface_index);
+
+            /* Set the address conflict event flag.  */
+            tx_event_flags_set(&(_nx_dhcp_created_ptr -> nx_dhcp_events), NX_DHCP_CLIENT_CONFLICT_EVENT, TX_OR);
+
+            break;
+        }
+    }
+
+    /* Restore interrupts.  */
+    TX_RESTORE
+
 }
 #endif
 

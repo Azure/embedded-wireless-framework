@@ -227,6 +227,7 @@ ewf_result ewf_adapter_espressif_common_start(ewf_adapter* adapter_ptr)
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+    ewf_adapter_espressif_common* implementation_ptr = (ewf_adapter_espressif_common*)adapter_ptr->implementation_ptr;
 
     ewf_result result;
 
@@ -270,6 +271,24 @@ ewf_result ewf_adapter_espressif_common_start(ewf_adapter* adapter_ptr)
     {
         EWF_LOG_ERROR("Failed to start the interface: ewf_result %d.\n", result);
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
+    }
+
+    /* Initialize the reception queues */
+    {
+#if (EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_POOL_SIZE != 5)
+#error Please update the code below to match
+#endif
+        EWF_PLATFORM_QUEUE_STATIC_DECLARE(implementation_ptr->internet_socket_pool[0].recv_queue_ptr, queue0, uint8_t, EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE);
+        EWF_PLATFORM_QUEUE_STATIC_DECLARE(implementation_ptr->internet_socket_pool[1].recv_queue_ptr, queue1, uint8_t, EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE);
+        EWF_PLATFORM_QUEUE_STATIC_DECLARE(implementation_ptr->internet_socket_pool[2].recv_queue_ptr, queue2, uint8_t, EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE);
+        EWF_PLATFORM_QUEUE_STATIC_DECLARE(implementation_ptr->internet_socket_pool[3].recv_queue_ptr, queue3, uint8_t, EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE);
+        EWF_PLATFORM_QUEUE_STATIC_DECLARE(implementation_ptr->internet_socket_pool[4].recv_queue_ptr, queue4, uint8_t, EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE);
+    
+        ewf_platform_queue_create(implementation_ptr->internet_socket_pool[0].recv_queue_ptr);
+        ewf_platform_queue_create(implementation_ptr->internet_socket_pool[1].recv_queue_ptr);
+        ewf_platform_queue_create(implementation_ptr->internet_socket_pool[2].recv_queue_ptr);
+        ewf_platform_queue_create(implementation_ptr->internet_socket_pool[3].recv_queue_ptr);
+        ewf_platform_queue_create(implementation_ptr->internet_socket_pool[4].recv_queue_ptr);
     }
 
     /* AT - wake the module */

@@ -2432,7 +2432,7 @@ NX_SNTP_TIME local_time;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_sntp_client_receive_time_update                 PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -2480,6 +2480,9 @@ NX_SNTP_TIME local_time;
 /*                                            added support for disabling */
 /*                                            message check,              */
 /*                                            resulting in version 6.1    */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            corrected the port check,   */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_sntp_client_receive_time_update(NX_SNTP_CLIENT *client_ptr, ULONG timeout)
@@ -2521,7 +2524,7 @@ NXD_ADDRESS     source_ip_address, destination_ip_address;
         sender_port = (UINT)udp_header_ptr -> nx_udp_header_word_0 >> NX_SHIFT_BY_16; 
 
         /* Check if this is the server port the Client expects.  */
-        if (sender_port != NX_SNTP_CLIENT_UDP_PORT) 
+        if (sender_port != NX_SNTP_SERVER_UDP_PORT) 
         {
 
             /* No, reject the packet.  */
@@ -2726,7 +2729,7 @@ NXD_ADDRESS     source_ip_address, destination_ip_address;
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_sntp_client_extract_time_message_from_packet    PORTABLE C      */ 
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -2761,6 +2764,9 @@ NXD_ADDRESS     source_ip_address, destination_ip_address;
 /*  09-30-2020     Yuxin Zhou               Modified comment(s), and      */
 /*                                            verified memcpy use cases,  */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), corrected*/
+/*                                            the Reference Identifier,  */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_sntp_client_extract_time_message_from_packet(NX_SNTP_CLIENT *client_ptr, NX_PACKET *packet_ptr) 
@@ -2803,7 +2809,6 @@ NX_SNTP_TIME_MESSAGE *time_message_ptr;
 
     /* Advance to the next 32 bit field and extract the reference clock ID field.  */
     ntp_word_0++;
-    NX_CHANGE_ULONG_ENDIAN(*ntp_word_0);
     memcpy(time_message_ptr -> reference_clock_id, ntp_word_0, 4); /* Use case of memcpy is verified. */
 
     /* Advance to the next field (64 bit field) and extract the reference time stamp field.  */

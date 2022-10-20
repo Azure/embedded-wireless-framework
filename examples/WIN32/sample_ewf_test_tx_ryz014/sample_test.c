@@ -107,10 +107,6 @@ void thread_sample_entry(ULONG param)
         // continue despite the error
     }
 
-    /* Update the context_id that should be used for the tests */
-    ewf_adapter_renesas_ryz014* adapter_renesas_ryz014_ptr = (ewf_adapter_renesas_ryz014*)adapter_ptr->implementation_ptr;
-    adapter_renesas_ryz014_ptr->current_context_id = EWF_CONFIG_CONTEXT_ID;
-
     /* Run the adapter tests.  */
     if (ewf_result_failed(result = ewf_adapter_renesas_ryz014_test(adapter_ptr)))
     {
