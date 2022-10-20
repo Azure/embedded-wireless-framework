@@ -167,6 +167,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
             const char match_str[] = "PUB: 0,";
             if (ewfl_str_starts_with(urc_str, match_str))
             {
+                implementation_ptr->mqtt_basic_publish = true;
                 /* Message published */
                 EWF_LOG("[INFO][QUECTEL MQTT PUB]\n");
                 return EWF_RESULT_OK;
@@ -177,6 +178,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
             const char match_str[] = "SUB: 0,";
             if (ewfl_str_starts_with(urc_str, match_str))
             {
+                implementation_ptr->mqtt_basic_subscribe = true;
                 /* Subscribed to topic */
                 EWF_LOG("[INFO][QUECTEL MQTT SUB]\n");
                 return EWF_RESULT_OK;
@@ -205,36 +207,36 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
                 {
                     char* topic = NULL;
                     char* payload = NULL;
+                    char* payload_len_str = NULL;
+                    uint32_t payload_len = 0;
                     {
                         char* q1 = NULL;
                         char* q2 = NULL;
                         char* q3 = NULL;
                         char* q4 = NULL;
+                        char* p = parse_str;
 
-                        for (char* p = parse_str; *p; p++)
-                        {
-                            if (*p == '\"')
-                            {
-                                if (!q1) q1 = p;
-                                else if (!q2) q2 = p;
-                                else if (!q3) q3 = p;
-                                else if (!q4) q4 = p;
-                            }
-                        }
-
+                        q1 = ewfl_find_chars_with_terms(p, "\"", NULL);
+                        q2 = ewfl_find_chars_with_terms(q1+1, "\"", NULL);
+                        q3 = ewfl_find_chars_with_terms(q2, ",", NULL);
                         if (q1 && q2)
                         {
                             topic = q1+1;
                             *q2 = 0;
                         }
 
-                        if (q3 && q4)
-                        {
-                            payload = q3+1;
-                            *q4 = 0;
-                        }
-                    }
+                        /* Skip "," after payload lenght in the URC */
+                        q3++;
+                        payload_len_str = q3;
+                        payload_len = ewfl_str_to_unsigned(payload_len_str);
 
+                        q3 = ewfl_find_chars_with_terms(q3, ",", NULL);
+
+                        /* Skip the starting ",\" before the payload*/
+                        payload = q3 + 2;
+                        q3[payload_len + 2] = 0;
+
+                    }
                     if (adapter_ptr->mqtt_basic_api_ptr && adapter_ptr->mqtt_basic_api_ptr->message_callback)
                     {
                         adapter_ptr->mqtt_basic_api_ptr->message_callback(adapter_ptr, topic, payload);
@@ -323,6 +325,10 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_connect(ewf_adapter* adapter_pt
 
     ewf_result result;
     uint32_t timeout;
+
+    /* Configure MQTT receive URC handling */
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QMTCFG=\"recv/mode\",0,0,1\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
 #ifdef EWF_DEBUG
     /* List the MQTT connections */
@@ -493,13 +499,22 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_subscribe(ewf_adapter* adapter_
 
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
+    ewf_adapter_quectel_common* implementation_ptr = (ewf_adapter_quectel_common*)adapter_ptr->implementation_ptr;
+    
     ewf_result result;
 
     if (!topic_cstr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QMTSUB=0,1,\"", topic_cstr, "\",2\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
+
+    for (unsigned i = 0; i < (2 * EWF_PLATFORM_TICKS_PER_SECOND); i++)
+    {
+        if (implementation_ptr->mqtt_basic_subscribe) break;
+        ewf_interface_poll(interface_ptr);
+        ewf_platform_sleep(1);
+    }
+    implementation_ptr->mqtt_basic_subscribe = false;
 
     return EWF_RESULT_OK;
 }
@@ -527,7 +542,8 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_publish(ewf_adapter* adapter_pt
 
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
+    ewf_adapter_quectel_common* implementation_ptr = (ewf_adapter_quectel_common*)adapter_ptr->implementation_ptr;
+    
     ewf_result result;
 
     if (!topic_cstr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
@@ -554,5 +570,12 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_publish(ewf_adapter* adapter_pt
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (const uint8_t*)message_cstr, message_length))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
+    for (unsigned i = 0; i < (2 * EWF_PLATFORM_TICKS_PER_SECOND); i++)
+    {
+        if (implementation_ptr->mqtt_basic_publish) break;
+        ewf_interface_poll(interface_ptr);
+        ewf_platform_sleep(1);
+    }
+    implementation_ptr->mqtt_basic_publish = false;
     return EWF_RESULT_OK;
 }

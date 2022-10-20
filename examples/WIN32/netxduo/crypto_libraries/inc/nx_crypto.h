@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    nx_crypto.h                                         PORTABLE C      */
-/*                                                           6.1.7        */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -49,6 +49,12 @@
 /*                                            Renamed FIPS symbol and     */
 /*                                            fips memory functions,      */
 /*                                            resulting in version 6.1.7  */
+/*  01-31-2022     Timothy Stapko           Modified comment(s),          */
+/*                                            added missing symbol,       */
+/*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Yuxin Zhou               Modified comment(s),          */
+/*                                            cleaned up memory functions,*/
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -91,6 +97,10 @@ extern   "C" {
 #include <stdlib.h>
 #include <string.h>
 
+
+/* Configuration macro: enable curve25519 and curve448. */
+/* #define NX_CRYPTO_ENABLE_CURVE25519_448 */
+
 #ifdef NX_CRYPTO_SELF_TEST
 
 VOID *_nx_crypto_self_test_memcpy(void *dest, const void *src, size_t size);
@@ -99,30 +109,6 @@ VOID *_nx_crypto_self_test_memset(void *dest, int value, size_t size);
 int   _nx_crypto_self_test_memcmp(const void *dest, const void *src, size_t size);
 UINT  _nx_crypto_drbg(UINT bits, UCHAR *result);
 
-#ifdef _NX_CRYPTO_INITIALIZE_
-VOID *(*volatile _nx_crypto_memset_ptr)(void *dest, int value, size_t size) = _nx_crypto_self_test_memset;
-VOID *(*volatile _nx_crypto_memcpy_ptr)(void *dest, const void *src, size_t size) = _nx_crypto_self_test_memcpy;
-#else
-extern VOID *(*volatile _nx_crypto_memset_ptr)(void *dest, int value, size_t size);
-extern VOID *(*volatile _nx_crypto_memcpy_ptr)(void *dest, const void *src, size_t size);
-#endif
-
-#ifndef NX_CRYPTO_MEMCPY
-#define NX_CRYPTO_MEMCPY    _nx_crypto_memcpy_ptr
-#endif
-
-#ifndef NX_CRYPTO_MEMMOVE
-#define NX_CRYPTO_MEMMOVE   _nx_crypto_self_test_memmove
-#endif
-
-#ifndef NX_CRYPTO_MEMSET
-#define NX_CRYPTO_MEMSET    _nx_crypto_memset_ptr
-#endif
-
-#ifndef NX_CRYPTO_MEMCMP
-#define NX_CRYPTO_MEMCMP    _nx_crypto_self_test_memcmp
-#endif
-
 #ifndef NX_CRYPTO_RBG
 #define NX_CRYPTO_RBG       _nx_crypto_drbg
 #endif
@@ -130,6 +116,13 @@ extern VOID *(*volatile _nx_crypto_memcpy_ptr)(void *dest, const void *src, size
 #define NX_CRYPTO_CONST
 
 #else /* NON NX_CRYPTO_SELF_TEST build. */
+
+#ifndef NX_CRYPTO_RBG
+#define NX_CRYPTO_RBG       _nx_crypto_huge_number_rbg
+#endif
+
+#define NX_CRYPTO_CONST     const
+#endif
 
 #ifdef _NX_CRYPTO_INITIALIZE_
 VOID *(*volatile _nx_crypto_memset_ptr)(void *dest, int value, size_t size) = memset;
@@ -155,15 +148,12 @@ extern VOID *(*volatile _nx_crypto_memcpy_ptr)(void *dest, const void *src, size
 #define NX_CRYPTO_MEMCMP    memcmp
 #endif
 
-#ifndef NX_CRYPTO_RBG
-#define NX_CRYPTO_RBG       _nx_crypto_huge_number_rbg
-#endif
-
-#define NX_CRYPTO_CONST     const
-#endif
-
 #if !defined(NX_CRYPTO_CHANGE_ULONG_ENDIAN) && defined(NX_CHANGE_ULONG_ENDIAN)
 #define NX_CRYPTO_CHANGE_ULONG_ENDIAN NX_CHANGE_ULONG_ENDIAN
+#endif
+
+#if !defined(NX_CRYPTO_CHANGE_USHORT_ENDIAN) && defined(NX_CHANGE_USHORT_ENDIAN)
+#define NX_CRYPTO_CHANGE_USHORT_ENDIAN NX_CHANGE_USHORT_ENDIAN
 #endif
 
 #ifndef NX_CRYPTO_INTEGRITY_TEST

@@ -147,6 +147,8 @@ typedef struct _ewf_adapter_quectel_common
     volatile bool mqtt_basic_open_error;
     volatile bool mqtt_basic_conn;
     volatile bool mqtt_basic_conn_error;
+    volatile bool mqtt_basic_publish;
+    volatile bool mqtt_basic_subscribe;
 #endif /* EWF_ADAPTER_QUECTEL_COMMON_MQTT_BASIC_ENABLED */
 
 #if EWF_ADAPTER_QUECTEL_COMMON_MQTT_ENABLED

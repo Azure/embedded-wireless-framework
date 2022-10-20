@@ -26,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
 /*    nx_api.h                                            PORTABLE C      */
-/*                                                           6.1.8        */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -76,6 +76,24 @@
 /*                                            added function to convert   */
 /*                                            unsigned integer to string, */
 /*                                            resulting in version 6.1.8  */
+/*  10-15-2021     Yuxin Zhou               Modified comment(s), and      */
+/*                                            added support for getting   */
+/*                                            interface type,             */
+/*                                            resulting in version 6.1.9  */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            updated product constants,  */
+/*                                            resulting in version 6.1.10 */
+/*  04-25-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            updated product constants,  */
+/*                                            added internal ip address   */
+/*                                            change notification,        */
+/*                                            resulting in version 6.1.11 */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            updated product constants,  */
+/*                                            fixed compiler errors when  */
+/*                                            TX_SAFETY_CRITICAL is       */
+/*                                            enabled,                    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -100,10 +118,13 @@ extern   "C" {
 
 
 /* Bypass ThreadX API error checking for internal NetX calls.  */
+#include "tx_port.h"
 
 #ifdef NX_SOURCE_CODE
+#ifndef TX_SAFETY_CRITICAL
 #ifndef TX_DISABLE_ERROR_CHECKING
 #define TX_DISABLE_ERROR_CHECKING
+#endif
 #endif
 #endif
 
@@ -489,7 +510,7 @@ VOID _nx_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, ULONG
 #define AZURE_RTOS_NETXDUO
 #define NETXDUO_MAJOR_VERSION                    6
 #define NETXDUO_MINOR_VERSION                    1
-#define NETXDUO_PATCH_VERSION                    8
+#define NETXDUO_PATCH_VERSION                    12
 
 /* Define the following symbols for backward compatibility */
 #define EL_PRODUCT_NETXDUO
@@ -1315,6 +1336,7 @@ typedef struct NX_IPV6_DEFAULT_ROUTER_ENTRY_STRUCT
 #define NX_LINK_RX_ENABLE                          25
 #define NX_LINK_RX_DISABLE                         26
 #define NX_LINK_6LOWPAN_COMMAND                    27 /* 6LowPAN driver command, the sub command see nx_6lowpan.h.  */
+#define NX_LINK_GET_INTERFACE_TYPE                 28
 
 #define NX_LINK_USER_COMMAND                       50 /* Values after this value are reserved for application.  */
 
@@ -1378,12 +1400,20 @@ typedef struct NX_IPV6_DEFAULT_ROUTER_ENTRY_STRUCT
 #define NX_IP_PACKET_OUT                           1
 #endif /* NX_ENABLE_IP_PACKET_FILTER */
 
+/* Define the interface type.  */
+#define NX_INTERFACE_TYPE_UNKNOWN                  0
+#define NX_INTERFACE_TYPE_OTHER                    1
+#define NX_INTERFACE_TYPE_ETHERNET                 2
+#define NX_INTERFACE_TYPE_WIFI                     3
+#define NX_INTERFACE_TYPE_CELLULAR                 4
+#define NX_INTERFACE_TYPE_BLUETOOTH                5
+#define NX_INTERFACE_TYPE_LORAWAN                  6
+#define NX_INTERFACE_TYPE_MAX                      7
 
 #ifdef NX_ENABLE_THREAD
 /* Define the packet type for Thread MLE.  */
 #define NX_PACKET_TYPE_THREAD_MLE                  0x01
 #endif /* NX_ENABLE_THREAD  */
-
 
 /* Define IPv4/v6 Address structure */
 typedef struct NXD_ADDRESS_STRUCT
@@ -2627,11 +2657,17 @@ typedef struct NX_IP_STRUCT
     /* Define the IP address change notification callback routine pointer.  */
     VOID        (*nx_ip_address_change_notify)(struct NX_IP_STRUCT *, VOID *);
     VOID        *nx_ip_address_change_notify_additional_info;
+
+    /* Define the internal IP address change notification callback routine pointer, used in mDNS.  */
+    VOID        (*nx_ip_address_change_notify_internal)(struct NX_IP_STRUCT *, VOID *);
 #endif /* !NX_DISABLE_IPV4  */
 
 #ifdef FEATURE_NX_IPV6
 #ifdef NX_ENABLE_IPV6_ADDRESS_CHANGE_NOTIFY
     VOID        (*nx_ipv6_address_change_notify)(struct NX_IP_STRUCT *ip_ptr, UINT status, UINT interface_index, UINT addres_index, ULONG *ip_address);
+
+    /* Define the internal IPv6 address change notification callback routine pointer, used in mDNS.  */
+    VOID        (*nx_ipv6_address_change_notify_internal)(struct NX_IP_STRUCT *ip_ptr, UINT status, UINT interface_index, UINT addres_index, ULONG *ip_address);
 #endif /* NX_ENABLE_IPV6_ADDRESS_CHANGE_NOTIFY */
 #endif /* FEATURE_NX_IPV6 */
 

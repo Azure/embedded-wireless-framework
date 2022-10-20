@@ -29,7 +29,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_session_renegotiate                  PORTABLE C      */
-/*                                                           6.1.8        */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -90,6 +90,13 @@
 /*  08-02-2021     Timothy Stapko           Modified comment(s),          */
 /*                                            fixed packet leak bug,      */
 /*                                            resulting in version 6.1.8  */
+/*  10-15-2021     Timothy Stapko           Modified comment(s), added    */
+/*                                            option to disable client    */
+/*                                            initiated renegotiation,    */
+/*                                            resulting in version 6.1.9  */
+/*  04-25-2022     Yuxin Zhou               Modified comment(s), changed  */
+/*                                            an error to assert,         */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 #ifndef NX_SECURE_TLS_DISABLE_SECURE_RENEGOTIATION
@@ -224,15 +231,17 @@ NX_PACKET *send_packet;
             return(status);
         }
 
+        /* We are requesting a renegotiation from the server side - we need to know if we requested
+           the renegotiation when the ClientHello comes in so we can reject client-initiated renegotiation
+           if the user so chooses. */
+        tls_session -> nx_secure_tls_server_renegotiation_requested = NX_TRUE;
+
         /* Populate our packet with HelloRequest data. */
         status = _nx_secure_tls_send_hellorequest(tls_session, send_packet);
+        NX_ASSERT(status == NX_SUCCESS);
 
-        if (status == NX_SUCCESS)
-        {
-
-            /* Send the HelloRequest to kick things off. */
-            status = _nx_secure_tls_send_handshake_record(tls_session, send_packet, NX_SECURE_TLS_HELLO_REQUEST, wait_option);
-        }
+        /* Send the HelloRequest to kick things off. */
+        status = _nx_secure_tls_send_handshake_record(tls_session, send_packet, NX_SECURE_TLS_HELLO_REQUEST, wait_option);
 
         /* If anything after the allocate fails, we need to release our packet. */
         if (status != NX_SUCCESS)

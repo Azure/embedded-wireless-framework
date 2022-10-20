@@ -203,7 +203,7 @@ UINT cmp;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_crypto_huge_number_subtract                     PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -262,6 +262,9 @@ UINT cmp;
 /*  05-19-2020     Timothy Stapko           Initial Version 6.0           */
 /*  09-30-2020     Timothy Stapko           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Timothy Stapko           Modified comment(s), and      */
+/*                                            improved performance,       */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 NX_CRYPTO_KEEP VOID _nx_crypto_huge_number_subtract(NX_CRYPTO_HUGE_NUMBER *left, NX_CRYPTO_HUGE_NUMBER *right)
@@ -276,7 +279,6 @@ UINT cmp;
     }
     else
     {
-        cmp = _nx_crypto_huge_number_compare_unsigned(left, right);
 
         if (cmp == NX_CRYPTO_HUGE_NUMBER_EQUAL)
         {
@@ -1340,7 +1342,7 @@ UINT      i, j;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_crypto_huge_number_modulus                      PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -1410,6 +1412,9 @@ UINT      i, j;
 /*  09-30-2020     Timothy Stapko           Modified comment(s), and      */
 /*                                            fixed variable type issue,  */
 /*                                            resulting in version 6.1    */
+/*  04-25-2022     Yuxin Zhou               Modified comment(s),          */
+/*                                            fixed division by zero bug, */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 NX_CRYPTO_KEEP VOID _nx_crypto_huge_number_modulus(NX_CRYPTO_HUGE_NUMBER *dividend, NX_CRYPTO_HUGE_NUMBER *divisor)
@@ -1518,7 +1523,7 @@ NX_CRYPTO_HUGE_NUMBER *result;
         }
         else
         {
-            scale = result_buffer[result_length] / (divisor_buffer[divisor_length] + 1);
+            scale = result_buffer[result_length] / ((HN_UBASE2)divisor_buffer[divisor_length] + 1);
             if (scale == 0)
             {
                 scale = 1;
@@ -2540,7 +2545,7 @@ HN_UBASE *result_buffer = result -> nx_crypto_huge_number_data;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_crypto_huge_number_mont_power_modulus           PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.9        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -2600,6 +2605,8 @@ HN_UBASE *result_buffer = result -> nx_crypto_huge_number_data;
 /*  05-19-2020     Timothy Stapko           Initial Version 6.0           */
 /*  09-30-2020     Timothy Stapko           Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  10-15-2021     Bhupendra Naphade        Modified comment(s),          */
+/*                                            resulting in version 6.1.9  */
 /*                                                                        */
 /**************************************************************************/
 NX_CRYPTO_KEEP VOID _nx_crypto_huge_number_mont_power_modulus(NX_CRYPTO_HUGE_NUMBER *x,
@@ -2673,7 +2680,6 @@ NX_CRYPTO_HUGE_NUMBER *operand, *temp_result, *temp_swap;
     temp_result = &temp;
 
     exp_size = e -> nx_crypto_huge_number_size;
-    m -> nx_crypto_huge_number_size = m -> nx_crypto_huge_number_size;
     val = e -> nx_crypto_huge_number_data + (exp_size - 1);
 
     /* Loop through the bits of the exponent. For each bit set, multiply the result by the running square. */

@@ -36,6 +36,13 @@ ewf_result ewf_adapter_quectel_common_urc_callback(ewf_interface* interface_ptr,
         buffer_ptr += 2;
     }
 
+    /* Skip leading \r\n */
+    if (buffer_length >= 2 && buffer_ptr[0] == '\r' && buffer_ptr[1] == '\n')
+    {
+        buffer_length -= 2;
+        buffer_ptr += 2;
+    }
+
 #if EWF_ADAPTER_QUECTEL_COMMON_UFS_ENABLED
     if (ewf_result_failed(result = ewf_adapter_quectel_common_ufs_urc_callback(interface_ptr, buffer_ptr, buffer_length))) return result;
     if (result != EWF_RESULT_UNHANDLED_URC) return result;

@@ -72,7 +72,7 @@ int main(void) {
     
     SYSTICK_TimerStart();
 
-    //mikroe_bg96_power_on();
+ //   mikroe_bg96_power_on();
      
     ewf_result result;
 

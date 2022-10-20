@@ -26,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
 /*    nx_lwm2m_client.h                                   PORTABLE C      */
-/*                                                           6.1.3        */
+/*                                                           6.1.12       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -41,6 +41,15 @@
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
 /*  12-31-2020     Yuxin Zhou               Initial Version 6.1.3         */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s), supported*/
+/*                                            token and processing        */
+/*                                            confirmable response,       */
+/*                                            resulting in version 6.1.10 */
+/*  07-29-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            fixed compiler errors when  */
+/*                                            TX_SAFETY_CRITICAL is       */
+/*                                            enabled,                    */
+/*                                            resulting in version 6.1.12 */
 /*                                                                        */
 /**************************************************************************/
 
@@ -58,9 +67,14 @@ extern   "C" {
 #endif
 
 /* Bypass NetX API error checking for internal calls.  */
+#include "tx_port.h"
 
 #ifdef NX_LWM2M_CLIENT_SOURCE_CODE
-
+#ifndef TX_SAFETY_CRITICAL
+#ifndef TX_DISABLE_ERROR_CHECKING
+#define TX_DISABLE_ERROR_CHECKING
+#endif
+#endif
 #ifndef NX_DISABLE_ERROR_CHECKING
 #define NX_DISABLE_ERROR_CHECKING
 #endif
@@ -1091,6 +1105,9 @@ struct NX_LWM2M_CLIENT_SESSION_STRUCT
 
     /* Request ID */
     USHORT                                  nx_lwm2m_client_session_request_id;
+
+    /* Token */
+    UCHAR                                   nx_lwm2m_client_session_token[NX_LWM2M_CLIENT_COAP_TOKEN_LEN];
 
     /* The error code */
     UINT                                    nx_lwm2m_client_session_error;

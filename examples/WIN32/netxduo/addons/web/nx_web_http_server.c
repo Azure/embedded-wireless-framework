@@ -2192,8 +2192,8 @@ UINT    status;
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
-/*    _nxe_web_http_server_secure_configure               PORTABLE C      */
-/*                                                           6.1          */
+/*    _nx_web_http_server_secure_configure                PORTABLE C      */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -2261,6 +2261,8 @@ UINT    status;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  04-25-2022     Yuxin Zhou               Modified comment(s),          */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_web_http_server_secure_configure(NX_WEB_HTTP_SERVER *http_server_ptr, const NX_SECURE_TLS_CRYPTO *crypto_table,
@@ -2291,6 +2293,120 @@ UINT    status;
     /* Return result of TLS setup. */
     return(status);
 }
+
+#ifdef NX_SECURE_ENABLE_ECC_CIPHERSUITE
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _nxe_web_http_server_secure_ecc_configure           PORTABLE C      */
+/*                                                           6.1.11       */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yuxin Zhou, Microsoft Corporation                                   */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function checks for errors in the HTTPS ECC configuration call.*/
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    http_server_ptr                       Pointer to HTTP server        */
+/*    supported_groups                      List of supported groups      */
+/*    supported_group_count                 Number of supported groups    */
+/*    curves                                List of curve methods         */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    status                                Completion status             */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    _nx_web_http_server_secure_ecc_configure                            */
+/*                                          Actual ECC configuration call */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application Code                                                    */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  04-25-2022     Yuxin Zhou               Initial Version 6.1.11        */
+/*                                                                        */
+/**************************************************************************/
+UINT _nxe_web_http_server_secure_ecc_configure(NX_WEB_HTTP_SERVER *http_server_ptr,
+                                               const USHORT *supported_groups, USHORT supported_group_count,
+                                               const NX_CRYPTO_METHOD **curves)
+{
+UINT status;
+
+    /* Check for invalid input pointers. */
+    if ((http_server_ptr == NX_NULL) || (http_server_ptr -> nx_web_http_server_id != NX_WEB_HTTP_SERVER_ID) ||
+        (supported_groups == NX_NULL) || (supported_group_count == 0) || (curves == NX_NULL))
+    {
+        return(NX_PTR_ERROR);
+    }
+
+    /* Call actual ECC configuration function.  */
+    status = _nx_web_http_server_secure_ecc_configure(http_server_ptr, supported_groups, supported_group_count, curves);
+    return(status);
+}
+
+/**************************************************************************/
+/*                                                                        */
+/*  FUNCTION                                               RELEASE        */
+/*                                                                        */
+/*    _nx_web_http_server_secure_ecc_configure            PORTABLE C      */
+/*                                                           6.1.11       */
+/*  AUTHOR                                                                */
+/*                                                                        */
+/*    Yuxin Zhou, Microsoft Corporation                                   */
+/*                                                                        */
+/*  DESCRIPTION                                                           */
+/*                                                                        */
+/*    This function configures supported curve lists for NetX Web HTTP    */
+/*    server instance using TLS.                                          */
+/*                                                                        */
+/*  INPUT                                                                 */
+/*                                                                        */
+/*    http_server_ptr                       Pointer to HTTP server        */
+/*    supported_groups                      List of supported groups      */
+/*    supported_group_count                 Number of supported groups    */
+/*    curves                                List of curve methods         */
+/*                                                                        */
+/*  OUTPUT                                                                */
+/*                                                                        */
+/*    status                                Completion status             */
+/*                                                                        */
+/*  CALLS                                                                 */
+/*                                                                        */
+/*    nx_tcpserver_tls_ecc_setup            Socket server ECC configure   */
+/*                                                                        */
+/*  CALLED BY                                                             */
+/*                                                                        */
+/*    Application Code                                                    */
+/*                                                                        */
+/*  RELEASE HISTORY                                                       */
+/*                                                                        */
+/*    DATE              NAME                      DESCRIPTION             */
+/*                                                                        */
+/*  04-25-2022     Yuxin Zhou               Initial Version 6.1.11        */
+/*                                                                        */
+/**************************************************************************/
+UINT _nx_web_http_server_secure_ecc_configure(NX_WEB_HTTP_SERVER *http_server_ptr,
+                                              const USHORT *supported_groups, USHORT supported_group_count,
+                                              const NX_CRYPTO_METHOD **curves)
+{
+UINT status;
+
+    /* Configure TLS ECC for the socket server. */
+    status = nx_tcpserver_tls_ecc_setup(&http_server_ptr -> nx_web_http_server_tcpserver, 
+                                        supported_groups, supported_group_count, curves);
+    return(status);
+}
+#endif /* NX_SECURE_ENABLE_ECC_CIPHERSUITE */
 
 #endif /* NX_WEB_HTTPS_ENABLE */
 
@@ -5268,7 +5384,7 @@ UINT        authorization_decoded_size;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_web_http_server_retrieve_basic_authorization    PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.10       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -5305,6 +5421,10 @@ UINT        authorization_decoded_size;
 /*  05-19-2020     Yuxin Zhou               Initial Version 6.0           */
 /*  09-30-2020     Yuxin Zhou               Modified comment(s),          */
 /*                                            resulting in version 6.1    */
+/*  01-31-2022     Yuxin Zhou               Modified comment(s),  fixed   */
+/*                                            the HTTP Server state issue */
+/*                                            with basic authorization,   */
+/*                                            resulting in version 6.1.10 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_web_http_server_retrieve_basic_authorization(NX_PACKET *packet_ptr, CHAR *authorization_request_ptr)
@@ -5369,6 +5489,9 @@ CHAR    *buffer_ptr;
         /* No, authorization is not present.  Return a zero length.  */
         return(length);
     }
+
+    /* Set the found flag back to false.  */
+    found =  NX_FALSE;
 
     /* Now remove any extra blanks.  */
     while ((buffer_ptr < (CHAR *) packet_ptr -> nx_packet_append_ptr) && (*buffer_ptr == ' '))
@@ -7076,7 +7199,7 @@ UINT  _nxe_web_http_server_get_entity_header(NX_WEB_HTTP_SERVER *server_ptr, NX_
 /*  FUNCTION                                               RELEASE        */ 
 /*                                                                        */ 
 /*    _nx_web_http_server_get_entity_header               PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.1.11       */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -7118,6 +7241,9 @@ UINT  _nxe_web_http_server_get_entity_header(NX_WEB_HTTP_SERVER *server_ptr, NX_
 /*  09-30-2020     Yuxin Zhou               Modified comment(s), and      */
 /*                                            fixed write underflow,      */
 /*                                            resulting in version 6.1    */
+/*  04-25-2022     Yuxin Zhou               Modified comment(s), and      */
+/*                                            verified memmove use cases, */
+/*                                            resulting in version 6.1.11 */
 /*                                                                        */
 /**************************************************************************/
 UINT  _nx_web_http_server_get_entity_header(NX_WEB_HTTP_SERVER *server_ptr, NX_PACKET **packet_pptr, UCHAR *entity_header_buffer, ULONG buffer_size)
@@ -7221,7 +7347,7 @@ UINT                        index;
             /* Leave boundary string only. */
             memmove(&multipart_ptr -> nx_web_http_server_multipart_boundary[4],
                     &multipart_ptr -> nx_web_http_server_multipart_boundary[index],
-                    quotation_index - index + 1);
+                    quotation_index - index + 1); /* Use case of memmove is verified.  */
         }
         else
         {

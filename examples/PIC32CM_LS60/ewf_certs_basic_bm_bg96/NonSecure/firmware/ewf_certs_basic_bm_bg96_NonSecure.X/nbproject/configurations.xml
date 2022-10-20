@@ -3928,6 +3928,8 @@
         <property key="periphComp5.gte" value="gt"/>
         <property key="periphComp6.gte" value="gt"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="E:/examples/PIC32CM_LS60/ewf_certs_basic_bm_bg96/NonSecure/firmware/ewf_certs_basic_bm_bg96_NonSecure.X/debug/default/ewf_certs_basic_bm_bg96_NonSecure_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"
