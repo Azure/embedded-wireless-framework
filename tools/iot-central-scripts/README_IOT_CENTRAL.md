@@ -5,20 +5,24 @@ This readme will guide through creating of IoT central application
 az login
 
 # Create a resource group for the IoT Central application
-az group create --location "MyLocation" --name "MyResourceGroup"
+az group create --location "mylocation" --name "myresourcegroup"
+
+>Note: run "az account list-locations -o table" to know the locations available
 
 # Create an IoT Central application
 Below command will output Application Id, which will be used in the next steps.
 
-az iot central app create --resource-group "MyResourceGroup" --name "MyIoTCentralAppName" --subdomain "MySubdomain"  --sku ST1 --template "iotc-pnp-preview"  --display-name "MyIoTCentralAppName"
+az iot central app create --resource-group "myresourcegroup" --name "myiotcentralappname" --subdomain "mysubdomain"  --sku ST1 --template "iotc-pnp-preview"  --display-name "myiotcentralappname"
 
-> Note: This readme uses "MyIoTCentralAppName" as name for the IoT central application and "MySubdomain" for subdomain.  You may choose to use your own application name and subdomain.
+> **Note**: This readme uses "myiotcentralappname" as name for the IoT central application and "mysubdomain" for subdomain.  You may choose to use your own application name and subdomain.  
+Give your IoT Central app a unique name so you can find it later.This will be used as the resource name in the Azure portal and CLI.  Avoid special characters - instead, use lower case letters (a-z), numbers (0-9), and dashes (-).
+The subdomain should be a unique URL. Your app will be accessible via https://<mysubdomain>.azureiotcentral.com/  Avoid special characters - instead, use lower case letters (a-z), numbers (0-9), and dashes (-).
 
 # Create the device template
 Open your Iot Central app link  in browser  to create a new template or import your template.
 Refer [How to setup a template](https://learn.microsoft.com/en-us/azure/iot-central/core/howto-set-up-template?) for more details
 
-Your app will be accessible via https://MySubdomain.azureiotcentral.com/
+Your app will be accessible via https://mysubdomain.azureiotcentral.com/
 
 # Create a device
 To create a device:
@@ -43,4 +47,5 @@ Confirm that the Device status is updated to Provisioned and there will telemetr
 For more details refer to [IoT Device Development Documentation](https://learn.microsoft.com/en-us/azure/iot-develop)
 
 # Delete a central application
-az iot central app delete --name "MyIoTCentralAppName" --resource-group "MyResourceGroup"
+az iot central app delete --name "myiotcentralappname" --resource-group "myresourcegroup"
+
