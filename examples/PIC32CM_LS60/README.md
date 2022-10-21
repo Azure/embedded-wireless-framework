@@ -30,6 +30,8 @@ Open your terminal program and connect to the serial port for looking at the out
 2. Update the EWF_CONFIG_ID_SCOPE, EWF_CONFIG_REGISTRATION_ID value in ewf_example.config.h file.  
 3. To create device certificates follow steps in [README_CREATE_CERTIFICATES.md](../../tools/iot-central-scripts/readme_create_certificate.md).  
 Once certifcates are created, upload them to the device in the IoT Central as mentioned in the corresponding readme document above.  Copy the .h files to the "NonSecure\firmware\src" directory of the **ewf_certs_basic_bm_bg96** project and provision the certificates.  
+> **Note**: Create a "ca_cert.pem.h" file with contents of the "baltimore_ca_cert.pem.h" file.  Open the "ca_cert.pem.h" file and replace "baltimore_ca_cert_pem" with "ca_cert_pem".
+This will be improved in future updates.
 4. Then run the **ewf_iot_central_bg96** project to connect to IoT Central
 
 >Note : This example currently only sends dummy telemetry data. Cloud to device messaging (command processing and response sending to IoT Central) will be added in future.

@@ -102,11 +102,18 @@ ewf_result ewf_adapter_winsock2_start(ewf_adapter* adapter_ptr)
                 implementation_ptr->ipv4_netmask.S_un.S_un_b.s_b3 = b;
                 implementation_ptr->ipv4_netmask.S_un.S_un_b.s_b4 = a;
 
-                /* Add a default DNS */ /* TODO */
-                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b1 = 50; // 8;
-                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b2 = 10; // 8;
-                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b3 = 50; // 8;
-                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b4 = 10; // 8;
+                /* Add a default DNS */
+#if 1
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b1 = 8;
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b2 = 8;
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b3 = 8;
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b4 = 8;
+#else
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b1 = 50;
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b2 = 10;
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b3 = 50;
+                implementation_ptr->ipv4_dns.S_un.S_un_b.s_b4 = 10;
+#endif
 
                 /* We found our adapter */
                 valid_adapter = true;
