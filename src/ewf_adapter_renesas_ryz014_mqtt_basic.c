@@ -34,43 +34,25 @@ ewf_result ewf_adapter_renesas_ryz014_mqtt_basic_urc_callback(ewf_interface* int
 
     EWF_PARAMETER_NOT_USED(buffer_length);
 
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTONCONNECT:0,0"))
+    const char urc_prefix_str[] = "+SQNSMQTTONCONNECT:0,";
+    if (ewfl_str_starts_with((char*)buffer_ptr, urc_prefix_str))
     {
-    	adapter_renesas_ryz014_ptr->mqtt_basic_conn = true;
-    	adapter_renesas_ryz014_ptr->mqtt_basic_conn_error = false;
-        return EWF_RESULT_OK;
+        char* parse_str  = buffer_ptr +  ewfl_str_length(urc_prefix_str) +1; // Skip until "+SQNSMQTTONCONNECT:0,-"
+        uint32_t socket_connect_id = ewfl_str_to_unsigned(parse_str);
+        if(socket_connect_id == 0)
+        {
+            adapter_renesas_ryz014_ptr->mqtt_basic_conn = true;
+            adapter_renesas_ryz014_ptr->mqtt_basic_conn_error = false;
+            return EWF_RESULT_OK;
+        }
+        else
+        {
+            adapter_renesas_ryz014_ptr->mqtt_basic_conn = false;
+            adapter_renesas_ryz014_ptr->mqtt_basic_conn_error = true;
+            EWF_LOG("[RYZ014 ADAPTER][MQTT CONN ERR] [CODE : -%d]", socket_connect_id);
+            return EWF_RESULT_OK;
+        }
     }
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTONCONNECT:0,-1"))
-    {
-    	adapter_renesas_ryz014_ptr->mqtt_basic_conn = false;
-    	adapter_renesas_ryz014_ptr->mqtt_basic_conn_error = true;
-        return EWF_RESULT_OK;
-    }
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTONCONNECT:0,-4"))
-    {
-        adapter_renesas_ryz014_ptr->mqtt_basic_conn = false;
-        adapter_renesas_ryz014_ptr->mqtt_basic_conn_error = true;
-        return EWF_RESULT_OK;
-    }
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTONCONNECT:0,-7"))
-    {
-        adapter_renesas_ryz014_ptr->mqtt_basic_conn = false;
-        adapter_renesas_ryz014_ptr->mqtt_basic_conn_error = true;
-        return EWF_RESULT_OK;
-    }
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTONCONNECT:0,-1"))
-    {
-        adapter_renesas_ryz014_ptr->mqtt_basic_conn = false;
-        adapter_renesas_ryz014_ptr->mqtt_basic_conn_error = true;
-        return EWF_RESULT_OK;
-    }
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSMQTTONCONNECT:0,-11"))
-    {
-        adapter_renesas_ryz014_ptr->mqtt_basic_conn = false;
-        adapter_renesas_ryz014_ptr->mqtt_basic_conn_error = true;
-        return EWF_RESULT_OK;
-    }
-
     if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNSPCFG: "))
     {
         return EWF_RESULT_OK;
