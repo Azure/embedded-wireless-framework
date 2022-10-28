@@ -55,7 +55,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void mikroe_bg96_power_on()
+void mikroe_bg96_power_toggle()
 {
     GPIO_PB04_OutputEnable();
     GPIO_PB04_Clear();
@@ -71,7 +71,7 @@ int main(void) {
     
     SYSTICK_TimerStart();
 
-//    mikroe_bg96_power_on();
+//    mikroe_bg96_power_toggle();
 
     ewf_result result;
 

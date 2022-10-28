@@ -30,13 +30,13 @@
 #define EWF_CONFIG_QUERY_TOPIC_BUFFER_LENGTH         (256)
 
 // The model this device implements
-static az_span const model_id = AZ_SPAN_LITERAL_FROM_STR("dtmi:com:Microchip:PIC32CMLS60_CURIOSITY;1");
+static az_span const model_id = AZ_SPAN_LITERAL_FROM_STR("dtmi:com:example:Thermostat;1");
 static az_span custom_registration_payload_property
-= AZ_SPAN_LITERAL_FROM_STR("{\"modelId\":\"dtmi:com:Microchip:PIC32CMLS60_CURIOSITY;1\"}");
+= AZ_SPAN_LITERAL_FROM_STR("{\"modelId\":\"dtmi:com:example:Thermostat;1\"}");
 
 /* Prototypes */
 ewf_result ewf_mqtt_receive_message_user_callback(ewf_adapter* adapter_ptr, const char* topic_cstr, const char* payload_cstr);
-ewf_result ewf_example_iot_provisioning(ewf_adapter* adapter_ptr);
+ewf_result ewf_example_azure_iot_provisioning(ewf_adapter* adapter_ptr);
 
 /* Work buffers */
 static char mqtt_client_username_buffer[256];
@@ -48,9 +48,9 @@ static char register_topic_buffer[128];
 static az_iot_provisioning_client provisioning_client;
 /* The IoT Hub client */
 static az_iot_hub_client hub_client;
-static char iot_hub_endpoint_buffer[128];
-static char iot_hub_device_id_buffer[128];
-static az_span device_iot_hub_endpoint;
+static char azure_iot_hub_endpoint_buffer[128];
+static char azure_iot_hub_device_id_buffer[128];
+static az_span device_azure_iot_hub_endpoint;
 static az_span device_id;
 
 typedef struct _ewf_mqtt_receive_message {
@@ -86,7 +86,7 @@ ewf_result ewf_mqtt_receive_message_user_callback(ewf_adapter* adapter_ptr, cons
 /**
  * @brief The IoT provisioning example
  */
-ewf_result ewf_example_iot_provisioning(ewf_adapter* adapter_ptr) {
+ewf_result ewf_example_azure_iot_provisioning(ewf_adapter* adapter_ptr) {
     az_result result;
     ewf_result ewf_status;
 
@@ -187,13 +187,6 @@ ewf_result ewf_example_iot_provisioning(ewf_adapter* adapter_ptr) {
 
     EWF_LOG("Waiting for registration status message.\r\n");
 
-    ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 4 /*register_response.retry_after_seconds */);
-
-    ewf_status = ewf_adapter_mqtt_basic_publish(adapter_ptr, (char*)register_topic_buffer, (char*)" ");
-    if (ewf_result_failed(ewf_status)) {
-        EWF_LOG("Failed to publish Register request: ewf_status %d.\n", ewf_status);
-        return ewf_status;
-    }
     // Continue to parse incoming responses from the provisioning service until the device has been
     // successfully provisioned or an error occurs.   
     do
@@ -248,8 +241,6 @@ ewf_result ewf_example_iot_provisioning(ewf_adapter* adapter_ptr) {
 
                 }
             }
-      //  } 
-#if 0
         else
         {
             /*  Wait the recommended retry-after number of seconds before query. */
@@ -262,18 +253,17 @@ ewf_result ewf_example_iot_provisioning(ewf_adapter* adapter_ptr) {
             }
 
         }
-#endif
     }while (!is_operation_complete);
 
     /* At this point  operation_status is AZ_IOT_PROVISIONING_STATUS_ASSIGNED */
     EWF_LOG("Device provisioned!!!\r\n");
-    device_iot_hub_endpoint
-        = az_span_create((uint8_t*)iot_hub_endpoint_buffer, sizeof(iot_hub_endpoint_buffer));
+    device_azure_iot_hub_endpoint
+        = az_span_create((uint8_t*)azure_iot_hub_endpoint_buffer, sizeof(azure_iot_hub_endpoint_buffer));
     device_id
-        = az_span_create((uint8_t*)iot_hub_device_id_buffer, sizeof(iot_hub_device_id_buffer));
+        = az_span_create((uint8_t*)azure_iot_hub_device_id_buffer, sizeof(azure_iot_hub_device_id_buffer));
 
-    az_span_copy(device_iot_hub_endpoint, register_response.registration_state.assigned_hub_hostname);
-    device_iot_hub_endpoint = az_span_slice(device_iot_hub_endpoint, 0,
+    az_span_copy(device_azure_iot_hub_endpoint, register_response.registration_state.assigned_hub_hostname);
+    device_azure_iot_hub_endpoint = az_span_slice(device_azure_iot_hub_endpoint, 0,
         az_span_size(register_response.registration_state.assigned_hub_hostname));
 
     az_span_copy(device_id, register_response.registration_state.device_id);
@@ -281,7 +271,7 @@ ewf_result ewf_example_iot_provisioning(ewf_adapter* adapter_ptr) {
         az_span_size(register_response.registration_state.device_id));
 
     EWF_LOG("IoT Hub Hostname: %s\r\nDevice Id: %s\r\n",
-        (char*)device_iot_hub_endpoint._internal.ptr,
+        (char*)device_azure_iot_hub_endpoint._internal.ptr,
         (char*)device_id._internal.ptr);
 
     // Disconnect from the MQTT client from Provisioning service
@@ -297,7 +287,7 @@ ewf_result ewf_example_iot_provisioning(ewf_adapter* adapter_ptr) {
     options.model_id = model_id;
 
     /* Initialize the hub client with the default connection options. */
-    result = az_iot_hub_client_init(&hub_client, device_iot_hub_endpoint, device_id, &options);
+    result = az_iot_hub_client_init(&hub_client, device_azure_iot_hub_endpoint, device_id, NULL);
     if (az_result_failed(result)) {
         EWF_LOG("Failed to initialize hub client: az_result %ld.\r\n", result);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
@@ -325,7 +315,7 @@ ewf_result ewf_example_iot_provisioning(ewf_adapter* adapter_ptr) {
     /* Connect to the MQTT server */
     ewf_status = ewf_adapter_mqtt_basic_connect(
         adapter_ptr,
-        (char*)device_iot_hub_endpoint._internal.ptr,
+        (char*)device_azure_iot_hub_endpoint._internal.ptr,
         8883,
         mqtt_client_id_buffer,
         mqtt_client_username_buffer,
@@ -358,6 +348,7 @@ ewf_result ewf_example_iot_provisioning(ewf_adapter* adapter_ptr) {
     }
 
     int mqtt_count = 0;
+     /* Telemetry Loop */
     for (int seconds_counter = 0; seconds_counter < 300; seconds_counter++)
     {
         mqtt_count++;

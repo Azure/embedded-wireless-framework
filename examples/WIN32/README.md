@@ -28,6 +28,10 @@ cmake -Bbuild -A WIN32 .
 cmake --build build -j 8
 ```
 
+> Note: When building projects in parallel, you will notice build errors for file not found in the certs examples.  
+> When using the certificate example, copy the required certificate header files to the project and rebuild.  
+> Follow the [Generate Certificate](../../tools/cert-scripts/README.md) to generate certificates.  
+
 ### Build application on Windows with Visual Studio
 
 Open this directory with Visual Studio and you are ready to go!
@@ -427,9 +431,156 @@ Connects the device to IoT Central application and then sends telemetry data to 
 - **sample_ewf_iot_pnp_provisioning_tx_bg96**
 - **sample_ewf_iot_provisioning_tx_bg96**
 
-Follow steps in [README_IoT_CENTRAL.md](../../tools/iot-central-scripts/README_IOT_CENTRAL.md) to create Azure IoT Central application that will be used to run the example.
-To create device certificates follow steps in [README_CREATE_CERTIFICATES.md](../../tools/iot-central-scripts/readme_create_certificate.md).
-Once certifcates are created, upload them to the device in the IoT Central as meantioned in the corresponding readme document above. Copy the .h files to the certificates example project and provision the certificates. Then run the **sample_ewf_iot_provisioning_tx_bg96** or **sample_ewf_iot_pnp_provisioning_tx_bg96** project to connect to IoT Central
+1. Follow steps in [README_IoT_CENTRAL.md](../../tools/iot-central-scripts/README.md) to create Azure IoT Central application that will be used to run the example.  
+2. Once certifcates are created, upload them to the device in the IoT Central as mentioned in the corresponding readme document above.  
+Once certifcates are created, upload them to the device in the IoT Central as meantioned in the corresponding readme document above. Copy the .h files to the certificates example project (for eg. sample_ewf_certs_basic_tx_bg96) and provision the certificates. Then run the **sample_ewf_iot_pnp_provisioning_tx_bg96** project to connect to IoT Central
 
->Note : This example currently only sends dummy telemetry data. Cloud to device messaging (command processing and response sending to IoT Central) will be added in future.
 
+5. Build and run the application. Verify the device provisions successfully.  
+Verify that telemetry appears on the device view in your IoT Central application:  
+6. Open the device you created and select the command tab. "Thermostat / Get Max-Min report" will be displayed.  
+Set any date and time in the "Since" option and click Run. There will be output similar to below in the Serial Terminal window.  
+```
+[URC^][ 100][\r\n\r\n+QMTRECV: 0,0,"$iothub/methods/POST/getMaxMinReport/?$rid=2",26,""2022-10-27T22:00:00.000Z""\r\n\r\n]
+[URCv][ 100][\r\n\r\n+QMTRECV: 0,0,"$iothub/methods/POST/getMaxMinReport/?$rid=2",26,""2022-10-27T22:00:00.000Z""\r\n\r\n]
+[MQTT-Basic][Message callback:][$iothub/methods/POST/getMaxMinReport/?$rid=2]["2022-10-27T22:00:00.000Z"]
+[RECV][   4][\r\n> ]
+[SEND][  18][{"temperature":22}]
+[RECV][   6][\r\nOK\r\n]
+[URC^][   2][\r\n]
+[URCv][   2][\r\n]
+[URC^][  16][+QMTPUB: 0,0,0\r\n]
+[URCv][  16][+QMTPUB: 0,0,0\r\n]
+[INFO][QUECTEL MQTT PUB]
+Waiting for command request or device property message.
+Client received a valid topic.
+Topic: $iothub/methods/POST/getMaxMinReport/?$rid=2
+Payload: "2022-10-27T22:00:00.000Z"
+Start time: 2022-10-27T22:00:00.000Z
+End time: 1987-01-06T12:43:36Z
+Client invoked command 'getMaxMinReport'.
+[SEND][  19][AT+QMTPUB=0,0,0,0,"]
+[SEND][  31][$iothub/methods/res/200/?$rid=2]
+[SEND][   2][",]
+[SEND][   3][112]
+[SEND][   1][\r]
+[RECV][   4][\r\n> ]
+[SEND][ 112][{"maxTemp":22,"minTemp":22,"avgTemp":22,"startTime":"2022-10-27T22:00:00.000Z","endTime":"1987-01-06T12:43:36Z"}]
+[RECV][   6][\r\nOK\r\n]
+[URC^][   2][\r\n]
+[URCv][   2][\r\n]
+[URC^][  16][+QMTPUB: 0,0,0\r\n]
+[URCv][  16][+QMTPUB: 0,0,0\r\n]
+[INFO][QUECTEL MQTT PUB]
+Client published the Command response.
+Status: 200
+Payload: {"maxTemp":22,"minTemp":22,"avgTemp":22,"startTime":"2022-10-27T22:00:00.000Z","endTime":"1987-01-06T12:43:36Z"}
+```
+  
+7. This application has two writable properties defined "targetTemperature" and "LED0".  
+To view existing properties on the device, navigate to the device in the Devices section, select Manage device, and then Device Properties.  
+You can update the writable properties in this view. Type below message in the right window and click "Send to device".  
+  
+{ "targetTemperature": 67 }  
+  
+On the serial terminal there will be output like below. You can see temperature value is now set to 32. The same updates will be seen in the Telemetry data on the IoT Central Application.  
+  
+```
+v][  16][+QMTPUB: 0,0,0\r\n]
+[INFO][QUECTEL MQTT PUB]
+[SEND][  19][AT+QMTPUB=0,0,0,0,"]
+[SEND][  38][devices/bhnaphad-dev2/messages/events/]
+[SEND][   2][",]
+[SEND][   2][18]
+[SEND][   1][\r]
+[URC^][ 116][\r\n\r\n+QMTRECV: 0,0,"$iothub/twin/PATCH/properties/desired/?$version=3",37,"{"targetTemperature":32,"$version":3}"\r\n\r\n]
+[URCv][ 116][\r\n\r\n+QMTRECV: 0,0,"$iothub/twin/PATCH/properties/desired/?$version=3",37,"{"targetTemperature":32,"$version":3}"\r\n\r\n]
+[MQTT-Basic][Message callback:][$iothub/twin/PATCH/properties/desired/?$version=3][{"targetTemperature":32,"$version":3}]
+[RECV][   4][\r\n> ]
+[SEND][  18][{"temperature":22}]
+[RECV][   6][\r\nOK\r\n]
+[URC^][   2][\r\n]
+[URCv][   2][\r\n]
+[URC^][  16][+QMTPUB: 0,0,0\r\n]
+[URCv][  16][+QMTPUB: 0,0,0\r\n]
+[INFO][QUECTEL MQTT PUB]
+Waiting for command request or device property message.
+Client received a valid topic.
+Topic: $iothub/twin/PATCH/properties/desired/?$version=3
+Payload: {"targetTemperature":32,"$version":3}
+Status: 200
+Message Type: Desired Properties
+Client updated desired temperature variables locally.
+Current Temperature: 32.000000
+Maximum Temperature: 32.000000
+Minimum Temperature: 22.000000
+Average Temperature: 27.000000
+[SEND][  19][AT+QMTPUB=0,0,0,0,"]
+[SEND][  46][$iothub/twin/PATCH/properties/reported/?$rid=5]
+[SEND][   2][",]
+[SEND][   2][65]
+[SEND][   1][\r]
+[RECV][   4][\r\n> ]
+[SEND][  65][{"targetTemperature":{"ac":200,"av":3,"ad":"success","value":32}}]
+[RECV][   6][\r\nOK\r\n]
+[URC^][   2][\r\n]
+[URCv][   2][\r\n]
+[URC^][  16][+QMTPUB: 0,0,0\r\n]
+[URCv][  16][+QMTPUB: 0,0,0\r\n]
+[INFO][QUECTEL MQTT PUB]
+[SEND][  19][AT+QMTPUB=0,0,0,0,"]
+[SEND][  46][$iothub/twin/PATCH/properties/reported/?$rid=6]
+[SEND][   2][",]
+[SEND][   2][29]
+[SEND][   1][\r]
+[RECV][   4][\r\n> ]
+[SEND][  29][{"maxTempSinceLastReboot":32}]
+[RECV][   6][\r\nOK\r\n]
+[URC^][   2][\r\n]
+[URCv][   2][\r\n]
+[URC^][  16][+QMTPUB: 0,0,0\r\n]
+[URCv][  16][+QMTPUB: 0,0,0\r\n]
+[INFO][QUECTEL MQTT PUB]
+[SEND][  19][AT+QMTPUB=0,0,0,0,"]
+[SEND][  38][devices/bhnaphad-dev2/messages/events/]
+[SEND][   2][",]
+[SEND][   2][18]
+[SEND][   1][\r]
+[RECV][   4][\r\n> ]
+[SEND][  18][{"temperature":32}]
+[RECV][   6][\r\nOK\r\n]
+[URC^][   2][\r\n]
+[URCv][   2][\r\n]
+````
+
+8.  Lets try another writable device property configured in the template. Type below message click "Send to device". 
+  
+{ "LED0": 1 }
+  
+
+Below output will be seen on the serial terminal.
+
+```
+[URC^][ 102][\r\n\r\n+QMTRECV: 0,0,"$iothub/twin/PATCH/properties/desired/?$version=7",23,"{"LED0":1,"$version":7}"\r\n\r\n]
+[URCv][ 102][\r\n\r\n+QMTRECV: 0,0,"$iothub/twin/PATCH/properties/desired/?$version=7",23,"{"LED0":1,"$version":7}"\r\n\r\n]
+[MQTT-Basic][Message callback:][$iothub/twin/PATCH/properties/desired/?$version=7][{"LED0":1,"$version":7}]
+[RECV][   4][\r\n> ]
+[SEND][  18][{"temperature":35}]
+[RECV][   6][\r\nOK\r\n]
+[URC^][   2][\r\n]
+[URCv][   2][\r\n]
+[URC^][  16][+QMTPUB: 0,0,0\r\n]
+[URCv][  16][+QMTPUB: 0,0,0\r\n]
+[INFO][QUECTEL MQTT PUB]
+Waiting for command request or device property message.
+Client received a valid topic.
+Topic: $iothub/twin/PATCH/properties/desired/?$version=7
+Payload: {"LED0":1,"$version":7}
+Status: 200
+Message Type: Desired Properties
+LED status update command recieved, LED0 : ON
+```
+  
+You can send below message to update the LED0 state to OFF.
+{ "LED0": 0 }  
+  

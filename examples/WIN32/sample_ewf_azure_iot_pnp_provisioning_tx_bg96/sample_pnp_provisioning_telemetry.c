@@ -119,7 +119,7 @@ void thread_sample_entry(ULONG param)
 #endif
 
     // Call the telemetry example
-    if (ewf_result_failed(result = ewf_example_iot_pnp_provisioning(adapter_ptr)))
+    if (ewf_result_failed(result = ewf_example_azure_iot_pnp_provisioning(adapter_ptr)))
     {
         EWF_LOG_ERROR("The telemetry example returned an error, ewf_result %d.\n", result);
         return;
