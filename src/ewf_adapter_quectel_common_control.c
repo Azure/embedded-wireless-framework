@@ -302,23 +302,11 @@ static bool _ewf_adapter_quectel_common_message_tokenizer_pattern1_match_functio
     const uint32_t prefix2_length = sizeof(prefix2_str) - 1;
     const char prefix3_str[] = "\r\n\r\n+QMTRECV: ";
     const uint32_t prefix3_length = sizeof(prefix3_str) - 1;
-<<<<<<< HEAD
-<<<<<<< HEAD
     const char prefix4_str[] = "\r\n\r\n\r\n+QMTRECV: ";
     const uint32_t prefix4_length = sizeof(prefix4_str) - 1;
 
     const uint32_t prefix_min_length = prefix1_length;
     const uint32_t prefix_max_length = prefix4_length;
-=======
-
-    const uint32_t prefix_min_length = prefix1_length;
-    const uint32_t prefix_max_length = prefix3_length;
->>>>>>> 7873ad3c05e0d7c186cfe3e866dd73f1591e15e5
-=======
-
-    const uint32_t prefix_min_length = prefix1_length;
-    const uint32_t prefix_max_length = prefix3_length;
->>>>>>> 7873ad3c05e0d7c186cfe3e866dd73f1591e15e5
 
     /* If the buffer is smaller than the prefix, then it is not yet for us */
     if (buffer_length < prefix_min_length)
@@ -368,8 +356,6 @@ static bool _ewf_adapter_quectel_common_message_tokenizer_pattern1_match_functio
             }
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         /* prefix4 */
         {
             /* If the buffer contains as many characters as the prefix, then look if it is for us */
@@ -383,10 +369,6 @@ static bool _ewf_adapter_quectel_common_message_tokenizer_pattern1_match_functio
             }
         }
 
-=======
->>>>>>> 7873ad3c05e0d7c186cfe3e866dd73f1591e15e5
-=======
->>>>>>> 7873ad3c05e0d7c186cfe3e866dd73f1591e15e5
         /* just ignore the rest of the incomming characters */
         return false;
     }
