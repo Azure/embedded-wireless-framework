@@ -11,7 +11,7 @@
 
 #include "ewf_allocator_threadx.h"
 #include "ewf_interface_win32_com.h"
-#include "ewf_adapter_espressif_wroom_02.h"
+#include "ewf_adapter_espressif_esp8266.h"
 #include "ewf_middleware_netxduo.h"
 #include "ewf_example.config.h"
 
@@ -192,7 +192,7 @@ ULONG   gateway_address = 0;
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS);
-    EWF_ADAPTER_ESPRESSIF_WROOM_02_STATIC_DECLARE(adapter_ptr, esp_wroom_02, message_allocator_ptr, NULL, interface_ptr);
+    EWF_ADAPTER_ESPRESSIF_ESP8266_STATIC_DECLARE(adapter_ptr, esp8266, message_allocator_ptr, NULL, interface_ptr);
 
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))

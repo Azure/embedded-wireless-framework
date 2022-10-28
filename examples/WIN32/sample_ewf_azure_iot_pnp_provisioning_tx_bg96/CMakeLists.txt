@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 # Project
-project(sample_ewf_iot_pnp_provisioning_tx_bg96 LANGUAGES C ASM)
+project(sample_ewf_azure_iot_pnp_provisioning_tx_bg96 LANGUAGES C ASM)
 
 # Add sample project
 add_executable(
@@ -58,7 +58,7 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_bg96.c
     ewf.config.h
     ewf_example.config.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples/ewf_example_iot_pnp_provisioning.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples/ewf_example_azure_iot_pnp_provisioning.c
     sample_pnp_provisioning_telemetry.c)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE threadx az_core az_iot_common az_iot_hub az_iot_provisioning)

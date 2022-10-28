@@ -48,7 +48,26 @@
 #include "ewf_adapter_quectel_bg96.c"
 
 #include "ewf_example.config.h"
-#include "examples/ewf_example_iot_pnp_provisioning.c"
+
+/* User defined funtion to update LED0 state used in 
+ * ewf_example_azure_iot_pnp_provisioning.c */
+void onboard_led0_status_update(bool state);
+#define LED0_STATUS_UPDATE(state)              onboard_led0_status_update(state)
+
+#include "examples/ewf_example_azure_iot_pnp_provisioning.c"
+
+void onboard_led0_status_update(bool state)
+{
+    if(state)
+    {
+        LED0_On();
+    }
+    else
+    {
+        LED0_Off();
+    }
+}
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -56,7 +75,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void mikroe_bg96_power_on() {
+void mikroe_bg96_power_toggle() {
     GPIO_PB04_OutputEnable();
     GPIO_PB04_Clear();
     SYSTICK_DelayMs(200);
@@ -72,7 +91,7 @@ int main(void) {
 
     SYSTICK_TimerStart();
 
-   // mikroe_bg96_power_on();
+ //   mikroe_bg96_power_toggle();
 
     ewf_result result;
 
@@ -119,7 +138,7 @@ int main(void) {
 #endif
 
     // Call the telemetry example
-    if (ewf_result_failed(result = ewf_example_iot_pnp_provisioning(adapter_ptr))) {
+    if (ewf_result_failed(result = ewf_example_azure_iot_pnp_provisioning(adapter_ptr))) {
         EWF_LOG_ERROR("The telemetry example returned and error: ewf_result %d.\n", result);
         exit(result);
     }

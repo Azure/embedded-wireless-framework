@@ -291,8 +291,8 @@
             <itemPath>../../../../../../src/examples/ewf_example_certs_basic_winsock2.c</itemPath>
             <itemPath>../../../../../../src/examples/ewf_example_netx_duo_test.c</itemPath>
             <itemPath>../../../../../../src/examples/ewf_example_telemetry.c</itemPath>
-            <itemPath>../../../../../../src/examples/ewf_example_iot_central_telemetry.c</itemPath>
             <itemPath>../../../../../../src/examples/ewf_example_telemetry_basic.c</itemPath>
+            <itemPath>../../../../../../src/examples/ewf_example_azure_iot_pnp_provisioning.c</itemPath>
           </logicalFolder>
           <logicalFolder name="templates" displayName="templates" projectFiles="true">
           </logicalFolder>
@@ -3118,6 +3118,24 @@
         <C32Global>
         </C32Global>
       </item>
+      <item path="../../../../../../src/examples/ewf_example_azure_iot_pnp_provisioning.c"
+            ex="true"
+            overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
       <item path="../../../../../../src/examples/ewf_example_certs_basic_quectel_bg95.c"
             ex="true"
             overriding="false">
@@ -3191,24 +3209,6 @@
         </C32Global>
       </item>
       <item path="../../../../../../src/examples/ewf_example_certs_basic_winsock2.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../../src/examples/ewf_example_iot_central_telemetry.c"
             ex="true"
             overriding="false">
         <C32>

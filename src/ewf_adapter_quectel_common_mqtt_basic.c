@@ -554,17 +554,32 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_publish(ewf_adapter* adapter_pt
     if (message_length > 512) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
     {
-        char tokenizer_pattern_str[] = "\r\n> ";
-        ewf_interface_tokenizer_pattern tokenizer_pattern = {
+        char tokenizer_pattern2_str[] = "\r\n\r\n> ";
+        ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
             NULL,
-            tokenizer_pattern_str ,
-            sizeof(tokenizer_pattern_str) - 1,
+            tokenizer_pattern2_str ,
+            sizeof(tokenizer_pattern2_str) - 1,
             false,
         };
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
+        char tokenizer_pattern1_str[] = "\r\n> ";
+        ewf_interface_tokenizer_pattern tokenizer_pattern1 = {
+            &tokenizer_pattern2,
+            tokenizer_pattern1_str ,
+            sizeof(tokenizer_pattern1_str) - 1,
+            false,
+        };
+        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern1))) return result;
         char message_length_str[6];
         if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QMTPUB=0,0,0,0,\"", topic_cstr, "\",", ewfl_unsigned_to_str(message_length, message_length_str, sizeof(message_length_str)), "\r", NULL))) return result;
-        if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str))) return result;
+        uint8_t* response_ptr = NULL;
+        if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_ptr))) return result;
+        if (!ewfl_buffer_equals_buffer(tokenizer_pattern1_str, response_ptr, sizeof(tokenizer_pattern1_str) - 1) && !ewfl_buffer_equals_buffer(tokenizer_pattern2_str, response_ptr, sizeof(tokenizer_pattern2_str) - 1))
+        {
+            ewf_interface_release(interface_ptr, response_ptr);
+            return EWF_RESULT_UNEXPECTED_RESPONSE;
+        }
+        ewf_interface_release(interface_ptr, response_ptr);
+
         if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
     }
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (const uint8_t*)message_cstr, message_length))) return result;

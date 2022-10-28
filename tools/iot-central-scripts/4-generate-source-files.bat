@@ -13,7 +13,7 @@ SET /A modem = %1%
 
 ECHO Generating source files...
 
-FOR %%i IN (baltimore_ca_cert.pem device_ec_cert.pem device_ec_key.pem) DO CALL :processfile %%i
+FOR %%i IN (baltimore_ca_cert.pem ca_cert.pem device_ec_cert.pem device_ec_key.pem) DO CALL :processfile %%i
 
 ECHO The source files have been generated.
 ECHO Incorporate these into your program.
