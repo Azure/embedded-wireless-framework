@@ -81,6 +81,9 @@ void    tx_application_define(void *first_unused_memory)
 /* Define sample helper thread entry.  */
 void ewf_info_thread_entry(ULONG parameter)
 {
+    /* Initialize the demo printf implementation. */
+    demo_printf_init();
+
     ewf_result result;
 
     ewf_allocator* message_allocator_ptr = NULL;
