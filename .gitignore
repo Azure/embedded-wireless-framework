@@ -2,3 +2,15 @@
 /docs/latex
 *.bak
 TODO.txt
+/examples/PIC32CM_LS60/ewf_pic32cmls60_curiosity_bg96/NonSecure/firmware/ewf_pic32cmls60_curiosity_NonSecure.X/build/
+/examples/PIC32CM_LS60/ewf_pic32cmls60_curiosity_bg96/NonSecure/firmware/ewf_pic32cmls60_curiosity_NonSecure.X/dist/
+/examples/PIC32CM_LS60/ewf_pic32cmls60_curiosity_bg96/NonSecure/firmware/ewf_iot_central_NonSecure.X/dist/
+/examples/PIC32CM_LS60/ewf_pic32cmls60_curiosity_bg96/NonSecure/firmware/ewf_iot_central_NonSecure.X/build/
+/examples/PIC32CM_LS60/ewf_pic32cmls60_curiosity_bg96/NonSecure/firmware/ewf_iot_curiosity_NonSecure.X/dist/
+/examples/PIC32CM_LS60/ewf_pic32cmls60_curiosity_bg96/NonSecure/firmware/ewf_iot_curiosity_NonSecure.X/build/
+/examples/PIC32CM_LS60/ewf_iot_central_bg96 copy/NonSecure/firmware/ewf_iot_central_NonSecure.X/build/
+/examples/PIC32CM_LS60/ewf_iot_central_bg96 copy/NonSecure/firmware/ewf_iot_central_NonSecure.X/dist/
+/examples/PIC32CM_LS60/ewf_iot_central_bg96 copy/Secure/firmware/ewf_iot_central_Secure.X/build/
+/examples/PIC32CM_LS60/ewf_iot_central_bg96 copy/Secure/firmware/ewf_iot_central_Secure.X/dist/
+/examples/PIC32CM_LS60/ewf_pic32cmls60_curiosity_bg96/Secure/firmware/ewf_iot_central_Secure.X/build/
+/examples/PIC32CM_LS60/ewf_pic32cmls60_curiosity_bg96/Secure/firmware/ewf_iot_central_Secure.X/dist/

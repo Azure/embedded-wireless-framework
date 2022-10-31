@@ -1,0 +1,242 @@
+{
+    "@id": "dtmi:com:Microchip:PIC32CMLS60_CURIOSITY;1",
+    "@type": "Interface",
+    "contents": [
+        {
+            "@type": "Telemetry",
+            "description": {
+                "en": "Raw value for the ADC input tied to the potentiometer"
+            },
+            "displayName": {
+                "en": "Potentiometer"
+            },
+            "name": "potentiometer",
+            "schema": "integer"
+        },
+        {
+            "@type": "Telemetry",
+            "description": {
+                "en": "Event triggered when button is pressed"
+            },
+            "displayName": {
+                "en": "Button Event"
+            },
+            "name": "button_event",
+            "schema": {
+                "@type": "Object",
+                "fields": [
+                    {
+                        "name": "button_name",
+                        "schema": "string"
+                    },
+                    {
+                        "name": "press_count",
+                        "schema": "integer"
+                    }
+                ]
+            }
+        },
+        {
+            "@type": "Property",
+            "description": {
+                "en": "Flag to disable telemetry reporting (0 = enabled / 1 = disabled)"
+            },
+            "displayName": {
+                "en": "Disable Telemetry"
+            },
+            "name": "disableTelemetry",
+            "schema": "boolean",
+            "writable": true
+        },
+        {
+            "@type": "Property",
+            "description": {
+                "en": "The current state of LED0 (GREEN)"
+            },
+            "displayName": {
+                "en": "LED0 (GREEN) State"
+            },
+            "name": "LED0",
+            "schema": "dtmi:com:Microchip:PIC32CMLS60_CURIOSITY:LedState;1",
+            "writable": true
+        },
+        {
+            "@type": "Property",
+            "description": {
+                "en": "The current state of LED1 (RED)"
+            },
+            "displayName": {
+                "en": "LED1 (RED) State"
+            },
+            "name": "LED1",
+            "schema": "dtmi:com:Microchip:PIC32CMLS60_CURIOSITY:LedState;1",
+            "writable": true
+        },
+        {
+            "@type": [
+                "Property",
+                "TimeSpan"
+            ],
+            "description": {
+                "en": "Sets interval to send telemetry in seconds"
+            },
+            "displayName": {
+                "en": "Set Telemetry Interval"
+            },
+            "name": "telemetryInterval",
+            "schema": "integer",
+            "unit": "second",
+            "writable": true
+        },
+        {
+            "@type": "Command",
+            "description": {
+                "en": "Reboot with the specified delay (e.g. PT5S = 5 seconds)"
+            },
+            "displayName": {
+                "en": "Reboot"
+            },
+            "name": "reboot",
+            "request": {
+                "@type": "CommandPayload",
+                "description": {
+                    "en": "Number of seconds to delay reboot (e.g. PT5S = 5 seconds)"
+                },
+                "displayName": {
+                    "en": "Reboot Delay"
+                },
+                "name": "delay",
+                "schema": "duration"
+            },
+            "response": {
+                "@type": "CommandPayload",
+                "displayName": {
+                    "en": "Response for command"
+                },
+                "name": "response",
+                "schema": {
+                    "@type": "Object",
+                    "fields": [
+                        {
+                            "displayName": {
+                                "en": "Message from reboot handler"
+                            },
+                            "name": "status",
+                            "schema": "string"
+                        },
+                        {
+                            "displayName": {
+                                "en": "Number of seconds to delay the reboot"
+                            },
+                            "name": "delay",
+                            "schema": "integer"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "@type": "Command",
+            "description": {
+                "en": "Send a text message for the WFI32-IoT to receive and process."
+            },
+            "displayName": {
+                "en": "Send Message"
+            },
+            "name": "sendMsg",
+            "request": {
+                "@type": "CommandPayload",
+                "description": {
+                    "en": "Text message to send to WFI32-IoT"
+                },
+                "displayName": {
+                    "en": "Message"
+                },
+                "name": "payload",
+                "schema": {
+                    "@type": "Object",
+                    "fields": [
+                        {
+                            "displayName": {
+                                "en": "String to send"
+                            },
+                            "name": "sendMsgString",
+                            "schema": "string"
+                        }
+                    ]
+                }
+            },
+            "response": {
+                "@type": "CommandPayload",
+                "displayName": {
+                    "en": "Response for command"
+                },
+                "name": "response",
+                "schema": {
+                    "@type": "Object",
+                    "fields": [
+                        {
+                            "displayName": {
+                                "en": "Message from send message handler"
+                            },
+                            "name": "status",
+                            "schema": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "description": {
+        "en": "Reports the raw value of 1 ADC input and the states of 3 buttons & 2 LEDs (plus ability to turn on/off any of the LEDs)"
+    },
+    "displayName": {
+        "en": "PIC32CM LS60 Curiosity Pro"
+    },
+    "schemas": [
+        {
+            "@id": "dtmi:com:Microchip:PIC32CMLS60_CURIOSITY:LedState;1",
+            "@type": "Enum",
+            "enumValues": [
+                {
+                    "comment": "LED is in the OFF state",
+                    "description": {
+                        "en": "LED is turned OFF"
+                    },
+                    "displayName": {
+                        "en": "LED OFF"
+                    },
+                    "enumValue": 0,
+                    "name": "Off"
+                },
+                {
+                    "comment": "LED is in the ON state",
+                    "description": {
+                        "en": "LED is turned ON"
+                    },
+                    "displayName": {
+                        "en": "LED ON"
+                    },
+                    "enumValue": 1,
+                    "name": "On"
+                },
+                {
+                    "comment": "LED is Blinking",
+                    "description": {
+                        "en": "LED is Blinking"
+                    },
+                    "displayName": {
+                        "en": "LED Blinking"
+                    },
+                    "enumValue": 2,
+                    "name": "Blink"
+                }
+            ],
+            "valueSchema": "integer"
+        }
+    ],
+    "@context": [
+        "dtmi:iotcentral:context;2",
+        "dtmi:dtdl:context;2"
+    ]
+  }

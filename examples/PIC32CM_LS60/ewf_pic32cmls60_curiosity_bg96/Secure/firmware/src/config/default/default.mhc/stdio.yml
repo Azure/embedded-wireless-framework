@@ -1,0 +1,30 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: stdio}
+children:
+- type: Symbols
+  children:
+  - type: String
+    attributes: {id: DEBUG_PERIPHERAL}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: stdio, value: sercom3}
+- type: Attachments
+  children:
+  - type: DirectDependency
+    attributes: {id: UART}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: targetComponentID}
+        children:
+        - {type: Value, value: sercom3}
+      - type: String
+        attributes: {id: targetAttachmentID}
+        children:
+        - {type: Value, value: SERCOM3_UART}
+- type: ElementPosition
+  attributes: {x: '249', y: '289', id: stdio}
