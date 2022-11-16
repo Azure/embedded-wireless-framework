@@ -247,8 +247,8 @@ add_subdirectory(sample_ewf_info_tx_sim868)
 #######################################
 
 # ThreadX
-add_subdirectory(sample_ewf_info_tx_exs82_w)
-add_subdirectory(sample_ewf_test_tx_exs82_w)
+#add_subdirectory(sample_ewf_info_tx_exs82_w)
+#add_subdirectory(sample_ewf_test_tx_exs82_w)
 #add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_exs82_w)
 #add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_exs82_w)
 
