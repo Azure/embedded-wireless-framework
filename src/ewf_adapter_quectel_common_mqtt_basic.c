@@ -384,7 +384,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_connect(ewf_adapter* adapter_pt
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
-#ifdef EWF_ADAPTER_QUECTEL_BG96_TLS_BASIC_ENABLED
+#ifdef EWF_ADAPTER_QUECTEL_COMMON_TLS_BASIC_ENABLED
     /* Use SSL */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QMTCFG=\"ssl\",0,1,2\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;

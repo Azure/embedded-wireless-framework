@@ -28,7 +28,7 @@
 #include "ewf_middleware_netxduo.c"
 #include "ewf_example_netx_duo_test.c"
 
-/* Azure SD-NET test thread entry function */
+/* Embedded Wireless Framework (EWF) test thread entry function */
 void ewf_netx_duo_test_thread_entry(void)
 {
     ewf_result result;
@@ -64,7 +64,7 @@ void ewf_netx_duo_test_thread_entry(void)
 
     /* Wait for the modem to be registered to network
      * Refer system integration guide for more info */
-    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, (uint32_t)-1));
+    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
     ewf_platform_sleep(200);
 
     /* Disable network Registration URC */

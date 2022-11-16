@@ -31,9 +31,9 @@ extern "C" {
 typedef struct _ewf_adapter_modem_api_packet_domain
 {
     ewf_result(*eps_network_registration_urc_set)(ewf_adapter* adapter_ptr, const char* n_str);
-    ewf_result(*eps_network_registration_read)(ewf_adapter* adapter_ptr, ewf_network_status * epsregistrationstatus_ptr, ewf_act * act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr, uint32_t rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
+    ewf_result(*eps_network_registration_read)(ewf_adapter* adapter_ptr, ewf_adapter_modem_network_status * epsregistrationstatus_ptr, ewf_adapter_modem_act * act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr, uint32_t rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
     ewf_result(*gprs_network_registration_urc_set)(ewf_adapter* adapter_ptr, const char* n_str);
-    ewf_result(*gprs_network_registration_read)(ewf_adapter* adapter_ptr, ewf_network_status * status_ptr, ewf_act* act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr,  uint32_t * rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
+    ewf_result(*gprs_network_registration_read)(ewf_adapter* adapter_ptr, ewf_adapter_modem_network_status * status_ptr, ewf_adapter_modem_act* act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr,  uint32_t * rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
     ewf_result(*init_pdp_activate)(ewf_adapter* adapter_ptr, uint32_t n, bool attachPDN);
     ewf_result(*init_pdp_activation_config_read)(ewf_adapter* adapter_ptr, uint32_t * n_ptr, bool * attachpdn_ptr);
     ewf_result(*pdp_apn_set)(ewf_adapter* adapter_ptr, uint32_t context_id, const char * pdptype_ptr, const char* apn_ptr);
@@ -69,7 +69,7 @@ ewf_result ewf_adapter_modem_eps_network_registration_urc_set(ewf_adapter* adapt
  * @param[out] reject_cause_ptr Pointer to integer value for reject cause for registration
  * @return #ewf_result status code
  */
-ewf_result ewf_adapter_modem_eps_network_registration_read(ewf_adapter* adapter_ptr, ewf_network_status * epsregistrationstatus_ptr, ewf_act * act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr, uint32_t rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
+ewf_result ewf_adapter_modem_eps_network_registration_read(ewf_adapter* adapter_ptr, ewf_adapter_modem_network_status * epsregistrationstatus_ptr, ewf_adapter_modem_act * act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr, uint32_t rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
 
 /**
  * @brief GPRS Network Registration (+cgreg)
@@ -93,7 +93,7 @@ ewf_result ewf_adapter_modem_gprs_network_registration_urc_set(ewf_adapter* adap
  * @param[out] reject_cause_ptr Pointer to integer value for reject cause for registration
  * @return #ewf_result status code
  */
-ewf_result ewf_adapter_modem_gprs_network_registration_read(ewf_adapter* adapter_ptr, ewf_network_status * status_ptr, ewf_act* act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr,  uint32_t * rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
+ewf_result ewf_adapter_modem_gprs_network_registration_read(ewf_adapter* adapter_ptr, ewf_adapter_modem_network_status * status_ptr, ewf_adapter_modem_act* act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr,  uint32_t * rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
 
 /**
  * @brief Initial PDP context activation (+cipca)

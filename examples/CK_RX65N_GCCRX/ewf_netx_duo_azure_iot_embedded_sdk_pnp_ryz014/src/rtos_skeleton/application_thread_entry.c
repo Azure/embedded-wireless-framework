@@ -181,15 +181,8 @@ void application_thread_entry(ULONG entry_input)
 
     /* Wait for the modem to be registered to network
      * Refer system integration guide for more info */
-    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, (uint32_t)-1));
+    while (EWF_RESULT_OK != ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
     ewf_platform_sleep(200);
-
-    /* Disable network Registration URC */
-    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
-    {
-        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
-        return;
-    }
 
     /* Disable EPS network Registration URC */
     if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_urc_set(adapter_ptr, "0")))

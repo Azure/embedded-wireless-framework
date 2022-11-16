@@ -96,7 +96,14 @@ typedef enum _ewf_result
 
     EWF_RESULT_ALLOCATOR_INITIALIZATION_FAILED  = -501, /**< The allocator initialization failed. */
 
-    EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED     = -601, /**< The modem not registered to network */
+    EWF_RESULT_ADAPTER_NETWORK_NOT_REGISTERED   = -601, /**< The adapter not registered to network */
+
+	/* EWF Apdater MQTT Result codes */
+    EWF_RESULT_ADAPTER_MQTT_CONNECTION_FAILED   = -701, /**< The adapter failed to establish MQTT connection */
+    EWF_RESULT_ADAPTER_MQTT_DISCONNECTED        = -702, /**< The MQTT link was disconnected */
+	EWF_RESULT_ADAPTER_MQTT_PUBLISH_FAILED      = -703, /**< The adapter failed to publish MQTT message */
+	EWF_RESULT_ADAPTER_MQTT_SUBSCRIBE_FAILED    = -704, /**< The adapter failed to subscribe MQTT topic */
+    EWF_RESULT_ADAPTER_MQTT_MESSAGE_GET_FAILED  = -705, /**< The adapter failed to get MQTT message */
 
 } ewf_result;
 

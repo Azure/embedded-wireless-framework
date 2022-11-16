@@ -217,7 +217,7 @@ bool ewfl_str_contains_str(const char * str, const char * substr)
         {
             return true;
         }
-        /* Increatemt the string */
+        /* Increment the string */
         str = start+1;
     }
     return false;

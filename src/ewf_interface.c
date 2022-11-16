@@ -650,7 +650,7 @@ static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface*
 
     *match_ptr = false;
 
-    for (; pattern_ptr; pattern_ptr = pattern_ptr->netx_ptr)
+    for (; pattern_ptr; pattern_ptr = pattern_ptr->next_ptr)
     {
         if (pattern_ptr->match_function)
         {

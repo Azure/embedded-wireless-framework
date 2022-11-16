@@ -205,11 +205,28 @@ add_subdirectory(sample_ewf_certs_basic_tx_ryz014)
 add_subdirectory(sample_ewf_telemetry_basic_tx_ryz014)
 
 #######################################
+# RYZ024
+#######################################
+
+# ThreadX
+add_subdirectory(sample_ewf_info_tx_ryz024a)
+add_subdirectory(sample_ewf_test_tx_ryz024a)
+add_subdirectory(sample_ewf_certs_basic_tx_ryz024a)
+add_subdirectory(sample_ewf_telemetry_basic_tx_ryz024a)
+
+#######################################
 # SIM7000
 #######################################
 
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_sim7000)
+
+#######################################
+# SIM7000
+#######################################
+
+# ThreadX
+#add_subdirectory(sample_ewf_info_tx_sim7000)
 
 #######################################
 # SIM900
@@ -224,6 +241,16 @@ add_subdirectory(sample_ewf_info_tx_sim900)
 
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_sim868)
+
+#######################################
+# EXS82-W
+#######################################
+
+# ThreadX
+add_subdirectory(sample_ewf_info_tx_exs82_w)
+add_subdirectory(sample_ewf_test_tx_exs82_w)
+#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_exs82_w)
+#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_exs82_w)
 
 #######################################
 # ESP8266
@@ -252,6 +279,16 @@ add_subdirectory(sample_ewf_info_tx_esp_wroom_02)
 add_subdirectory(sample_ewf_test_tx_esp_wroom_02)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_esp_wroom_02)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_esp_wroom_02)
+
+#######################################
+# MX-CHIP EMW3080
+#######################################
+
+# ThreadX
+#add_subdirectory(sample_ewf_info_tx_mxchip_emw3080)
+#add_subdirectory(sample_ewf_test_tx_mxchip_emw3080)
+#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_emw3080)
+#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_emw3080)
 
 #######################################
 # Seeed LoRa-E5

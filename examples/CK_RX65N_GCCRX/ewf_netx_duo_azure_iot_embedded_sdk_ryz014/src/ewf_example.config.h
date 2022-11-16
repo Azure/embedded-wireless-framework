@@ -28,7 +28,7 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (16)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
 
 /** @brief the size of each message allocator block */
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)

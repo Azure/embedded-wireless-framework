@@ -326,7 +326,7 @@ ewf_result ewf_example_test_netx_duo_dns(NX_IP* ip_ptr)
     return EWF_RESULT_OK;
 }
 
-ULONG ewf_example_test_netx_duo_tcp_echo_server_ip = IP_ADDRESS(20, 237, 168, 91);
+ULONG ewf_example_test_netx_duo_tcp_echo_server_ip = IP_ADDRESS(20, 253, 207, 165);
 UINT ewf_example_test_netx_duo_tcp_echo_server_port = 4000;
 CHAR ewf_example_test_netx_duo_tcp_echo_message[] =
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -520,7 +520,7 @@ ewf_result ewf_example_test_netx_duo_tcp_echo(NX_IP* ip_ptr)
     return EWF_RESULT_OK;
 }
 
-ULONG ewf_example_test_netx_duo_udp_echo_server_ip = IP_ADDRESS(20, 237, 168, 91);
+ULONG ewf_example_test_netx_duo_udp_echo_server_ip = IP_ADDRESS(168, 61, 1, 33);
 UINT ewf_example_test_netx_duo_udp_echo_server_port = 5000;
 CHAR ewf_example_test_netx_duo_udp_echo_message[] =
 "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

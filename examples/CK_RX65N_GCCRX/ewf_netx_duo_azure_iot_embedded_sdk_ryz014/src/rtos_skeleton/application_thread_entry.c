@@ -31,9 +31,6 @@ Includes   <System Includes> , "Project Includes"
 #define SAMPLE_DHCP_DISABLE
 
 #include "nx_api.h"
-#ifndef SAMPLE_DHCP_DISABLE
-#include "nxd_dhcp_client.h"
-#endif /* SAMPLE_DHCP_DISABLE */
 #include "nxd_dns.h"
 #include "nxd_sntp_client.h"
 #include "nx_secure_tls_api.h"
@@ -72,11 +69,11 @@ extern VOID sample_entry(NX_IP* ip_ptr, NX_PACKET_POOL* pool_ptr, NX_DNS* dns_pt
 #endif /* SAMPLE_IP_STACK_SIZE  */
 
 #ifndef SAMPLE_PACKET_COUNT
-#define SAMPLE_PACKET_COUNT           (60)
+#define SAMPLE_PACKET_COUNT           (40)
 #endif /* SAMPLE_PACKET_COUNT  */
 
 #ifndef SAMPLE_PACKET_SIZE
-#define SAMPLE_PACKET_SIZE            (1560)
+#define SAMPLE_PACKET_SIZE            (1536)
 #endif /* SAMPLE_PACKET_SIZE  */
 
 #define SAMPLE_POOL_SIZE              ((SAMPLE_PACKET_SIZE + sizeof(NX_PACKET)) * SAMPLE_PACKET_COUNT)
@@ -90,7 +87,7 @@ extern VOID sample_entry(NX_IP* ip_ptr, NX_PACKET_POOL* pool_ptr, NX_DNS* dns_pt
 #endif /* SAMPLE_IP_THREAD_PRIORITY */
 
 #ifndef SAMPLE_SNTP_SYNC_MAX
-#define SAMPLE_SNTP_SYNC_MAX             (10)
+#define SAMPLE_SNTP_SYNC_MAX             (30)
 #endif /* SAMPLE_SNTP_SYNC_MAX */
 
 #ifndef SAMPLE_SNTP_UPDATE_MAX
@@ -124,7 +121,7 @@ ULONG            unix_time_base;
 
 /* Define the stack/cache for ThreadX.  */
 ULONG sample_ip_stack[SAMPLE_IP_STACK_SIZE / sizeof(ULONG)];
-ULONG sample_pool_stack[SAMPLE_POOL_SIZE / sizeof(ULONG) + 4];
+ULONG sample_pool_stack[SAMPLE_POOL_SIZE / sizeof(ULONG)];
 ULONG sample_pool_stack_size = sizeof(sample_pool_stack);
 ULONG sample_arp_cache_area[SAMPLE_ARP_CACHE_SIZE / sizeof(ULONG)];
 
@@ -184,11 +181,11 @@ void application_thread_entry(ULONG entry_input)
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
     }
-    ewf_platform_sleep(200);
+    ewf_platform_sleep(500);
 
     /* Wait for the modem to be registered to network
      * Refer system integration guide for more info */
-    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, (uint32_t)-1));
+    while (EWF_RESULT_OK != ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
     ewf_platform_sleep(200);
 
     /* Disable network Registration URC */
@@ -327,17 +324,17 @@ void application_thread_entry(ULONG entry_input)
     nx_ip_gateway_address_get(&ip_0, &gateway_address);
 
     /* Output IP address and gateway address. */
-    EWF_LOG("IP address: %lu.%lu.%lu.%lu\r\n",
+    printf("IP address: %lu.%lu.%lu.%lu\r\n",
            (ip_address >> 24),
            (ip_address >> 16 & 0xFF),
            (ip_address >> 8 & 0xFF),
            (ip_address & 0xFF));
-    EWF_LOG("Mask: %lu.%lu.%lu.%lu\r\n",
+    printf("Mask: %lu.%lu.%lu.%lu\r\n",
            (network_mask >> 24),
            (network_mask >> 16 & 0xFF),
            (network_mask >> 8 & 0xFF),
            (network_mask & 0xFF));
-    EWF_LOG("Gateway: %lu.%lu.%lu.%lu\r\n",
+    printf("Gateway: %lu.%lu.%lu.%lu\r\n",
            (gateway_address >> 24),
            (gateway_address >> 16 & 0xFF),
            (gateway_address >> 8 & 0xFF),
@@ -383,7 +380,6 @@ static UINT dns_create()
 
 UINT    status;
 ULONG   dns_server_address[3];
-UINT    dns_server_address_size = 12;
 
     /* Create a DNS instance for the Client.  Note this function will create
        the DNS Client packet pool for creating DNS message packets intended

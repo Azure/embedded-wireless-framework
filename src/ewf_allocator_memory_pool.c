@@ -36,6 +36,7 @@ ewf_result ewf_allocator_memory_pool_start(ewf_allocator* allocator_ptr)
 
 ewf_result ewf_allocator_memory_pool_stop(ewf_allocator* allocator_ptr)
 {
+    EWF_PARAMETER_NOT_USED(allocator_ptr);
     return EWF_RESULT_OK;
 }
 

@@ -100,13 +100,11 @@
       <configSetting altId="p400.output.low" configurationId="p400"/>
       <configSetting altId="p403.output.high" configurationId="p403"/>
       <configSetting altId="p404.output.low" configurationId="p404"/>
-      <configSetting altId="p412.output.low" configurationId="p412"/>
       <configSetting altId="p415.output.low" configurationId="p415"/>
       <configSetting altId="p611.output.low" configurationId="p611"/>
       <configSetting altId="p612.output.low" configurationId="p612"/>
       <configSetting altId="p708.output.high" configurationId="p708"/>
-      <configSetting altId="p709.output.low" configurationId="p709"/>
-      <configSetting altId="p710.output.low" configurationId="p710"/>
+      <configSetting altId="p709.input" configurationId="p709"/>
       <configSetting altId="p712.output.low" configurationId="p712"/>
       <configSetting altId="p713.output.low" configurationId="p713"/>
       <configSetting altId="qspi0.qio0.p307" configurationId="qspi0.qio0"/>
@@ -117,6 +115,7 @@
       <configSetting altId="qspi0.qssl.p306" configurationId="qspi0.qssl"/>
       <configSetting altId="sci0.ctsrts.p413" configurationId="sci0.ctsrts" isUsedByDriver="true"/>
       <configSetting altId="sci0.rxd.p410" configurationId="sci0.rxd" isUsedByDriver="true"/>
+      <configSetting altId="sci0.sck.p412" configurationId="sci0.sck"/>
       <configSetting altId="sci0.txd.p411" configurationId="sci0.txd" isUsedByDriver="true"/>
       <configSetting altId="sci6.scl.p505" configurationId="sci6.scl"/>
       <configSetting altId="sci6.sda.p506" configurationId="sci6.sda"/>

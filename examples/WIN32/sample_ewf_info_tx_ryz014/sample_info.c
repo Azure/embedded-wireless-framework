@@ -82,10 +82,12 @@ void thread_sample_entry(ULONG param)
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
     }
+    ewf_platform_sleep(300);
 
-    /* Wait for the modem functionality to be up, increase the sleep time as required by modem and network,
-     * Refer modem user manual for more info */
-    ewf_platform_sleep(100);
+    /* Wait for the modem to be registered to network
+     * Refer system integration guide for more info */
+    while (EWF_RESULT_OK != ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
+    ewf_platform_sleep(200);
 
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
@@ -99,6 +101,20 @@ void thread_sample_entry(ULONG param)
     {
         EWF_LOG_ERROR("Failed to activate the PDP context, ewf_result %d.\n", result);
         // continue despite the error
+    }
+
+    /* Disable network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
+    {
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
+    }
+
+    /* Disable EPS network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_urc_set(adapter_ptr, "0")))
+    {
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
     }
 
     // Get the adapter info

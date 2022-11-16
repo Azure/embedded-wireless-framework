@@ -28,7 +28,7 @@ extern "C" {
  ***************************************************************/
 typedef struct _ewf_adapter_api_modem_ntp
 {
-    ewf_result(*adapter_ntp_network_time_synchronize)(ewf_adapter* adapter_ptr, const char* server_str, uint16_t port, uint8_t autoset, ewf_time * time_info_ptr);
+    ewf_result(*adapter_ntp_network_time_synchronize)(ewf_adapter* adapter_ptr, const char* server_str, uint16_t port, uint8_t autoset, ewf_adapter_modem_time * time_info_ptr);
 } ewf_adapter_api_modem_ntp;
 
 /**
@@ -41,7 +41,7 @@ typedef struct _ewf_adapter_api_modem_ntp
  * @note Not all modems support NTP synchronization, refer modem user manual for feature suport informations
  * @return #ewf_result status code
  */
-ewf_result ewf_adapter_ntp_network_time_synchronize(ewf_adapter* adapter_ptr, const char* server_str, uint16_t port, uint8_t autoset, ewf_time * time_info_ptr);
+ewf_result ewf_adapter_ntp_network_time_synchronize(ewf_adapter* adapter_ptr, const char* server_str, uint16_t port, uint8_t autoset, ewf_adapter_modem_time * time_info_ptr);
 
 /************************************************************************//**
  * @} *** group_adapter_ntp

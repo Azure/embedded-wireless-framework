@@ -12,6 +12,8 @@
 #include "ewf.h"
 #include "ewf_platform.h"
 #include "ewf_allocator.h"
+#include "ewf_tokenizer.h"
+#include "ewf_message.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,17 +41,15 @@ extern "C" {
  * @{
  ****************************************************************************/
 
-/** @brief The interface message structure declaration */
-struct _ewf_interface_message;
+/**
+ * @brief Legacy type for messages
+ */
+typedef ewf_message ewf_interface_message;
 
-/** @brief The interface message structure type definition */
-typedef struct _ewf_interface_message ewf_interface_message;
-
-/** @brief The interface tokenizer pattern structure declaration */
-struct _ewf_interface_tokenizer_pattern;
-
-/** @brief The interface tokenizer pattern structure type definition */
-typedef struct _ewf_interface_tokenizer_pattern ewf_interface_tokenizer_pattern;
+/**
+ * @brief Legacy type for tokenizer patters
+ */
+typedef ewf_tokenizer_pattern ewf_interface_tokenizer_pattern;
 
 /**
  * @brief a function pointer type for response callbacks
@@ -60,35 +60,6 @@ typedef ewf_result(*ewf_interface_response_callback)(ewf_interface* interface_pt
  * @brief a function pointer type for URC callbacks
  */
 typedef ewf_result(*ewf_interface_urc_callback)(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t length);
-
-/** @brief The interface message structure definition */
-struct _ewf_interface_message
-{
-    uint8_t* buffer_ptr;
-    uint32_t buffer_length;
-};
-
-/** @brief The interface tokenizer pattern structure definition */
-struct _ewf_interface_tokenizer_pattern
-{
-    /**< a pointer to the next patter in the list, NULL if no further patters */
-    ewf_interface_tokenizer_pattern* netx_ptr;
-
-    /**< a pointer to a NULL terminated string for the pattern */
-    const char* pattern_str;
-
-    /**< the length of the patter */
-    uint32_t patter_length;
-
-    /**< true if the pattern contains wildcards, false otherwise */
-    bool has_wildcards;
-
-    /**< custom function for matching */
-    bool(*match_function)(const char* buffer, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr);
-
-    /**< pointer to custom data, that can be used by the match function */
-    void* data_ptr;
-};
 
 /** @brief The interface structure definition */
 struct _ewf_interface

@@ -4,7 +4,7 @@
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
  * @details
- * The Embedded Wireless Framework BG96 adapter API
+ * The Embedded Wireless Framework Allocator API
  ****************************************************************************/
 
 #ifndef __ewf_allocator__h__included__
