@@ -27,7 +27,7 @@ FSP_CPP_HEADER
 void R_BSP_WarmStart(bsp_warm_start_event_t event);
 FSP_CPP_FOOTER
 
-char ewf_log_buffer[1024];
+char ewf_log_buffer[1500];
 void ewf_ra_bsp_delay(uint32_t delay_ms);
 void ewf_ra_bsp_delay(uint32_t delay_ms)
 {
@@ -70,19 +70,7 @@ void ewf_certificate_example_entry(void)
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
     }
-    ewf_platform_sleep(5000);
-
-    /* Wait for the modem to be registered to network
-     * Refer system integration guide for more info */
-    while (EWF_RESULT_OK != ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
-    ewf_platform_sleep(2000);
-
-    /* Disable network Registration URC */
-    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
-    {
-        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
-        return;
-    }
+    ewf_platform_sleep(200);
 
     /* Disable EPS network Registration URC */
     if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_urc_set(adapter_ptr, "0")))
@@ -91,28 +79,12 @@ void ewf_certificate_example_entry(void)
         return;
     }
 
-    // Set the SIM PIN
-    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
-    {
-        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
-        return;
-    }
-
-    // Activated the PDP context
-    if (ewf_result_failed(result = ewf_adapter_modem_packet_service_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
-    {
-        EWF_LOG_ERROR("Failed to activate the PDP context: ewf_result %d.\n", result);
-        // continue despite the error
-    }
-
     // Call the certificate provisioning example
     if (ewf_result_failed(result = ewf_example_certs_basic_renesas_ryz014(adapter_ptr)))
     {
         EWF_LOG_ERROR("The certificate provisioning example returned and ewf_result %d.\n", result);
         exit(result);
     }
-
-    EWF_LOG("Done!\n");
 
     // Stay here forever.
     while (1)

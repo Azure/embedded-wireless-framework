@@ -447,6 +447,7 @@ ewf_result ewf_adapter_quectel_common_start(ewf_adapter* adapter_ptr)
     ewf_adapter_quectel_common_message_tokenizer_pattern1_match_function_state.interface_ptr = interface_ptr;
     ewf_adapter_quectel_common_message_tokenizer_pattern2_match_function_state.interface_ptr = interface_ptr;
     ewf_adapter_quectel_common_message_tokenizer_pattern3_match_function_state.interface_ptr = interface_ptr;
+
     if (ewf_result_failed(result = ewf_interface_tokenizer_message_pattern_set(interface_ptr, ewf_adapter_quectel_common_message_tokenizer_pattern_ptr)))
     {
         EWF_LOG_ERROR("Failed to set the interface message tokenizer pattern: ewf_result %d.\n", result);

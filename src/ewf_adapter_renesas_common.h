@@ -6,10 +6,12 @@
  * @brief The Embedded Wireless Framework generic Renesas adapter functionality.
  *     Renesas adapter common definitions are defined here.
  *     for eg. the application should define
- *     EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_ID,
+ *     EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_ID/
+ *     EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_ID,
  *     EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_ID,
- *     EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_ID,
- *     and EWF_CONFIG_ADAPTER_RENESAS_COMMON_SECURITY_PROFILE_ID
+ *     EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_ID while provisioning
+ *     certificates onto the device. EWF_CONFIG_ADAPTER_RENESAS_COMMON_SECURITY_PROFILE_ID
+ *     and EWF_CONFIG_ADAPTER_RENESAS_COMMON_CA_CERTIFICATE_ID must be defined
  *     when using MQTT connection. If not defined, the adapter has default 
  *     definitions to be used.
  ****************************************************************************/
@@ -86,30 +88,79 @@ extern "C" {
 #define EWF_ADAPTER_RENESAS_COMMON_SOCKET_COMMAND_MODE                         ("1")
 #define EWF_ADAPTER_RENESAS_COMMON_SOCKET_ONLINE_DATA_MODE                     ("0")
 
-/* Trusted Certificate Authority certificate index, range 0-19  */
+/**
+ * @brief Trusted Certificate Authority certificate index number(0-19)
+ * The index in the non volatile memory where the root CA certificate will be stored
+ *
+ */
 #ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_ID
-#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_ID               ("10")
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_ID               ("11")
 #endif
 
-/* User Certificate Authority certificate index, range 0-19  */
+/**
+ * @brief User Certificate Authority certificate index number(0-19)
+ * The index in the non volatile memory where the user CA certificate will be stored
+ *
+ */
 #ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_ID
-#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_ID               ("10")
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_ID               ("12")
 #endif
 
-/* Client certificate ID, range 0-19.
- * This index should be different that the CA certificate ID  */
+/**
+ * @brief CA certificate index that will be used in the security/TLS profile configuration
+ * This number will either be EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_ID or
+ * EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_ID
+ * Default to Root CA.
+ */
+#ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_CA_CERTIFICATE_ID
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CA_CERTIFICATE_ID                    ("11")
+#endif
+
+/**
+ * @brief Client certificate index number(0-19)
+ * The index in the non volatile memory where the client certificate will be stored
+ *
+ */
 #ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_ID
-#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_ID                ("11")
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_ID                ("13")
 #endif
 
-/* Client private key ID, range 0-19 */
+/**
+ * @brief Client Key index number(0-19)
+ * The index in the non volatile memory where the client key will be stored
+ *
+ */
 #ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_ID
-#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_ID                ("11")
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_ID                ("13")
 #endif
 
-/* Security Profile Id , range 0-6 */
+/**
+ * @brief Security Profile ID (0-6)
+ * The id number for the security profile configuration
+ *
+ */
 #ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_SECURITY_PROFILE_ID
 #define EWF_CONFIG_ADAPTER_RENESAS_COMMON_SECURITY_PROFILE_ID                  ("5")
+#endif
+
+/** @brief Trusted Certificate Authority certificate pointer name*/
+#ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_BUFFER_NAME      (root_ca_cert_pem)
+#endif
+
+/** @brief User Certificate Authority certificate pointing buffer name */
+#ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_BUFFER_NAME      (ca_cert_pem)
+#endif
+
+/** @brief Client certificate pointing buffer name */
+#ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_BUFFER_NAME       (device_cert_pem)
+#endif
+
+/** @brief Client private key filename  */
+#ifndef EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_BUFFER_NAME       (device_key_pem)
 #endif
 
 /* Type of data, string */
@@ -168,7 +219,7 @@ typedef struct _ewf_adapter_renesas_common_socket
 typedef struct _ewf_adapter_renesas_common
 {
     /**< The user URC callback, called to process URC not handled by the driver */
-    ewf_adapter_urc_user_callback user_urc_callback;
+    ewf_interface_urc_callback user_urc_callback;
 
 #if EWF_ADAPTER_RENESAS_COMMON_TCP_ENABLED || EWF_ADAPTER_RENESAS_COMMON_UDP_ENABLED
     /**< The internal pool of internet sockets */
@@ -245,7 +296,7 @@ ewf_result ewf_adapter_renesas_common_get_ipv4_dns(ewf_adapter* adapter_ptr, uin
  */
 
 ewf_result ewf_adapter_renesas_common_urc_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length);
-ewf_result ewf_adapter_renesas_common_set_user_urc_callback(ewf_adapter* adapter_ptr, ewf_adapter_urc_user_callback callback);
+ewf_result ewf_adapter_renesas_common_set_user_urc_callback(ewf_adapter* adapter_ptr, ewf_interface_urc_callback callback);
 
 /** @} *** group_adapter_renesas_common_urc */
 

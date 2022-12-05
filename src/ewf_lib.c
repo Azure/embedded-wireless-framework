@@ -86,8 +86,8 @@ char * ewfl_unsigned_to_str(uint32_t u, char * str, uint32_t len)
     char * rev = str + len - 1;
     *rev = 0;
     do {
-        div_t r = div(u, 10);
-        u = r.quot;
+        div_t r = div((int)u, 10);
+        u = (uint32_t)r.quot;
         *--rev = (char)('0' + r.rem);
         if (rev < str) return NULL;
     } while (u);
@@ -99,7 +99,7 @@ uint32_t ewfl_str_to_unsigned(const char * str)
     if (!str) return 0;
     uint32_t u = 0;
     for (const char * p = str; *p && isdigit((int)*p); p++)
-        u = (u * 10) + (*p - '0');
+        u = (u * 10) + (uint32_t)(*p - '0');
     return u;
 }
 

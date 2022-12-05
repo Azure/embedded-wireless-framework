@@ -6,12 +6,12 @@
  * @brief The Embedded Wireless Framework adapter certificate provisioning example.
  ****************************************************************************/
 
+#include "ewf_example.config.h"
 #include "ewf_platform.h"
 #include "ewf_allocator_threadx.h"
 #include "ewf_interface_win32_com.h"
-#include "ewf_adapter_quectel_bg96.h"
 #include "ewf_lib.h"
-#include "ewf_example.config.h"
+#include "ewf_adapter_quectel_bg96.h"
 
 /* The thread */
 static TX_THREAD thread;

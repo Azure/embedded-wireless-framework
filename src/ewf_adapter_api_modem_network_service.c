@@ -7,31 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_api_modem.h"
-
-ewf_adapter_modem_api_network_service_command ewf_adapter_modem_api_network_service_command_implementation =
-{
-    NULL, /* subscriber_number_read */
-    ewf_adapter_modem_network_registration_urc_set, /* network_registration_set */
-    ewf_adapter_modem_network_registration_read, /* network_registration_read */
-    ewf_adapter_modem_network_registration_check, /* network registration status check with timeout */
-    NULL, /* operator_select */
-    NULL, /* operator_select_read */
-    NULL, /* operator_list_edit */
-    NULL, /* operator_list_read */
-    NULL, /* operator_list_select */
-    NULL, /* operator_option_list_read */
-    NULL, /* dynamic_parameters_read */
-    NULL, /* dynamic_parameters_set */
-    NULL, /* power_saving_mode_set */
-    NULL, /* power_saving_mode_read */
-    NULL, /* signal_strength_read */
-    NULL, /* signal_strength_extended_read */
-    NULL, /* timezone_reporting_set */
-    NULL, /* timezone_reporting_read */
-    NULL, /* timezone_autoupdate_set */
-    NULL, /* timezone_autoupdate_read */
-
-};
+#include "ewf_adapter.h"
 
 ewf_result ewf_adapter_modem_network_registration_urc_set(ewf_adapter* adapter_ptr, const char * n_str)
 {

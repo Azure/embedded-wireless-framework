@@ -58,6 +58,85 @@ extern "C" {
 #endif
 #endif
 
+/**
+ * @brief Trusted Certificate Authority certificate index number(0-19)
+ * The index in the non volatile memory where the root CA certificate will be stored
+ *
+ */
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_ROOT_CA_CERTIFICATE_ID
+#undef EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_ID
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_ID               EWF_CONFIG_ADAPTER_RENESAS_RYZ014_ROOT_CA_CERTIFICATE_ID
+#endif
+
+/**
+ * @brief User Certificate Authority certificate index number(0-19)
+ * The index in the non volatile memory where the user CA certificate will be stored
+ *
+ */
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_USER_CA_CERTIFICATE_ID
+#undef EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_ID
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_ID               EWF_CONFIG_ADAPTER_RENESAS_RYZ014_USER_CA_CERTIFICATE_ID
+#endif
+
+/**
+ * @brief CA certificate index that will be used in the security/TLS profile configuration
+ * This number will either be EWF_CONFIG_ADAPTER_RENESAS_RYZ014_ROOT_CA_CERTIFICATE_ID or
+ * EWF_CONFIG_ADAPTER_RENESAS_RYZ014_USER_CA_CERTIFICATE_ID
+ */
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CA_CERTIFICATE_ID
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CA_CERTIFICATE_ID                    EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CA_CERTIFICATE_ID
+#endif
+
+/**
+ * @brief Client certificate index number(0-19)
+ * The index in the non volatile memory where the client certificate will be stored
+ *
+ */
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_CERTIFICATE_ID
+#undef EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_ID
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_ID                EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_CERTIFICATE_ID
+#endif
+
+/**
+ * @brief Client Key index number(0-19)
+ * The index in the non volatile memory where the client key will be stored
+ *
+ */
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_PRIVATE_KEY_ID
+#undef EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_ID
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_ID                EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_PRIVATE_KEY_ID
+#endif
+
+/** @brief Trusted Certificate Authority certificate pointer name*/
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_ROOT_CA_CERTIFICATE_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_BUFFER_NAME      EWF_CONFIG_ADAPTER_RENESAS_RYZ014_ROOT_CA_CERTIFICATE_BUFFER_NAME
+#endif
+
+/** @brief User Certificate Authority certificate pointing buffer name */
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_USER_CA_CERTIFICATE_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_USER_CA_CERTIFICATE_BUFFER_NAME      EWF_CONFIG_ADAPTER_RENESAS_RYZ014_USER_CA_CERTIFICATE_BUFFER_NAME
+#endif
+
+/** @brief Client certificate pointing buffer name */
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_CERTIFICATE_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_BUFFER_NAME       EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_CERTIFICATE_BUFFER_NAME
+#endif
+
+/** @brief Client private key filename  */
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_PRIVATE_KEY_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_BUFFER_NAME       EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_PRIVATE_KEY_BUFFER_NAME
+#endif
+
+/**
+ * @brief Security Profile ID (0-6)
+ * The id number for the security profile configuration
+ *
+ */
+#ifdef EWF_CONFIG_ADAPTER_RENESAS_RYZ014_SECURITY_PROFILE_ID
+#undef EWF_CONFIG_ADAPTER_RENESAS_COMMON_SECURITY_PROFILE_ID
+#define EWF_CONFIG_ADAPTER_RENESAS_COMMON_SECURITY_PROFILE_ID                  EWF_CONFIG_ADAPTER_RENESAS_RYZ014_SECURITY_PROFILE_ID
+#endif
+
 /************************************************************************//**
  * @} *** group_configuration_adapter_renesas_ryz014
  ****************************************************************************/
@@ -355,6 +434,7 @@ adapter_ptr->mqtt_basic_api_ptr = &ewf_adapter_renesas_common_api_mqtt_basic;   
 do {                                                                                                                                                              \
 static ewf_adapter_renesas_ryz014 ewf_adapter_renesas_ryz014__implementation__##adapter_name_symb = {0};                                                          \
 static ewf_adapter ewf_adapter_renesas_ryz014__##adapter_name_symb = {0};                                                                                         \
+static ewf_adapter_api_modem_data ewf_adapter_renesas_ryz014__modem_data__##adapter_name_symb = {0};                                                              \
 interface_ptr_param->message_allocator_ptr = message_allocator_ptr_param;                                                                                         \
 interface_ptr_param->data_allocator_ptr = data_allocator_ptr_param;                                                                                               \
 interface_ptr_param->urc_callback = ewf_adapter_renesas_ryz014_urc_callback;                                                                                      \
@@ -363,6 +443,7 @@ ewf_adapter_renesas_ryz014__##adapter_name_symb.implementation_ptr = &(ewf_adapt
 adapter_ptr = &(ewf_adapter_renesas_ryz014__##adapter_name_symb);                                                                                                 \
 interface_ptr_param->adapter_ptr = adapter_ptr;                                                                                                                   \
 EWF_ADAPTER_RENESAS_RYZ014_INITIALIZE_HEADER(adapter_ptr);                                                                                                        \
+ewf_adapter_renesas_ryz014__##adapter_name_symb.modem_api_data_ptr = &ewf_adapter_renesas_ryz014__modem_data__##adapter_name_symb;                                \
 ewf_adapter_renesas_ryz014__##adapter_name_symb.control_api_ptr = &ewf_adapter_renesas_ryz014_api_control;                                                        \
 ewf_adapter_renesas_ryz014__##adapter_name_symb.info_api_ptr = &ewf_adapter_renesas_common_api_info;                                                              \
 EWF_ADAPTER_RENESAS_RYZ014_INITIALIZE_TCP_API(adapter_ptr);                                                                                                       \

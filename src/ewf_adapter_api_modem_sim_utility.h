@@ -12,7 +12,8 @@
 #ifndef __ewf_adapter_modem_sim_utility__h__included__
 #define __ewf_adapter_modem_sim_utility__h__included__
 
-#include "ewf_adapter.h"
+#include "ewf.h"
+#include "ewf_adapter_api_modem_types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,20 +27,6 @@ extern "C" {
  * @{
  *
  ****************************************************************************/
-
-typedef struct _ewf_adapter_modem_api_sim_utility
-{
-    ewf_result(*sim_pin_enter)(ewf_adapter* adapter_ptr, const char * pin_str);
-    ewf_result(*sim_pin_status_read)(ewf_adapter* adapter_ptr, char * code_str, uint32_t * code_str_len);
-    ewf_result(*sim_new_pin_change)(ewf_adapter* adapter_ptr, const char * pin_str, const char * new_pin_str);
-    ewf_result(*sim_pin_retries_read)(ewf_adapter* adapter_ptr, const char * sel_code_str, uint32_t* retries_ptr, uint32_t* default_retries_ptr);
-    ewf_result(*sim_generic_access_set)(ewf_adapter* adapter_ptr, uint32_t lenght, const char * command_str);
-    ewf_result(*sim_restricted_access)(ewf_adapter* adapter_ptr, uint32_t command, uint32_t field, uint32_t p1, uint32_t p2, uint32_t p3, const char * data_str, const char * pathid_str);
-    ewf_result(*facility_lock)(ewf_adapter* adapter_ptr, const char * facility_str, const char * password_str,  uint32_t classx);
-    ewf_result(*facility_unlock)(ewf_adapter* adapter_ptr, const char * facility_str, const char * password_str, uint32_t classx);
-    ewf_result(*facility_password_change)(ewf_adapter* adapter_ptr, const char * facility_str, const char * old_password_str, const char * new_password_str);
-
-} ewf_adapter_modem_api_sim_utility;
 
 /**
  * @brief Enter the modem SIM PIN (+cpin)

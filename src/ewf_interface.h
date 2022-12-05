@@ -76,8 +76,19 @@ struct _ewf_interface
     ewf_platform_mutex global_mutex;
 #endif /* EWF_PLATFORM_HAS_THREADING */
 
-    /**< Current Context ID */
-    volatile uint32_t current_context;
+    /**< Internal reception mode: command or URC */
+    volatile bool command_mode;
+
+    /**< URC processing policy: synchronous or asynchronous */
+    volatile bool sync_urc_processing;
+
+    /* *** Pointers to other related structures *** */
+
+    /**< The pointer to the adapter */
+    struct _ewf_adapter* adapter_ptr;
+
+    /**< The pointer to the implementation data */
+    void* implementation_ptr;
 
     /**<
      * The current message being received
@@ -86,24 +97,26 @@ struct _ewf_interface
      */
     ewf_interface_message current_message;
 
-    /**< Internal reception mode: command or URC */
-    volatile bool command_mode;
+    /* *** Pointers to interface callbacks */
 
-    /**< URC processing policy: synchronous or asynchronous */
-    volatile bool sync_urc_processing;
-
-    /**< Pointers to the stored interface response callbacks */
+    /**< Pointer to the response callback */
     ewf_interface_response_callback response_callback;
 
-    /**< Pointers to the stored interface URC callbacks */
+    /**< Pointer to the URC callback */
     ewf_interface_urc_callback urc_callback;
+
+    /**< Pointers to the user URC callbacks */
     ewf_interface_urc_callback user_urc_callback;
+
+    /* *** Allocators *** */
 
     /**< The message allocator, it might be NULL */
     ewf_allocator* message_allocator_ptr;
 
     /**< The data allocator, it might be NULL */
     ewf_allocator* data_allocator_ptr;
+
+    /* *** Queues *** */
 
     /**< The command response queue */
     ewf_platform_queue* response_queue_ptr;
@@ -143,14 +156,6 @@ struct _ewf_interface
 
     /**< A pointer to the hardware receive function */
     ewf_result(*hardware_receive)(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
-
-    /* *** Pointers to other related structures *** */
-
-    /**< The pointer to the adapter */
-    struct _ewf_adapter* adapter_ptr;
-
-    /**< The pointer to the implementation data */
-    void* implementation_ptr;
 };
 
 #define EWF_INTERFACE_STRUCT_MAGIC         (0x017eface) /* ~~ i(n)te(r)face */
@@ -203,14 +208,14 @@ do {                                                                            
  * @{
  ****************************************************************************/
 
- /**
-  * @brief Initialize the interface
-  * This initializes the internal status of the control structure
-  * This doesn't start the hardware interface
-  * Call ewf_interface_start to start the interface before using it
-  * @param[in] interface_ptr A pointer to the interface structure
-  * @return #ewf_result status code
-  */
+/**
+ * @brief Initialize the interface
+ * This initializes the internal status of the control structure
+ * This doesn't start the hardware interface
+ * Call ewf_interface_start to start the interface before using it
+ * @param[in] interface_ptr A pointer to the interface structure
+ * @return #ewf_result status code
+ */
 ewf_result ewf_interface_init(ewf_interface* interface_ptr);
 
 /**
@@ -285,8 +290,8 @@ ewf_result ewf_interface_data_allocator_set(ewf_interface* interface_ptr, ewf_al
  * @param[in] buffer_ptr a pointer to the message buffer to be released
  * @return #ewf_result status code
   */
-ewf_result ewf_interface_release(ewf_interface* interface_ptr, void * buffer_ptr);
-/* TODO: global rename ewf_interface_release -> ewf_interface_release_message */
+ewf_result ewf_interface_release(ewf_interface* interface_ptr, void* buffer_ptr);
+/* TODO: global rename ewf_interface_release -> ewf_interface_release_buffer */
 
 /**
  * @brief Release a data buffer returned by the interface
@@ -295,6 +300,16 @@ ewf_result ewf_interface_release(ewf_interface* interface_ptr, void * buffer_ptr
  * @return #ewf_result status code
   */
 ewf_result ewf_interface_release_data(ewf_interface * interface_ptr, void* buffer_ptr);
+
+/************************************************************************//**
+ * @} *** group_interface_common
+ ****************************************************************************/
+
+/************************************************************************//**
+ * @defgroup group_interface_timeout The Interface timeout API
+ * @brief Functions for setting up and controlling the interface timeout
+ * @{
+ ****************************************************************************/
 
 /**
  * @brief Set the interface default timeout value
@@ -313,14 +328,14 @@ ewf_result ewf_interface_default_timeout_set(ewf_interface * interface_ptr, uint
 ewf_result ewf_interface_default_timeout_get(ewf_interface * interface_ptr, uint32_t* timeout_ptr);
 
 /************************************************************************//**
- * @} *** group_interface_common
+ * @} *** group_interface_timeout
  ****************************************************************************/
 
 /************************************************************************//**
-  * @defgroup group_interface_tokenizer The Interface tokenizer API
-  * @brief Functions for setting up and controlling the interface tokenizer
-  * @{
-  ****************************************************************************/
+ * @defgroup group_interface_tokenizer The Interface tokenizer API
+ * @brief Functions for setting up and controlling the interface tokenizer
+ * @{
+ ****************************************************************************/
 
 /**
  * @brief Set the interface message tokenizer pattern
@@ -457,6 +472,8 @@ ewf_result ewf_interface_poll(ewf_interface* interface_ptr);
 
 ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr);
 
+ewf_result ewf_interface_process_poll(ewf_interface* interface_ptr);
+
 /************************************************************************//**
  * @} *** group_interface_polling
  ****************************************************************************/
@@ -509,7 +526,7 @@ ewf_result ewf_interface_send_command(ewf_interface* interface_ptr, const char *
  * a last parameter equal to NULL
  * @return #ewf_result success and error conditions
  */
-ewf_result ewf_interface_send_commands(ewf_interface* interface_ptr, const char * command_str, ...);
+ewf_result ewf_interface_send_commands(ewf_interface* interface_ptr, const char* command_str, ...);
 
 /**
  * @brief Drop all responses from the interface
@@ -528,25 +545,25 @@ ewf_result ewf_interface_drop_response(ewf_interface* interface_ptr);
  * @param a pointer to a pointer that will hold the response on return
  * @return #ewf_result success and error conditions
  */
-ewf_result ewf_interface_get_response(ewf_interface* interface_ptr, uint8_t ** response_out);
+ewf_result ewf_interface_get_response(ewf_interface* interface_ptr, uint8_t** response_out);
 
 /**
- * @brief Verify an interface response
+ * @brief Verify an interface response, compare against a string
  * @param[in] expected_str a pointer to a NULL terminated string that will be compared
  * agains the interface response. If different, the function will return an error
  * code, if equal, the function will return a success code.
  * @return #ewf_result success and error conditions
  */
-ewf_result ewf_interface_verify_response(ewf_interface* interface_ptr, const char  * expected_str);
+ewf_result ewf_interface_verify_response(ewf_interface* interface_ptr, const char* expected_str);
 
 /**
- * @brief Verify an interface responses
+ * @brief Verify an interface response, compare agains an array of strings
  * @param[in] expected_str_arr is array of NULL terminated strings that will be compared
  * against the interface response. If different, the function will return an error
  * code, if match is found, the function will return a success code.
  * @return #ewf_result success and error conditions
  */
-ewf_result ewf_interface_verify_responses(ewf_interface* interface_ptr, uint32_t response_count, const char ** expected_str_arr);
+ewf_result ewf_interface_verify_responses(ewf_interface* interface_ptr, uint32_t response_count, const char** expected_str_arr);
 
 /**
  * @brief Verify if interface response starts with expected string
@@ -555,7 +572,7 @@ ewf_result ewf_interface_verify_responses(ewf_interface* interface_ptr, uint32_t
  * code, if equal or starts with expected string, the function will return a success code.
  * @return #ewf_result success and error conditions
  */
-ewf_result ewf_interface_verify_response_starts_with(ewf_interface* interface_ptr, const char * expected_start_str);
+ewf_result ewf_interface_verify_response_starts_with(ewf_interface* interface_ptr, const char* expected_start_str);
 
 /**
  * @brief Verify if interface response starts with expected string

@@ -4,8 +4,6 @@ The Embedded Wireless Framework simplifies the development of internet and cloud
 
 You can look at the compiled EWF doxygen documentation at GitHub pages [here](https://azure.github.io/embedded-wireless-framework/html/index.html).
 
-You can look at the compiled EWF doxygen documentation at GitHub pages [here](https://azure.github.io/embedded-wireless-framework/html/index.html)
-
 ## Objectives
 
 - Simplify development of IoT devices connecting to the cloud via various combinations of communication adapters and host processors.
@@ -65,6 +63,7 @@ Cellular modems in the same family are likely to work with small changes:
 - Quectel BG95
 - Quectel BC95
 - Renesas RYZ014
+- Renesas RYZ024A
 - SIMCom SIM7000
 - SIMCom SIM7600
 - SIMCom SIM900

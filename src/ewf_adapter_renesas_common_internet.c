@@ -266,6 +266,12 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_open(ewf_adapter* 
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
+    if (!adapter_ptr->modem_api_data_ptr)
+    {
+        EWF_LOG_ERROR("The adapter must have a valid modem data pointer.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
     char connection_id_str[3] = {0};
     const char* connection_id_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, connection_id_str, sizeof(connection_id_str));
 
@@ -273,7 +279,7 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_open(ewf_adapter* 
     const char* service_type_cstr = ewfl_unsigned_to_str(service_type, service_type_str, sizeof(service_type_str));
 
     char context_id_str[3] = {0};
-    const char* context_id_cstr = ewfl_unsigned_to_str(interface_ptr->current_context, context_id_str, sizeof(context_id_str));
+    const char* context_id_cstr = ewfl_unsigned_to_str(adapter_ptr->modem_api_data_ptr->current_context, context_id_str, sizeof(context_id_str));
 
     char accept_any_remote_str[3] = {0};
     const char* accept_any_remote_cstr = ewfl_unsigned_to_str(accept_any_remote, accept_any_remote_str, sizeof(accept_any_remote_str));

@@ -86,7 +86,7 @@ ewf_result ewf_adapter_renesas_common_urc_callback(ewf_interface* interface_ptr,
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_renesas_common_set_user_urc_callback(ewf_adapter* adapter_ptr, ewf_adapter_urc_user_callback callback)
+ewf_result ewf_adapter_renesas_common_set_user_urc_callback(ewf_adapter* adapter_ptr, ewf_interface_urc_callback callback)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_adapter_renesas_common* adapter_renesas_common_ptr = (ewf_adapter_renesas_common*)adapter_ptr->implementation_ptr;

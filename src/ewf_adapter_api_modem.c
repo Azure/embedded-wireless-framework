@@ -7,9 +7,8 @@
  ****************************************************************************/
 
 #include "ewf_adapter_api_modem.h"
+#include "ewf_adapter.h"
 #include "ewf_lib.h"
-
-#include <stddef.h>
 
 ewf_result ewf_adapter_modem_custom_command_send(ewf_adapter* adapter_ptr, const char* command_str)
 {

@@ -22,12 +22,6 @@ extern "C" {
  * @{
  ****************************************************************************/
 
-/** @brief The interface tokenizer pattern structure declaration */
-struct _ewf_tokenizer_pattern;
-
-/** @brief The interface tokenizer pattern structure type definition */
-typedef struct _ewf_tokenizer_pattern ewf_tokenizer_pattern;
-
 /** @brief The interface tokenizer pattern structure definition */
 struct _ewf_tokenizer_pattern
 {

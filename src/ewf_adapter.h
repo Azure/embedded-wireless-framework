@@ -23,8 +23,8 @@ extern "C" {
 
 /* Include the headers for the different adapter APIs */
 
-#include "ewf_adapter_api_urc.h"
 #include "ewf_adapter_api_control.h"
+#include "ewf_adapter_api_modem.h"
 #include "ewf_adapter_api_wifi_station.h"
 #include "ewf_adapter_api_info.h"
 #include "ewf_adapter_api_tls.h"
@@ -56,35 +56,21 @@ struct _ewf_adapter
 #endif /* EWF_PARAMETER_CHECKING */
 
     ewf_adapter_api_control* control_api_ptr;
-
-    union { /* Only adapter specific control APIs */
-        struct {
-            ewf_adapter_wifi_station_api* wifi_station_api_ptr;
-        };
-    };
-
+    ewf_adapter_api_modem_data* modem_api_data_ptr;
+    ewf_adapter_api_wifi_station* wifi_station_api_ptr;
     ewf_adapter_api_info* info_api_ptr;
-
-    union { /* Only one TLS API per adapter */
-        ewf_adapter_api_tls_basic* tls_basic_api_ptr;
-        ewf_adapter_api_tls* tls_api_ptr;
-    };
-
+    ewf_adapter_api_tls_basic* tls_basic_api_ptr;
+    ewf_adapter_api_tls* tls_api_ptr;
     ewf_adapter_api_dtls* dtls_api_ptr;
-
     ewf_adapter_api_tcp* tcp_api_ptr;
-
     ewf_adapter_api_udp* udp_api_ptr;
-
-    union { /* Only one MQTT API per adapter */
-        ewf_adapter_api_mqtt_basic* mqtt_basic_api_ptr;
-        ewf_adapter_api_mqtt* mqtt_api_ptr;
-    };
+    ewf_adapter_api_mqtt_basic* mqtt_basic_api_ptr;
+    ewf_adapter_api_mqtt* mqtt_api_ptr;
 
     /**<
      * a pointer to an interface, NULL if there is no associated interface
      */
-    struct _ewf_interface * interface_ptr;
+    ewf_interface* interface_ptr;
 
     /**<
      * A pointer to the adapter implementation data.

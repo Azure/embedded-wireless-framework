@@ -27,10 +27,10 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                         (8)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                          (1500)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -41,26 +41,44 @@ extern "C" {
  */
 
 /** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN                                          ("0000")
+#define EWF_CONFIG_SIM_PIN                                               ("0000")
 
 /** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                                       (1)
+#define EWF_CONFIG_CONTEXT_ID                                            (1)
 
 /** @} *** group_example_configuration_modem */
 
 /**
- * @defgroup group_example_configuration_iot_hub IoT Hub configuration
- * @brief IoT Hub configuration settings used in examples
+ * @defgroup group_example_configuration_certs Certificate Provisioning configuration
+ * @brief Certificate Provisioning configuration used in examples
  * @{
- */
+*/
 
-/** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME                                 ""
+/** @brief Trusted Certificate Authority certificate file name to be stored on the modem */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_ROOT_CA_CERTIFICATE_FILE_NAME    ("root_ca_cert.pem")
 
-/** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
+/** @brief User Certificate Authority certificate file name to be stored on the modem */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_USER_CA_CERTIFICATE_FILE_NAME    ("ca_cert.pem")
 
-/** @} *** group_example_configuration_iot_hub */
+/** @brief Client certificate file name to be stored on the modem */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_CLIENT_CERTIFICATE_FILE_NAME     ("device_cert.pem")
+
+/** @brief Client private key filename  */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_CLIENT_PRIVATE_KEY_FILE_NAME     ("device_key.pem")
+
+/** @brief Trusted Certificate Authority certificate buffer name */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_ROOT_CA_CERTIFICATE_BUFFER_NAME  (root_ca_cert_pem)
+
+/** @brief User Certificate Authority certificate  buffer name */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_USER_CA_CERTIFICATE_BUFFER_NAME  (ca_cert_pem)
+
+/** @brief Client certificate buffer name */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_CLIENT_CERTIFICATE_BUFFER_NAME   (device_cert_pem)
+
+/** @brief Client private key buffer name  */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_CLIENT_PRIVATE_KEY_BUFFER_NAME   (device_key_pem)
+
+/** @} *** group_example_configuration_certs */
 
 /************************************************************************//**
  * @}

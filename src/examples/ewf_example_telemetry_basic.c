@@ -63,12 +63,14 @@ ewf_result ewf_mqtt_receive_message_user_callback(ewf_adapter* adapter_ptr, cons
 
 /**
  * @brief The MQTT message user callback example
- * @description This user callback will provide MQTT topic and payload information if
+ * @details
+ * This user callback will provide MQTT topic and payload information if
  * provided by the adapter modem, else the information will be NULL. If the payload
  * in the callback is NULL,the application must use the ewf_adapter_mqtt_basic_message_get()
  * to get the payload associated with the Topic received. For eg. Topic and Payload
  * information is available for Quectel modems, while only Topic information is
  * available for Renesas/Sequans adapter modem.
+ *
  */
 ewf_result ewf_mqtt_receive_message_user_callback(ewf_adapter* adapter_ptr, const char* topic_cstr, const char* payload_cstr)
 {

@@ -1,6 +1,7 @@
 ca_cert.srl
-device_ec.csr
-validation_ec.csr
+device_.csr
+validation_.csr
 *.key
 *.pem
 *.h
+*.csr

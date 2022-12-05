@@ -12,7 +12,7 @@
 #ifndef __ewf_adapter_modem_packet_domain__h__included__
 #define __ewf_adapter_modem_packet_domain__h__included__
 
-#include "ewf_adapter.h"
+#include "ewf.h"
 #include "ewf_adapter_api_modem_types.h"
 
 #ifdef __cplusplus
@@ -27,26 +27,6 @@ extern "C" {
  * @{
  *
  ****************************************************************************/
-
-typedef struct _ewf_adapter_modem_api_packet_domain
-{
-    ewf_result(*eps_network_registration_urc_set)(ewf_adapter* adapter_ptr, const char* n_str);
-    ewf_result(*eps_network_registration_read)(ewf_adapter* adapter_ptr, ewf_adapter_modem_network_status * epsregistrationstatus_ptr, ewf_adapter_modem_act * act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr, uint32_t rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
-    ewf_result(*gprs_network_registration_urc_set)(ewf_adapter* adapter_ptr, const char* n_str);
-    ewf_result(*gprs_network_registration_read)(ewf_adapter* adapter_ptr, ewf_adapter_modem_network_status * status_ptr, ewf_adapter_modem_act* act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr,  uint32_t * rac_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
-    ewf_result(*init_pdp_activate)(ewf_adapter* adapter_ptr, uint32_t n, bool attachPDN);
-    ewf_result(*init_pdp_activation_config_read)(ewf_adapter* adapter_ptr, uint32_t * n_ptr, bool * attachpdn_ptr);
-    ewf_result(*pdp_apn_set)(ewf_adapter* adapter_ptr, uint32_t context_id, const char * pdptype_ptr, const char* apn_ptr);
-    ewf_result(*pdp_apn_read)(ewf_adapter* adapter_ptr, uint32_t context_id, char* pdptype_ptr, char* apn_ptr, uint8_t apn_len);
-    ewf_result(*pdp_context_authentication_set)(ewf_adapter* adapter_ptr, uint32_t context_id, const char * userid_str, const char * password_str);
-    ewf_result(*pdp_data_mode_enter)(ewf_adapter* adapter_ptr, const char * l2p_str, uint32_t context_id);
-    ewf_result(*packet_service_activate)(ewf_adapter* adapter_ptr, const char * contextid);
-    ewf_result(*packet_service_deactivate)(ewf_adapter* adapter_ptr, const char * contextid);
-    ewf_result(*network_attach)(ewf_adapter* adapter_ptr);
-    ewf_result(*network_dettach)(ewf_adapter* adapter_ptr);
-    ewf_result(*network_attach_status_read)(ewf_adapter* adapter_ptr, bool *state_ptr);
-
-} ewf_adapter_modem_api_packet_domain;
 
 /**
  * @brief EPS Network Registration (+cereg)

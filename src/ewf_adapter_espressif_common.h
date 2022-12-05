@@ -164,7 +164,7 @@ ewf_result ewf_adapter_espressif_common_urc_callback(ewf_interface* interface_pt
  * @{
  */
 
-extern ewf_adapter_wifi_station_api ewf_adapter_espressif_common_api_wifi_station;
+extern ewf_adapter_api_wifi_station ewf_adapter_espressif_common_api_wifi_station;
 
 ewf_result ewf_adapter_espressif_common_wifi_station_connect(ewf_adapter* adapter_ptr, const char* ssid_str, const char* password_str);
 ewf_result ewf_adapter_espressif_common_wifi_station_disconnect(ewf_adapter* adapter_ptr);

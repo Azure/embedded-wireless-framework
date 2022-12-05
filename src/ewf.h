@@ -98,11 +98,11 @@ typedef enum _ewf_result
 
     EWF_RESULT_ADAPTER_NETWORK_NOT_REGISTERED   = -601, /**< The adapter not registered to network */
 
-	/* EWF Apdater MQTT Result codes */
+    /* EWF Apdater MQTT Result codes */
     EWF_RESULT_ADAPTER_MQTT_CONNECTION_FAILED   = -701, /**< The adapter failed to establish MQTT connection */
     EWF_RESULT_ADAPTER_MQTT_DISCONNECTED        = -702, /**< The MQTT link was disconnected */
-	EWF_RESULT_ADAPTER_MQTT_PUBLISH_FAILED      = -703, /**< The adapter failed to publish MQTT message */
-	EWF_RESULT_ADAPTER_MQTT_SUBSCRIBE_FAILED    = -704, /**< The adapter failed to subscribe MQTT topic */
+    EWF_RESULT_ADAPTER_MQTT_PUBLISH_FAILED      = -703, /**< The adapter failed to publish MQTT message */
+    EWF_RESULT_ADAPTER_MQTT_SUBSCRIBE_FAILED    = -704, /**< The adapter failed to subscribe MQTT topic */
     EWF_RESULT_ADAPTER_MQTT_MESSAGE_GET_FAILED  = -705, /**< The adapter failed to get MQTT message */
 
 } ewf_result;
@@ -115,14 +115,14 @@ typedef enum _ewf_result
  * @{
  */
 
- /**
-  * @brief Returns true if the passed code is an error, false if not.
-  */
+/**
+ * @brief Returns true if the passed code is an error, false if not.
+ */
 #define ewf_result_failed(code) (EWF_RESULT_OK > (code))
 
-  /**
-   * @brief Returns true if the code passed indicates success, false if it is an error.
-   */
+/**
+ * @brief Returns true if the code passed indicates success, false if it is an error.
+ */
 #define ewf_result_succeeded(code) ((code) >= EWF_RESULT_OK)
 
 /** @} // group_ewf_result_macros */
@@ -192,6 +192,18 @@ struct _ewf_allocator;
 
 /** @breif The allocator type definition */
 typedef struct _ewf_allocator ewf_allocator;
+
+/** @brief The interface message structure declaration */
+struct _ewf_message;
+
+/** @brief The interface message structure type definition */
+typedef struct _ewf_message ewf_message;
+
+/** @brief The interface tokenizer pattern structure declaration */
+struct _ewf_tokenizer_pattern;
+
+/** @brief The interface tokenizer pattern structure type definition */
+typedef struct _ewf_tokenizer_pattern ewf_tokenizer_pattern;
 
 /** @} // group_ewf_types */
 

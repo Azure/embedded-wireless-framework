@@ -70,7 +70,7 @@ ewf_result ewf_adapter_renesas_common_tls_basic_init(ewf_adapter* adapter_ptr)
     /* Secure profile configuration */
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSPCFG=",
             EWF_CONFIG_ADAPTER_RENESAS_COMMON_SECURITY_PROFILE_ID, ",2,\"\",1,",
-			EWF_CONFIG_ADAPTER_RENESAS_COMMON_ROOT_CA_CERTIFICATE_ID, ",",
+			EWF_CONFIG_ADAPTER_RENESAS_COMMON_CA_CERTIFICATE_ID, ",",
 			EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_CERTIFICATE_ID, ",",
 			EWF_CONFIG_ADAPTER_RENESAS_COMMON_CLIENT_PRIVATE_KEY_ID, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_str))) return result;

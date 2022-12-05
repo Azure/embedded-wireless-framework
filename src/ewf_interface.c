@@ -51,9 +51,6 @@ ewf_result ewf_interface_init(ewf_interface* interface_ptr)
     /* Not in command mode initially */
     interface_ptr->command_mode = false;
 
-    /* No context active initially */
-    interface_ptr->current_context = 0;
-
 #ifdef EWF_LOG_VERBOSE
     EWF_LOG("[COMMAND MODE: FALSE]\n");
 #endif
@@ -878,7 +875,21 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
 
 ewf_result ewf_interface_poll(ewf_interface* interface_ptr)
 {
-    return ewf_interface_receive_poll(interface_ptr);
+    ewf_result result = EWF_RESULT_OK;
+
+    result = ewf_interface_receive_poll(interface_ptr);
+    if (ewf_result_failed(result))
+    {
+        return result;
+
+    }
+    result = ewf_interface_process_poll(interface_ptr);
+    if (ewf_result_failed(result))
+    {
+        return result;
+    }
+
+    return result;
 }
 
 ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr)
@@ -908,9 +919,19 @@ ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr)
         if (ewf_result_failed(result))
         {
             EWF_LOG_ERROR("Failed to process a byte, byte [%02d], ewf_result %d.\n", buffer[0], result);
+            break;
         }
     }
     while(ewf_result_succeeded(result));
+
+    return result;
+}
+
+ewf_result ewf_interface_process_poll(ewf_interface* interface_ptr)
+{
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    ewf_result result = EWF_RESULT_OK;
 
     return result;
 }

@@ -351,10 +351,10 @@
       <itemPath>../src/main.c</itemPath>
       <itemPath>../src/ewf.config.h</itemPath>
       <itemPath>../src/ewf_example.config.h</itemPath>
-      <itemPath>../src/baltimore_ca_cert.pem.h</itemPath>
+      <itemPath>../src/root_ca_cert.pem.h</itemPath>
       <itemPath>../src/ca_cert.pem.h</itemPath>
-      <itemPath>../src/device_ec_cert.pem.h</itemPath>
-      <itemPath>../src/device_ec_key.pem.h</itemPath>
+      <itemPath>../src/device_cert.pem.h</itemPath>
+      <itemPath>../src/device_key.pem.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

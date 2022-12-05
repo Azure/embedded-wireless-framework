@@ -82,17 +82,17 @@ ewf_result ewf_adapter_quectel_common_tls_basic_init(ewf_adapter* adapter_ptr)
     ewf_result result;
 
     /* SSL CA certificate */
-    static const char* const ca_cert = "baltimore_ca_cert.pem";
+    static const char* const ca_cert = EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CA_CERTIFICATE_FILE_NAME;
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QSSLCFG=\"cacert\",2,\"", ca_cert, "\"\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
     /* SSL client certificate */
-    static const char* const device_cert = "device_ec_cert.pem";
+    static const char* const device_cert = EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_FILE_NAME;
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QSSLCFG=\"clientcert\",2,\"", device_cert, "\"\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 
     /* SSL client key */
-    static const char* const device_key = "device_ec_key.pem";
+    static const char* const device_key = EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_FILE_NAME;
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QSSLCFG=\"clientkey\",2,\"", device_key, "\"\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 

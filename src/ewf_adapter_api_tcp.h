@@ -61,15 +61,15 @@ do {                                                                            
     }                                                                               \
 } while(0)
 
+#define EWF_ADAPTER_TCP_SOCKET_CONTROL_SET_CONTEXT_ID              ("!SetContextId")
 #define EWF_ADAPTER_TCP_SOCKET_CONTROL_SET_CONNECTION_TIMEOUT      ("!SetConnectionTimeout")
-
-#define EWF_ADAPTER_TCP_SOCKET_QUERY_IS_CONNECTED                  ("?IsConnected")
-#define EWF_ADAPTER_TCP_SOCKET_QUERY_IS_BOUND                      ("?IsBound")
-#define EWF_ADAPTER_TCP_SOCKET_QUERY_USES_TLS                      ("?UsesTLS")
-#define EWF_ADAPTER_TCP_SOCKET_QUERY_PEER_ADDRESSS                 ("?PeerAddress")
-#define EWF_ADAPTER_TCP_SOCKET_QUERY_LOCAL_ADDRESSS                ("?LocalAddress")
-#define EWF_ADAPTER_TCP_SOCKET_QUERY_SENT_BYTES                    ("?SentBytes")
-#define EWF_ADAPTER_TCP_SOCKET_QUERY_RECEIVED_BYTES                ("?ReceivedBytes")
+#define EWF_ADAPTER_TCP_SOCKET_CONTROL_IS_CONNECTED                ("!IsConnected")
+#define EWF_ADAPTER_TCP_SOCKET_CONTROL_IS_BOUND                    ("!IsBound")
+#define EWF_ADAPTER_TCP_SOCKET_CONTROL_USES_TLS                    ("!UsesTLS")
+#define EWF_ADAPTER_TCP_SOCKET_CONTROL_PEER_ADDRESSS               ("!PeerAddress")
+#define EWF_ADAPTER_TCP_SOCKET_CONTROL_LOCAL_ADDRESSS              ("!LocalAddress")
+#define EWF_ADAPTER_TCP_SOCKET_CONTROL_SENT_BYTES                  ("!SentBytes")
+#define EWF_ADAPTER_TCP_SOCKET_CONTROL_RECEIVED_BYTES              ("!ReceivedBytes")
 
 /** @brief The TCP API structure */
 typedef struct _ewf_adapter_api_tcp

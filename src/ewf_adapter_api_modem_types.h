@@ -12,9 +12,18 @@
 #ifndef __ewf_adapter_modem_types__h__included__
 #define __ewf_adapter_modem_types__h__included__
 
+#include "ewf.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/************************************************************************//**
+ * @defgroup group_adapter_modem_types Modem adapter types
+ * @ingroup group_adapter_modem
+ * @brief The EWF modem API types
+ * @{
+ ****************************************************************************/
 
 typedef struct _ewf_adapter_modem_time
 {
@@ -99,17 +108,17 @@ typedef enum _ewf_adapter_modem_operator_sel_register_mode
 
 typedef enum _ewf_afapter_modem_operator_name_format
 {
-    EWF_OPERATOR_NAME_FORMAT_LONG = 0,    /**< Long format alphanumeric */
-    EWF_OPERATOR_NAME_FORMAT_SHORT,       /**< Short format alphanumeric */
-    EWF_OPERATOR_NAME_FORMAT_NUMERIC,     /**< Numeric operator name */
+    EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_LONG = 0,    /**< Long format alphanumeric */
+    EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_SHORT,       /**< Short format alphanumeric */
+    EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_NUMERIC,     /**< Numeric operator name */
 
 } ewf_afapter_modem_operator_name_format;
 
 /** @brief Packet data protocol(PDP) type */
 #define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_IP               "IP"
-#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_IPV6  			"IPV6"
-#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_IPV4V6			"IPV4V6"
-#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_PPP			    "PPP"
+#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_IPV6             "IPV6"
+#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_IPV4V6           "IPV4V6"
+#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_PPP              "PPP"
 
 typedef enum _ewf_adapter_modem_pdpauthtype
 {
@@ -118,6 +127,10 @@ typedef enum _ewf_adapter_modem_pdpauthtype
     EWF_ADAPTER_MODEM_PDP_AUTH_CHAP        /**< Challenge Handshake Authentication Protocol (CHAP) */
 
 } ewf_adapter_modem_pdpauthtype;
+
+/************************************************************************//**
+ * @} *** group_adapter_modem_types
+ ****************************************************************************/
 
 #ifdef __cplusplus
 }

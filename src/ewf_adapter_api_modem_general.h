@@ -12,7 +12,8 @@
 #ifndef __ewf_adapter_modem_general__h__included__
 #define __ewf_adapter_modem_general__h__included__
 
-#include "ewf_adapter.h"
+#include "ewf.h"
+#include "ewf_adapter_api_modem_types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,20 +25,6 @@ extern "C" {
  * @brief The general modem functions
  * @{
  ****************************************************************************/
-
-typedef struct _ewf_adapter_modem_api_general
-{
-    ewf_result(*manufacturer_read)(ewf_adapter* adapter_ptr, char * info_str, uint16_t * info_str_len_ptr);
-    ewf_result(*model_read)(ewf_adapter* adapter_ptr, char * info_str, uint16_t * info_str_len_ptr);
-    ewf_result(*revision_read)(ewf_adapter* adapter_ptr, char * info_str, uint16_t * info_str_len_ptr);
-    ewf_result(*serial_number_read)(ewf_adapter* adapter_ptr,  const char * snt_str, char * info_str, uint16_t * info_str_len_ptr);
-    ewf_result(*imsi_read)(ewf_adapter* adapter_ptr, char * info_str, uint32_t * info_str_len_ptr);
-    ewf_result(*message_character_set)(ewf_adapter* adapter_ptr, const char * chset_str);
-    ewf_result(*message_character_read)(ewf_adapter* adapter_ptr, char * chset_str, uint32_t * chset_len_ptr);
-    ewf_result(*multiplexing_mode_set)(ewf_adapter* adapter_ptr, bool transparency, uint8_t subset, uint8_t port_speed, uint32_t n1, uint8_t t1, uint8_t n2, uint8_t t2, uint8_t t3, uint8_t k);
-    ewf_result(*multiplexing_mode_read)(ewf_adapter* adapter_ptr, bool * transparency_ptr, uint8_t *subset_ptr, uint8_t *port_speed_ptr, uint32_t* n1_ptr, uint8_t *t1_ptr, uint8_t *n2_ptr, uint8_t *t2_ptr, uint8_t *t3_ptr, uint8_t *k_ptr);
-
-} ewf_adapter_modem_api_general;
 
 /**
  * @brief Read manufacturer info (+cgmi)

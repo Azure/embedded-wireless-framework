@@ -233,9 +233,9 @@ ewf_result ewf_example_azure_iot_provisioning(ewf_adapter* adapter_ptr) {
                     }
                     else
                     {
-                        EWF_LOG("Registration failed with dPS response: operation status %d.\r\n", register_response.operation_status);
-                        EWF_LOG("Operation ID: %d\r\n", register_response.operation_id);
-                        EWF_LOG("Registration error track id: %d\r\n", register_response.registration_state.error_tracking_id);
+                        EWF_LOG("Registration failed with DPS response: operation status %d.\r\n", register_response.operation_status);
+                        EWF_LOG("Operation ID: %s\r\n", register_response.operation_id._internal.ptr);
+                        EWF_LOG("Registration error track id: %s\r\n", register_response.registration_state.error_tracking_id._internal.ptr);
                         EWF_LOG("Retrying Registration.\r\n");
                     }
 

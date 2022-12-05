@@ -14,8 +14,8 @@ IF %ERRORLEVEL% NEQ 0 (
     EXIT /B 1
 ) 
 
-openssl ecparam -out validation_ec_key.pem -name prime256v1 -genkey
-openssl req -new -key validation_ec_key.pem -out validation_ec.csr -subj "/CN=%1%"
-openssl x509 -req -in validation_ec.csr -CA ca_cert.pem -CAkey ca_key.pem -CAcreateserial -out validation_ec_cert.pem -extensions client_auth -days 30 -sha256
+openssl ecparam -out validationkey.pem -name prime256v1 -genkey
+openssl req -new -key validationkey.pem -out validation_.csr -subj "/CN=%1%"
+openssl x509 -req -in validation_.csr -CA ca_cert.pem -CAkey ca_key.pem -CAcreateserial -out validationcert.pem -extensions client_auth -days 30 -sha256
 
-ECHO Upload the validation certificate validation_ec_cert.pem to the IoT Hub
+ECHO Upload the validation certificate validationcert.pem to the IoT Hub

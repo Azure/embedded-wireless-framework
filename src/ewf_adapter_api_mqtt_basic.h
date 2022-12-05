@@ -39,12 +39,14 @@ typedef ewf_result(*ewf_adapter_mqtt_basic_state_callback)(ewf_adapter* adapter_
  * @param[in] topic_cstr a pointer to the topic string
  * @param[in] payload_cstr a pointer to the payload string
  * @return #ewf_result success and error conditions
- * @description This user callback will provide MQTT topic and payload information if
+ * @details
+ * This user callback will provide MQTT topic and payload information if
  * provided by the adapter modem, else the information will be NULL. If the payload
  * in the callback is NULL,the application must use the ewf_adapter_mqtt_basic_message_get()
- * to get the payload associated with the Topic received. For eg. Topic and Payload
- * information is available for Quectel modems, while only Topic information is
- * available for Renesas/Sequans adapter modem.
+ * to get the payload associated with the Topic received.
+ * @par
+ * For example Topic and Payload information is available for Quectel modems,
+ * while only Topic information is available for Renesas/Sequans adapter modem.
  */
 typedef ewf_result(*ewf_adapter_mqtt_basic_message_callback)(ewf_adapter* adapter_ptr, const char* topic_cstr, const char* payload_cstr);
 

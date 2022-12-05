@@ -47,7 +47,7 @@ extern void ewf_ra_bsp_delay(uint32_t delay_ms);
 #define EWF_PLATFORM_BUSY_WAIT(t)                      ewf_ra_bsp_delay(t)
 
 /* Override the EWF_LOG definition to change formating for the logs on Renesas RA */
-extern char ewf_log_buffer[1024];
+extern char ewf_log_buffer[1500];
 unsigned SEGGER_RTT_WriteString(unsigned BufferIndex, const char* s);
 #define EWF_LOG(...)                                                          \
 		do {                                                                  \

@@ -22,17 +22,12 @@ extern "C" {
  * @{
  ****************************************************************************/
 
-/** @brief The interface message structure declaration */
-struct _ewf_message;
-
-/** @brief The interface message structure type definition */
-typedef struct _ewf_message ewf_message;
-
 /** @brief The interface message structure definition */
 struct _ewf_message
 {
     uint8_t* buffer_ptr;
     uint32_t buffer_length;
+    ewf_allocator* allocator_ptr;
 };
 
 /************************************************************************//**

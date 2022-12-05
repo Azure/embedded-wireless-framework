@@ -35,7 +35,7 @@ ewf_result ewf_adapter_renesas_common_info(ewf_adapter* adapter_ptr)
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    ewf_result result;
+    ewf_result result = EWF_RESULT_OK;
 
     EWF_LOG("[ADAPTER INFORMATION START]\n");
 
@@ -139,18 +139,24 @@ ewf_result ewf_adapter_renesas_common_get_ipv4_address(ewf_adapter* adapter_ptr,
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    ewf_result result;
-    uint8_t* response;
-    uint32_t length;
+    ewf_result result = EWF_RESULT_OK;
+    uint8_t* response = NULL;
+    uint32_t length = 0;
 
     if (!address_ptr)
     {
-        EWF_LOG_ERROR("The address_ptr parameter cannot be NULL.");
+        EWF_LOG_ERROR("The address_ptr parameter cannot be NULL.\n");
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    char context_id_str[3];
-    const char* context_id_cstr = ewfl_unsigned_to_str(interface_ptr->current_context, context_id_str, sizeof(context_id_str));
+    if (!adapter_ptr->modem_api_data_ptr)
+    {
+        EWF_LOG_ERROR("The adapter must have a valid modem data pointer.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    char context_id_str[3] = {0};
+    const char* context_id_cstr = ewfl_unsigned_to_str(adapter_ptr->modem_api_data_ptr->current_context, context_id_str, sizeof(context_id_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGPADDR=", context_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 3 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
@@ -221,9 +227,9 @@ ewf_result ewf_adapter_renesas_common_get_ipv4_dns(ewf_adapter* adapter_ptr, uin
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    ewf_result result;
-    uint8_t* response;
-    uint32_t length;
+    ewf_result result = EWF_RESULT_OK;
+    uint8_t* response = NULL;
+    uint32_t length = 0;
 
     if (!dns)
     {
@@ -231,8 +237,14 @@ ewf_result ewf_adapter_renesas_common_get_ipv4_dns(ewf_adapter* adapter_ptr, uin
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    char context_id_str[3];
-    const char* context_id_cstr = ewfl_unsigned_to_str(interface_ptr->current_context, context_id_str, sizeof(context_id_str));
+    if (!adapter_ptr->modem_api_data_ptr)
+    {
+        EWF_LOG_ERROR("The adapter must have a valid modem data pointer.\n");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    char context_id_str[3] = {0};
+    const char* context_id_cstr = ewfl_unsigned_to_str(adapter_ptr->modem_api_data_ptr->current_context, context_id_str, sizeof(context_id_str));
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGCONTRDP=", context_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response, &length, 1 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
@@ -241,7 +253,7 @@ ewf_result ewf_adapter_renesas_common_get_ipv4_dns(ewf_adapter* adapter_ptr, uin
     {
         int context_id;
         int bearer_id;
-        char apn[64];
+        char apn[64] = {0};
 
         int dns1_a;
         int dns1_b;

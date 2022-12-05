@@ -83,6 +83,32 @@ extern "C" {
 
 /** @} */
 
+/**
+ * @defgroup group_example_configuration_tls Renesas RYZ014A security profile
+ * @brief Renesas RYZ014A security profile configuration used in the example
+ *
+ * Use the same certificate ID's and Key ID that were provisioned before.
+ * @{
+ */
+
+/** @brief Security Profile Id , range 0-6 */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_SECURITY_PROFILE_ID       ("5")
+
+/**
+ * @brief CA certificate index that will be used in the security/TLS profile configuration
+ * This number will either be EWF_CONFIG_ADAPTER_RENESAS_RYZ014_ROOT_CA_CERTIFICATE_ID or
+ * EWF_CONFIG_ADAPTER_RENESAS_RYZ014_USER_CA_CERTIFICATE_ID used when certificate provisioning.
+ */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CA_CERTIFICATE_ID         ("11")
+
+/** @brief Client certificate ID, range 0-19 */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_CERTIFICATE_ID     ("13")
+
+/** @brief Client private key ID, range 0-19  */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_PRIVATE_KEY_ID     ("13")
+
+/** @} *** group_example_configuration_tls */
+
 /************************************************************************//**
  * @}
  ****************************************************************************/

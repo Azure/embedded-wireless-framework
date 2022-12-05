@@ -58,10 +58,12 @@ extern "C" {
 #define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               ""
 #define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      (4000)
 #define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             (0)
+#define EWF_ADAPTER_TEST_TCP_RECV_SLEEP_SECS                        (1)
 
 #define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               ""
 #define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
 #define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             (0)
+#define EWF_ADAPTER_TEST_UDP_RECV_SLEEP_SECS                        (1)
 
 /** @} *** group_example_configuration_test_echo */
 

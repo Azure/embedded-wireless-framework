@@ -12,7 +12,7 @@
 #ifndef __ewf_adapter_modem_network_service__h__included__
 #define __ewf_adapter_modem_network_service__h__included__
 
-#include "ewf_adapter.h"
+#include "ewf.h"
 #include "ewf_adapter_api_modem_types.h"
 
 #ifdef __cplusplus
@@ -25,31 +25,6 @@ extern "C" {
  * @brief The modem network servicefunctions
  * @{
  ****************************************************************************/
-
-typedef struct _ewf_adapter_modem_api_network_service_command
-{
-	ewf_result(*subscriber_number_read)(ewf_adapter* adapter_ptr, char * alphax_str, uint32_t *  alphax_buffer_len_ptr, char * numberx_str, uint32_t *  numberx_len_ptr, uint32_t * typex_ptr, uint8_t * service_ptr);
-	ewf_result(*network_registration_set)(ewf_adapter* adapter_ptr, const char * n_str);
-	ewf_result(*network_registration_read)(ewf_adapter* adapter_ptr, ewf_adapter_modem_cmd_query_network_reg reg_cmd, uint32_t * n_ptr, ewf_adapter_modem_network_status * cmnRegistrationStatus_ptr, ewf_adapter_modem_act * act_ptr, uint32_t * tac_ptr, uint32_t * ci_ptr, uint8_t * cause_type_ptr, uint8_t * reject_cause_ptr);
-	ewf_result(*network_registration_check)(ewf_adapter* adapter_ptr, ewf_adapter_modem_cmd_query_network_reg reg_cmd, uint32_t timeout);
-	ewf_result(*operator_select)(ewf_adapter* adapter_ptr, ewf_adapter_modem_operator_sel_register_mode registration_mode, ewf_afapter_modem_operator_name_format operator_name_format, const char * operator_name_str, ewf_adapter_modem_act act);
-	ewf_result(*operator_select_read)(ewf_adapter* adapter_ptr, ewf_adapter_modem_operator_sel_register_mode * registration_mode_ptr, ewf_afapter_modem_operator_name_format * operator_name_format_ptr, char * operator_name_str, uint32_t * operator_name_len_ptr,  ewf_adapter_modem_act *act_ptr);
-	ewf_result(*operator_list_edit)(ewf_adapter* adapter_ptr, uint32_t index, ewf_afapter_modem_operator_name_format format, const char *operator_name_str, uint8_t gsm, uint8_t gsm_compact, uint8_t utran, uint8_t etran, uint8_t ngran);
-	ewf_result(*operator_list_read)(ewf_adapter* adapter_ptr, uint32_t * index_ptr, ewf_afapter_modem_operator_name_format * format_ptr, char *operator_name_str, uint32_t * operator_name_len_ptr, uint8_t *gsm_ptr, uint8_t *gsm_compact_ptr, uint8_t *utran_ptr, uint8_t *etran_ptr, uint8_t *ngran_ptr);
-	ewf_result(*operator_list_select)(ewf_adapter* adapter_ptr, uint8_t list);
-	ewf_result(*operator_option_list_read)(ewf_adapter* adapter_ptr, uint8_t * list_ptr);
-	ewf_result(*dynamic_parameters_read)(ewf_adapter* adapter_ptr, ewf_adapter_modem_edrx_act* act_type_ptr, uint8_t * requested_edrx_ptr, uint8_t * nw_provided_edrx_ptr, uint8_t * paging_time_window_ptr);
-	ewf_result(*dynamic_parameters_set)(ewf_adapter* adapter_ptr, uint8_t mode, ewf_adapter_modem_edrx_act act_type, uint8_t requested_edrx, uint8_t nw_provided_edrx, uint8_t paging_time_window);
-	ewf_result(*power_saving_mode_set)(ewf_adapter* adapter_ptr, uint32_t mode, const char * periodic_rau_str, const char * gprs_ready_timer_str, const char * periodic_tau_str, const char * active_time_str);
-	ewf_result(*power_saving_mode_read)(ewf_adapter* adapter_ptr, uint32_t * mode, char * periodic_rau_str, uint8_t * periodic_rau_len_ptr, char * gprs_Ready_timer_str, uint8_t * gprs_ready_timer_len_ptr, char * periodic_tau_str, uint8_t * periodic_tau_len_ptr, char * active_time_str, uint8_t * active_time_len_ptr);
-	ewf_result(*signal_strength_read)(ewf_adapter* adapter_ptr, int32_t * rssi_ptr, int32_t *ber_ptr);
-	ewf_result(*signal_strength_extended_read)(ewf_adapter* adapter_ptr, int32_t * rxlev_ptr, int32_t * ber_ptr, int32_t * rscp_ptr, int32_t * ecno_ptr, int32_t * rsrq_ptr, int32_t * rsrp_ptr);
-	ewf_result(*timezone_reporting_set)(ewf_adapter* adapter_ptr, uint32_t reporting);
-	ewf_result(*timezone_reporting_read)(ewf_adapter* adapter_ptr, uint32_t * reporting_ptr);
-	ewf_result(*timezone_autoupdate_set)(ewf_adapter* adapter_ptr, uint32_t option);
-	ewf_result(*timezone_autoupdate_read)(ewf_adapter* adapter_ptr, uint32_t * option_ptr);
-
-} ewf_adapter_modem_api_network_service_command;
 
 /**
  * @brief Read subscriber number (+cnum)
