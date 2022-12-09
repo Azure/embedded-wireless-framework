@@ -15,7 +15,7 @@
 #include <stddef.h>
 #include <ctype.h>
 
-ewf_adapter_wifi_station_api ewf_adapter_espressif_common_api_wifi_station =
+ewf_adapter_api_wifi_station ewf_adapter_espressif_common_api_wifi_station =
 {
     ewf_adapter_espressif_common_wifi_station_connect,
     ewf_adapter_espressif_common_wifi_station_disconnect,

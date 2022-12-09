@@ -53,7 +53,7 @@ void R_BSP_WarmStart (bsp_warm_start_event_t event)
     }
 }
 
-char ewf_log_buffer[256];
+char ewf_log_buffer[1024];
 
 void initialise_monitor_handles();
 void tx_application_define_user(void *first_unused_memory);

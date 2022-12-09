@@ -89,7 +89,7 @@ typedef enum _ewf_adapter_common_internet_socket_service_type
 typedef struct _ewf_adapter_espressif_common_internet_socket
 {
     uint32_t id;
-    uint32_t port;
+    uint32_t local_port;
     volatile ewf_adapter_espressif_common_internet_socket_service_type type;
     volatile bool used;
     volatile bool open;
@@ -97,8 +97,7 @@ typedef struct _ewf_adapter_espressif_common_internet_socket
     volatile bool conn;
     volatile bool conn_error;
     volatile bool recv;
-    uint32_t recv_size;
-    uint8_t recv_buffer[EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE];
+    ewf_platform_queue* recv_queue_ptr;
 
 } ewf_adapter_espressif_common_internet_socket;
 
@@ -165,7 +164,7 @@ ewf_result ewf_adapter_espressif_common_urc_callback(ewf_interface* interface_pt
  * @{
  */
 
-extern ewf_adapter_wifi_station_api ewf_adapter_espressif_common_api_wifi_station;
+extern ewf_adapter_api_wifi_station ewf_adapter_espressif_common_api_wifi_station;
 
 ewf_result ewf_adapter_espressif_common_wifi_station_connect(ewf_adapter* adapter_ptr, const char* ssid_str, const char* password_str);
 ewf_result ewf_adapter_espressif_common_wifi_station_disconnect(ewf_adapter* adapter_ptr);

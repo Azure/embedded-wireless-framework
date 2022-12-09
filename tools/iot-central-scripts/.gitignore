@@ -1,0 +1,14 @@
+*.json
+temp*.txt
+*.pem
+*.pem.h
+*.cfg
+*.csr
+*.srl
+ca_cert.srl
+device_.csr
+validation_.csr
+*.key
+*.pem
+*.h
+*.csr

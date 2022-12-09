@@ -46,6 +46,59 @@ static char telemetry_topic_buffer[EWF_CONFIG_TELEMETRY_TOPIC_LENGTH];
 /* The IoT Hub client */
 static az_iot_hub_client hub_client;
 
+/* The MQTT message user sturcture*/
+typedef struct _ewf_mqtt_receive_message {
+    char ewf_mqtt_recv_topic[256];
+    uint32_t ewf_mqtt_recv_topic_length;
+    char ewf_mqtt_recv_message_buffer[1024];
+    uint32_t ewf_mqtt_recv_message_length;
+} ewf_mqtt_receive_message;
+
+static ewf_mqtt_receive_message ewf_mqtt_recv_message = { 0 };
+
+/* Message receive flag */
+uint8_t ewf_mqtt_rx_flag = 0;
+
+ewf_result ewf_mqtt_receive_message_user_callback(ewf_adapter* adapter_ptr, const char* topic_cstr, const char* payload_cstr);
+
+/**
+ * @brief The MQTT message user callback example
+ * @details
+ * This user callback will provide MQTT topic and payload information if
+ * provided by the adapter modem, else the information will be NULL. If the payload
+ * in the callback is NULL,the application must use the ewf_adapter_mqtt_basic_message_get()
+ * to get the payload associated with the Topic received. For eg. Topic and Payload
+ * information is available for Quectel modems, while only Topic information is
+ * available for Renesas/Sequans adapter modem.
+ *
+ */
+ewf_result ewf_mqtt_receive_message_user_callback(ewf_adapter* adapter_ptr, const char* topic_cstr, const char* payload_cstr)
+{
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    ewf_mqtt_rx_flag++;
+
+    ewf_mqtt_recv_message.ewf_mqtt_recv_topic_length = ewfl_str_length(topic_cstr);
+    ewfl_str_n_cpy(ewf_mqtt_recv_message.ewf_mqtt_recv_topic, topic_cstr, ewf_mqtt_recv_message.ewf_mqtt_recv_topic_length);
+
+    /* Not all modems will receive payload in the MQTT message URC.
+     Some message will have to query the modem using the topic information to get the payload */
+    if (payload_cstr)
+    {
+        ewf_mqtt_recv_message.ewf_mqtt_recv_message_length = ewfl_str_length(payload_cstr);
+        ewfl_str_n_cpy(ewf_mqtt_recv_message.ewf_mqtt_recv_message_buffer, payload_cstr, ewf_mqtt_recv_message.ewf_mqtt_recv_message_length);
+        EWF_LOG("[MQTT-Basic][Message callback:][TOPIC:][%s][Payload:][%s]\r\n", topic_cstr, payload_cstr);
+        return EWF_RESULT_OK;
+    }
+    EWF_LOG("[MQTT-Basic][Message callback:][TOPIC:][%s]\r\n", topic_cstr);
+    return EWF_RESULT_OK;
+
+
+}
+
 /**
  * @brief The telemetry basic example
  */
@@ -111,9 +164,9 @@ ewf_result ewf_example_telemetry_basic(ewf_adapter* adapter_ptr)
         return ewf_status;
     }
 
-    EWF_LOG("[INFO] Connected!\n");
+    EWF_LOG("[INFO][CONNECTED!]\n");
 
-    EWF_LOG("[INFO] Listening for cloud to device messages...\n");
+    EWF_LOG("[INFO][Listening for cloud to device messages...]\n");
 
     /* Subscribe to the C2D topic */
     ewf_status = ewf_adapter_mqtt_basic_subscribe(adapter_ptr, AZ_IOT_HUB_CLIENT_C2D_SUBSCRIBE_TOPIC);
@@ -140,7 +193,15 @@ ewf_result ewf_example_telemetry_basic(ewf_adapter* adapter_ptr)
     	EWF_LOG("[INFO] Running for %d minutes...\n\n", EWF_CONFIG_TELEMETRY_LOOP_MINUTES);
     }
 
+    /* Configure callback for MQTT message reception */
+    ewf_status = ewf_adapter_mqtt_basic_message_callback_set(adapter_ptr, ewf_mqtt_receive_message_user_callback);
+    if (ewf_result_failed(ewf_status)) {
+        EWF_LOG("Failed to set MQTT callback: ewf_status %d.", ewf_status);
+        return ewf_status;
+    }
+
     int mqtt_count = 0;
+    unsigned char message_buffer[512] = { 0 };
 
     int minutes_counter;
     int seconds_counter;
@@ -172,6 +233,24 @@ ewf_result ewf_example_telemetry_basic(ewf_adapter* adapter_ptr)
                 if (ewf_result_failed(ewf_status))
                 {
                     EWF_LOG_ERROR("Failed to publish telemetry: ewf_status %d.\n", ewf_status);
+                }
+            }
+            if (ewf_mqtt_rx_flag)
+            {
+                ewf_mqtt_rx_flag--;
+                ewf_status = ewf_adapter_mqtt_basic_message_get(adapter_ptr, ewf_mqtt_recv_message.ewf_mqtt_recv_topic, (char*)message_buffer);
+                if (ewf_status == EWF_RESULT_NOT_SUPPORTED)
+                {
+                    continue;
+                }
+                else if (ewf_result_failed(ewf_status))
+                {
+                    EWF_LOG_ERROR("Failed to get MQTT message from the modem: ewf_status %d.\n", ewf_status);
+                }
+                else if(ewf_result_succeeded(ewf_status))
+                {
+                    EWF_LOG("[MQTT RECIEVE][TOPIC: %s]\r\n", ewf_mqtt_recv_message.ewf_mqtt_recv_topic);
+                    EWF_LOG("[MQTT RECIEVE][Payload: %s]\r\n", message_buffer);
                 }
             }
 

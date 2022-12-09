@@ -25,7 +25,7 @@
 #include "ewf_example.config.h"
 
 
-/* Azure SD-NET test thread entry function */
+/* Embedded Wireless Framework (EWF) test thread entry function */
 void ewf_test_thread_entry(void)
 {
     ewf_result result;
@@ -54,7 +54,7 @@ void ewf_test_thread_entry(void)
     }
 
     // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
     {
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
@@ -63,7 +63,7 @@ void ewf_test_thread_entry(void)
 
     /* Wait for the modem to be registered to network
      * Refer system integration guide for more info */
-    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, (uint32_t)-1));
+    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
     ewf_platform_sleep(200);
 
     /* Disable network Registration URC */

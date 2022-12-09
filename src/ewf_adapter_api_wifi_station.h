@@ -25,12 +25,12 @@ extern "C" {
  * @{
  ****************************************************************************/
 
-typedef struct _ewf_adapter_wif_station_api
+typedef struct _ewf_adapter_api_wif_station
 {
     ewf_result(*connect)(ewf_adapter* adapter_ptr, const char* ssid_str, const char* password_str);
     ewf_result(*disconnect)(ewf_adapter* adapter_ptr);
 
-} ewf_adapter_wifi_station_api;
+} ewf_adapter_api_wifi_station;
 
 /**
  * @brief Connect the WiFi adapter to a wireless network

@@ -351,10 +351,10 @@
       <itemPath>../src/main.c</itemPath>
       <itemPath>../src/ewf.config.h</itemPath>
       <itemPath>../src/ewf_example.config.h</itemPath>
-      <itemPath>../src/baltimore_ca_cert.pem.h</itemPath>
+      <itemPath>../src/root_ca_cert.pem.h</itemPath>
       <itemPath>../src/ca_cert.pem.h</itemPath>
-      <itemPath>../src/device_ec_cert.pem.h</itemPath>
-      <itemPath>../src/device_ec_key.pem.h</itemPath>
+      <itemPath>../src/device_cert.pem.h</itemPath>
+      <itemPath>../src/device_key.pem.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -3928,6 +3928,8 @@
         <property key="periphComp5.gte" value="gt"/>
         <property key="periphComp6.gte" value="gt"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="E:/examples/PIC32CM_LS60/ewf_certs_basic_bm_bg96/NonSecure/firmware/ewf_certs_basic_bm_bg96_NonSecure.X/debug/default/ewf_certs_basic_bm_bg96_NonSecure_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"

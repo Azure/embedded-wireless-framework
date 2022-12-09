@@ -7,19 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_api_modem.h"
-
-ewf_adapter_modem_api_sim_utility ewf_adapter_modem_api_sim_utility_implementation =
-{
-	ewf_adapter_modem_sim_pin_enter, /* sim_pin_enter */
-	NULL, /* sim_pin_read */
-	NULL, /* sim_new_pin_enter */
-	NULL, /* sim_pin_retries_read */
-	NULL, /* sim_generic_access_set */
-	NULL, /* sim_restricted_access */
-	NULL, /* facility_lock */
-	NULL, /* facility_unlock */
-	NULL, /* facility_password_change */
-};
+#include "ewf_adapter.h"
 
 ewf_result ewf_adapter_modem_sim_pin_enter(ewf_adapter* adapter_ptr, const char* param)
 {

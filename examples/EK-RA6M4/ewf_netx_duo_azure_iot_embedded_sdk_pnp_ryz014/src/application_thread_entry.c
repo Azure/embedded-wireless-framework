@@ -164,7 +164,7 @@ void application_thread_entry(void)
 
     /* Wait for the modem to be registered to network
      * Refer system integration guide for more info */
-    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, (uint32_t)-1));
+    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr,  EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
     ewf_platform_sleep(200);
 
     /* Disable network Registration URC */

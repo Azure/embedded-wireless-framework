@@ -66,7 +66,7 @@ TODO`s: Configure core settings of application for your IoTHub.
 #else /* !ENABLE_DPS_SAMPLE */
 /* Required when DPS is used.  */
 #ifndef ENDPOINT
-#define ENDPOINT                                    ""
+#define ENDPOINT                                    "bhnaphad-dps.azure-devices-provisioning.net"
 #endif /* ENDPOINT */
 
 #ifndef ID_SCOPE
@@ -74,20 +74,14 @@ TODO`s: Configure core settings of application for your IoTHub.
 #endif /* ID_SCOPE */
 
 #ifndef REGISTRATION_ID
-#define REGISTRATION_ID                             ""
+#define REGISTRATION_ID                             "bhnaphad-dev-dps"
 #endif /* REGISTRATION_ID */
 
 #endif /* ENABLE_DPS_SAMPLE */
 
 /* Optional SYMMETRIC KEY.  */
-#ifndef ENABLE_DPS_SAMPLE
 #ifndef DEVICE_SYMMETRIC_KEY
 #define DEVICE_SYMMETRIC_KEY                        ""
-#endif
-#else
-#ifndef DEVICE_SYMMETRIC_KEY
-#define DEVICE_SYMMETRIC_KEY                        ""
-#endif /* DEVICE_SYMMETRIC_KEY */
 #endif
 
 /* Optional module ID.  */

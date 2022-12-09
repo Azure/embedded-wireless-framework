@@ -56,7 +56,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void mikroe_bg96_power_on()
+void mikroe_bg96_power_toggle()
 {
     GPIO_PB04_OutputEnable();
     GPIO_PB04_Clear();
@@ -72,7 +72,7 @@ int main(void) {
     
     SYSTICK_TimerStart();
 
-    //mikroe_bg96_power_on();
+ //   mikroe_bg96_power_toggle();
      
     ewf_result result;
 
@@ -80,7 +80,10 @@ int main(void) {
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(message_allocator_ptr, message_allocator, 4, 1024);
+    EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(message_allocator_ptr, 
+            message_allocator, 
+            EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, 
+            EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_MICROCHIP_PIC_UART_STATIC_DECLARE(interface_ptr, pic_uart);
     EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 

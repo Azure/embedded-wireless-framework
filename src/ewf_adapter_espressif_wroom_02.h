@@ -97,7 +97,6 @@ ewf_result ewf_adapter_espressif_wroom_02_urc_callback(ewf_interface* interface_
  * @{
  */
 
-
 #define ewf_adapter_espressif_wroom_02_info                          ewf_adapter_espressif_common_info
 #define ewf_adapter_espressif_wroom_02_get_ipv4_address              ewf_adapter_espressif_common_get_ipv4_address
 #define ewf_adapter_espressif_wroom_02_get_ipv4_netmask              ewf_adapter_espressif_common_get_ipv4_netmask

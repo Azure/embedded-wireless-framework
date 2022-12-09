@@ -84,3 +84,10 @@ ewf_result ewf_adapter_mqtt_basic_publish(ewf_adapter* adapter_ptr, const char* 
     EWF_ADAPTER_VALIDATE_MQTT_BASIC_API_FUNCTION_POINTER(adapter_ptr, publish);
     return adapter_ptr->mqtt_basic_api_ptr->publish(adapter_ptr, topic_cstr, message_cstr);
 }
+
+ewf_result ewf_adapter_mqtt_basic_message_get(ewf_adapter* adapter_ptr, const char* topic_cstr, char* message_buffer_ptr)
+{
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    EWF_ADAPTER_VALIDATE_MQTT_BASIC_API_FUNCTION_POINTER(adapter_ptr, message_get);
+    return adapter_ptr->mqtt_basic_api_ptr->message_get(adapter_ptr, topic_cstr, message_buffer_ptr);
+}

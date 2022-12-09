@@ -86,7 +86,6 @@
             <slot name="P705" secure="false"/>
             <slot name="P708" secure="false"/>
             <slot name="P709" secure="false"/>
-            <slot name="P710" secure="false"/>
             <slot name="P712" secure="false"/>
             <slot name="P713" secure="false"/>
         </peripheral>

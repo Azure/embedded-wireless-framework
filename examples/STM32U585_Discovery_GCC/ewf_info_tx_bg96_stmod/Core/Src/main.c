@@ -133,7 +133,7 @@ void ewf_adapter_quectel_bg96_stmod_power_on()
 
     /* Wait for the modem to reach ready state  */
     printf("Waiting for BG96 modem to be ready after power ON\n");
-    tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 5);
+    tx_thread_sleep(TX_TIMER_TICKS_PER_SECOND * 10);
     printf("Modem Ready!\n");
 
     /* set DTR to 1 */

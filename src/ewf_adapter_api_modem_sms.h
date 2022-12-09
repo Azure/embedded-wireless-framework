@@ -12,7 +12,8 @@
 #ifndef __ewf_adapter_modem_sms__h__included__
 #define __ewf_adapter_modem_sms__h__included__
 
-#include "ewf_adapter.h"
+#include "ewf.h"
+#include "ewf_adapter_api_modem_types.h"
 
 #ifdef EWF_SMS_SUPPORT_ENABLED
 
@@ -21,41 +22,11 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- *
  * @defgroup group_adapter_modem_sms Modem adapter SMS API
  * @ingroup group_adapter_modem
  * @brief The Short Message Service (SMS) functions
  * @{
- *
  ****************************************************************************/
-
-typedef struct _ewf_adapter_modem_api_sms
-{
-    ewf_result(*message_format_set)(ewf_adapter* adapter_ptr, bool mode);
-    ewf_result(*message_format_read)(ewf_adapter* adapter_ptr, bool * mode_ptr);
-    ewf_result(*message_send)(ewf_adapter* adapter_ptr, const char * phone_num_str, const char * message_str);
-    ewf_result(*message_more_send_config_set)(ewf_adapter* adapter_ptr, uint8_t n);
-    ewf_result(*message_more_send_config_read)(ewf_adapter* adapter_ptr, uint8_t * n);
-    ewf_result(*message_read)(ewf_adapter* adapter_ptr, uint32_t index, char * message_str, uint32_t * message_str_len);
-    ewf_result(*message_delete)(ewf_adapter* adapter_ptr, uint32_t index);
-    ewf_result(*message_list)(ewf_adapter* adapter_ptr, uint8_t stat);
-    ewf_result(*message_service_select)(ewf_adapter* adapter_ptr, uint8_t service);
-    ewf_result(*message_service_read)(ewf_adapter* adapter_ptr, uint8_t * service, bool * mt_ptr, bool * mo_ptr, bool* bm_ptr);
-    ewf_result(*message_service_center_address_set)(ewf_adapter* adapter_ptr, const char * sca_str, uint32_t tosca);
-    ewf_result(*message_service_center_address_read)(ewf_adapter* adapter_ptr, char * sca_str, uint32_t * tosca_ptr);
-    ewf_result(*message_show_header_values_mode_set)(ewf_adapter* adapter_ptr, bool show);
-    ewf_result(*message_show_header_values_mode_read)(ewf_adapter* adapter_ptr, bool * show_ptr);
-    ewf_result(*message_profile_save)(ewf_adapter* adapter_ptr, uint8_t profile);
-    ewf_result(*message_profile_restore)(ewf_adapter* adapter_ptr, uint8_t profile);
-    ewf_result(*message_preffered_storage_set)(ewf_adapter* adapter_ptr, const char * mem1_str, const char * mem2_str, const char *mem3_str);
-    ewf_result(*message_preffered_storage_read)(ewf_adapter* adapter_ptr, uint32_t * used1_ptr, uint32_t * total1_ptr, uint32_t * used2_ptr, uint32_t * total2_ptr, uint32_t * used3_ptr, uint32_t* total3_ptr);
-    ewf_result(*message_to_memory_write)(ewf_adapter* adapter_ptr, const char * address_str, uint32_t address_type, uint32_t stat, uint32_t * index_ptr);
-    ewf_result(*message_send)(ewf_adapter* adapter_ptr, uint32_t index, const char * address_str, uint32_t address_len, uint32_t address_type);
-    ewf_result(*message_recieve_indications_set)(ewf_adapter* adapter_ptr, uint32_t mode, uint32_t mt, uint32_t bm, uint32_t ds, uint32_t bfr);
-    ewf_result(*message_recieve_indications_read)(ewf_adapter* adapter_ptr, uint32_t * mode_ptr, uint32_t * mt_ptr, uint32_t * bm_ptr, uint32_t * ds_ptr, uint32_t * bfr_ptr);
-    ewf_result(*message_new_acknowlegdement)(ewf_adapter* adapter_ptr, uint32_t n);
-
-} ewf_adapter_modem_api_sms;
 
 /**
  * @brief Set the input/output message format (PDU mode or text mode) (+cmgf)
