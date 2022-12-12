@@ -653,7 +653,7 @@ static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface*
         {
             bool stop = false;
             if (pattern_ptr->match_function(
-                (const char*)interface_ptr->current_message.buffer_ptr,
+                interface_ptr->current_message.buffer_ptr,
                 interface_ptr->current_message.buffer_length,
                 pattern_ptr,
                 &stop))

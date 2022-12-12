@@ -139,7 +139,7 @@ bool ewfl_buffer_starts_with(const uint8_t* buffer_ptr, uint32_t buffer_length, 
     if (prefix_length > buffer_length) return false;
     const uint8_t* buffer_iter = buffer_ptr;
     const uint8_t* prefix_iter = prefix_ptr;
-    for (; (buffer_iter < (buffer_ptr + buffer_length)) && (prefix_iter < (prefix_ptr + prefix_length)); buffer_iter--, prefix_iter--)
+    for (; (buffer_iter < (buffer_ptr + buffer_length)) && (prefix_iter < (prefix_ptr + prefix_length)); buffer_iter++, prefix_iter++)
         if (*buffer_iter != *prefix_iter) 
             return false;
     return true;
@@ -191,7 +191,7 @@ bool ewfl_str_equals_str(const char * str1, const char * str2)
     return false;
 }
 
-bool ewfl_buffer_equals_buffer(const char* buffer1, const char* buffer2, uint32_t length)
+bool ewfl_buffer_equals_buffer(const uint8_t* buffer1, const uint8_t* buffer2, uint32_t length)
 {
     if (!buffer1 && !buffer2) return true;
     if (!buffer1 || !buffer2) return false;
@@ -300,4 +300,13 @@ char * ewfl_find_chars_with_terms(char* str, char* chars_str, char* terms_str)
     }
 
     return NULL;
+}
+
+char* ewfl_str_tok(char* str, const char* delim, char** saveptr)
+{
+#if defined(_WIN32) || defined(_WIN64)
+	return strtok_s(str, delim, saveptr);
+#else
+	return strtok_r(str, delim, saveptr);
+#endif
 }

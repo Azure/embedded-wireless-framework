@@ -79,10 +79,10 @@ extern "C" {
  */
 
 /** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME                                 ""
+#define EWF_CONFIG_IOT_HUB_HOSTNAME                                     "azurertos-test.azure-devices.net"
 
 /** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
+#define EWF_CONFIG_IOT_HUB_DEVICEID                                     "bhnaphad-test-cert"
 
 /** @} *** group_example_configuration_iot_hub */
 

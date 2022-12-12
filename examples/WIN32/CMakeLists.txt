@@ -178,9 +178,9 @@ add_subdirectory(sample_ewf_azure_iot_pnp_provisioning_tx_bg96)
 
 # NetX Duo
 add_subdirectory(sample_ewf_netx_duo_test_bg96)
-#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_bg96)
-#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_bg96)
-#add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_bg96)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_bg96)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_bg96)
+add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_bg96)
 
 # WIN32
 add_subdirectory(sample_ewf_info_win32_bg96)
@@ -249,8 +249,12 @@ add_subdirectory(sample_ewf_info_tx_sim868)
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_exs82_w)
 add_subdirectory(sample_ewf_test_tx_exs82_w)
-#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_exs82_w)
-#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_exs82_w)
+
+# NetX Duo
+add_subdirectory(sample_ewf_netx_duo_test_exs82_w)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_exs82_w)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_exs82_w)
+add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_exs82_w)
 
 #######################################
 # ESP8266
@@ -259,8 +263,12 @@ add_subdirectory(sample_ewf_test_tx_exs82_w)
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_esp8266)
 add_subdirectory(sample_ewf_test_tx_esp8266)
+
+# NetX Duo
+add_subdirectory(sample_ewf_netx_duo_test_esp8266)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_esp8266)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_esp8266)
+add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_esp8266)
 
 #######################################
 # ESP8285
@@ -277,18 +285,26 @@ add_subdirectory(sample_ewf_test_tx_esp8285)
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_esp_wroom_02)
 add_subdirectory(sample_ewf_test_tx_esp_wroom_02)
+
+# NetX Duo
+add_subdirectory(sample_ewf_netx_duo_test_esp_wroom_02)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_esp_wroom_02)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_esp_wroom_02)
+add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_esp_wroom_02)
 
 #######################################
 # MX-CHIP EMW3080
 #######################################
 
 # ThreadX
-#add_subdirectory(sample_ewf_info_tx_mxchip_emw3080)
-#add_subdirectory(sample_ewf_test_tx_mxchip_emw3080)
-#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_emw3080)
-#add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_emw3080)
+add_subdirectory(sample_ewf_info_tx_emw3080b)
+add_subdirectory(sample_ewf_test_tx_emw3080b)
+
+# NetX Duo
+add_subdirectory(sample_ewf_netx_duo_test_emw3080b)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_emw3080b)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_emw3080b)
+add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_emw3080b)
 
 #######################################
 # Seeed LoRa-E5

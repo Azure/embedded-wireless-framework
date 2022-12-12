@@ -231,7 +231,7 @@ ewf_result ewf_adapter_espressif_common_udp_set_dtls_configuration(ewf_socket_ud
 ewf_result ewf_adapter_espressif_common_udp_bind(ewf_socket_udp* socket_ptr, uint32_t port);
 ewf_result ewf_adapter_espressif_common_udp_shutdown(ewf_socket_udp* socket_ptr);
 ewf_result ewf_adapter_espressif_common_udp_send_to(ewf_socket_udp* socket_ptr, const char* remote_address_str, uint32_t remote_port, const uint8_t* buffer_ptr, uint32_t buffer_length);
-ewf_result ewf_adapter_espressif_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
+ewf_result ewf_adapter_espressif_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
 
 #endif /* EWF_ADAPTER_ESPRESSIF_COMMON_UDP_ENABLED */
 

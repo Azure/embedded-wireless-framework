@@ -164,7 +164,7 @@ bool ewfl_str_equals_str(const char * str1, const char * str2);
  * @param[in] length the length to compare.
  * @return true if both strings are equal, false if they are different.
  */
-bool ewfl_buffer_equals_buffer(const char* buffer1, const char* buffer2, uint32_t length);
+bool ewfl_buffer_equals_buffer(const uint8_t* buffer1, const uint8_t* buffer2, uint32_t length);
 
 /**
  * @brief Searches for a string in a substring
@@ -225,6 +225,13 @@ char* ewfl_adapter_response_str_extract(char* str);
  * @return a pointer to the match, NULL otherwise
  */
 char* ewfl_find_chars_with_terms(char* str, char* chars_str, char* term_str);
+
+/**
+ * @brief Wrapper function with functionality equivalent to strtok_s / strtok_r
+ *
+ * @return a pointer to the match, NULL otherwise
+ */
+char* ewfl_str_tok(char* str, const char* delim, char** saveptr);
 
 /************************************************************************//**
  * @} *** group_lib_string

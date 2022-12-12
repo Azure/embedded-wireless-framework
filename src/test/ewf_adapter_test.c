@@ -153,6 +153,8 @@ ewf_result ewf_adapter_test_api_tcp_echo(ewf_adapter* adapter_ptr)
             memcmp(EWF_ADAPTER_TEST_TCP_MESSAGE_STR, receive_buffer, sizeof(EWF_ADAPTER_TEST_TCP_MESSAGE_STR)))
         {
             EWF_LOG_ERROR("Echo reply is different!");
+            EWF_LOG_ERROR("Message sent:     [%s]\n", EWF_ADAPTER_TEST_TCP_MESSAGE_STR);
+            EWF_LOG_ERROR("Message received: [%s]\n", receive_buffer);
             return EWF_RESULT_UNEXPECTED_RESPONSE;
         }
 #endif
@@ -169,6 +171,8 @@ ewf_result ewf_adapter_test_api_tcp_echo(ewf_adapter* adapter_ptr)
             memcmp(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR, receive_buffer, sizeof(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR)))
         {
             EWF_LOG_ERROR("Echo reply is different!");
+            EWF_LOG_ERROR("Message sent:     [%s]\n", EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR);
+            EWF_LOG_ERROR("Message received: [%s]\n", receive_buffer);
             return EWF_RESULT_UNEXPECTED_RESPONSE;
         }
 #endif
@@ -265,12 +269,16 @@ ewf_result ewf_adapter_test_api_udp_echo(ewf_adapter* adapter_ptr)
             receive_buffer, &receive_buffer_length,
             true))) return result;
 
+#if EWF_ADAPTER_TEST_UDP_SMALL_MESSAGE_COMPARE
         if (sizeof(EWF_ADAPTER_TEST_UDP_MESSAGE_STR) != receive_buffer_length ||
             memcmp(EWF_ADAPTER_TEST_UDP_MESSAGE_STR, receive_buffer, sizeof(EWF_ADAPTER_TEST_UDP_MESSAGE_STR)))
         {
             EWF_LOG_ERROR("Echo reply is different!");
+            EWF_LOG_ERROR("Message sent:     [%s]\n", EWF_ADAPTER_TEST_UDP_MESSAGE_STR);
+            EWF_LOG_ERROR("Message received: [%s]\n", receive_buffer);
             return EWF_RESULT_UNEXPECTED_RESPONSE;
         }
+#endif
 
         ewf_platform_sleep(EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS);
 
@@ -286,12 +294,16 @@ ewf_result ewf_adapter_test_api_udp_echo(ewf_adapter* adapter_ptr)
             receive_buffer, &receive_buffer_length,
             true))) return result;
         
+#if EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_COMPARE
         if (sizeof(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR) != receive_buffer_length ||
             memcmp(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR, receive_buffer, sizeof(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR)))
         {
             EWF_LOG_ERROR("Echo reply is different!");
+            EWF_LOG_ERROR("Message sent:     [%s]\n", EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR);
+            EWF_LOG_ERROR("Message received: [%s]\n", receive_buffer);
             return EWF_RESULT_UNEXPECTED_RESPONSE;
         }
+#endif
 
         ewf_platform_sleep(EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS);
     }

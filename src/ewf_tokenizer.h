@@ -38,7 +38,7 @@ struct _ewf_tokenizer_pattern
     bool has_wildcards;
 
     /**< custom function for matching */
-    bool(*match_function)(const char* buffer, uint32_t buffer_length, const ewf_tokenizer_pattern* pattern_ptr, bool* stop_ptr);
+    bool(*match_function)(const uint8_t* buffer, uint32_t buffer_length, const ewf_tokenizer_pattern* pattern_ptr, bool* stop_ptr);
 
     /**< pointer to custom data, that can be used by the match function */
     void* data_ptr;

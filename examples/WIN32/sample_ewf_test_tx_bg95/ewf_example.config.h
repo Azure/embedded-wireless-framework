@@ -42,7 +42,7 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM23")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM44")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
 #define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (CBR_115200)
@@ -79,15 +79,15 @@ extern "C" {
  */
 
 #define EWF_ADAPTER_TEST_TCP_HTTP_TEST_ENABLED                      0
-#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               ""
+#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-tcp.westus.azurecontainer.io"
 #define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      4000
 #define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             0
-#define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS                        0
+#define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS                       0
 
-#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               ""
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-udp.westus.azurecontainer.io"
 #define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
 #define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             0
-#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS                        0
+#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS                       0
 
 /** @} *** group_example_configuration_test_echo */
 
