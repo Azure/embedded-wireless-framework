@@ -70,7 +70,7 @@ ewf_result ewf_adapter_udp_send_to(ewf_socket_udp* socket_ptr, const char* remot
     return adapter_ptr->udp_api_ptr->send_to(socket_ptr, remote_address_str, remote_port, buffer_ptr, buffer_length);
 }
 
-ewf_result ewf_adapter_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address_str, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
+ewf_result ewf_adapter_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address_str, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
 {
     EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;

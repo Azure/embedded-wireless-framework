@@ -29,7 +29,7 @@ extern "C" {
 #ifndef EWF_PLATFORM_BUSY_WAIT
 /**
  * @brief The default platform busy wait macro.
- * @description
+ * @details
  * This default implementation is not time accurate and very wasteful (power hungry, bus hungry).
  * Override it with an implementation valid for your system, ideally sleeping the CPU for the requested number of ticks.
  *

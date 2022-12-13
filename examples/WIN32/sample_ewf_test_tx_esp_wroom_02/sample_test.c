@@ -58,7 +58,7 @@ void tx_application_define(void *first_unused_memory)
  */
 void thread_entry(ULONG param)
 {
-    ewf_result result;
+    ewf_result result = EWF_RESULT_OK;
 
     ewf_allocator* message_allocator_ptr = NULL;
     ewf_interface* interface_ptr = NULL;

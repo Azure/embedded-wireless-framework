@@ -28,10 +28,10 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (12)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (512)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -71,6 +71,22 @@ extern "C" {
 #define EWF_CONFIG_CONTEXT_ID                                       (1)
 
 /** @} *** group_example_configuration_modem */
+
+/**
+* @defgroup group_example_configuration_test_echo Echo test configuration
+* @brief Echo test configuration settings used in examples
+* @{
+*/
+
+#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-tcp.westus.azurecontainer.io"
+#define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      (4000)
+#define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             (0)
+
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-udp.westus.azurecontainer.io"
+#define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
+#define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             (0)
+
+/** @} *** group_example_configuration_test_echo */
 
 /************************************************************************//**
  * @}

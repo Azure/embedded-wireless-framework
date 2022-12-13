@@ -10,9 +10,7 @@
 #ifndef __ewf_adapter_modem__h__included__
 #define __ewf_adapter_modem__h__included__
 
-#include "ewf_adapter.h"
-#include "ewf_interface.h"
-#include "ewf_lib.h"
+#include "ewf.h"
 
 #include "ewf_adapter_api_modem_types.h"
 #include "ewf_adapter_api_modem_general.h"
@@ -32,30 +30,12 @@ extern "C" {
  * @{
  ****************************************************************************/
 
-typedef struct _ewf_adapter_modem_api
+typedef struct _ewf_adapter_api_modem_data
 {
-    ewf_adapter_modem_api_general* general_modem_api_ptr;
-    ewf_adapter_modem_api_network_service_command* network_service_command_modem_api_ptr;
-    ewf_adapter_modem_api_packet_domain* packet_domain_modem_api_ptr;
-    ewf_adapter_modem_api_sim_utility* sim_utility_modem_api_ptr;
+    /**< Current Context ID */
+    volatile uint32_t current_context;
 
-#if EWF_SMS_SUPPORT_ENABLED
-    ewf_adapter_modem_api_sms* modem_api_sms;
-#endif /* EWF_SMS_SUPPORT_ENABLED */
-
-    ewf_result(*custom_command_send)(ewf_adapter* adapter_ptr, const char* command_str);
-    ewf_result(*custom_command_receive)(ewf_adapter* adapter_ptr, char** buffer_ptr_ptr, uint32_t * buffer_lenght_ptr);
-    ewf_result(*functionality_set)(ewf_adapter* adapter_ptr, const char* fun);
-    ewf_result(*functionality_read)(ewf_adapter* adapter_ptr, uint8_t * fun);
-    ewf_result(*clock_set)(ewf_adapter* adapter_ptr, ewf_time * time_info_ptr);
-    ewf_result(*clock_read)(ewf_adapter* adapter_ptr, ewf_time * time_info_ptr);
-    ewf_result(*alarm_set)(ewf_adapter* adapter_ptr,  ewf_time * alarm_info_ptr, uint8_t n, uint32_t type, const char * text_str,  uint32_t text_len, const char * recurr_str, uint32_t recurr_len, bool silent);
-    ewf_result(*alarm_delete)(ewf_adapter* adapter_ptr, uint32_t index);
-    ewf_result(*commands_list_read)(ewf_adapter* adapter_ptr, const char ** buffer_ptr_ptr, uint32_t * response_length_ptr);
-    ewf_result(*extended_err_report_read)(ewf_adapter* adapter_ptr, uint16_t * report);
-    ewf_result(*indicator_status_read)(ewf_adapter* adapter_ptr, char * indicator_ptr, uint32_t * indicator_len);
-
-} ewf_adapter_modem_api;
+} ewf_adapter_api_modem_data;
 
 /************************************************************************//**
  * @defgroup group_adapter_modem_common Modem adapter common API
@@ -77,10 +57,10 @@ ewf_result ewf_adapter_modem_custom_command_send(ewf_adapter* adapter_ptr, const
  * @brief Function to read command that is not implmented in the framework
  * @param[in] adapter_ptr A pointer to the adapter structure
  * @param[in] buffer_ptr_ptr A pointer to a string destination holding the output of read command
- * @param[in] buffer_lenght_ptr Lenght of the data in output buffer
+ * @param[in] buffer_length_ptr Lenght of the data in output buffer
  * @return #ewf_result status code
  */
-ewf_result ewf_adapter_modem_custom_command_receive(ewf_adapter* adapter_ptr, char** buffer_ptr_ptr, uint32_t * buffer_lenght_ptr);
+ewf_result ewf_adapter_modem_custom_command_receive(ewf_adapter* adapter_ptr, char** buffer_ptr_ptr, uint32_t * buffer_length_ptr);
 
 #define EWF_ADAPTER_MODEM_FUNCTIONALITY_MINIMUM             ("0") /**< Minimum modem functionality */
 #define EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL                ("1") /**< Full modem functionality */
@@ -105,20 +85,12 @@ ewf_result ewf_adapter_modem_functionality_set(ewf_adapter* adapter_ptr, const c
 ewf_result ewf_adapter_modem_functionality_read(ewf_adapter* adapter_ptr, uint8_t * fun);
 
 /**
- * @brief Check if modem is registered to network
- * @param[in] adapter_ptr A pointer to the adapter structure
- * @param[in] timeout a integer indicating timeout in seconds
- * @return #ewf_result status code
- */
-ewf_result ewf_adapter_modem_network_registration_check(ewf_adapter* adapter_ptr, uint32_t timeout);
-
-/**
  * @brief Set the clock (+cclk)
  * @param[in] adapter_ptr A pointer to the adapter structure
  * @param[out]  time_info_ptr pointer to structure holding clock time values.
  * @return #ewf_result status code
  */
-ewf_result ewf_adapter_modem_clock_set(ewf_adapter* adapter_ptr, ewf_time * time_info_ptr);
+ewf_result ewf_adapter_modem_clock_set(ewf_adapter* adapter_ptr, ewf_adapter_modem_time * time_info_ptr);
 
 /**
  * @brief Read the clock (+cclk)
@@ -126,7 +98,7 @@ ewf_result ewf_adapter_modem_clock_set(ewf_adapter* adapter_ptr, ewf_time * time
  * @param[out]  time_info_ptr pointer to structure holding clock time values.
  * @return #ewf_result status code
  */
-ewf_result ewf_adapter_modem_clock_read(ewf_adapter* adapter_ptr, ewf_time * time_info_ptr);
+ewf_result ewf_adapter_modem_clock_read(ewf_adapter* adapter_ptr, ewf_adapter_modem_time * time_info_ptr);
 
 /**
  * @brief Set the alarm (+cala)
@@ -143,7 +115,7 @@ ewf_result ewf_adapter_modem_clock_read(ewf_adapter* adapter_ptr, ewf_time * tim
  * @param[in] silent Integer to indicate if alarm is silent or not.
  * @return #ewf_result status code
  */
-ewf_result ewf_adapter_modem_alarm_set(ewf_adapter* adapter_ptr,  ewf_time * alarm_info_ptr, uint8_t n, uint32_t type, const char * text_str,  uint32_t text_len, const char * recurr_str, uint32_t recurr_len, bool silent);
+ewf_result ewf_adapter_modem_alarm_set(ewf_adapter* adapter_ptr,  ewf_adapter_modem_time * alarm_info_ptr, uint8_t n, uint32_t type, const char * text_str,  uint32_t text_len, const char * recurr_str, uint32_t recurr_len, bool silent);
 
 /**
  * @brief Delete the alarm (+cald)

@@ -8,3 +8,6 @@ Release/
 AzureRTOS_TAD_logs/
 FreeRTOS_TAD_logs/
 ZephyrRTOS_TAD_logs/
+*.pem
+*.pem.h
+

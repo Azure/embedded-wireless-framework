@@ -39,14 +39,18 @@ extern "C" {
 //#define EWF_PLATFORM_FREERTOS
 //#define EWF_PLATFORM_WIN32
 
-/* Override the EWF_LOG definition to change formating for the logs on Renesas RA */
-extern char ewf_log_buffer[256];
+/* Override the EWF_LOG reroute logs to RTT viewer  Renesas RA */
+#ifdef EWF_DEBUG
+extern char ewf_log_buffer[1024];
 unsigned SEGGER_RTT_WriteString(unsigned BufferIndex, const char* s);
 #define EWF_LOG(...)                                                          \
 		do {                                                                  \
 			snprintf(ewf_log_buffer, sizeof(ewf_log_buffer), __VA_ARGS__);    \
 			SEGGER_RTT_WriteString(0, ewf_log_buffer);                        \
 		} while(0)
+#else
+#define EWF_LOG(...)
+#endif
 
 /************************************************************************//**
  * @} *** group_configuration

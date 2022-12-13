@@ -28,10 +28,10 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (4)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                         (4)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (512)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                          (512)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -42,19 +42,19 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM78")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME                    ("\\\\.\\COM65")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (921600)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE                    (921600)
 
 /** @brief Define the WIN32 COM port interface serial port byte size */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE               (8)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE                    (8)
 
 /** @brief Define the WIN32 COM port interface serial port parity */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY                  (NOPARITY)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY                       (NOPARITY)
 
 /** @brief Define the WIN32 COM port interface serial stop bits */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS               (ONESTOPBIT)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS                    (ONESTOPBIT)
 
 /** @} *** group_example_configuration_interface */
 
@@ -65,10 +65,10 @@ extern "C" {
  */
 
 /** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN                                          ("0000")
+#define EWF_CONFIG_SIM_PIN                                               ("0000")
 
 /** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                                       (1)
+#define EWF_CONFIG_CONTEXT_ID                                            (1)
 
 /** @} *** group_example_configuration_modem */
 
@@ -79,12 +79,38 @@ extern "C" {
  */
 
 /** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME                                 ""
+#define EWF_CONFIG_IOT_HUB_HOSTNAME                                      "azurertos-test.azure-devices.net"
 
 /** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
+#define EWF_CONFIG_IOT_HUB_DEVICEID                                      "bhnaphad-test-cert"
 
 /** @} *** group_example_configuration_iot_hub */
+
+/**
+ * @defgroup group_example_configuration_tls Renesas RYZ014A security profile
+ * @brief Renesas RYZ014A security profile configuration used in the example
+ *
+ * Use the same certificate ID's and Key ID that were provisioned before.
+ * @{
+ */
+
+/** @brief Security Profile Id , range 0-6 */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_SECURITY_PROFILE_ID            ("5")
+
+/**
+ * @brief CA certificate index that will be used in the security/TLS profile configuration
+ * This number will either be EWF_CONFIG_ADAPTER_RENESAS_RYZ024A_ROOT_CA_CERTIFICATE_ID or
+ * EWF_CONFIG_ADAPTER_RENESAS_RYZ024A_USER_CA_CERTIFICATE_ID used when certificate provisioning.
+ */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CA_CERTIFICATE_ID              ("11")
+
+/** @brief Client certificate ID, range 0-19 */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_CERTIFICATE_ID          ("13")
+
+/** @brief Client private key ID, range 0-19  */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_PRIVATE_KEY_ID          ("13")
+
+/** @} *** group_example_configuration_tls */
 
 /************************************************************************//**
  * @}

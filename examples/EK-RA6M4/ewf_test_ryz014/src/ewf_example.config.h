@@ -50,18 +50,34 @@ extern "C" {
 /** @} *** group_example_configuration_modem */
 
 /**
- * @defgroup group_example_configuration_iot_hub IoT Hub configuration
- * @brief IoT Hub configuration settings used in examples
+* @defgroup group_example_configuration_test_echo Echo test configuration
+* @brief Echo test configuration settings used in examples
+* @{
+*/
+
+#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               ""
+#define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      (4000)
+#define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             (0)
+#define EWF_ADAPTER_TEST_TCP_RECV_SLEEP_SECS                        (1)
+
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               ""
+#define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
+#define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             (0)
+#define EWF_ADAPTER_TEST_UDP_RECV_SLEEP_SECS                        (1)
+
+/** @} *** group_example_configuration_test_echo */
+
+
+/**
+ * @defgroup group_example_configuration_netx_duo NetX Duo driver configuration
+ * @brief NetX Duo Driver configuration settings used in middleware driver
  * @{
  */
 
-/** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME                                 ""
+/* MTU size should be equal to the modems maximum socket send size */
+#define EWF_CONFIG_ADAPTER_MTU                                      (1460)
 
-/** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
-
-/** @} *** group_example_configuration_iot_hub */
+/** @} */
 
 /************************************************************************//**
  * @}

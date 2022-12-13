@@ -16,8 +16,8 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_lib The EWF Library
- * @brief The EWF library
+ * @defgroup group_lib EWF Library
+ * @brief EWF library
  * @{
  ****************************************************************************/
 
@@ -118,20 +118,20 @@ bool ewfl_str_ends_with(const char* str, const char* suffix_str);
  * @brief Checks if a buffer starts with a string
  * @return true if the buffer starts with the prefix, false otherwise.
  */
-bool ewfl_buffer_starts_with(const char* buffer, uint32_t buffer_length, const char* prefix_str, uint32_t prefix_length);
+bool ewfl_buffer_starts_with(const uint8_t* buffer_ptr, uint32_t buffer_length, const uint8_t* prefix_ptr, uint32_t prefix_length);
 
 /**
  * @brief Checks if a buffer ends with a string
  * @return true if the buffer ends with the suffix, false otherwise.
  */
-bool ewfl_buffer_ends_with(const char * buffer, uint32_t buffer_length, const char * suffix_str, uint32_t suffix_length);
+bool ewfl_buffer_ends_with(const uint8_t* buffer_ptr, uint32_t buffer_length, const uint8_t* suffix_ptr, uint32_t suffix_length);
 
 /**
  * @brief Checks if a buffer ends with a string containing wildcards
  * The current version supports question marks '?'to match single characters.
  * @return true if the buffer ends with the suffix, false otherwise.
  */
-bool ewfl_buffer_ends_with_wildcard_string(const char* buffer, uint32_t buffer_length, const char* suffix_str, uint32_t suffix_length);
+bool ewfl_buffer_ends_with_wildcard_string(const uint8_t* buffer_ptr, uint32_t buffer_length, const uint8_t* suffix_ptr, uint32_t suffix_length);
 
 /**
  * @brief Checks if two strings are equal.
@@ -164,7 +164,7 @@ bool ewfl_str_equals_str(const char * str1, const char * str2);
  * @param[in] length the length to compare.
  * @return true if both strings are equal, false if they are different.
  */
-bool ewfl_buffer_equals_buffer(const char* buffer1, const char* buffer2, uint32_t length);
+bool ewfl_buffer_equals_buffer(const uint8_t* buffer1, const uint8_t* buffer2, uint32_t length);
 
 /**
  * @brief Searches for a string in a substring
@@ -214,6 +214,24 @@ char * ewfl_str_remove_suffix_str(char* str, const char * suffix_str);
  * @return pointer to the trimmed string.
  */
 char* ewfl_adapter_response_str_extract(char* str);
+
+/**
+ * @brief Find the next matching character from several of many in a string, break and fail on matching custom terminators
+ *
+ * @param str the string to search
+ * @param i the index to start from
+ * @param chars_str a NULL terminated strinc containing the characters to match
+ * @param terms_str a NULL terminated string containing the character to match for termination
+ * @return a pointer to the match, NULL otherwise
+ */
+char* ewfl_find_chars_with_terms(char* str, char* chars_str, char* term_str);
+
+/**
+ * @brief Wrapper function with functionality equivalent to strtok_s / strtok_r
+ *
+ * @return a pointer to the match, NULL otherwise
+ */
+char* ewfl_str_tok(char* str, const char* delim, char** saveptr);
 
 /************************************************************************//**
  * @} *** group_lib_string

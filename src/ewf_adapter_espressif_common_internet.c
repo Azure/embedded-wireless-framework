@@ -100,7 +100,7 @@ ewf_result ewf_adapter_espressif_common_internet_start(ewf_adapter* adapter_ptr)
     {
         implementation_ptr->internet_socket_pool[i].id = i;
         implementation_ptr->internet_socket_pool[i].type = ewf_adapter_espressif_common_internet_socket_service_type_not_initialized;
-        implementation_ptr->internet_socket_pool[i].port = 0;
+        implementation_ptr->internet_socket_pool[i].local_port = 0;
         implementation_ptr->internet_socket_pool[i].used = false;
         implementation_ptr->internet_socket_pool[i].open = false;
         implementation_ptr->internet_socket_pool[i].open_error = false;
@@ -175,10 +175,11 @@ ewf_result ewf_adapter_espressif_common_internet_urc_callback(ewf_interface* int
             if (implementation_ptr->passive_mode)
             {
                 internet_socket_ptr->recv = true;
-                internet_socket_ptr->recv_size = length;
             }
             else
             {
+                internet_socket_ptr->recv = true;
+
                 if (length > EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE)
                 {
                     EWF_LOG("\nThe received data is too big for the configured buffer, length %d, buffer %d.\n",
@@ -192,7 +193,7 @@ ewf_result ewf_adapter_espressif_common_internet_urc_callback(ewf_interface* int
                     /* check for the data marker */
                     if (*data_ptr == ':')
                     {
-                        *data_ptr++;
+                        data_ptr++;
                         break;
                     }
 
@@ -208,17 +209,15 @@ ewf_result ewf_adapter_espressif_common_internet_urc_callback(ewf_interface* int
 
                 if (data_ptr)
                 {
-                    internet_socket_ptr->recv = true;
-                    internet_socket_ptr->recv_size = length;
-                    memcpy(
-                        internet_socket_ptr->recv_buffer,
-                        data_ptr,
-                        (length < EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE) ?
-                        length : EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE);
+                    for (size_t i = 0; i < length; i++)
+                    {
+                        ewf_platform_queue_enqueue(internet_socket_ptr->recv_queue_ptr, data_ptr + i, sizeof(uint8_t), false);
+                    }
                 }
             }
 
             return EWF_RESULT_OK;
+
         }
     }
 
@@ -267,11 +266,11 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_open(ewf_adapter* adapt
     param_str[0] = 0;
     if (ewfl_str_equals_str("TCP", service_type_str) && keep_alive != 0)
     {
-        sprintf(param_str, ",%u\r\n", keep_alive);
+        sprintf(param_str, ",%lu\r\n", keep_alive);
     }
     else if (ewfl_str_equals_str("UDP", service_type_str) && local_port != 0)
     {
-        sprintf(param_str, ",%u,2\r\n", local_port);
+        sprintf(param_str, ",%lu,2\r\n", local_port);
     }
     else
     {
@@ -305,7 +304,7 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_open(ewf_adapter* adapt
 
     char expected_ok_str[] = "\r\nOK\r\n";
 
-    bool ok_found = ewfl_buffer_ends_with(response_ptr, response_length, expected_ok_str, sizeof(expected_ok_str) - 1);
+    bool ok_found = ewfl_buffer_ends_with(response_ptr, response_length, (uint8_t*)expected_ok_str, sizeof(expected_ok_str) - 1);
 
     ewf_interface_release(interface_ptr, response_ptr);
 
@@ -360,8 +359,6 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    ewf_result result;
-
     if (!buffer_ptr)
     {
         EWF_LOG_ERROR("The buffer pointer cannot be NULL.");
@@ -380,47 +377,31 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
         return EWF_RESULT_SOCKET_NOT_OPEN;
     }
 
-    char tokenizer_pattern_error_str[] = "\r\nERROR\r\n";
-    ewf_interface_tokenizer_pattern tokenizer_pattern_error = {
-        NULL,
-        tokenizer_pattern_error_str,
-        sizeof(tokenizer_pattern_error_str) - 1,
-        false,
-    };
-
-    char tokenizer_pattern_ok_str[] = "\r\nOK\r\n";
-    ewf_interface_tokenizer_pattern tokenizer_pattern_ok = {
-        &tokenizer_pattern_error,
-        tokenizer_pattern_ok_str,
-        sizeof(tokenizer_pattern_ok_str) - 1,
-        false,
-    };
-
-    char tokenizer_pattern_prompt_str[] = "> ";
-    ewf_interface_tokenizer_pattern tokenizer_pattern_prompt = {
-        &tokenizer_pattern_ok,
-        tokenizer_pattern_prompt_str,
-        sizeof(tokenizer_pattern_prompt_str) - 1,
-        false,
-    };
-
-    char tokenizer_pattern_send_fail_str[] = "\r\nSEND FAIL\r\n";
-    ewf_interface_tokenizer_pattern tokenizer_pattern_send_fail = {
-        &tokenizer_pattern_error,
-        tokenizer_pattern_send_fail_str,
-        sizeof(tokenizer_pattern_send_fail_str) - 1,
-        false,
-    };
-
-    char tokenizer_pattern_send_ok_str[] = "\r\nSEND OK\r\n";
-    ewf_interface_tokenizer_pattern tokenizer_pattern_send_ok = {
-        &tokenizer_pattern_send_fail,
-        tokenizer_pattern_send_ok_str,
-        sizeof(tokenizer_pattern_send_ok_str) - 1,
-        false,
-    };
-
     {
+        char tokenizer_pattern_error_str[] = "\r\nERROR\r\n";
+        ewf_interface_tokenizer_pattern tokenizer_pattern_error = {
+            NULL,
+            tokenizer_pattern_error_str,
+            sizeof(tokenizer_pattern_error_str) - 1,
+            false,
+        };
+
+        char tokenizer_pattern_ok_str[] = "\r\nOK\r\n";
+        ewf_interface_tokenizer_pattern tokenizer_pattern_ok = {
+            &tokenizer_pattern_error,
+            tokenizer_pattern_ok_str,
+            sizeof(tokenizer_pattern_ok_str) - 1,
+            false,
+        };
+
+        char tokenizer_pattern_prompt_str[] = "> ";
+        ewf_interface_tokenizer_pattern tokenizer_pattern_prompt = {
+            &tokenizer_pattern_ok,
+            tokenizer_pattern_prompt_str,
+            sizeof(tokenizer_pattern_prompt_str) - 1,
+            false,
+        };
+
         ewf_result result_command;
         ewf_result result_verify_ok;
         ewf_result result_verify_prompt;
@@ -451,17 +432,111 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
     }
 
     {
+        char tokenizer_pattern4_str[] = "\r\nRecv ???? bytes\r\n";
+        ewf_interface_tokenizer_pattern tokenizer_pattern4 = {
+            NULL,
+            tokenizer_pattern4_str, sizeof(tokenizer_pattern4_str) - 1, true,
+            NULL, NULL,
+        };
+
+        char tokenizer_pattern3_str[] = "\r\nRecv ??? bytes\r\n";
+        ewf_interface_tokenizer_pattern tokenizer_pattern3 = {
+            &tokenizer_pattern4,
+            tokenizer_pattern3_str, sizeof(tokenizer_pattern3_str) - 1, true,
+            NULL, NULL,
+        };
+
+        char tokenizer_pattern2_str[] = "\r\nRecv ?? bytes\r\n";
+        ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
+            &tokenizer_pattern3,
+            tokenizer_pattern2_str, sizeof(tokenizer_pattern2_str) - 1, true,
+            NULL, NULL,
+        };
+
+        char tokenizer_pattern1_str[] = "\r\nRecv ? bytes\r\n";
+        ewf_interface_tokenizer_pattern tokenizer_pattern1 = {
+            &tokenizer_pattern2,
+            tokenizer_pattern1_str, sizeof(tokenizer_pattern1_str) - 1, true,
+            NULL, NULL,
+        };
+
+        char tokenizer_pattern_send_fail_str[] = "\r\nSEND FAIL\r\n";
+        ewf_interface_tokenizer_pattern tokenizer_pattern_send_fail = {
+            NULL,
+            tokenizer_pattern_send_fail_str, sizeof(tokenizer_pattern_send_fail_str) - 1, false,
+            NULL, NULL,
+        };
+
+        char tokenizer_pattern_send_ok_str[] = "\r\nSEND OK\r\n";
+        ewf_interface_tokenizer_pattern tokenizer_pattern_send_ok = {
+            &tokenizer_pattern_send_fail,
+            tokenizer_pattern_send_ok_str, sizeof(tokenizer_pattern_send_ok_str) - 1, false,
+            NULL, NULL,
+        };
+
         ewf_result result_command;
         ewf_result result_verify;
-        ewf_interface_tokenizer_pattern* saved_end_pattern_ptr = NULL;
-        ewf_interface_tokenizer_command_response_end_pattern_get(interface_ptr, &saved_end_pattern_ptr);
+        ewf_interface_tokenizer_pattern* saved_command_end_pattern_ptr = NULL;
+        ewf_interface_tokenizer_pattern* saved_command_pattern_ptr = NULL;
+        ewf_interface_tokenizer_command_response_end_pattern_get(interface_ptr, &saved_command_end_pattern_ptr);
         ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, &tokenizer_pattern_send_ok);
+        ewf_interface_tokenizer_command_response_pattern_get(interface_ptr, &saved_command_pattern_ptr);
+        ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern1);
         result_command = ewf_interface_send(interface_ptr, (const uint8_t*)buffer_ptr, buffer_length);
-        if (ewf_result_succeeded(result_command)) result_verify = ewf_interface_verify_response_ends_with(interface_ptr, tokenizer_pattern_send_ok_str);
-        ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, saved_end_pattern_ptr);
+        if (ewf_result_succeeded(result_command)) {
+            ewf_interface_drop_response(interface_ptr);
+            result_verify = ewf_interface_verify_response_ends_with(interface_ptr, tokenizer_pattern_send_ok_str);
+        }
+        ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, saved_command_end_pattern_ptr);
+        ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, saved_command_pattern_ptr);
         if (ewf_result_failed(result_command)) return result_command;
         if (ewf_result_failed(result_verify)) return result_verify;
     }
+
+    return EWF_RESULT_OK;
+}
+
+ewf_result _ewf_adapter_espressif_common_internet_socket_receive(ewf_adapter* adapter_ptr, ewf_adapter_espressif_common_internet_socket* internet_socket_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr)
+{
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    if (!buffer_ptr)
+    {
+        EWF_LOG_ERROR("The buffer pointer cannot be NULL.");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (!buffer_length_ptr)
+    {
+        EWF_LOG_ERROR("The length pointer cannot be NULL.");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (*buffer_length_ptr == 0)
+    {
+        EWF_LOG_ERROR("The buffer length cannot be 0.");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    if (internet_socket_ptr->conn == false)
+    {
+        EWF_LOG_ERROR("Socket is not open.");
+        return EWF_RESULT_SOCKET_NOT_OPEN;
+    }
+
+    size_t i;
+    for (i = 0; i < *buffer_length_ptr; i++)
+    {
+        uint32_t buffer_size = sizeof(uint8_t);
+        ewf_result result = ewf_platform_queue_dequeue(internet_socket_ptr->recv_queue_ptr, &(buffer_ptr[i]), &buffer_size, false);
+        if (result != EWF_RESULT_OK)
+        {
+            break;
+        }
+    }
+    *buffer_length_ptr = i;
 
     return EWF_RESULT_OK;
 }
@@ -520,7 +595,6 @@ ewf_result ewf_adapter_espressif_common_tcp_control(ewf_socket_tcp* socket_ptr, 
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
 
     return EWF_RESULT_OK;
 }
@@ -532,7 +606,6 @@ ewf_result ewf_adapter_espressif_common_tcp_set_tls_configuration(ewf_socket_tcp
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
 
     return EWF_RESULT_OK;
 }
@@ -542,12 +615,11 @@ ewf_result ewf_adapter_espressif_common_tcp_bind(ewf_socket_tcp* socket_ptr, uin
     EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr);
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
     ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
-    
-    internet_socket_ptr->port = port;
-    
+
+    /* Do not bind, just save the requested port */
+    internet_socket_ptr->local_port = port;
+
     return EWF_RESULT_OK;
 }
 
@@ -556,7 +628,6 @@ ewf_result ewf_adapter_espressif_common_tcp_listen(ewf_socket_tcp* socket_ptr)
     EWF_VALIDATE_TCP_SOCKET_POINTER(socket_ptr);
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-    ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
 
     return EWF_RESULT_OK;
 }
@@ -614,11 +685,6 @@ ewf_result ewf_adapter_espressif_common_tcp_receive(ewf_socket_tcp* socket_ptr, 
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
     ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
 
-    ewf_result result;
-
-    uint8_t* response_ptr;
-    uint32_t response_length;
-
     if (!buffer_ptr)
     {
         EWF_LOG_ERROR("The buffer pointer cannot be NULL.");
@@ -648,12 +714,12 @@ ewf_result ewf_adapter_espressif_common_tcp_receive(ewf_socket_tcp* socket_ptr, 
         /* Wait until data is received */
         for (;;)
         {
+            ewf_interface_poll(interface_ptr);
             if (internet_socket_ptr->recv)
             {
                 internet_socket_ptr->recv = false;
                 break;
             }
-            ewf_interface_poll(interface_ptr);
             ewf_platform_sleep(1);
         }
     }
@@ -666,11 +732,7 @@ ewf_result ewf_adapter_espressif_common_tcp_receive(ewf_socket_tcp* socket_ptr, 
         }
     }
 
-    *buffer_length_ptr = *buffer_length_ptr < internet_socket_ptr->recv_size ? 
-        *buffer_length_ptr : internet_socket_ptr->recv_size;
-    memcpy(buffer_ptr, internet_socket_ptr->recv_buffer, *buffer_length_ptr);
-
-    return EWF_RESULT_OK;
+    return _ewf_adapter_espressif_common_internet_socket_receive(adapter_ptr, internet_socket_ptr, buffer_ptr, buffer_length_ptr);
 }
 
 /******************************************************************************
@@ -747,11 +809,8 @@ ewf_result ewf_adapter_espressif_common_udp_bind(ewf_socket_udp* socket_ptr, uin
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
 
-    ewf_result result = _ewf_adapter_espressif_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "UDP", "0.0.0.0", 0, port, 0);
-    if (ewf_result_failed(result))
-    {
-        /* Handle error */
-    }
+    /* Do not bind, just save the requested port */
+    internet_socket_ptr->local_port = port;
 
     return EWF_RESULT_OK;
 }
@@ -779,29 +838,28 @@ ewf_result ewf_adapter_espressif_common_udp_send_to(ewf_socket_udp* socket_ptr, 
     ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
 
     ewf_result result;
+
     if (!internet_socket_ptr->used)
     {
-        result = _ewf_adapter_espressif_common_internet_socket_close(adapter_ptr, internet_socket_ptr);
+        result = _ewf_adapter_espressif_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "UDP", remote_address_str, remote_port, internet_socket_ptr->local_port, 0);
         if (ewf_result_failed(result))
         {
-
-        }
-        result = _ewf_adapter_espressif_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "UDP", remote_address_str, remote_port, 0, 0);
-        if (ewf_result_failed(result))
-        {
-
+            EWF_LOG_ERROR("Failed to open the UDP socket.");
+            return EWF_RESULT_SOCKET_NOT_OPEN;
         }
     }
+
     result = _ewf_adapter_espressif_common_internet_socket_send(adapter_ptr, internet_socket_ptr, buffer_ptr, buffer_length);
     if (ewf_result_failed(result))
     {
-
+        EWF_LOG_ERROR("Failed to close the UDP socket.");
+        return EWF_RESULT_ADAPTER_TRANSMIT_FAILED;
     }
 
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_espressif_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address_str, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
+ewf_result ewf_adapter_espressif_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address_str, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
 {
     EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;
@@ -809,11 +867,6 @@ ewf_result ewf_adapter_espressif_common_udp_receive_from(ewf_socket_udp* socket_
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
     ewf_adapter_espressif_common_internet_socket* internet_socket_ptr = (ewf_adapter_espressif_common_internet_socket*)socket_ptr->data_ptr;
-
-    ewf_result result;
-
-    uint8_t* response_ptr;
-    uint32_t response_length;
 
     if (!buffer_ptr)
     {
@@ -844,12 +897,11 @@ ewf_result ewf_adapter_espressif_common_udp_receive_from(ewf_socket_udp* socket_
         /* Wait until data is received */
         for (;;)
         {
+            ewf_interface_poll(interface_ptr);
             if (internet_socket_ptr->recv)
             {
-                internet_socket_ptr->recv = false;
                 break;
             }
-            ewf_interface_poll(interface_ptr);
             ewf_platform_sleep(1);
         }
     }
@@ -862,9 +914,5 @@ ewf_result ewf_adapter_espressif_common_udp_receive_from(ewf_socket_udp* socket_
         }
     }
 
-    *buffer_length_ptr = *buffer_length_ptr < internet_socket_ptr->recv_size ?
-        *buffer_length_ptr : internet_socket_ptr->recv_size;
-    memcpy(buffer_ptr, internet_socket_ptr->recv_buffer, *buffer_length_ptr);
-
-    return EWF_RESULT_OK;
+    return _ewf_adapter_espressif_common_internet_socket_receive(adapter_ptr, internet_socket_ptr, buffer_ptr, buffer_length_ptr);
 }

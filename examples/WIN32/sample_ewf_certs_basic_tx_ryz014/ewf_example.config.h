@@ -28,10 +28,10 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                             (8)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                              (1500)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -42,19 +42,19 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM78")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME                        ("\\\\.\\COM65")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (912600)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE                        (912600)
 
 /** @brief Define the WIN32 COM port interface serial port byte size */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE               (8)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE                        (8)
 
 /** @brief Define the WIN32 COM port interface serial port parity */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY                  (NOPARITY)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY                           (NOPARITY)
 
 /** @brief Define the WIN32 COM port interface serial stop bits */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS               (ONESTOPBIT)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS                        (ONESTOPBIT)
 
 /** @} *** group_example_configuration_interface */
 
@@ -65,12 +65,44 @@ extern "C" {
  */
 
 /** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN                                          ("0000")
+#define EWF_CONFIG_SIM_PIN                                                   ("0000")
 
 /** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                                       (1)
+#define EWF_CONFIG_CONTEXT_ID                                                (1)
 
 /** @} *** group_example_configuration_modem */
+
+/**
+ * @defgroup group_example_configuration_certs Certificate Provisioning configuration
+ * @brief Certificate Provisioning configuration used in examples
+ * @{
+ */
+
+/** @brief Trusted Certificate Authority certificate index, range 0-19 */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_ROOT_CA_CERTIFICATE_ID             ("11")
+
+/** @brief User Certificate Authority certificate index, range 0-19 */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_USER_CA_CERTIFICATE_ID             ("12")
+
+/** @brief Client certificate ID, range 0-19 */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_CERTIFICATE_ID              ("13")
+
+/** @brief Client private key ID, range 0-19  */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_PRIVATE_KEY_ID              ("13")
+
+/** @brief Trusted Certificate Authority certificate buffer name */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_ROOT_CA_CERTIFICATE_BUFFER_NAME    (root_ca_cert_pem)
+
+/** @brief User Certificate Authority certificate  buffer name */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_USER_CA_CERTIFICATE_BUFFER_NAME    (ca_cert_pem)
+
+/** @brief Client certificate buffer name */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_CERTIFICATE_BUFFER_NAME     (device_cert_pem)
+
+/** @brief Client private key buffer name  */
+#define EWF_CONFIG_ADAPTER_RENESAS_RYZ014_CLIENT_PRIVATE_KEY_BUFFER_NAME     (device_key_pem)
+
+/** @} *** group_example_configuration_certs */
 
 /************************************************************************//**
  * @}

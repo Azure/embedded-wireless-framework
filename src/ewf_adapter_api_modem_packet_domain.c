@@ -7,25 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_api_modem.h"
-
-ewf_adapter_modem_api_packet_domain ewf_adapter_modem_api_packet_domain_implementation =
-{
-    ewf_adapter_modem_eps_network_registration_urc_set, /* eps_network_registration_urc_set */
-    NULL, /* eps_network_registration_read */
-    ewf_adapter_modem_gprs_network_registration_urc_set, /* gprs_network_registration_urc_set */
-    NULL, /* gprs_network_registration_read */
-    NULL, /* init_pdp_activate */
-    NULL, /* init_pdp_activation_config_read */
-    NULL, /* pdp_apn_set */
-    NULL, /* pdp_apn_read */
-    NULL, /* pdp_context_authentication_set */
-    NULL, /* pdp_data_mode_enter */
-    NULL, /* packet_service_activate */
-    NULL, /* packet_service_deactivate */
-    NULL, /* network_attach */
-    NULL, /* network_dettach */
-    NULL, /* network_attach_status_read */
-};
+#include "ewf_adapter.h"
 
 ewf_result ewf_adapter_modem_eps_network_registration_urc_set(ewf_adapter* adapter_ptr, const char* n_str)
 {
@@ -115,7 +97,7 @@ ewf_result ewf_adapter_modem_packet_service_activate(ewf_adapter* adapter_ptr, u
     char context_id_str[3];
     const char* context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
-    interface_ptr->current_context = context_id;
+    if (adapter_ptr->modem_api_data_ptr) adapter_ptr->modem_api_data_ptr->current_context = context_id;
 
     /* Activate PDP context */
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGACT=1,", context_id_cstr, "\r", NULL))) return result;

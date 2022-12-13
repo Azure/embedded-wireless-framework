@@ -42,7 +42,7 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM78")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM29")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
 #define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (CBR_115200)
@@ -71,6 +71,38 @@ extern "C" {
 #define EWF_CONFIG_CONTEXT_ID                                       (1)
 
 /** @} *** group_example_configuration_modem */
+
+/**
+ * @defgroup group_example_configuration_certs Certificate Provisioning configuration
+ * @brief Certificate Provisioning configuration used in examples
+ * @{
+*/
+
+/** @brief Trusted Certificate Authority certificate file name to be stored on the modem */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG95_ROOT_CA_CERTIFICATE_FILE_NAME      ("root_ca_cert.pem")
+
+/** @brief User Certificate Authority certificate file name to be stored on the modem */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG95_USER_CA_CERTIFICATE_FILE_NAME      ("ca_cert.pem")
+
+/** @brief Client certificate file name to be stored on the modem */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG95_CLIENT_CERTIFICATE_FILE_NAME       ("device_cert.pem")
+
+/** @brief Client private key filename  */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG95_CLIENT_PRIVATE_KEY_FILE_NAME       ("device_key.pem")
+
+/** @brief Trusted Certificate Authority certificate buffer name */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG95_ROOT_CA_CERTIFICATE_BUFFER_NAME    (root_ca_cert_pem)
+
+/** @brief User Certificate Authority certificate  buffer name */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG95_USER_CA_CERTIFICATE_BUFFER_NAME    (ca_cert_pem)
+
+/** @brief Client certificate buffer name */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG95_CLIENT_CERTIFICATE_BUFFER_NAME     (device_cert_pem)
+
+/** @brief Client private key buffer name  */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG95_CLIENT_PRIVATE_KEY_BUFFER_NAME     (device_key_pem)
+
+/** @} *** group_example_configuration_certs */
 
 /************************************************************************//**
  * @}

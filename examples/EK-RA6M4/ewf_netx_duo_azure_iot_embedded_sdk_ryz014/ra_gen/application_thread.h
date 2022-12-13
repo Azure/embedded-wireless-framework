@@ -9,10 +9,6 @@
                 #else
 extern void application_thread_entry(void);
 #endif
-#include "nxd_sntp_client.h"
 FSP_HEADER
-#define G_SNTP_CLIENT0_INDEX_NETWORK_INTERFACE  0
-
-void g_sntp_client0_quick_setup();
 FSP_FOOTER
 #endif /* APPLICATION_THREAD_H_ */

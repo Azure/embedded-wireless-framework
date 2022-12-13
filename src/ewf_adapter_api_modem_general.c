@@ -7,6 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_api_modem.h"
+#include "ewf_adapter.h"
 
 ewf_result ewf_adapter_modem_manufacturer_read(ewf_adapter* adapter_ptr, char * info_str, uint16_t * info_str_len_ptr)
 {

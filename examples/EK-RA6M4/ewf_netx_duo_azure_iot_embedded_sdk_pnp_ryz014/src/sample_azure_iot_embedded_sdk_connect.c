@@ -150,7 +150,7 @@ ULONG gateway_address;
                 {
                     if (iothub_init_count++)
                     {
-                        EWF_LOG("Re-initializing iothub connection, after backoff\r\n");
+                        IotLog("Re-initializing iothub connection, after backoff\r\n");
                         tx_thread_sleep(exponential_backoff_with_jitter());
                     }
 
@@ -176,13 +176,13 @@ ULONG gateway_address;
 
                 case NX_AZURE_IOT_SAS_TOKEN_EXPIRED:
                 {
-                    EWF_LOG("SAS token expired\r\n");
+                    IotLog("SAS token expired\r\n");
                 }
                 /* fallthrough */
 
                 default :
                 {
-                    EWF_LOG("Reconnecting iothub, after backoff\r\n");
+                    IotLog("Reconnecting iothub, after backoff\r\n");
 
                     tx_thread_sleep(exponential_backoff_with_jitter());
 

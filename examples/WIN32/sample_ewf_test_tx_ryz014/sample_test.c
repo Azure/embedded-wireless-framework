@@ -82,6 +82,26 @@ void thread_sample_entry(ULONG param)
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
     }
+    ewf_platform_sleep(500);
+
+    /* Wait for the modem to be registered to network
+     * Refer system integration guide for more info */
+    while (EWF_RESULT_OK != ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
+    ewf_platform_sleep(200);
+
+    /* Disable network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
+    {
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
+    }
+
+    /* Disable EPS network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_urc_set(adapter_ptr, "0")))
+    {
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
+    }
 
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
@@ -90,14 +110,11 @@ void thread_sample_entry(ULONG param)
         return;
     }
 
-    /* Wait for the modem functionality to be up, increase/decrease the sleep time as required by modem and network,
-     * Refer system integration guide for more info */
-    uint32_t wait_time_seconds = 15;
-
-    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, wait_time_seconds)))
+    // Deactivate the PDP context
+    if (ewf_result_failed(result = ewf_adapter_modem_packet_service_deactivate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
-        EWF_LOG_ERROR("Failed to register modem to network within timeout specified, ewf_result %d.\n", result);
-        return;
+        EWF_LOG_ERROR("Failed to deactivate the PDP context, ewf_result %d.\n", result);
+        // continue despite the error
     }
 
     // Activated the PDP context
@@ -107,10 +124,6 @@ void thread_sample_entry(ULONG param)
         // continue despite the error
     }
 
-    /* Update the context_id that should be used for the tests */
-    ewf_adapter_renesas_ryz014* adapter_renesas_ryz014_ptr = (ewf_adapter_renesas_ryz014*)adapter_ptr->implementation_ptr;
-    adapter_renesas_ryz014_ptr->current_context_id = EWF_CONFIG_CONTEXT_ID;
-
     /* Run the adapter tests.  */
     if (ewf_result_failed(result = ewf_adapter_renesas_ryz014_test(adapter_ptr)))
     {
@@ -118,9 +131,11 @@ void thread_sample_entry(ULONG param)
         exit(result);
     }
 
+    EWF_LOG("\r\nTest Complete\r\n");
     /* Stay here forever.  */
     while (1)
     {
+        EWF_LOG(".");
         tx_thread_sleep(100);
     }
 }

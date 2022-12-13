@@ -22,6 +22,10 @@ extern "C" {
  * @{
  ****************************************************************************/
 
+#ifndef EWF_ADAPTER_QUECTEL_COMMON_DEFAULT_TIMEOUT
+#define EWF_ADAPTER_QUECTEL_COMMON_DEFAULT_TIMEOUT (EWF_PLATFORM_TICKS_PER_SECOND * 10)
+#endif
+
 #ifndef EWF_ADAPTER_QUECTEL_COMMON_UFS_ENABLED
 #define EWF_ADAPTER_QUECTEL_COMMON_UFS_ENABLED (1)
 #endif
@@ -74,6 +78,57 @@ extern "C" {
 #define EWF_ADAPTER_QUECTEL_COMMON_MQTT_SOCKET_INVALID (-1)
 #endif
 
+/** @brief Trusted Certificate Authority certificate file name to be stored on the modem */
+#ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_FILE_NAME
+#define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_FILE_NAME      ("root_ca_cert.pem")
+#endif 
+
+/** @brief User Certificate Authority certificate file name to be stored on the modem */
+#ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_FILE_NAME
+#define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_FILE_NAME      ("ca_cert.pem")
+#endif 
+
+/**
+ * @brief CA certificate index that will be used in the security/TLS profile 
+ * configuration. This number will either be 
+ * EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_FILE_NAME or
+ * EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_FILE_NAME
+ * Default to Root CA.
+ */
+#ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CA_CERTIFICATE_FILE_NAME
+#define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CA_CERTIFICATE_FILE_NAME           ("root_ca_cert.pem")
+#endif
+
+/** @brief Client certificate file name to be stored on the modem */
+#ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_FILE_NAME
+#define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_FILE_NAME       ("device_cert.pem")
+#endif 
+
+/** @brief Client private key filename  */
+#ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_FILE_NAME
+#define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_FILE_NAME       ("device_key.pem")
+#endif 
+
+/** @brief Trusted Certificate Authority certificate pointer name*/
+#ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_BUFFER_NAME    (root_ca_cert_pem)
+#endif 
+
+/** @brief User Certificate Authority certificate pointing buffer name */
+#ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_BUFFER_NAME    (ca_cert_pem)
+#endif 
+
+/** @brief Client certificate pointing buffer name */
+#ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_BUFFER_NAME     (device_cert_pem)
+#endif 
+
+/** @brief Client private key filename  */
+#ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_BUFFER_NAME
+#define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_BUFFER_NAME     (device_key_pem)
+#endif 
+
 /************************************************************************//**
  * @} *** group_configuration_adapter_quectel_common
  ****************************************************************************/
@@ -105,31 +160,33 @@ typedef enum _ewf_adapter_common_internet_socket_service_type
 /** @brief Internal structure for internet socket status  */
 typedef struct _ewf_adapter_quectel_common_internet_socket
 {
+    void* socket_ptr;
     uint32_t id;
-    uint32_t port;
-    volatile ewf_adapter_quectel_common_internet_socket_service_type type;
-    volatile bool used;
-    volatile bool open;
-    volatile bool open_error;
-    volatile bool conn;
-    volatile bool conn_error;
-    volatile bool recv;
+    uint16_t local_port;
+    ewf_adapter_quectel_common_internet_socket_service_type type;
+    volatile bool used : 1;
+    volatile bool open : 1;
+    volatile bool open_error : 1;
+    volatile bool conn : 1;
+    volatile bool conn_error : 1;
 
 } ewf_adapter_quectel_common_internet_socket;
 
 /** @brief Internal structure for MQTT socket status  */
 typedef struct _ewf_adapter_quectel_common_mqtt_socket
 {
-    volatile bool open;
-    volatile bool open_error;
-    volatile bool conn;
-    volatile bool conn_error;
+    volatile bool open : 1;
+    volatile bool open_error : 1;
+    volatile bool conn : 1;
+    volatile bool conn_error : 1;
 
 } ewf_adapter_quectel_common_mqtt_socket;
 
 /** @brief The Quectel common adapter data structure */
 typedef struct _ewf_adapter_quectel_common
 {
+    uint32_t default_timeout;
+
 #if EWF_ADAPTER_QUECTEL_COMMON_TCP_ENABLED || EWF_ADAPTER_QUECTEL_COMMON_UDP_ENABLED
     /**< The internal pool of internet sockets */
     ewf_adapter_quectel_common_internet_socket internet_socket_pool[EWF_ADAPTER_QUECTEL_COMMON_INTERNET_SOCKET_POOL_SIZE];
@@ -141,6 +198,8 @@ typedef struct _ewf_adapter_quectel_common
     volatile bool mqtt_basic_open_error;
     volatile bool mqtt_basic_conn;
     volatile bool mqtt_basic_conn_error;
+    volatile bool mqtt_basic_publish;
+    volatile bool mqtt_basic_subscribe;
 #endif /* EWF_ADAPTER_QUECTEL_COMMON_MQTT_BASIC_ENABLED */
 
 #if EWF_ADAPTER_QUECTEL_COMMON_MQTT_ENABLED
@@ -300,7 +359,7 @@ ewf_result ewf_adapter_quectel_common_tcp_open(ewf_adapter* adapter_ptr, ewf_soc
 ewf_result ewf_adapter_quectel_common_tcp_close(ewf_socket_tcp* socket_ptr);
 ewf_result ewf_adapter_quectel_common_tcp_control(ewf_socket_tcp* socket_ptr, const char* control_str, const uint8_t* buffer_ptr, uint32_t* buffer_length_ptr);
 ewf_result ewf_adapter_quectel_common_tcp_set_tls_configuration(ewf_socket_tcp* socket_ptr, uint32_t tls_configuration_id);
-ewf_result ewf_adapter_quectel_common_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t port);
+ewf_result ewf_adapter_quectel_common_tcp_bind(ewf_socket_tcp* socket_ptr, uint32_t local_port);
 ewf_result ewf_adapter_quectel_common_tcp_listen(ewf_socket_tcp* socket_ptr);
 ewf_result ewf_adapter_quectel_common_tcp_accept(ewf_socket_tcp* socket_ptr, ewf_socket_tcp* socket_new_ptr);
 ewf_result ewf_adapter_quectel_common_tcp_connect(ewf_socket_tcp* socket_ptr, const char* const server, uint32_t port);

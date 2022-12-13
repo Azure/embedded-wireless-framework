@@ -17,18 +17,20 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_example_adapter_test EWF adapter API test.
+ * @defgroup group_adapter_test EWF adapter API test.
  * @brief The definitions and functions to test EWF adapters API implementations.
  * @{
  ****************************************************************************/
 
 /**
- * @defgroup group_example_adapter_test_configuration The EWF adapter API test configuration
+ * @defgroup group_adapter_test_configuration The EWF adapter API test configuration
  * @brief EWF adapter API test configuration settings
- * @description Every definition can be overriden by the user.
+ *
+ * Every definition can be overriden by the user.
  * Defining a symbol before including this file will skip the definition here.
  * Symbols not defined prior to these definitions will be defined with default values.
  * The default location for use definitions overriding these defaults is the file ewf_example.config.h
+ *
  * @{
  */
 
@@ -44,16 +46,20 @@ extern "C" {
 #define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED         1
 #endif
 
-#ifndef EWF_ADAPTER_TEST_UDP_ECHO_TEST_ENABLED
-#define EWF_ADAPTER_TEST_UDP_ECHO_TEST_ENABLED                  1
+#ifndef EWF_ADAPTER_TEST_TCP_SMALL_MESSAGE_COMPARE
+#define EWF_ADAPTER_TEST_TCP_SMALL_MESSAGE_COMPARE              0
 #endif
 
-#ifndef EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED
-#define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED         1
+#ifndef EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_COMPARE
+#define EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_COMPARE              0
 #endif
 
-#ifndef EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS
-#define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS                    0
+#ifndef EWF_ADAPTER_TEST_TCP_RECV_SLEEP_TICKS
+#define EWF_ADAPTER_TEST_TCP_RECV_SLEEP_TICKS                   0
+#endif
+
+#ifndef EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS
+#define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS                   0
 #endif
 
 #ifndef EWF_ADAPTER_TEST_TCP_HTTP_SERVER_STR
@@ -113,20 +119,43 @@ extern "C" {
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"    \
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"    \
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"    \
-    "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"    \
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #endif
 
-#ifndef EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS
-#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS                    0
+#ifndef EWF_ADAPTER_TEST_UDP_ECHO_TEST_ENABLED
+#define EWF_ADAPTER_TEST_UDP_ECHO_TEST_ENABLED                  1
+#endif
+
+#ifndef EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED
+#define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED         1
+#endif
+
+#ifndef EWF_ADAPTER_TEST_UDP_SMALL_MESSAGE_COMPARE
+#define EWF_ADAPTER_TEST_UDP_SMALL_MESSAGE_COMPARE              0
+#endif
+
+#ifndef EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_COMPARE
+#define EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_COMPARE              0
+#endif
+
+#ifndef EWF_ADAPTER_TEST_UDP_RECV_SLEEP_TICKS
+#define EWF_ADAPTER_TEST_UDP_RECV_SLEEP_TICKS                   0
+#endif
+
+#ifndef EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS
+#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS                   0
 #endif
 
 #ifndef EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT
 #define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                  5080
 #endif
 
+#ifndef EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS
+#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS                   0
+#endif
+
 #ifndef EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR
-#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR           "example-test-ewf-socat-udp-echo.westus.azurecontainer.io"
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR           ""
 #endif
 
 #ifndef EWF_ADAPTER_TEST_UDP_ECHO_SERVER_PORT
@@ -169,15 +198,17 @@ extern "C" {
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #endif
 
-/** @} *** group_example_adapter_test_configuration */
+/** @} *** group_adapter_test_configuration */
 
 /**
- * @defgroup group_example_adapter_test_functions The EWF adapter API test functions
+ * @defgroup group_adapter_test_functions The EWF adapter API test functions
  * @brief EWF adapter API test functions
- * @description You can call all test by calling the function ewf_adapter_test
- * The ewf_adapter_test function will call all other functions, 
+ *
+ * You can call all test by calling the function ewf_adapter_test
+ * The ewf_adapter_test function will call all other functions,
  * but it will skip functions that are disabled by the configuration symbols above.
  * You can call specific tests instead of the main entry points in your test code if that is more convenient.
+ *
  * @{
  */
 
@@ -244,10 +275,10 @@ ewf_result ewf_adapter_test_api_udp_client_server(ewf_adapter* adapter_ptr);
  */
 ewf_result ewf_adapter_test_api_mqtt(ewf_adapter* adapter_ptr);
 
-/** @} *** group_example_adapter_test_functions */
+/** @} *** group_adapter_test_functions */
 
 /************************************************************************//**
- * @} *** group_example_configuration
+ * @} *** group_adapter_test
  ****************************************************************************/
 
 #ifdef __cplusplus

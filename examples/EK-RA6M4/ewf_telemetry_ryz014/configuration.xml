@@ -526,8 +526,8 @@
       <configSetting altId="p410.gpio_mode.gpio_mode_peripheral" configurationId="p410.gpio_mode"/>
       <configSetting altId="p411.sci0.txd" configurationId="p411"/>
       <configSetting altId="p411.gpio_mode.gpio_mode_peripheral" configurationId="p411.gpio_mode"/>
-      <configSetting altId="p412.output.low" configurationId="p412"/>
-      <configSetting altId="p412.gpio_mode.gpio_mode_out.low" configurationId="p412.gpio_mode"/>
+      <configSetting altId="p412.sci0.sck" configurationId="p412"/>
+      <configSetting altId="p412.gpio_mode.gpio_mode_peripheral" configurationId="p412.gpio_mode"/>
       <configSetting altId="p413.sci0.ctsrts" configurationId="p413"/>
       <configSetting altId="p413.gpio_mode.gpio_mode_peripheral" configurationId="p413.gpio_mode"/>
       <configSetting altId="p415.output.low" configurationId="p415"/>
@@ -595,6 +595,7 @@
       <configSetting altId="sci0.ctsrts.p413" configurationId="sci0.ctsrts"/>
       <configSetting altId="sci0.mode.custom.free" configurationId="sci0.mode"/>
       <configSetting altId="sci0.rxd.p410" configurationId="sci0.rxd"/>
+      <configSetting altId="sci0.sck.p412" configurationId="sci0.sck"/>
       <configSetting altId="sci0.txd.p411" configurationId="sci0.txd"/>
       <configSetting altId="sci6.mode.iic.b" configurationId="sci6.mode"/>
       <configSetting altId="sci6.pairing.b" configurationId="sci6.pairing"/>

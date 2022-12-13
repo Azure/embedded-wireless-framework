@@ -76,23 +76,19 @@ void thread_entry(ULONG param)
         exit(result);
     }
 
-#if 0
-    // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
+    /* Disable network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
     {
-        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
         return;
     }
-#endif
 
-#if 0
-    // Set the SIM PIN
-    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
+    /* Disable EPS network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_urc_set(adapter_ptr, "0")))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
     }
-#endif
 
     // Call the certificate provisioning example
     if (ewf_result_failed(result = ewf_example_certs_basic_renesas_ryz014(adapter_ptr)))

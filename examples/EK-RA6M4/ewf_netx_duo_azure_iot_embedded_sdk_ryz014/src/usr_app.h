@@ -47,7 +47,7 @@
 #define IotLogErr       APP_ERR_PRINT
 #define IotLogWarn      APP_WARN_PRINT
 #define IotLogDebug     APP_DBG_PRINT
-#define IotLog          APP_PRINT
+#define IotLog          APP_OUTPUT_PRINT /* APP_PRINT */
 #define IotLogErrTrap  APP_ERR_TRAP
 
 #define LIBRARY_LOG_LEVEL IOT_LOG_ERROR
@@ -62,12 +62,6 @@
 			vLoggingPrintf(__VA_ARGS__); \
 			vLoggingPrintf("\r\n"); \
 		} while(0)
-
-
-/* IP instance */
-extern NX_IP g_ip0;
-/* DNS instance */
-extern NX_DNS g_dns0;
 
 fsp_err_t usr_hal_init(void);
 UINT usr_packet_pool_init(void);

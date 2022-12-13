@@ -28,10 +28,10 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (4)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                         (4)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (512)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                          (512)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -42,19 +42,19 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM78")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME                    ("\\\\.\\COM43")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (CBR_115200)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE                    (CBR_115200)
 
 /** @brief Define the WIN32 COM port interface serial port byte size */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE               (8)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE                    (8)
 
 /** @brief Define the WIN32 COM port interface serial port parity */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY                  (NOPARITY)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_PARITY                       (NOPARITY)
 
 /** @brief Define the WIN32 COM port interface serial stop bits */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS               (ONESTOPBIT)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_STOP_BITS                    (ONESTOPBIT)
 
 /** @} *** group_example_configuration_interface */
 
@@ -65,10 +65,10 @@ extern "C" {
  */
 
 /** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN                                          ("0000")
+#define EWF_CONFIG_SIM_PIN                                               ("0000")
 
 /** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                                       (1)
+#define EWF_CONFIG_CONTEXT_ID                                            (1)
 
 /** @} *** group_example_configuration_modem */
 
@@ -79,12 +79,28 @@ extern "C" {
  */
 
 /** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME                                 ""
+#define EWF_CONFIG_IOT_HUB_HOSTNAME                                     "azurertos-test.azure-devices.net"
 
 /** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
+#define EWF_CONFIG_IOT_HUB_DEVICEID                                     "bhnaphad-test-cert"
 
 /** @} *** group_example_configuration_iot_hub */
+
+/**
+ * @brief CA certificate file name that will be used in the security/TLS profile configuration
+ * @details This name will either be EWF_CONFIG_ADAPTER_QUECTEL_BG96_ROOT_CA_CERTIFICATE_FILE_NAME or
+ * EWF_CONFIG_ADAPTER_QUECTEL_BG96_USER_CA_CERTIFICATE_FILE_NAME used when certificate provisioning.
+ * By default this example is set to use the ROOT CA certificate file name.
+ */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_CA_CERTIFICATE_FILE_NAME         ("root_ca_cert.pem")
+
+ /** @brief Client certificate ID, range 0-19 */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_CLIENT_CERTIFICATE_FILE_NAME     ("device_cert.pem")
+
+/** @brief Client private key ID, range 0-19  */
+#define EWF_CONFIG_ADAPTER_QUECTEL_BG96_CLIENT_PRIVATE_KEY_FILE_NAME     ("device_key.pem")
+
+/** @} *** group_example_configuration_tls */
 
 /************************************************************************//**
  * @}

@@ -134,12 +134,6 @@ ewf_result ewf_adapter_quectel_common_info(ewf_adapter* adapter_ptr)
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QMTCFG=\"recv/mode\",0\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QMTCFG=\"aliauth\",0\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QMTCFG=?\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
     EWF_LOG("[ADAPTER INFORMATION END]\n");
 
     /* All ok! */

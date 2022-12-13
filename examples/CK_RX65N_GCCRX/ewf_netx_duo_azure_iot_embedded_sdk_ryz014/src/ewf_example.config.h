@@ -28,7 +28,7 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (16)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
 
 /** @brief the size of each message allocator block */
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
@@ -80,6 +80,17 @@ extern "C" {
 
 /** @brief The number of minutes to run the telemetry loop, 0 means to run forever */
 #define EWF_CONFIG_TELEMETRY_LOOP_MINUTES                           (60)
+
+/** @} */
+
+/**
+ * @defgroup group_example_configuration_netx_duo NetX Duo driver configuration
+ * @brief NetX Duo Driver configuration settings used in middleware driver
+ * @{
+ */
+
+/* MTU size should be equal to the modems maximum socket send size */
+#define EWF_CONFIG_ADAPTER_MTU                                       (1460)
 
 /** @} */
 

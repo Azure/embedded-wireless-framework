@@ -7,9 +7,34 @@
  ****************************************************************************/
 
 #include "ewf_adapter_api_modem.h"
+#include "ewf_adapter.h"
 #include "ewf_lib.h"
 
-#include <stddef.h>
+ewf_result ewf_adapter_modem_custom_command_send(ewf_adapter* adapter_ptr, const char* command_str)
+{
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    ewf_result result;
+    result = ewf_interface_send_command(interface_ptr, command_str);
+    if (ewf_result_failed(result)) return result;
+
+    return EWF_RESULT_OK;
+}
+
+ewf_result ewf_adapter_modem_custom_command_receive(ewf_adapter* adapter_ptr, char** buffer_ptr_ptr, uint32_t* buffer_length_ptr)
+{
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    ewf_result result;
+    result = ewf_interface_receive_response(interface_ptr, (uint8_t**)buffer_ptr_ptr, buffer_length_ptr, (uint32_t)-1);
+    if (ewf_result_failed(result)) return result;
+
+    return EWF_RESULT_OK;
+}
 
 ewf_result ewf_adapter_modem_functionality_set(ewf_adapter* adapter_ptr, const char * fun)
 {
@@ -28,38 +53,4 @@ ewf_result ewf_adapter_modem_functionality_set(ewf_adapter* adapter_ptr, const c
 #endif
 
     return EWF_RESULT_OK;
-}
-
-ewf_result ewf_adapter_modem_network_registration_check(ewf_adapter* adapter_ptr, uint32_t timeout)
-{
-    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-
-    if(!timeout)
-    {
-    	return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    }
-
-	ewf_result result = EWF_RESULT_OK;
-	uint32_t n;
-	ewf_network_status stat = EWF_NOT_REGISTERED_NOT_SEARCHING;
-
-	while(--timeout)
-	{
-		while(ewf_adapter_modem_network_registration_read(adapter_ptr, &n, &stat,NULL,NULL,NULL,NULL,NULL) != EWF_RESULT_OK);
-		/* Check if module is registered to network */
-		if((stat == EWF_REGISTERED_HOME)||(stat == EWF_REGISTERED_ROAMING))
-		{
-			break;
-		}
-		ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 1U);
-	}
-    if (!timeout)
-    {
-
-		EWF_LOG_ERROR("Failed to register to Network, ewf_result %d.\n", result);
-		return EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED;
-    }
-
-    return EWF_RESULT_OK;
-
 }

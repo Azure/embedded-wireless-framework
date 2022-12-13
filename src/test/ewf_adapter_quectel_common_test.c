@@ -33,18 +33,20 @@ ewf_result ewf_adapter_quectel_common_test(ewf_adapter* adapter_ptr)
 
     ewf_result result;
 
+    /* TCP/IP */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QICSGP=1\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
+    /* DNS */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QIDNSCFG=1\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
-    uint32_t pdp_context = 1;
-
-    if (ewf_result_failed(result = ewf_adapter_quectel_common_context_activate(adapter_ptr, pdp_context)))
+    if (ewf_result_failed(result = ewf_adapter_quectel_common_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG("[WARNING][Failed to activate the context.]\n");
     }
+
+#if 0
 
     // Adapter tests - ping
     result = ewf_adapter_quectel_common_test_command_ping(adapter_ptr);
@@ -67,14 +69,12 @@ ewf_result ewf_adapter_quectel_common_test(ewf_adapter* adapter_ptr)
         EWF_LOG_ERROR("Failed to run the adapter NTP test: ewf_result %d.\n", result);
     }
 
-#if 0
     // Adapter tests - HTTP
     result = ewf_adapter_quectel_common_test_command_http(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the adapter HTTP test: ewf_result %d.\n", result);
     }
-#endif
 
     // Adapter tests - Modem - UFS
     result = ewf_adapter_quectel_common_test_api_ufs(adapter_ptr);
@@ -83,41 +83,16 @@ ewf_result ewf_adapter_quectel_common_test(ewf_adapter* adapter_ptr)
         EWF_LOG_ERROR("Failed to run the modem adapter UFS test: ewf_result %d.\n", result);
     }
 
-    // Adapter tests - TCP/HTTP
-    result = ewf_adapter_test_api_tcp_http(adapter_ptr);
-    if (ewf_result_failed(result))
-    {
-        EWF_LOG_ERROR("Failed to run the adapter TCP/HTTP test: ewf_result %d.\n", result);
-    }
-
-#if 0 /* TODO, under development */
-    // Adapter tests - TCP
-    result = ewf_adapter_test_api_tcp(adapter_ptr);
-    if (ewf_result_failed(result))
-    {
-        EWF_LOG_ERROR("Failed to run the adapter TCP test: ewf_result %d.\n", result);
-    }
 #endif
 
-#if 0 /* TODO, under development */
-    // Adapter tests - UDP
-    result = ewf_adapter_test_api_udp(adapter_ptr);
+    // Adapter tests
+    result = ewf_adapter_test(adapter_ptr);
     if (ewf_result_failed(result))
     {
-        EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
+        EWF_LOG_ERROR("Failed to run the adapter common tests: ewf_result %d.\n", result);
     }
-#endif
 
-#if 0 /* TODO, under development */
-    // Adapter tests - MQTT
-    result = ewf_adapter_test_api_mqtt(adapter_ptr);
-    if (ewf_result_failed(result))
-    {
-        EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
-    }
-#endif
-
-    if (ewf_result_failed(result = ewf_adapter_quectel_common_context_deactivate(adapter_ptr, pdp_context)))
+    if (ewf_result_failed(result = ewf_adapter_quectel_common_context_deactivate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG("Failed to deactivate the context.\n");
     }
@@ -135,16 +110,16 @@ ewf_result ewf_adapter_quectel_common_test_command_ping(ewf_adapter* adapter_ptr
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
     ewf_result result;
-    char * response;
+    char * response_ptr;
     uint32_t length;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QPING=?\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QPING=1,\"www.microsoft.com\",3,4\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 3)))
+    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response_ptr, &length, 3)))
     {
-        ewf_interface_release(interface_ptr, response);
+        ewf_interface_release(interface_ptr, response_ptr);
         ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 3);
     }
 
@@ -161,17 +136,17 @@ ewf_result ewf_adapter_quectel_common_test_command_dns(ewf_adapter* adapter_ptr)
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    ewf_result result;
-    char * response;
-    uint32_t length;
+    ewf_result result = EWF_RESULT_OK;
+    char * response_ptr = NULL;
+    uint32_t length = 0;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QIDNSGIP=?\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QIDNSGIP=1,\"www.microsoft.com\"\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 30)))
+    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response_ptr, &length, 30)))
     {
-        ewf_interface_release(interface_ptr, (uint8_t*)response);
+        ewf_interface_release(interface_ptr, (uint8_t*)response_ptr);
         ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 3);
     }
 
@@ -187,17 +162,17 @@ ewf_result ewf_adapter_quectel_common_test_command_ntp(ewf_adapter* adapter_ptr)
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    ewf_result result;
-    char* response_str;
-    uint32_t response_length;
+    ewf_result result = EWF_RESULT_OK;
+    char* response_ptr = NULL;
+    uint32_t response_length = 0;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QNTP=?\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QNTP=1,\"pool.ntp.org\"\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response_str, &response_length, 3)))
+    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response_ptr, &response_length, 3)))
     {
-        ewf_interface_release(interface_ptr, response_str);
+        ewf_interface_release(interface_ptr, response_ptr);
         ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 3);
     }
 
@@ -272,29 +247,52 @@ ewf_result ewf_adapter_quectel_common_test_command_http(ewf_adapter* adapter_ptr
         }
     }
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QHTTPGET=80\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
-
-    /* Set a user URC callback to wait for the HTTP GET response */
-    ewf_adapter_quectel_common_test_command_http_http_get = false;
-    if (ewf_result_failed(result = ewf_interface_set_user_urc_callback(interface_ptr, ewf_adapter_quectel_common_test_command_http_urc_callback))) return result;
-
-    /* Wait until the response is recevied or a timeout is reached */
-    uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 60;
-    while (!ewf_adapter_quectel_common_test_command_http_http_get && timeout != 0)
+    /* Issue the HTTP GET request and wait for the asynchronous response */
     {
-        ewf_platform_sleep(1);
-        ewf_interface_poll(interface_ptr);
-        timeout--;
-    }
+        /* Set a user URC callback to wait for the HTTP GET response */
+        ewf_adapter_quectel_common_test_command_http_http_get = false;
+        if (ewf_result_failed(result = ewf_interface_set_user_urc_callback(interface_ptr, ewf_adapter_quectel_common_test_command_http_urc_callback))) return result;
 
-    /* Clear the user URC callback */
-    if (ewf_result_failed(result = ewf_interface_set_user_urc_callback(interface_ptr, NULL))) return result;
+        ewf_result result_send_command = EWF_RESULT_OK;
+        ewf_result result_verify_response = EWF_RESULT_OK;
 
-    /* If we reached the timeout there was no response, fail */
-    if (timeout == 0)
-    {
-        return EWF_RESULT_UNEXPECTED_RESPONSE;
+        uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 60;
+
+        result_send_command = ewf_interface_send_command(interface_ptr, "AT+QHTTPGET=80\r");
+        if (ewf_result_failed(result_send_command))
+        {
+            EWF_LOG_ERROR("Failed to send the command.\n");
+        }
+        else
+        {
+            result_verify_response = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+            if (ewf_result_failed(result_verify_response))
+            {
+                EWF_LOG_ERROR("Failed to verify the response.\n");
+            }
+            else
+            {
+                /* Wait until the response is recevied or a timeout is reached */
+                while (!ewf_adapter_quectel_common_test_command_http_http_get && timeout != 0)
+                {
+                    ewf_interface_poll(interface_ptr);
+                    timeout--;
+                    ewf_platform_sleep(1);
+                }
+            }
+        }
+
+        /* Clear the user URC callback */
+        if (ewf_result_failed(result = ewf_interface_set_user_urc_callback(interface_ptr, NULL))) return result;
+
+        if (ewf_result_failed(result_send_command)) return result_send_command;
+        if (ewf_result_failed(result_verify_response)) return result_verify_response;
+
+        /* If we reached the timeout there was no response, fail */
+        if (timeout == 0)
+        {
+            return EWF_RESULT_UNEXPECTED_RESPONSE;
+        }
     }
 
     /* Read the responses */
@@ -307,17 +305,36 @@ ewf_result ewf_adapter_quectel_common_test_command_http(ewf_adapter* adapter_ptr
             false,
         };
         if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QHTTPREAD=10\r"))) return result;
-        if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str)))
+
+        ewf_result result_send_command = EWF_RESULT_OK;
+        ewf_result result_verify_response = EWF_RESULT_OK;
+
+        result_send_command = ewf_interface_send_command(interface_ptr, "AT+QHTTPREAD=10\r");
+
+        if (ewf_result_failed(result_send_command))
         {
-            EWF_LOG_ERROR("Unexpected response.\n");
+            EWF_LOG_ERROR("Failed to send the command.\n");
         }
+        else
+        {
+            result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str);
+            if (ewf_result_failed(result_verify_response))
+            {
+                EWF_LOG_ERROR("Failed to verify the response.\n");
+            }
+        }
+
+        /* Clear the response pattern */
         if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+
+        if (ewf_result_failed(result_send_command)) return result_send_command;
+        if (ewf_result_failed(result_verify_response)) return result_verify_response;
 
         /* Wait for the read response time out */
         uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 10;
         while (timeout != 0)
         {
+            ewf_interface_poll(interface_ptr);
             ewf_interface_drop_all_responses(interface_ptr);
             timeout--;
             ewf_platform_sleep(1);

@@ -324,8 +324,8 @@
         <Item currentVect="81" id="SCI3_TXI3" priority="15" usedState="Not Use"/>
         <Item currentVect="82" id="SCI4_RXI4" priority="15" usedState="Not Use"/>
         <Item currentVect="83" id="SCI4_TXI4" priority="15" usedState="Not Use"/>
-        <Item currentVect="84" id="SCI5_RXI5" priority="15" usedState="Not Use"/>
-        <Item currentVect="85" id="SCI5_TXI5" priority="15" usedState="Not Use"/>
+        <Item currentVect="84" id="SCI5_RXI5" priority="5" usedState="Used"/>
+        <Item currentVect="85" id="SCI5_TXI5" priority="5" usedState="Used"/>
         <Item currentVect="86" id="SCI6_RXI6" priority="15" usedState="Not Use"/>
         <Item currentVect="87" id="SCI6_TXI6" priority="15" usedState="Not Use"/>
         <Item currentVect="88" id="LVD1_LVD1" priority="15" usedState="Not Use"/>
@@ -348,7 +348,7 @@
         <Item currentVect="107" groupchild="&lt;br&gt;1-SDIOI" id="BL2" priority="15" usedState="Not Use"/>
         <Item currentVect="108" id="RSPI2_SPRI2" priority="15" usedState="Not Use"/>
         <Item currentVect="109" id="RSPI2_SPTI2" priority="15" usedState="Not Use"/>
-        <Item currentVect="110" groupchild="&lt;br&gt;1-TEI0&lt;br&gt;2-ERI0&lt;br&gt;3-TEI1&lt;br&gt;4-ERI1&lt;br&gt;5-TEI2&lt;br&gt;6-ERI2&lt;br&gt;7-TEI3&lt;br&gt;8-ERI3&lt;br&gt;9-TEI4&lt;br&gt;10-ERI4&lt;br&gt;11-TEI5&lt;br&gt;12-ERI5&lt;br&gt;13-TEI6&lt;br&gt;14-ERI6&lt;br&gt;15-TEI7&lt;br&gt;16-ERI7&lt;br&gt;17-TEI12&lt;br&gt;18-ERI12&lt;br&gt;19-SCIX0&lt;br&gt;20-SCIX1&lt;br&gt;21-SCIX2&lt;br&gt;22-SCIX3&lt;br&gt;23-QSPSSLI&lt;br&gt;24-FERRI&lt;br&gt;25-MENDI&lt;br&gt;26-OVFI&lt;br&gt;27-DOPCI&lt;br&gt;28-PCFEI&lt;br&gt;29-PCERI" id="BL0" priority="15" usedState="Not Use"/>
+        <Item currentVect="110" groupchild="&lt;br&gt;1-TEI0&lt;br&gt;2-ERI0&lt;br&gt;3-TEI1&lt;br&gt;4-ERI1&lt;br&gt;5-TEI2&lt;br&gt;6-ERI2&lt;br&gt;7-TEI3&lt;br&gt;8-ERI3&lt;br&gt;9-TEI4&lt;br&gt;10-ERI4&lt;br&gt;11-TEI5&lt;br&gt;12-ERI5&lt;br&gt;13-TEI6&lt;br&gt;14-ERI6&lt;br&gt;15-TEI7&lt;br&gt;16-ERI7&lt;br&gt;17-TEI12&lt;br&gt;18-ERI12&lt;br&gt;19-SCIX0&lt;br&gt;20-SCIX1&lt;br&gt;21-SCIX2&lt;br&gt;22-SCIX3&lt;br&gt;23-QSPSSLI&lt;br&gt;24-FERRI&lt;br&gt;25-MENDI&lt;br&gt;26-OVFI&lt;br&gt;27-DOPCI&lt;br&gt;28-PCFEI&lt;br&gt;29-PCERI" id="BL0" priority="5" usedState="Used"/>
         <Item currentVect="111" groupchild="&lt;br&gt;1-CDETI&lt;br&gt;2-CACI&lt;br&gt;3-SDACI&lt;br&gt;4-CDETIO&lt;br&gt;5-ERRIO&lt;br&gt;6-ACCIO&lt;br&gt;7-OEI1&lt;br&gt;8-OEI2&lt;br&gt;9-OEI3&lt;br&gt;10-OEI4&lt;br&gt;11-TEI0&lt;br&gt;12-EEI0&lt;br&gt;13-TEI2&lt;br&gt;14-EEI2&lt;br&gt;15-S12CMPAI&lt;br&gt;16-S12CMPBI&lt;br&gt;17-S12CMPAI1&lt;br&gt;18-S12CMPBI1&lt;br&gt;19-TEI8&lt;br&gt;20-ERI8&lt;br&gt;21-TEI9&lt;br&gt;22-ERI9&lt;br&gt;23-TEI1&lt;br&gt;24-EEI1" id="BL1" priority="15" usedState="Not Use"/>
         <Item currentVect="112" groupchild="&lt;br&gt;1-TEI10&lt;br&gt;2-ERI10&lt;br&gt;3-TEI11&lt;br&gt;4-ERI11&lt;br&gt;5-SPII0&lt;br&gt;6-SPEI0&lt;br&gt;7-SPII1&lt;br&gt;8-SPEI1&lt;br&gt;9-SPII2&lt;br&gt;10-SPEI2" id="AL0" priority="15" usedState="Not Use"/>
         <Item currentVect="113" groupchild="&lt;br&gt;1-EINT0&lt;br&gt;2-VPOS&lt;br&gt;3-GR1UF&lt;br&gt;4-GR2UF&lt;br&gt;5-DRW_IRQ" id="AL1" priority="15" usedState="Not Use"/>
@@ -500,8 +500,8 @@
         <pinItem allocation="34" comments="" direction="None" id="CTS0#" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="70" comments="" direction="None" id="RXD5" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="27" comments="" direction="None" id="SMOSI0" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
-        <pinItem allocation="67" comments="" direction="None" id="SMOSI5" isUsedBySoftware="false" locked="false" operationMode="" status="65280"/>
         <pinItem allocation="17" comments="" direction="None" id="XCIN" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
+        <pinItem allocation="67" comments="" direction="None" id="TXD5" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="22" comments="" direction="None" id="EXTAL" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="16" comments="" direction="None" id="FINED" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="26" comments="" direction="None" id="SMISO0" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
@@ -629,7 +629,7 @@
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
         </configuration>
-        <configuration enable="true" exclude="false" id="d575bdb5-778a-47e6-ad1a-12f7ba6d4e2f" inuse="true" name="threadx">
+        <configuration enable="true" exclude="false" id="ef594254-12a1-4993-b005-709ea3169f24" inuse="true" name="threadx">
             <component description="Dependency: None&#10;Azure RTOS ThreadX is an advanced real-time operating system (RTOS) designed specifically for deeply embedded applications" detailDescription="Azure RTOS ThreadX is an advanced real-time operating system (RTOS) designed specifically for deeply embedded applications" display="Azure RTOS ThreadX" id="threadx6.1.11_rel-rx-1.0.0" version="6.1.11_rel-rx-1.0.0">
                 <gridItem id="USE_TX_MAX_PRIORITIES" selectedIndex="0"/>
                 <gridItem id="TX_MAX_PRIORITIES" selectedIndex="32"/>
@@ -678,11 +678,11 @@
             </component>
             <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
         </configuration>
-        <configuration enable="true" exclude="false" id="00ceb2ec-7434-489d-8037-0c183e6763f2" inuse="true" name="netxduo_addons">
+        <configuration enable="true" exclude="false" id="3abcb98d-8a08-4401-9670-bbb0a8391134" inuse="true" name="netxduo_addons">
             <component description="Dependency: filex, netxduo&#10;Azure RTOS NetX Duo Addons provide additional libraries for NetX Duo such as azure_iot (azure-sdk-for-c), cloud, dhcp, dns, http, mqtt, nat, smtp, snmp etc." detailDescription="Azure RTOS NetX Duo Addons provide additional libraries for NetX Duo such as azure_iot (azure-sdk-for-c), cloud, dhcp, dns, http, mqtt, nat, smtp, snmp etc." display="Azure RTOS NetX Duo Addons" id="netxduo_addons6.1.11_rel-rx-1.0.0" version="6.1.11_rel-rx-1.0.0"/>
             <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
         </configuration>
-        <configuration enable="true" exclude="false" id="d786abdc-60ff-4002-a06d-12f498967db0" inuse="true" name="netxduo">
+        <configuration enable="true" exclude="false" id="4e1e5ceb-9e5e-45fe-89cd-160561823767" inuse="true" name="netxduo">
             <component description="Dependency: threadx&#10;Azure RTOS NetX Duo is an advanced, industrial-grade TCP/IP network stack designed specifically for deeply embedded real-time and IoT applications" detailDescription="Azure RTOS NetX Duo is an advanced, industrial-grade TCP/IP network stack designed specifically for deeply embedded real-time and IoT applications" display="Azure RTOS NetX Duo" id="netxduo6.1.11_rel-rx-1.0.0" version="6.1.11_rel-rx-1.0.0">
                 <gridItem id="USE_NX_MAX_PHYSICAL_INTERFACES" selectedIndex="0"/>
                 <gridItem id="NX_MAX_PHYSICAL_INTERFACES" selectedIndex="1"/>
@@ -937,7 +937,7 @@
                 <gridItem id="SCI_CFG_CH2_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH3_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH4_INCLUDED" selectedIndex="0"/>
-                <gridItem id="SCI_CFG_CH5_INCLUDED" selectedIndex="1"/>
+                <gridItem id="SCI_CFG_CH5_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH6_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH7_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH8_INCLUDED" selectedIndex="0"/>
@@ -950,7 +950,7 @@
                 <gridItem id="SCI_CFG_CH2_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH3_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH4_TX_BUFSIZ" selectedIndex="80"/>
-                <gridItem id="SCI_CFG_CH5_TX_BUFSIZ" selectedIndex="2048"/>
+                <gridItem id="SCI_CFG_CH5_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH6_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH7_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH8_TX_BUFSIZ" selectedIndex="80"/>
@@ -1083,7 +1083,7 @@
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
         </configuration>
-        <configuration enable="true" exclude="false" id="a58033ef-bcd7-41f2-bd89-be8cb06cb43c" inuse="true" name="azurertos_object">
+        <configuration enable="true" exclude="false" id="9a842739-f44a-4130-997f-d10f3a229c79" inuse="true" name="azurertos_object">
             <allocatable id="" name="" type="">
                 <allocatable id="THREAD" name="THREAD" type="TABALLOCATABLE">
                     <allocatable id="THREAD1" name="THREAD1" type="ROWALLOCATABLE">
@@ -1107,7 +1107,7 @@
             <component description="" detailDescription="" display="AzureRTOS Object" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.azurertos.object" version="1.0.111"/>
             <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
         </configuration>
-        <configuration enable="true" exclude="false" id="b8807cb7-d6bf-4263-aa8a-e6dff9cb3255" inuse="true" name="filex">
+        <configuration enable="true" exclude="false" id="833fd12e-0b8f-438a-a7d5-197e62b4773e" inuse="true" name="filex">
             <component description="Dependency: threadx&#10;Azure RTOS FileX is a high-performance, FAT-compatible file system that’s fully integrated with Azure RTOS ThreadX" detailDescription="Azure RTOS FileX is a high-performance, FAT-compatible file system that’s fully integrated with Azure RTOS ThreadX" display="Azure RTOS FileX" id="filex6.1.11_rel-rx-1.0.0" version="6.1.11_rel-rx-1.0.0">
                 <gridItem id="USE_FX_MAX_LONG_NAME_LEN" selectedIndex="0"/>
                 <gridItem id="FX_MAX_LONG_NAME_LEN" selectedIndex="256"/>
@@ -1151,6 +1151,167 @@
                 <gridItem id="USE_FX_DISABLE_CONSECUTIVE_DETECT" selectedIndex="0"/>
             </component>
             <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
+        </configuration>
+        <configuration apiMode="FULL_API" id="6d1473cd-0d83-4300-a717-eb1f9e91b356" inuse="true" name="Config_SCI5">
+            <allocatable id="SCI5">
+                <isocket id="CountingClockB" selection="Clock.tool_clock_pclkb" value="6.0E7"/>
+                <option enabled="true" id="BitEdge" selection="LowLevel">
+                    <item id="LowLevel" input="" vlaue="0"/>
+                    <item id="FallEdge" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="DataLength" selection="8Bits">
+                    <item id="9Bits" input="" vlaue="0"/>
+                    <item id="8Bits" input="" vlaue="0"/>
+                    <item id="7Bits" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="Parity" selection="None">
+                    <item id="None" input="" vlaue="0"/>
+                    <item id="Even" input="" vlaue="0"/>
+                    <item id="Odd" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="StopBit" selection="1Bit">
+                    <item id="1Bit" input="" vlaue="0"/>
+                    <item id="2Bits" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="TransDir" selection="LSB">
+                    <item id="LSB" input="" vlaue="0"/>
+                    <item id="MSB" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="TransClock" selection="Internal">
+                    <item id="Internal" input="" vlaue="0"/>
+                    <item id="External" input="" vlaue="0"/>
+                    <item id="TMRClk" input="" vlaue="0"/>
+                </option>
+                <option enabled="false" id="BaseClk" selection="16Cyl">
+                    <item id="16Cyl" input="" vlaue="0"/>
+                    <item id="8Cyl" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="Bitrate" selection="FreeValue">
+                    <item id="FreeValue" input="115200" vlaue="9600"/>
+                    <item id="9600" input="9600" vlaue="0"/>
+                    <item id="19200" input="19200" vlaue="0"/>
+                    <item id="31250" input="31250" vlaue="0"/>
+                    <item id="38400" input="38400" vlaue="0"/>
+                    <item id="75000" input="75000" vlaue="0"/>
+                    <item id="150000" input="150000" vlaue="0"/>
+                    <item id="325000" input="325000" vlaue="0"/>
+                    <item id="375000" input="375000" vlaue="0"/>
+                </option>
+                <option enabled="true" id="DutyCorrection" selection="Disable">
+                    <item id="Enable" input="" vlaue="0"/>
+                    <item id="Disable" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="SCKPinFun" selection="SckUnuse">
+                    <item id="SckUnuse" input="" vlaue="0"/>
+                    <item id="ClkOut" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="NoiseFilt" selection="Disable">
+                    <item id="Enable" input="" vlaue="0"/>
+                    <item id="Disable" input="" vlaue="0"/>
+                </option>
+                <option enabled="false" id="FiltClk" selection="Div1">
+                    <item id="Div1" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="FlowControl" selection="None">
+                    <item id="None" input="" vlaue="0"/>
+                    <item id="CTS" input="" vlaue="0"/>
+                    <item id="RTS" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="TransDataHandle" selection="ISR">
+                    <item id="ISR" input="" vlaue="0"/>
+                    <item id="DMAC" input="" vlaue="0"/>
+                    <item id="DTC" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="RecvDataHandle" selection="ISR">
+                    <item id="ISR" input="" vlaue="0"/>
+                    <item id="DMAC" input="" vlaue="0"/>
+                    <item id="DTC" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="TXIPriority" selection="Level5">
+                    <item id="Level0" input="" vlaue="0"/>
+                    <item id="Level1" input="" vlaue="0"/>
+                    <item id="Level2" input="" vlaue="0"/>
+                    <item id="Level3" input="" vlaue="0"/>
+                    <item id="Level4" input="" vlaue="0"/>
+                    <item id="Level5" input="" vlaue="0"/>
+                    <item id="Level6" input="" vlaue="0"/>
+                    <item id="Level7" input="" vlaue="0"/>
+                    <item id="Level8" input="" vlaue="0"/>
+                    <item id="Level9" input="" vlaue="0"/>
+                    <item id="Level10" input="" vlaue="0"/>
+                    <item id="Level11" input="" vlaue="0"/>
+                    <item id="Level12" input="" vlaue="0"/>
+                    <item id="Level13" input="" vlaue="0"/>
+                    <item id="Level14" input="" vlaue="0"/>
+                    <item id="Level15" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="RXIPriority" selection="Level5">
+                    <item id="Level0" input="" vlaue="0"/>
+                    <item id="Level1" input="" vlaue="0"/>
+                    <item id="Level2" input="" vlaue="0"/>
+                    <item id="Level3" input="" vlaue="0"/>
+                    <item id="Level4" input="" vlaue="0"/>
+                    <item id="Level5" input="" vlaue="0"/>
+                    <item id="Level6" input="" vlaue="0"/>
+                    <item id="Level7" input="" vlaue="0"/>
+                    <item id="Level8" input="" vlaue="0"/>
+                    <item id="Level9" input="" vlaue="0"/>
+                    <item id="Level10" input="" vlaue="0"/>
+                    <item id="Level11" input="" vlaue="0"/>
+                    <item id="Level12" input="" vlaue="0"/>
+                    <item id="Level13" input="" vlaue="0"/>
+                    <item id="Level14" input="" vlaue="0"/>
+                    <item id="Level15" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="ERIEnable" selection="Enable">
+                    <item id="Enable" input="" vlaue="0"/>
+                    <item id="Disable" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="ERIPriority" selection="Level5">
+                    <item id="Level0" input="" vlaue="0"/>
+                    <item id="Level1" input="" vlaue="0"/>
+                    <item id="Level2" input="" vlaue="0"/>
+                    <item id="Level3" input="" vlaue="0"/>
+                    <item id="Level4" input="" vlaue="0"/>
+                    <item id="Level5" input="" vlaue="0"/>
+                    <item id="Level6" input="" vlaue="0"/>
+                    <item id="Level7" input="" vlaue="0"/>
+                    <item id="Level8" input="" vlaue="0"/>
+                    <item id="Level9" input="" vlaue="0"/>
+                    <item id="Level10" input="" vlaue="0"/>
+                    <item id="Level11" input="" vlaue="0"/>
+                    <item id="Level12" input="" vlaue="0"/>
+                    <item id="Level13" input="" vlaue="0"/>
+                    <item id="Level14" input="" vlaue="0"/>
+                    <item id="Level15" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="TransEnd" selection="Enable">
+                    <item id="Enable" input="" vlaue="0"/>
+                    <item id="Disable" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="RecvEnd" selection="Enable">
+                    <item id="Enable" input="" vlaue="0"/>
+                    <item id="Disable" input="" vlaue="0"/>
+                </option>
+                <option enabled="true" id="RecvError" selection="Enable">
+                    <item id="Enable" input="" vlaue="0"/>
+                    <item id="Disable" input="" vlaue="0"/>
+                </option>
+            </allocatable>
+            <component description="This software component provides configurations for SCI(SCIF, RSCI) single(multi-processor) asynchronous mode." detailDescription="" display="SCI/SCIF Asynchronous Mode" id="com.renesas.smc.tools.swcomponent.codegenerator.sciasyncmode" version="1.12.0"/>
+            <allocator channelLevel0="5" channelLevel1="" channelLevel2="" channelLevel3="" channelLevel4="" channelLevel5="" description="SCI channel 5" display="SCI5" id="com.renesas.smc.tools.swcomponent.codegenerator.sciasync.rx651.sci5" type="SCI">
+                <context>
+                    <option enabled="true" id="Mode" selection="BothMode">
+                        <item enabled="true" id="TransMode"/>
+                        <item enabled="true" id="RecvMode"/>
+                        <item enabled="true" id="BothMode"/>
+                        <item enabled="true" id="MultiTransMode"/>
+                        <item enabled="true" id="MultiRecvMode"/>
+                        <item enabled="true" id="MultiBothMode"/>
+                    </option>
+                </context>
+            </allocator>
+            <source description="Code generator components provide peripheral drivers with customized generated source geared towards small code size" display="Code Generator" id="com.renesas.smc.tools.swcomponent.codegenerator.source"/>
         </configuration>
     </tool>
     <tool id="System">

@@ -60,7 +60,7 @@
 #define RESET_VALUE             (0x00)
 #define PRE_INIT_VALUE          (0xFF)
 
-#define KIT_NAME                "EK-RA6M5"
+#define KIT_NAME                "EK-RA6M4"
 
 #define AP_VERSION              ("1.0")
 #define MODULE_NAME             "Azure IoT C-SDK"
@@ -75,12 +75,19 @@
 
 
 #define AP_INFO                 "\r\nThis Application project demonstrates the IOT functionalities of Azure IOT SDK Client"\
-                                "\r\nusing Azure RTOS and NetX Duo with Ethernet Interface Module running on Renesas RA MCU's" \
+                                "\r\nusing Azure RTOS and NetX Duo with RYZ014 running on Renesas RA MCU's" \
 							    "\r\n********************************************************************************\r\n"\
                                 "\r\n\r\n"
 
 #define SEGGER_INDEX            (0)
 
+
+extern char ewf_log_buffer[1024];
+#define APP_OUTPUT_PRINT(...)                                                 \
+        do {                                                                  \
+            snprintf(ewf_log_buffer, sizeof(ewf_log_buffer), __VA_ARGS__);    \
+            SEGGER_RTT_WriteString(0, ewf_log_buffer);                        \
+        } while(0)
 
 #define APP_PRINT(fn_, ...)         if(LOG_TERMINAL == RTT_TERMINAL)\
 	                                    SEGGER_RTT_printf (SEGGER_INDEX,(fn_), ##__VA_ARGS__);\

@@ -1,6 +1,8 @@
 # Embedded Wireless Framework
 
-The Embedded Wireless Framework simplifies the development of internet and cloud connectivity for embedded device software by defining a set of APIs for network adapters, host interfaces, platforms, and software stacks. The goal is to provide a standard framework for writing applications and controlling wireless network adapters (cellular, wifi, ...) while abstracting a driver interface for hardware vendors to plug in modules with self-developed drivers.
+The Embedded Wireless Framework simplifies the development of internet and cloud connectivity for embedded device software by defining a set of APIs for network adapters, host interfaces, platforms, and software stacks. The goal is to provide a standard framework for writing applications and controlling wireless network adapters (cellular, Wi-Fi, LoRa...) while abstracting a driver interface for hardware vendors to plug in modules with self-developed drivers.
+
+You can look at the compiled EWF doxygen documentation at GitHub pages [here](https://azure.github.io/embedded-wireless-framework/html/index.html).
 
 ## Objectives
 
@@ -61,6 +63,7 @@ Cellular modems in the same family are likely to work with small changes:
 - Quectel BG95
 - Quectel BC95
 - Renesas RYZ014
+- Renesas RYZ024A
 - SIMCom SIM7000
 - SIMCom SIM7600
 - SIMCom SIM900

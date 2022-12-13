@@ -107,7 +107,7 @@ ULONG reported_property_version;
                                                             scratch_buffer,
                                                             sizeof(scratch_buffer))))
     {
-        EWF_LOG("Failed to initialize json writer\r\n");
+        IotLog("Failed to initialize json writer\r\n");
         return(NX_NOT_SUCCESSFUL);
     }
 
@@ -115,7 +115,7 @@ ULONG reported_property_version;
                                                                   append_properties, NX_NULL,
                                                                   &json_builder)))
     {
-        EWF_LOG("Failed to build reported property!: error code = 0x%08x\r\n", status);
+        IotLog("Failed to build reported property!: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_builder);
         return(status);
     }
@@ -128,7 +128,7 @@ ULONG reported_property_version;
                                                                                &reported_property_version,
                                                                                (5 * NX_IP_PERIODIC_RATE))))
     {
-        EWF_LOG("Device twin reported properties failed!: error code = 0x%08x\r\n", status);
+        IotLog("Device twin reported properties failed!: error code = 0x%08x\r\n", status);
         nx_azure_iot_json_writer_deinit(&json_builder);
         return(status);
     }
@@ -137,7 +137,7 @@ ULONG reported_property_version;
 
     if ((response_status < 200) || (response_status >= 300))
     {
-        EWF_LOG("device twin report properties failed with code : %d\r\n", response_status);
+        IotLog("device twin report properties failed with code : %d\r\n", response_status);
         return(NX_NOT_SUCCESSFUL);
     }
 

@@ -42,7 +42,11 @@
 #endif /* NX_ENABLE_TCPIP_OFFLOAD */
 
 #ifndef NX_DRIVER_IP_MTU
+#ifdef EWF_CONFIG_ADAPTER_MTU
+#define NX_DRIVER_IP_MTU                        EWF_CONFIG_ADAPTER_MTU
+#else
 #define NX_DRIVER_IP_MTU                        1500
+#endif /* EWF_CONFIG_ADAPTER_MTU */
 #endif /* NX_DRIVER_IP_MTU */
 
 #ifndef NX_DRIVER_RECEIVE_QUEUE_SIZE
@@ -959,6 +963,7 @@ UINT        status;
 /**************************************************************************/
 static VOID  _nx_driver_deferred_processing(NX_IP_DRIVER *driver_req_ptr)
 {
+    EWF_PARAMETER_NOT_USED(driver_req_ptr);
 }
 
 /**************************************************************************/
@@ -1012,11 +1017,9 @@ static VOID _nx_driver_thread_entry(ULONG thread_input)
 UINT i;
 NX_PACKET *packet_ptr;
 UINT packet_type;
-UINT status;
 NXD_ADDRESS local_ip;
 NXD_ADDRESS remote_ip;
-uint16_t data_length;
-int32_t size;
+uint32_t data_length;
 NX_IP *ip_ptr = nx_driver_information.nx_driver_information_ip_ptr;
 NX_INTERFACE *interface_ptr = nx_driver_information.nx_driver_information_interface;
 NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_pool_ptr;
@@ -1025,7 +1028,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
 
     for (;;)
     {
-        ewf_adapter* adapter_ptr = (ewf_adapter*)ip_ptr->nx_ip_reserved_ptr;
+        ewf_adapter* adapter_ptr = (ewf_adapter*)interface_ptr->nx_interface_additional_link_info;
         if ((adapter_ptr == NULL) ||
             (adapter_ptr->struct_magic != EWF_ADAPTER_STRUCT_MAGIC) ||
             (adapter_ptr->struct_size != EWF_ADAPTER_STRUCT_SIZE) ||
@@ -1111,7 +1114,7 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
                     uint32_t len = data_length;
                     result = ewf_adapter_tcp_receive(
                         &nx_driver_sockets[i].tcp_socket,
-                        (char*)(packet_ptr->nx_packet_prepend_ptr), 
+                        (uint8_t*)(packet_ptr->nx_packet_prepend_ptr),
                         &len,
                         false);
                     data_length = len;
@@ -1193,7 +1196,8 @@ NX_PACKET_POOL *pool_ptr = nx_driver_information.nx_driver_information_packet_po
     EWF_LOG("[NETX-DUO-DRIVER][DRIVER THREAD IS BROKEN!]\n");
 }
 
-bool _nxd_address_to_string(NXD_ADDRESS* address_ptr, CHAR* buffer_ptr, UINT buffer_size)
+#ifdef EWF_DEBUG
+static bool _nxd_address_to_string(NXD_ADDRESS* address_ptr, CHAR* buffer_ptr, UINT buffer_size)
 {
     if (buffer_ptr == NULL || buffer_size == 0)
     {
@@ -1236,6 +1240,7 @@ bool _nxd_address_to_string(NXD_ADDRESS* address_ptr, CHAR* buffer_ptr, UINT buf
 
     return true;
 }
+#endif
 
 /**************************************************************************/
 /*                                                                        */
@@ -1289,15 +1294,17 @@ static UINT _nx_driver_tcpip_handler(struct NX_IP_STRUCT *ip_ptr,
                                      NXD_ADDRESS *local_ip, NXD_ADDRESS *remote_ip,
                                      UINT local_port, UINT *remote_port, UINT wait_option)
 {
-UINT status = NX_NOT_SUCCESSFUL;
-char server_address[16] = { 0 };
-UCHAR remote_ip_bytes[4] = { 0 };
-NX_PACKET *current_packet;
-ULONG packet_size;
-ULONG offset;
-uint16_t sent_size;
-UINT i = 0;
-ewf_result result;
+
+    EWF_PARAMETER_NOT_USED(ip_ptr);
+    UINT status = NX_NOT_SUCCESSFUL;
+    char server_address[16] = { 0 };
+    UCHAR remote_ip_bytes[4] = { 0 };
+    NX_PACKET *current_packet;
+    ULONG packet_size;
+    ULONG offset;
+    uint32_t sent_size;
+    UINT i = 0;
+    ewf_result result;
 
 #ifdef EWF_DEBUG
     const char* nx_tcpip_offload_op_str = "Uninitialized";
@@ -1324,7 +1331,7 @@ ewf_result result;
         socket_ptr, nx_tcpip_offload_op_str, packet_ptr, local_ip_str, local_port, remote_ip_str, remote_port ? *remote_port : 0, wait_option);
 #endif
 
-    ewf_adapter* adapter_ptr = (ewf_adapter*)ip_ptr->nx_ip_reserved_ptr;
+    ewf_adapter* adapter_ptr = (ewf_adapter*)interface_ptr->nx_interface_additional_link_info;
     if ((adapter_ptr == NULL) ||
         (adapter_ptr->struct_magic != EWF_ADAPTER_STRUCT_MAGIC) ||
         (adapter_ptr->struct_size != EWF_ADAPTER_STRUCT_SIZE) ||
@@ -1410,10 +1417,10 @@ ewf_result result;
         }
 
         /* Convert remote IP to byte array.  */
-        remote_ip_bytes[0] = (remote_ip -> nxd_ip_address.v4 >> 24) & 0xFF;
-        remote_ip_bytes[1] = (remote_ip -> nxd_ip_address.v4 >> 16) & 0xFF;
-        remote_ip_bytes[2] = (remote_ip -> nxd_ip_address.v4 >> 8) & 0xFF;
-        remote_ip_bytes[3] = (remote_ip -> nxd_ip_address.v4) & 0xFF;
+        remote_ip_bytes[0] = (UCHAR)((remote_ip -> nxd_ip_address.v4 >> 24) & 0xFF);
+        remote_ip_bytes[1] = (UCHAR)((remote_ip -> nxd_ip_address.v4 >> 16) & 0xFF);
+        remote_ip_bytes[2] = (UCHAR)((remote_ip -> nxd_ip_address.v4 >> 8) & 0xFF);
+        remote_ip_bytes[3] = (UCHAR)((remote_ip -> nxd_ip_address.v4) & 0xFF);
 
         snprintf(server_address, sizeof(server_address), 
             "%u.%u.%u.%u",
@@ -1440,8 +1447,8 @@ ewf_result result;
 
         /* Store address and port.  */
         nx_driver_sockets[i].remote_ip = remote_ip -> nxd_ip_address.v4;
-        nx_driver_sockets[i].local_port = local_port;
-        nx_driver_sockets[i].remote_port = *remote_port;
+        nx_driver_sockets[i].local_port = (USHORT)local_port;
+        nx_driver_sockets[i].remote_port = (USHORT)*remote_port;
         nx_driver_sockets[i].protocol = NX_PROTOCOL_TCP;
         nx_driver_sockets[i].is_client = NX_TRUE;
         break;
@@ -1453,7 +1460,7 @@ ewf_result result;
         /* Store the index of driver socket.  */
         ((NX_TCP_SOCKET *)socket_ptr) -> nx_tcp_socket_tcpip_offload_context = (VOID *)i;
 
-        ewf_result result = ewf_adapter_tcp_listen(
+        result = ewf_adapter_tcp_listen(
             &nx_driver_sockets[i].tcp_socket);
         if (ewf_result_failed(result))
         {
@@ -1465,7 +1472,7 @@ ewf_result result;
 #endif
 
         /* Store address and port.  */
-        nx_driver_sockets[i].local_port = local_port;
+        nx_driver_sockets[i].local_port = (USHORT)local_port;
         nx_driver_sockets[i].remote_port = 0;
         nx_driver_sockets[i].protocol = NX_PROTOCOL_TCP;
         nx_driver_sockets[i].tcp_connected = NX_FALSE;
@@ -1583,7 +1590,7 @@ ewf_result result;
         nx_driver_sockets[i].remote_port = 0;
 
         /* Set the local port to indicate the socket is bound */
-        nx_driver_sockets[i].local_port = local_port;
+        nx_driver_sockets[i].local_port = (USHORT)local_port;
 
         memset(&nx_driver_sockets[i].udp_socket, 0, sizeof(ewf_socket_udp));
         result = ewf_adapter_udp_open(adapter_ptr, &nx_driver_sockets[i].udp_socket);
@@ -1658,8 +1665,8 @@ ewf_result result;
             /* Store address and port.  */
             nx_driver_sockets[i].local_ip = local_ip -> nxd_ip_address.v4;
             nx_driver_sockets[i].remote_ip = remote_ip -> nxd_ip_address.v4;
-            nx_driver_sockets[i].local_port = local_port;
-            nx_driver_sockets[i].remote_port = *remote_port;
+            nx_driver_sockets[i].local_port = (USHORT)local_port;
+            nx_driver_sockets[i].remote_port = (USHORT)*remote_port;
             nx_driver_sockets[i].protocol = NX_PROTOCOL_UDP;
             nx_driver_sockets[i].is_client = NX_TRUE;
         }
@@ -1706,10 +1713,10 @@ ewf_result result;
             }
 
             /* Convert remote IP to byte array.  */
-            remote_ip_bytes[0] = (remote_ip->nxd_ip_address.v4 >> 24) & 0xFF;
-            remote_ip_bytes[1] = (remote_ip->nxd_ip_address.v4 >> 16) & 0xFF;
-            remote_ip_bytes[2] = (remote_ip->nxd_ip_address.v4 >> 8) & 0xFF;
-            remote_ip_bytes[3] = (remote_ip->nxd_ip_address.v4) & 0xFF;
+            remote_ip_bytes[0] = (UCHAR)((remote_ip->nxd_ip_address.v4 >> 24) & 0xFF);
+            remote_ip_bytes[1] = (UCHAR)((remote_ip->nxd_ip_address.v4 >> 16) & 0xFF);
+            remote_ip_bytes[2] = (UCHAR)((remote_ip->nxd_ip_address.v4 >> 8) & 0xFF);
+            remote_ip_bytes[3] = (UCHAR)((remote_ip->nxd_ip_address.v4) & 0xFF);
 
             snprintf(server_address, sizeof(server_address),
                 "%u.%u.%u.%u",
@@ -1728,7 +1735,7 @@ ewf_result result;
             result = ewf_adapter_udp_send_to(
                 &nx_driver_sockets[i].udp_socket,
                 server_address, *remote_port,
-                (char const*)(uint8_t*)packet_ptr->nx_packet_prepend_ptr,
+                (const uint8_t*)(packet_ptr->nx_packet_prepend_ptr),
                 packet_ptr->nx_packet_length);
             /* Check status.  */
             if (ewf_result_failed(result))
@@ -1792,9 +1799,9 @@ ewf_result result;
             }
 
             /* Send data.  */
-            ewf_result result = ewf_adapter_tcp_send(
+            result = ewf_adapter_tcp_send(
               &nx_driver_sockets[i].tcp_socket,
-              (char const *)(uint8_t *)current_packet-> nx_packet_prepend_ptr,
+              (const uint8_t *)(current_packet-> nx_packet_prepend_ptr + offset),
               packet_size);
             /* Check status.  */
             if (ewf_result_failed(result))
@@ -1885,8 +1892,9 @@ ewf_result result;
 /**************************************************************************/
 static UINT  _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
 {
-UINT status;
-UINT priority = 0;
+    EWF_PARAMETER_NOT_USED(driver_req_ptr);
+    UINT status;
+    UINT priority = 0;
 
     /* Get priority of IP thread.  */
     tx_thread_info_get(tx_thread_identify(), NX_NULL, NX_NULL, NX_NULL, &priority,
@@ -1943,6 +1951,7 @@ UINT priority = 0;
 /**************************************************************************/
 static UINT  _nx_driver_hardware_enable(NX_IP_DRIVER *driver_req_ptr)
 {
+    EWF_PARAMETER_NOT_USED(driver_req_ptr);
     tx_thread_reset(&nx_driver_thread);
     tx_thread_resume(&nx_driver_thread);
 
@@ -2060,6 +2069,7 @@ UINT i;
 /**************************************************************************/
 static UINT  _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr)
 {
+    EWF_PARAMETER_NOT_USED(driver_req_ptr);
 
     /* Return success.  */
     return(NX_SUCCESS);
@@ -2105,6 +2115,7 @@ static UINT  _nx_driver_hardware_get_status(NX_IP_DRIVER *driver_req_ptr)
 /**************************************************************************/
 static UINT _nx_driver_hardware_capability_set(NX_IP_DRIVER *driver_req_ptr)
 {
+    EWF_PARAMETER_NOT_USED(driver_req_ptr);
 
     return NX_SUCCESS;
 }

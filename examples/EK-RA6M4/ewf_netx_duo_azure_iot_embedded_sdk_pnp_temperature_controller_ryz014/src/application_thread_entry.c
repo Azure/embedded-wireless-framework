@@ -62,7 +62,7 @@
 
 #include "ewf_middleware_netxduo.c"
 
-char ewf_log_buffer[512];
+char ewf_log_buffer[1024];
 
 ULONG g_ip_address = 0;
 ULONG g_network_mask = 0;
@@ -158,7 +158,7 @@ void application_thread_entry(void)
 
     /* Wait for the modem to be registered to network
      * Refer system integration guide for more info */
-    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, (uint32_t)-1));
+    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
     ewf_platform_sleep(200);
 
     /* Disable network Registration URC */
@@ -245,7 +245,7 @@ void application_thread_entry(void)
     }
 
     /* Save the adapter pointer in the IP instance */
-    g_ip0.nx_ip_reserved_ptr = adapter_ptr;
+    g_ip0.nx_ip_interface->nx_interface_additional_link_info = adapter_ptr;
 
     /* Enable ARP and supply ARP cache memory for IP Instance 0.  */
     status = nx_arp_enable(&g_ip0, &g_ip0_arp_cache_memory, G_IP0_ARP_CACHE_SIZE);

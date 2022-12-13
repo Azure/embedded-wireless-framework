@@ -15,7 +15,7 @@
 #include <stddef.h>
 #include <ctype.h>
 
-ewf_adapter_wifi_station_api ewf_adapter_espressif_common_api_wifi_station =
+ewf_adapter_api_wifi_station ewf_adapter_espressif_common_api_wifi_station =
 {
     ewf_adapter_espressif_common_wifi_station_connect,
     ewf_adapter_espressif_common_wifi_station_disconnect,
@@ -36,7 +36,11 @@ ewf_result ewf_adapter_espressif_common_wifi_station_connect(ewf_adapter* adapte
     uint32_t response_length;
 
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CWJAP_CUR=\"", ssid_str, "\",\"", password_str, "\"\r\n", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 5 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
+    if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 10 * EWF_PLATFORM_TICKS_PER_SECOND)))
+	{
+        EWF_LOG_ERROR("Failed to receive a response.\n");
+    	return result;
+	}
 
     if (!response_ptr)
     {
@@ -48,7 +52,7 @@ ewf_result ewf_adapter_espressif_common_wifi_station_connect(ewf_adapter* adapte
 
     char expected_ok_str[] = "\r\nOK\r\n";
 
-    bool ok_found = ewfl_buffer_ends_with(response_ptr, response_length, expected_ok_str, sizeof(expected_ok_str)-1);
+    bool ok_found = ewfl_buffer_ends_with(response_ptr, response_length, (uint8_t*)expected_ok_str, sizeof(expected_ok_str)-1);
 
     ewf_interface_release(interface_ptr, response_ptr);
 

@@ -10,6 +10,29 @@
 #include "ewf_adapter_test.h"
 #include "ewf_lib.h"
 
+ewf_result ewf_adapter_test(ewf_adapter* adapter_ptr)
+{
+    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+
+    ewf_result result = EWF_RESULT_OK;
+
+    // Adapter tests - TCP
+    result = ewf_adapter_test_api_tcp(adapter_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to run the adapter TCP test: ewf_result %d.\n", result);
+    }
+
+    // Adapter tests - UDP
+    result = ewf_adapter_test_api_udp(adapter_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to run the adapter UDP test: ewf_result %d.\n", result);
+    }
+
+    return result;
+}
+
 /**
  * @brief TCP API test
  */
@@ -122,12 +145,39 @@ ewf_result ewf_adapter_test_api_tcp_echo(ewf_adapter* adapter_ptr)
     {
         if (ewf_result_failed(result = ewf_adapter_tcp_send(&socket_tcp, (uint8_t*)EWF_ADAPTER_TEST_TCP_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_TCP_MESSAGE_STR)))) return result;
         receive_buffer_length = sizeof(receive_buffer);
+        ewf_platform_sleep(EWF_ADAPTER_TEST_TCP_RECV_SLEEP_TICKS);
         if (ewf_result_failed(result = ewf_adapter_tcp_receive(&socket_tcp, receive_buffer, &receive_buffer_length, true))) return result;
-        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS);
+
+#if EWF_ADAPTER_TEST_TCP_SMALL_MESSAGE_COMPARE
+        if (sizeof(EWF_ADAPTER_TEST_TCP_MESSAGE_STR) != receive_buffer_length ||
+            memcmp(EWF_ADAPTER_TEST_TCP_MESSAGE_STR, receive_buffer, sizeof(EWF_ADAPTER_TEST_TCP_MESSAGE_STR)))
+        {
+            EWF_LOG_ERROR("Echo reply is different!");
+            EWF_LOG_ERROR("Message sent:     [%s]\n", EWF_ADAPTER_TEST_TCP_MESSAGE_STR);
+            EWF_LOG_ERROR("Message received: [%s]\n", receive_buffer);
+            return EWF_RESULT_UNEXPECTED_RESPONSE;
+        }
+#endif
+
+        ewf_platform_sleep(EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS);
+
         if (ewf_result_failed(result = ewf_adapter_tcp_send(&socket_tcp, (uint8_t*)EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR)))) return result;
         receive_buffer_length = sizeof(receive_buffer);
+        ewf_platform_sleep(EWF_ADAPTER_TEST_TCP_RECV_SLEEP_TICKS);
         if (ewf_result_failed(result = ewf_adapter_tcp_receive(&socket_tcp, receive_buffer, &receive_buffer_length, true))) return result;
-        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS);
+
+#if EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_COMPARE
+        if (sizeof(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR) != receive_buffer_length ||
+            memcmp(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR, receive_buffer, sizeof(EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR)))
+        {
+            EWF_LOG_ERROR("Echo reply is different!");
+            EWF_LOG_ERROR("Message sent:     [%s]\n", EWF_ADAPTER_TEST_TCP_LARGE_MESSAGE_STR);
+            EWF_LOG_ERROR("Message received: [%s]\n", receive_buffer);
+            return EWF_RESULT_UNEXPECTED_RESPONSE;
+        }
+#endif
+
+        ewf_platform_sleep(EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS);
     }
     if (ewf_result_failed(result = ewf_adapter_tcp_shutdown(&socket_tcp))) return result;
     if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp))) return result;
@@ -178,7 +228,7 @@ ewf_result ewf_adapter_test_api_tcp_client_server(ewf_adapter* adapter_ptr)
             &socket_tcp_incomming,
             receive_buffer, &receive_buffer_length,
             true))) return result;
-        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_SECS);
+        ewf_platform_sleep(EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS);
     }
     if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp_server))) return result;
     if (ewf_result_failed(result = ewf_adapter_tcp_close(&socket_tcp_client))) return result;
@@ -212,23 +262,50 @@ ewf_result ewf_adapter_test_api_udp_echo(ewf_adapter* adapter_ptr)
             EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR, EWF_ADAPTER_TEST_UDP_ECHO_SERVER_PORT,
             (uint8_t*)EWF_ADAPTER_TEST_UDP_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_UDP_MESSAGE_STR)))) return result;
         receive_buffer_length = sizeof(receive_buffer);
+        ewf_platform_sleep(EWF_ADAPTER_TEST_UDP_RECV_SLEEP_TICKS);
         if (ewf_result_failed(result = ewf_adapter_udp_receive_from(
             &socket_udp,
             remote_buffer_str, &remote_bufferewfl_str_length, &remote_port,
             receive_buffer, &receive_buffer_length,
             true))) return result;
-        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS);
+
+#if EWF_ADAPTER_TEST_UDP_SMALL_MESSAGE_COMPARE
+        if (sizeof(EWF_ADAPTER_TEST_UDP_MESSAGE_STR) != receive_buffer_length ||
+            memcmp(EWF_ADAPTER_TEST_UDP_MESSAGE_STR, receive_buffer, sizeof(EWF_ADAPTER_TEST_UDP_MESSAGE_STR)))
+        {
+            EWF_LOG_ERROR("Echo reply is different!");
+            EWF_LOG_ERROR("Message sent:     [%s]\n", EWF_ADAPTER_TEST_UDP_MESSAGE_STR);
+            EWF_LOG_ERROR("Message received: [%s]\n", receive_buffer);
+            return EWF_RESULT_UNEXPECTED_RESPONSE;
+        }
+#endif
+
+        ewf_platform_sleep(EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS);
+
         if (ewf_result_failed(result = ewf_adapter_udp_send_to(
             &socket_udp,
             EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR, EWF_ADAPTER_TEST_UDP_ECHO_SERVER_PORT,
             (uint8_t*)EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR, sizeof(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR)))) return result;
         receive_buffer_length = sizeof(receive_buffer);
+        ewf_platform_sleep(EWF_ADAPTER_TEST_UDP_RECV_SLEEP_TICKS);
         if (ewf_result_failed(result = ewf_adapter_udp_receive_from(
             &socket_udp,
             remote_buffer_str, &remote_bufferewfl_str_length, &remote_port,
             receive_buffer, &receive_buffer_length,
             true))) return result;
-        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS);
+        
+#if EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_COMPARE
+        if (sizeof(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR) != receive_buffer_length ||
+            memcmp(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR, receive_buffer, sizeof(EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR)))
+        {
+            EWF_LOG_ERROR("Echo reply is different!");
+            EWF_LOG_ERROR("Message sent:     [%s]\n", EWF_ADAPTER_TEST_UDP_LARGE_MESSAGE_STR);
+            EWF_LOG_ERROR("Message received: [%s]\n", receive_buffer);
+            return EWF_RESULT_UNEXPECTED_RESPONSE;
+        }
+#endif
+
+        ewf_platform_sleep(EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS);
     }
     if (ewf_result_failed(result = ewf_adapter_udp_close(&socket_udp))) return result;
 
@@ -279,7 +356,7 @@ ewf_result ewf_adapter_test_api_udp_client_server(ewf_adapter* adapter_ptr)
             remote_buffer_str, &remote_buffer_str_length, &remote_port,
             receive_buffer, &receive_buffer_length,
             true))) return result;
-        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_SECS);
+        ewf_platform_sleep(EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS);
     }
     if (ewf_result_failed(result = ewf_adapter_udp_close(&socket_udp_server))) return result;
     if (ewf_result_failed(result = ewf_adapter_udp_close(&socket_udp_client))) return result;

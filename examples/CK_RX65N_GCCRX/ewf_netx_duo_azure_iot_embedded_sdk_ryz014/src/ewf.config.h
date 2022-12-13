@@ -18,6 +18,8 @@
 extern "C" {
 #endif
 
+#include "demo_printf.h"
+
 /************************************************************************//**
  * @defgroup group_configuration EWF configuration
  * @brief The definitions to configure the Embedded Wireless Framework.
@@ -41,6 +43,12 @@ extern "C" {
 
 /* Enable CK-RX65N UART confif */
 #define EWF_RENESAS_RX65N_CK_ENABLE
+
+#ifdef EWF_DEBUG
+#define EWF_LOG       demo_printf
+#else
+#define EWF_LOG(...)
+#endif
 
 /************************************************************************//**
  * @} *** group_configuration
