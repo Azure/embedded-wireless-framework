@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: Adapter MQTT basic API</title>
+<title>Embedded Wireless Framework: Adapter MQTT basic API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -66,7 +66,7 @@ $(function() {
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Adapter MQTT basic API<div class="ingroups"><a class="el" href="group__group__adapter__api.html">The EWF Adapter APIs</a></div></div>  </div>
+<div class="title">Adapter MQTT basic API<div class="ingroups"><a class="el" href="group__group__adapter__api.html">EWF APIs</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -109,6 +109,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gaadcc13f05755c07c8c662092771ca5af"><td class="memItemLeft" align="right" valign="top"><a id="gaadcc13f05755c07c8c662092771ca5af"></a>
 <a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_mqtt_basic_publish</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, const char *topic_cstr, const char *message_cstr)</td></tr>
 <tr class="separator:gaadcc13f05755c07c8c662092771ca5af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga219eeab4ad1f965d0364b0d62e0e8dc9"><td class="memItemLeft" align="right" valign="top"><a id="ga219eeab4ad1f965d0364b0d62e0e8dc9"></a>
+<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_mqtt_basic_message_get</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, const char *topic_cstr, char *message_buffer_ptr)</td></tr>
+<tr class="separator:ga219eeab4ad1f965d0364b0d62e0e8dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaeaa8c6c70b39a87629dec4d8c9d5c959"><td class="memItemLeft" align="right" valign="top"><a id="gaeaa8c6c70b39a87629dec4d8c9d5c959"></a>
 <a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_mqtt_basic_state_callback_set</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, <a class="el" href="group__group__adapter__mqtt__basic.html#gabc4fde298c6657c2282c2296ccf4fc51">ewf_adapter_mqtt_basic_state_callback</a> callback)</td></tr>
 <tr class="separator:gaeaa8c6c70b39a87629dec4d8c9d5c959"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,7 +158,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9" title="Success and error result codes specific to the EWF API.">ewf_result</a> success and error conditions </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9" title="Success and error result codes specific to the EWF API.">ewf_result</a> success and error conditions</dd></dl>
+<p>This user callback will provide MQTT topic and payload information if provided by the adapter modem, else the information will be NULL. If the payload in the callback is NULL,the application must use the ewf_adapter_mqtt_basic_message_get() to get the payload associated with the Topic received. </p><dl class="section user"><dt></dt><dd>For example Topic and Payload information is available for Quectel modems, while only Topic information is available for Renesas/Sequans adapter modem. </dd></dl>
 
 </div>
 </div>

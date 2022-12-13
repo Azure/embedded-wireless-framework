@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: UDP API implementation</title>
+<title>Embedded Wireless Framework: UDP API implementation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -62,51 +62,41 @@ $(function() {
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
-<div class="title">UDP API implementation<div class="ingroups"><a class="el" href="group__group__adapter.html">EWF Adapter API</a> &raquo; <a class="el" href="group__group__adapter__renesas__ryz014.html">The Renesas RYX014 adapter driver</a></div></div>  </div>
+<div class="title">UDP API implementation<div class="ingroups"><a class="el" href="group__group__adapter.html">EWF Adapter API</a> &raquo; <a class="el" href="group__group__adapter__renesas__ryz014.html">The Renesas RYZ014A modem adapter driver</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Renesas RYZ014 adapter UDP API.  
+<p>Renesas RYZ014A adapter UDP API.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ga97ee080be174d91c492d9602abc901ac"><td class="memItemLeft" align="right" valign="top"><a id="ga97ee080be174d91c492d9602abc901ac"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_open</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, <a class="el" href="group__group__adapter__udp.html#gac19b68e4bce006027bc99194b24d61c8">ewf_socket_udp</a> *socket_ptr)</td></tr>
-<tr class="separator:ga97ee080be174d91c492d9602abc901ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab1af3b1d08a41148a234d40e64691835"><td class="memItemLeft" align="right" valign="top"><a id="gab1af3b1d08a41148a234d40e64691835"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_close</b> (<a class="el" href="group__group__adapter__udp.html#gac19b68e4bce006027bc99194b24d61c8">ewf_socket_udp</a> *socket_ptr)</td></tr>
-<tr class="separator:gab1af3b1d08a41148a234d40e64691835"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga50ee65f89be3b6c0a764164771f26b2e"><td class="memItemLeft" align="right" valign="top"><a id="ga50ee65f89be3b6c0a764164771f26b2e"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_control</b> (<a class="el" href="group__group__adapter__udp.html#gac19b68e4bce006027bc99194b24d61c8">ewf_socket_udp</a> *socket_ptr, const char *control_str, const uint8_t *buffer_ptr, uint32_t *buffer_length_ptr)</td></tr>
-<tr class="separator:ga50ee65f89be3b6c0a764164771f26b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga729bf82585effdb1b754e938ec0fe31b"><td class="memItemLeft" align="right" valign="top"><a id="ga729bf82585effdb1b754e938ec0fe31b"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_set_dtls_configuration</b> (<a class="el" href="group__group__adapter__udp.html#gac19b68e4bce006027bc99194b24d61c8">ewf_socket_udp</a> *socket_ptr, uint32_t dtls_configuration_id)</td></tr>
-<tr class="separator:ga729bf82585effdb1b754e938ec0fe31b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1e64ddcbb6295866df7ab3beab259170"><td class="memItemLeft" align="right" valign="top"><a id="ga1e64ddcbb6295866df7ab3beab259170"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_bind</b> (<a class="el" href="group__group__adapter__udp.html#gac19b68e4bce006027bc99194b24d61c8">ewf_socket_udp</a> *socket_ptr, uint32_t local_port)</td></tr>
-<tr class="separator:ga1e64ddcbb6295866df7ab3beab259170"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1e98f65a8a201499d9c99d53bbfe56bd"><td class="memItemLeft" align="right" valign="top"><a id="ga1e98f65a8a201499d9c99d53bbfe56bd"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_shutdown</b> (<a class="el" href="group__group__adapter__udp.html#gac19b68e4bce006027bc99194b24d61c8">ewf_socket_udp</a> *socket_ptr)</td></tr>
-<tr class="separator:ga1e98f65a8a201499d9c99d53bbfe56bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga83e5360fd8328f9c0e89ccd0db892ea5"><td class="memItemLeft" align="right" valign="top"><a id="ga83e5360fd8328f9c0e89ccd0db892ea5"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_send_to</b> (<a class="el" href="group__group__adapter__udp.html#gac19b68e4bce006027bc99194b24d61c8">ewf_socket_udp</a> *socket_ptr, const char *remote_address_str, uint32_t remote_port, const uint8_t *buffer_ptr, uint32_t buffer_length)</td></tr>
-<tr class="separator:ga83e5360fd8328f9c0e89ccd0db892ea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf49c7b1e45c360be9167b04948d76085"><td class="memItemLeft" align="right" valign="top"><a id="gaf49c7b1e45c360be9167b04948d76085"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_receive_from</b> (<a class="el" href="group__group__adapter__udp.html#gac19b68e4bce006027bc99194b24d61c8">ewf_socket_udp</a> *socket_ptr, char *remote_address_str, uint32_t *remote_address_length_ptr, uint32_t *remote_port_ptr, char *buffer_ptr, uint32_t *buffer_length_ptr, bool wait)</td></tr>
-<tr class="separator:gaf49c7b1e45c360be9167b04948d76085"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga1d1fb9acdd0cdfc5a1561fe22bc23fd9"><td class="memItemLeft" align="right" valign="top"><a id="ga1d1fb9acdd0cdfc5a1561fe22bc23fd9"></a>
-<a class="el" href="group__group__adapter__udp.html#ga0f52697a6da485e62d8734c09d69a936">ewf_adapter_api_udp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_api_udp</b></td></tr>
-<tr class="separator:ga1d1fb9acdd0cdfc5a1561fe22bc23fd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:gab39b1e2b6661dceb61cbaeb3582523b2"><td class="memItemLeft" align="right" valign="top"><a id="gab39b1e2b6661dceb61cbaeb3582523b2"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_open</b>&#160;&#160;&#160;ewf_adapter_renesas_common_udp_open</td></tr>
+<tr class="separator:gab39b1e2b6661dceb61cbaeb3582523b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeea1965182c76072914d0d39ae559d80"><td class="memItemLeft" align="right" valign="top"><a id="gaeea1965182c76072914d0d39ae559d80"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_close</b>&#160;&#160;&#160;ewf_adapter_renesas_common_udp_close</td></tr>
+<tr class="separator:gaeea1965182c76072914d0d39ae559d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga81f01ab5feaf05110379cfa1e31d76bd"><td class="memItemLeft" align="right" valign="top"><a id="ga81f01ab5feaf05110379cfa1e31d76bd"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_control</b>&#160;&#160;&#160;ewf_adapter_renesas_common_udp_control</td></tr>
+<tr class="separator:ga81f01ab5feaf05110379cfa1e31d76bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga856c4876b8f2e900ca49e435c4a1af60"><td class="memItemLeft" align="right" valign="top"><a id="ga856c4876b8f2e900ca49e435c4a1af60"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_set_dtls_configuration</b>&#160;&#160;&#160;ewf_adapter_renesas_common_udp_set_dtls_configuration</td></tr>
+<tr class="separator:ga856c4876b8f2e900ca49e435c4a1af60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5536bbd1a187c7b17d2e366b73c09f72"><td class="memItemLeft" align="right" valign="top"><a id="ga5536bbd1a187c7b17d2e366b73c09f72"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_bind</b>&#160;&#160;&#160;ewf_adapter_renesas_common_udp_bind</td></tr>
+<tr class="separator:ga5536bbd1a187c7b17d2e366b73c09f72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga572071211ed4028e7599155347f624dd"><td class="memItemLeft" align="right" valign="top"><a id="ga572071211ed4028e7599155347f624dd"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_send_to</b>&#160;&#160;&#160;ewf_adapter_renesas_common_udp_send_to</td></tr>
+<tr class="separator:ga572071211ed4028e7599155347f624dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga720baba7759fd5a87e0edc7e8c3d3d49"><td class="memItemLeft" align="right" valign="top"><a id="ga720baba7759fd5a87e0edc7e8c3d3d49"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_udp_receive_from</b>&#160;&#160;&#160;ewf_adapter_renesas_common_udp_receive_from</td></tr>
+<tr class="separator:ga720baba7759fd5a87e0edc7e8c3d3d49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Renesas RYZ014 adapter UDP API. </p>
+<p>Renesas RYZ014A adapter UDP API. </p>
 <p>*** group_adapter_renesas_ryz014_tcp </p>
 </div><!-- contents -->
 <!-- start footer part -->

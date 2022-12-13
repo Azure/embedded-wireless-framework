@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: G:/src/ewf_ids.h Source File</title>
+<title>Embedded Wireless Framework: G:/src/ewf_ids.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -86,52 +86,56 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define EWF_DEVELOPER_UBLOX                        (0x00090000)</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define EWF_DEVELOPER_ESPRESSIF                    (0x000A0000)</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define EWF_DEVELOPER_WIZNET                       (0x000B0000)</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define EWF_DEVELOPER_ANONYMOUS                    (0xFFFF0000)</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_WINSOCK2                  (EWF_DEVELOPER_MICROSOFT | 0x0001)</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_BSD_SOCKETS               (EWF_DEVELOPER_MICROSOFT | 0x0002)</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_QUECTEL_BG96              (EWF_DEVELOPER_MICROSOFT | 0x0003)</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_QUECTEL_BG95              (EWF_DEVELOPER_MICROSOFT | 0x0004)</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SIMCOM_SIM7000            (EWF_DEVELOPER_MICROSOFT | 0x0005)</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SIMCOM_SIM868             (EWF_DEVELOPER_MICROSOFT | 0x0006)</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_UBLOX_SARA_R4             (EWF_DEVELOPER_MICROSOFT | 0x0007)</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_UBLOX_SARA_R5             (EWF_DEVELOPER_MICROSOFT | 0x0008)</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SEQUANS_MONARCH           (EWF_DEVELOPER_MICROSOFT | 0x0009)</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SEQUANS_MONARCHGO         (EWF_DEVELOPER_MICROSOFT | 0x000A)</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SEQUANS_MONARCH2          (EWF_DEVELOPER_MICROSOFT | 0x000B)</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_ESPRESSIF_ESP8266         (EWF_DEVELOPER_MICROSOFT | 0x000C)</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_ESPRESSIF_ESP8285         (EWF_DEVELOPER_MICROSOFT | 0x000D)</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_ESPRESSIF_ESP32           (EWF_DEVELOPER_MICROSOFT | 0x000E)</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_ESPRESSIF_WROOM_02        (EWF_DEVELOPER_MICROSOFT | 0x000F)</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_WIZNET_W5500              (EWF_DEVELOPER_MICROSOFT | 0x0010)</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_WIZNET_WIZFI360           (EWF_DEVELOPER_MICROSOFT | 0x0011)</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_RENESAS_RYZ014            (EWF_DEVELOPER_MICROSOFT | 0x0012)</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SEEED_LORA_E5             (EWF_DEVELOPER_MICROSOFT | 0x0013)</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SIMCOM_SIM900             (EWF_DEVELOPER_MICROSOFT | 0x0014)</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_WIN32_COM               (EWF_DEVELOPER_MICROSOFT | 0x0001)</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_LINUX_SERIAL            (EWF_DEVELOPER_MICROSOFT | 0x0002)</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_STM32_UART              (EWF_DEVELOPER_MICROSOFT | 0x0003)</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_RA_UART                 (EWF_DEVELOPER_MICROSOFT | 0x0004)</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_RX_UART                 (EWF_DEVELOPER_MICROSOFT | 0x0005)</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_LPC_UART                (EWF_DEVELOPER_MICROSOFT | 0x0006)</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_MICROCHIP_SAM_UART      (EWF_DEVELOPER_MICROSOFT | 0x0007)</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_MICROCHIP_PIC_UART      (EWF_DEVELOPER_MICROSOFT | 0x0008)</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_PIC_UART                (EWF_DEVELOPER_MICROSOFT | 0x0009)</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_ESP32_UART              (EWF_DEVELOPER_MICROSOFT | 0x000A)</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_RPI_PICO_UART           (EWF_DEVELOPER_MICROSOFT | 0x000B)</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_GPIO_BIT_BANG           (EWF_DEVELOPER_MICROSOFT | 0x000C)</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_USBX                    (EWF_DEVELOPER_MICROSOFT | 0x000D)</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_WINDOWS_USB             (EWF_DEVELOPER_MICROSOFT | 0x000E)</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_LINUX_USB               (EWF_DEVELOPER_MICROSOFT | 0x000F)</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#define EWF_ALLOCATOR_TYPE_C_HEAP                  (EWF_DEVELOPER_MICROSOFT | 0x0001)</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">#define EWF_ALLOCATOR_TYPE_MEMORY_POOL             (EWF_DEVELOPER_MICROSOFT | 0x0002)</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#define EWF_ALLOCATOR_TYPE_THREADX                 (EWF_DEVELOPER_MICROSOFT | 0x0003)</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#define EWF_ALLOCATOR_TYPE_NETX                    (EWF_DEVELOPER_MICROSOFT | 0x0004)</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __ewf__ids__h__included__ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define EWF_DEVELOPER_MXCHIP                       (0x000C0000)</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define EWF_DEVELOPER_ANONYMOUS                    (0xFFFF0000)</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_WINSOCK2                  (EWF_DEVELOPER_MICROSOFT | 0x0001)</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_BSD_SOCKETS               (EWF_DEVELOPER_MICROSOFT | 0x0002)</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_QUECTEL_BG96              (EWF_DEVELOPER_MICROSOFT | 0x0003)</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_QUECTEL_BG95              (EWF_DEVELOPER_MICROSOFT | 0x0004)</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SIMCOM_SIM7000            (EWF_DEVELOPER_MICROSOFT | 0x0005)</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SIMCOM_SIM868             (EWF_DEVELOPER_MICROSOFT | 0x0006)</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_UBLOX_SARA_R4             (EWF_DEVELOPER_MICROSOFT | 0x0007)</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_UBLOX_SARA_R5             (EWF_DEVELOPER_MICROSOFT | 0x0008)</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SEQUANS_MONARCH           (EWF_DEVELOPER_MICROSOFT | 0x0009)</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SEQUANS_MONARCHGO         (EWF_DEVELOPER_MICROSOFT | 0x000A)</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SEQUANS_MONARCH2          (EWF_DEVELOPER_MICROSOFT | 0x000B)</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_ESPRESSIF_ESP8266         (EWF_DEVELOPER_MICROSOFT | 0x000C)</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_ESPRESSIF_ESP8285         (EWF_DEVELOPER_MICROSOFT | 0x000D)</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_ESPRESSIF_ESP32           (EWF_DEVELOPER_MICROSOFT | 0x000E)</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_ESPRESSIF_WROOM_02        (EWF_DEVELOPER_MICROSOFT | 0x000F)</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_WIZNET_W5500              (EWF_DEVELOPER_MICROSOFT | 0x0010)</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_WIZNET_WIZFI360           (EWF_DEVELOPER_MICROSOFT | 0x0011)</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_RENESAS_RYZ014            (EWF_DEVELOPER_MICROSOFT | 0x0012)</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_RENESAS_RYZ024A           (EWF_DEVELOPER_MICROSOFT | 0x0013)</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SEEED_LORA_E5             (EWF_DEVELOPER_MICROSOFT | 0x0014)</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_SIMCOM_SIM900             (EWF_DEVELOPER_MICROSOFT | 0x0015)</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_THALES_EXS82_W            (EWF_DEVELOPER_MICROSOFT | 0x0016)</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_TYPE_MXCHIP_EMW3080B           (EWF_DEVELOPER_MICROSOFT | 0x0004)</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_WIN32_COM               (EWF_DEVELOPER_MICROSOFT | 0x0001)</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_LINUX_SERIAL            (EWF_DEVELOPER_MICROSOFT | 0x0002)</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_STM32_UART              (EWF_DEVELOPER_MICROSOFT | 0x0003)</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_RA_UART                 (EWF_DEVELOPER_MICROSOFT | 0x0004)</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_RX_UART                 (EWF_DEVELOPER_MICROSOFT | 0x0005)</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_LPC_UART                (EWF_DEVELOPER_MICROSOFT | 0x0006)</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_MICROCHIP_SAM_UART      (EWF_DEVELOPER_MICROSOFT | 0x0007)</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_MICROCHIP_PIC_UART      (EWF_DEVELOPER_MICROSOFT | 0x0008)</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_PIC_UART                (EWF_DEVELOPER_MICROSOFT | 0x0009)</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_ESP32_UART              (EWF_DEVELOPER_MICROSOFT | 0x000A)</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_RPI_PICO_UART           (EWF_DEVELOPER_MICROSOFT | 0x000B)</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_GPIO_BIT_BANG           (EWF_DEVELOPER_MICROSOFT | 0x000C)</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_USBX                    (EWF_DEVELOPER_MICROSOFT | 0x000D)</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_WINDOWS_USB             (EWF_DEVELOPER_MICROSOFT | 0x000E)</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#define EWF_INTERFACE_TYPE_LINUX_USB               (EWF_DEVELOPER_MICROSOFT | 0x000F)</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#define EWF_ALLOCATOR_TYPE_C_HEAP                  (EWF_DEVELOPER_MICROSOFT | 0x0001)</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#define EWF_ALLOCATOR_TYPE_MEMORY_POOL             (EWF_DEVELOPER_MICROSOFT | 0x0002)</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#define EWF_ALLOCATOR_TYPE_THREADX                 (EWF_DEVELOPER_MICROSOFT | 0x0003)</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#define EWF_ALLOCATOR_TYPE_NETX                    (EWF_DEVELOPER_MICROSOFT | 0x0004)</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __ewf__ids__h__included__ */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

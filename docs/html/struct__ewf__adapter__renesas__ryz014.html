@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: _ewf_adapter_renesas_ryz014 Struct Reference</title>
+<title>Embedded Wireless Framework: _ewf_adapter_renesas_ryz014 Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -64,125 +64,35 @@ $(function() {
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">_ewf_adapter_renesas_ryz014 Struct Reference<div class="ingroups"><a class="el" href="group__group__adapter.html">EWF Adapter API</a> &raquo; <a class="el" href="group__group__adapter__renesas__ryz014.html">The Renesas RYX014 adapter driver</a> &raquo; <a class="el" href="group__group__adapter__renesas__ryz014__data.html">Renesas RYZ014 driver internal data</a></div></div>  </div>
+<div class="title">_ewf_adapter_renesas_ryz014 Struct Reference<div class="ingroups"><a class="el" href="group__group__adapter.html">EWF Adapter API</a> &raquo; <a class="el" href="group__group__adapter__renesas__ryz014.html">The Renesas RYZ014A modem adapter driver</a> &raquo; <a class="el" href="group__group__adapter__renesas__ryz014__data.html">Renesas RYZ014A driver internal data</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>The Renesas RYZ014 adapter data structure.  
+<p>The Renesas RYZ014A adapter data structure.  
  <a href="struct__ewf__adapter__renesas__ryz014.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ewf__adapter__renesas__ryz014_8h_source.html">ewf_adapter_renesas_ryz014.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:ab2d2746586baf9c5cd9de06c6636c930"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__adapter__urc.html#gad41ac9c8e9c66fe4b855587a01d5ffd2">ewf_adapter_urc_user_callback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__adapter__renesas__ryz014.html#ab2d2746586baf9c5cd9de06c6636c930">user_urc_callback</a></td></tr>
-<tr class="separator:ab2d2746586baf9c5cd9de06c6636c930"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33282fdcfa025bc60e82e4d124ce78c4"><td class="memItemLeft" align="right" valign="top"><a id="a33282fdcfa025bc60e82e4d124ce78c4"></a>
-volatile uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__adapter__renesas__ryz014.html#a33282fdcfa025bc60e82e4d124ce78c4">current_context_id</a></td></tr>
-<tr class="memdesc:a33282fdcfa025bc60e82e4d124ce78c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current context ID <br  />
- <br /></td></tr>
-<tr class="separator:a33282fdcfa025bc60e82e4d124ce78c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aace436be925b9f8ad0a0b484ffe17fb3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__adapter__renesas__ryz014__data.html#gafdacdb7ca0cb243d4ac546da060fac82">ewf_adapter_renesas_ryz014_internet_socket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__adapter__renesas__ryz014.html#aace436be925b9f8ad0a0b484ffe17fb3">internet_socket_pool</a> [<a class="el" href="group__group__adapter__renesas__ryz014__config.html#gafbbb64df99fd8d2fab086cf301d569f8">EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_POOL_SIZE</a>]</td></tr>
-<tr class="separator:aace436be925b9f8ad0a0b484ffe17fb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5b1f297382111ed20515ee1a3db224d"><td class="memItemLeft" align="right" valign="top"><a id="aa5b1f297382111ed20515ee1a3db224d"></a>
-volatile bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__adapter__renesas__ryz014.html#aa5b1f297382111ed20515ee1a3db224d">mqtt_basic_conn</a></td></tr>
-<tr class="memdesc:aa5b1f297382111ed20515ee1a3db224d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal MQTT basic API socket 0 status <br  />
- <br /></td></tr>
-<tr class="separator:aa5b1f297382111ed20515ee1a3db224d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53f0f60e78180306aefcd44f802f9521"><td class="memItemLeft" align="right" valign="top"><a id="a53f0f60e78180306aefcd44f802f9521"></a>
-volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>mqtt_basic_conn_error</b></td></tr>
-<tr class="separator:a53f0f60e78180306aefcd44f802f9521"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6c6eee522f27fc2edc17ee49cab548b"><td class="memItemLeft" align="right" valign="top"><a id="af6c6eee522f27fc2edc17ee49cab548b"></a>
-volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>mqtt_basic_publish</b></td></tr>
-<tr class="separator:af6c6eee522f27fc2edc17ee49cab548b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab91f1de58bc9938b01dc60dae65d0d18"><td class="memItemLeft" align="right" valign="top"><a id="ab91f1de58bc9938b01dc60dae65d0d18"></a>
-volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>mqtt_basic_subscribe</b></td></tr>
-<tr class="separator:ab91f1de58bc9938b01dc60dae65d0d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1b75f448f0b06fe07d5b228f759f7f3"><td class="memItemLeft" align="right" valign="top">volatile bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__adapter__renesas__ryz014.html#ad1b75f448f0b06fe07d5b228f759f7f3">module_start</a></td></tr>
-<tr class="separator:ad1b75f448f0b06fe07d5b228f759f7f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad90bce1983a24de5c59ae788d8d45b8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__adapter__tcp.html#gada729e8f7414675c2e0881f8407710ef">ewf_adapter_tcp_receive_callback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__adapter__renesas__ryz014.html#ad90bce1983a24de5c59ae788d8d45b8e">tcp_receive_callback</a></td></tr>
-<tr class="separator:ad90bce1983a24de5c59ae788d8d45b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03ea2b8a34e8c958d61ec50aeb108d9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__adapter__udp.html#ga0b3cdfd3d9936c611b57e0d072340ca6">ewf_adapter_udp_receive_callback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__adapter__renesas__ryz014.html#a03ea2b8a34e8c958d61ec50aeb108d9d">udp_receive_callback</a></td></tr>
-<tr class="separator:a03ea2b8a34e8c958d61ec50aeb108d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f002517f5770a75914ada87b5831a4d"><td class="memItemLeft" align="right" valign="top"><a id="a7f002517f5770a75914ada87b5831a4d"></a>
-<a class="el" href="group__group__adapter__mqtt.html#ga194f20ca35872f90338e394a4ee3eb13">ewf_adapter_mqtt_message_callback</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mqtt_message_callback</b></td></tr>
-<tr class="separator:a7f002517f5770a75914ada87b5831a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43eb3ba7319c9f58804a88b45d46bcbd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__adapter__renesas__common__data.html#ga22c36054250ae20745f4b2d919d19a72">ewf_adapter_renesas_common</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__adapter__renesas__ryz014.html#a43eb3ba7319c9f58804a88b45d46bcbd">common_implementation_data</a></td></tr>
+<tr class="separator:a43eb3ba7319c9f58804a88b45d46bcbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The Renesas RYZ014 adapter data structure. </p>
+<div class="textblock"><p>The Renesas RYZ014A adapter data structure. </p>
 </div><h2 class="groupheader">Field Documentation</h2>
-<a id="aace436be925b9f8ad0a0b484ffe17fb3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aace436be925b9f8ad0a0b484ffe17fb3">&#9670;&nbsp;</a></span>internet_socket_pool</h2>
+<a id="a43eb3ba7319c9f58804a88b45d46bcbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43eb3ba7319c9f58804a88b45d46bcbd">&#9670;&nbsp;</a></span>common_implementation_data</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__group__adapter__renesas__ryz014__data.html#gafdacdb7ca0cb243d4ac546da060fac82">ewf_adapter_renesas_ryz014_internet_socket</a> _ewf_adapter_renesas_ryz014::internet_socket_pool[<a class="el" href="group__group__adapter__renesas__ryz014__config.html#gafbbb64df99fd8d2fab086cf301d569f8">EWF_ADAPTER_RENESAS_RYZ014_INTERNET_SOCKET_POOL_SIZE</a>]</td>
+          <td class="memname"><a class="el" href="group__group__adapter__renesas__common__data.html#ga22c36054250ae20745f4b2d919d19a72">ewf_adapter_renesas_common</a> _ewf_adapter_renesas_ryz014::common_implementation_data</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt; The internal pool of internet sockets </p>
-
-</div>
-</div>
-<a id="ad1b75f448f0b06fe07d5b228f759f7f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1b75f448f0b06fe07d5b228f759f7f3">&#9670;&nbsp;</a></span>module_start</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">volatile bool _ewf_adapter_renesas_ryz014::module_start</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The TCP receive callback </p>
-
-</div>
-</div>
-<a id="ad90bce1983a24de5c59ae788d8d45b8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad90bce1983a24de5c59ae788d8d45b8e">&#9670;&nbsp;</a></span>tcp_receive_callback</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__adapter__tcp.html#gada729e8f7414675c2e0881f8407710ef">ewf_adapter_tcp_receive_callback</a> _ewf_adapter_renesas_ryz014::tcp_receive_callback</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The UDP receive callback </p>
-
-</div>
-</div>
-<a id="a03ea2b8a34e8c958d61ec50aeb108d9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03ea2b8a34e8c958d61ec50aeb108d9d">&#9670;&nbsp;</a></span>udp_receive_callback</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__adapter__udp.html#ga0b3cdfd3d9936c611b57e0d072340ca6">ewf_adapter_udp_receive_callback</a> _ewf_adapter_renesas_ryz014::udp_receive_callback</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The MQTT message callback </p>
-
-</div>
-</div>
-<a id="ab2d2746586baf9c5cd9de06c6636c930"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2d2746586baf9c5cd9de06c6636c930">&#9670;&nbsp;</a></span>user_urc_callback</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__adapter__urc.html#gad41ac9c8e9c66fe4b855587a01d5ffd2">ewf_adapter_urc_user_callback</a> _ewf_adapter_renesas_ryz014::user_urc_callback</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>&lt; The user URC callback, called to process URC not handled by the driver </p>
+<p>The Quectel common data, it must be the first in the implementation structure </p>
 
 </div>
 </div>

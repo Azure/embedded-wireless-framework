@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: G:/src/ewf_adapter_api_tcp.h File Reference</title>
+<title>Embedded Wireless Framework: G:/src/ewf_adapter_api_tcp.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -94,30 +94,33 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:ga9a2f287791a16f2e12ea5f95792956eb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_VALIDATE_TCP_SOCKET_POINTER</b>(socket_ptr)</td></tr>
 <tr class="separator:ga9a2f287791a16f2e12ea5f95792956eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga52d013a4c98982263c5b49495a03502e"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_CONTROL_SET_CONTEXT_ID</b>&#160;&#160;&#160;(&quot;!SetContextId&quot;)</td></tr>
+<tr class="separator:ga52d013a4c98982263c5b49495a03502e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa120726b87d9f34c37323ae6b90746d8"><td class="memItemLeft" align="right" valign="top">
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_CONTROL_SET_CONNECTION_TIMEOUT</b>&#160;&#160;&#160;(&quot;!SetConnectionTimeout&quot;)</td></tr>
 <tr class="separator:gaa120726b87d9f34c37323ae6b90746d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2b9c7a5793b95c868fb862963540af51"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_QUERY_IS_CONNECTED</b>&#160;&#160;&#160;(&quot;?IsConnected&quot;)</td></tr>
-<tr class="separator:ga2b9c7a5793b95c868fb862963540af51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaebb7b6306eb9758b59766b10bc620c44"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_QUERY_IS_BOUND</b>&#160;&#160;&#160;(&quot;?IsBound&quot;)</td></tr>
-<tr class="separator:gaebb7b6306eb9758b59766b10bc620c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9e42fac45089a0df81f5139826c4e677"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_QUERY_USES_TLS</b>&#160;&#160;&#160;(&quot;?UsesTLS&quot;)</td></tr>
-<tr class="separator:ga9e42fac45089a0df81f5139826c4e677"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad1b9047afa597356e0880916430954c7"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_QUERY_PEER_ADDRESSS</b>&#160;&#160;&#160;(&quot;?PeerAddress&quot;)</td></tr>
-<tr class="separator:gad1b9047afa597356e0880916430954c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa924024df3a650caf86a915964726594"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_QUERY_LOCAL_ADDRESSS</b>&#160;&#160;&#160;(&quot;?LocalAddress&quot;)</td></tr>
-<tr class="separator:gaa924024df3a650caf86a915964726594"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab87f9352ce2fe5b41db2121fa5795d0b"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_QUERY_SENT_BYTES</b>&#160;&#160;&#160;(&quot;?SentBytes&quot;)</td></tr>
-<tr class="separator:gab87f9352ce2fe5b41db2121fa5795d0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae6c013cf7e4ea1eba8a485f66459f39d"><td class="memItemLeft" align="right" valign="top">
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_QUERY_RECEIVED_BYTES</b>&#160;&#160;&#160;(&quot;?ReceivedBytes&quot;)</td></tr>
-<tr class="separator:gae6c013cf7e4ea1eba8a485f66459f39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae21821203020b995347887df03a7a8ad"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_CONTROL_IS_CONNECTED</b>&#160;&#160;&#160;(&quot;!IsConnected&quot;)</td></tr>
+<tr class="separator:gae21821203020b995347887df03a7a8ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa707bf4cddcd251f8f20ba4bd7fa3490"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_CONTROL_IS_BOUND</b>&#160;&#160;&#160;(&quot;!IsBound&quot;)</td></tr>
+<tr class="separator:gaa707bf4cddcd251f8f20ba4bd7fa3490"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3dc0d7d705f906a0f0c7cd94a1a66e8d"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_CONTROL_USES_TLS</b>&#160;&#160;&#160;(&quot;!UsesTLS&quot;)</td></tr>
+<tr class="separator:ga3dc0d7d705f906a0f0c7cd94a1a66e8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1f4cf0b0d605ff4eade5bb92a8a2893d"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_CONTROL_PEER_ADDRESSS</b>&#160;&#160;&#160;(&quot;!PeerAddress&quot;)</td></tr>
+<tr class="separator:ga1f4cf0b0d605ff4eade5bb92a8a2893d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4e11b33a13db2784fdf6dedd84b03285"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_CONTROL_LOCAL_ADDRESSS</b>&#160;&#160;&#160;(&quot;!LocalAddress&quot;)</td></tr>
+<tr class="separator:ga4e11b33a13db2784fdf6dedd84b03285"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga825a1ebb97fcc929f6ed821016ab5a88"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_CONTROL_SENT_BYTES</b>&#160;&#160;&#160;(&quot;!SentBytes&quot;)</td></tr>
+<tr class="separator:ga825a1ebb97fcc929f6ed821016ab5a88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga507548673fa1daad402f39be1ceac4f2"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_TCP_SOCKET_CONTROL_RECEIVED_BYTES</b>&#160;&#160;&#160;(&quot;!ReceivedBytes&quot;)</td></tr>
+<tr class="separator:ga507548673fa1daad402f39be1ceac4f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>

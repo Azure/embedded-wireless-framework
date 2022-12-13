@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: RA UART interface</title>
+<title>Embedded Wireless Framework: RA UART interface</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -159,12 +159,12 @@ Functions</h2></td></tr>
 <div class="line">EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                 \</div>
 <div class="line">    ewf_interface_ra_uart__interface__##interface_name_symb.response_queue_ptr,                                                                    \</div>
 <div class="line">    ewf_interface_ra_uart__response_queue__##interface_name_symb,                                                                                  \</div>
-<div class="line">    <a class="code" href="struct__ewf__interface__message.html">ewf_interface_message</a>,                                                                                                                         \</div>
+<div class="line">    <a class="code" href="struct__ewf__message.html">ewf_interface_message</a>,                                                                                                                         \</div>
 <div class="line">    EWF_INTERFACE_RA_UART_CONFIG_RESPONSE_QUEUE_SIZE);                                                                                                                                                 \</div>
 <div class="line">EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                 \</div>
 <div class="line">    ewf_interface_ra_uart__interface__##interface_name_symb.urc_queue_ptr,                                                                         \</div>
 <div class="line">    ewf_interface_ra_uart__urc_queue__##interface_name_symb,                                                                                       \</div>
-<div class="line">    <a class="code" href="struct__ewf__interface__message.html">ewf_interface_message</a>,                                                                                                                         \</div>
+<div class="line">    <a class="code" href="struct__ewf__message.html">ewf_interface_message</a>,                                                                                                                         \</div>
 <div class="line">    EWF_INTERFACE_RA_UART_CONFIG_URC_QUEUE_SIZE);                                                                                                                                                 \</div>
 <div class="line">ewf_interface_ra_uart__interface__##interface_name_symb.hardware_start = <a class="code" href="group__group__interface__ra__uart.html#gad476bd17e8e96970b3094dade5b4380e">ewf_interface_ra_uart_hardware_start</a>;                              \</div>
 <div class="line">ewf_interface_ra_uart__interface__##interface_name_symb.hardware_stop = <a class="code" href="group__group__interface__ra__uart.html#ga542ead0130a265dda56363a3b349ac21">ewf_interface_ra_uart_hardware_stop</a>;                                \</div>
@@ -178,9 +178,9 @@ Functions</h2></td></tr>
 <div class="ttc" id="agroup__group__interface__ra__uart_html_ga542ead0130a265dda56363a3b349ac21"><div class="ttname"><a href="group__group__interface__ra__uart.html#ga542ead0130a265dda56363a3b349ac21">ewf_interface_ra_uart_hardware_stop</a></div><div class="ttdeci">ewf_result ewf_interface_ra_uart_hardware_stop(ewf_interface *interface_ptr)</div><div class="ttdoc">Stop the RA UART hardware interface.</div><div class="ttdef"><b>Definition:</b> ewf_interface_ra_uart.c:87</div></div>
 <div class="ttc" id="agroup__group__interface__ra__uart_html_ga840f4167c401919d2206764dcef1fa33"><div class="ttname"><a href="group__group__interface__ra__uart.html#ga840f4167c401919d2206764dcef1fa33">ewf_interface_ra_uart_hardware_receive</a></div><div class="ttdeci">ewf_result ewf_interface_ra_uart_hardware_receive(ewf_interface *interface_ptr, uint8_t *buffer_ptr, uint32_t *buffer_length_ptr, bool wait)</div><div class="ttdoc">Receive a buffer using the RA UART hardware interface.</div><div class="ttdef"><b>Definition:</b> ewf_interface_ra_uart.c:142</div></div>
 <div class="ttc" id="agroup__group__interface__ra__uart_html_gad476bd17e8e96970b3094dade5b4380e"><div class="ttname"><a href="group__group__interface__ra__uart.html#gad476bd17e8e96970b3094dade5b4380e">ewf_interface_ra_uart_hardware_start</a></div><div class="ttdeci">ewf_result ewf_interface_ra_uart_hardware_start(ewf_interface *interface_ptr)</div><div class="ttdoc">Start the RA UART hardware interface.</div><div class="ttdef"><b>Definition:</b> ewf_interface_ra_uart.c:62</div></div>
-<div class="ttc" id="astruct__ewf__interface__message_html"><div class="ttname"><a href="struct__ewf__interface__message.html">_ewf_interface_message</a></div><div class="ttdoc">The interface message structure definition.</div><div class="ttdef"><b>Definition:</b> ewf_interface.h:66</div></div>
 <div class="ttc" id="astruct__ewf__interface__ra__uart_html"><div class="ttname"><a href="struct__ewf__interface__ra__uart.html">_ewf_interface_ra_uart</a></div><div class="ttdoc">The RA UART interface implementation data structure type.</div><div class="ttdef"><b>Definition:</b> ewf_interface_ra_uart.h:52</div></div>
-<div class="ttc" id="astruct__ewf__interface_html"><div class="ttname"><a href="struct__ewf__interface.html">_ewf_interface</a></div><div class="ttdoc">The interface structure definition.</div><div class="ttdef"><b>Definition:</b> ewf_interface.h:95</div></div>
+<div class="ttc" id="astruct__ewf__interface_html"><div class="ttname"><a href="struct__ewf__interface.html">_ewf_interface</a></div><div class="ttdoc">The interface structure definition.</div><div class="ttdef"><b>Definition:</b> ewf_interface.h:66</div></div>
+<div class="ttc" id="astruct__ewf__message_html"><div class="ttname"><a href="struct__ewf__message.html">_ewf_message</a></div><div class="ttdoc">The interface message structure definition.</div><div class="ttdef"><b>Definition:</b> ewf_message.h:27</div></div>
 </div><!-- fragment -->
 <p>Declare a RA UART HOST interface. </p>
 <dl class="params"><dt>Parameters</dt><dd>

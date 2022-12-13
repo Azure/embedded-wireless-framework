@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: LPC UART host interface</title>
+<title>Embedded Wireless Framework: LPC UART host interface</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -172,12 +172,12 @@ Functions</h2></td></tr>
 <div class="line">EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \</div>
 <div class="line">    ewf_interface_lpc_uart__interface__##interface_name_symb.response_queue_ptr,                                                                    \</div>
 <div class="line">    ewf_interface_lpc_uart__response_queue__##interface_name_symb,                                                                                  \</div>
-<div class="line">    <a class="code" href="struct__ewf__interface__message.html">ewf_interface_message</a>,                                                                                                                          \</div>
+<div class="line">    <a class="code" href="struct__ewf__message.html">ewf_interface_message</a>,                                                                                                                          \</div>
 <div class="line">    EWF_INTERFACE_LPC_UART_CONFIG_RESPONSE_QUEUE_SIZE);                                                                                             \</div>
 <div class="line">EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \</div>
 <div class="line">    ewf_interface_lpc_uart__interface__##interface_name_symb.urc_queue_ptr,                                                                         \</div>
 <div class="line">    ewf_interface_lpc_uart__urc_queue__##interface_name_symb,                                                                                       \</div>
-<div class="line">    <a class="code" href="struct__ewf__interface__message.html">ewf_interface_message</a>,                                                                                                                          \</div>
+<div class="line">    <a class="code" href="struct__ewf__message.html">ewf_interface_message</a>,                                                                                                                          \</div>
 <div class="line">    EWF_INTERFACE_LPC_UART_CONFIG_URC_QUEUE_SIZE);                                                                                                  \</div>
 <div class="line">ewf_interface_lpc_uart__interface__##interface_name_symb.hardware_start = <a class="code" href="group__group__interface__lpc__uart.html#gae892f955ef6cf4b46e120968d2d8bfbd">ewf_interface_lpc_uart_hardware_start</a>;                                    \</div>
 <div class="line">ewf_interface_lpc_uart__interface__##interface_name_symb.hardware_stop = <a class="code" href="group__group__interface__lpc__uart.html#ga498ccb541e707bb5bb5d2f01a30d84f0">ewf_interface_lpc_uart_hardware_stop</a>;                                      \</div>
@@ -192,8 +192,8 @@ Functions</h2></td></tr>
 <div class="ttc" id="agroup__group__interface__lpc__uart_html_gae892f955ef6cf4b46e120968d2d8bfbd"><div class="ttname"><a href="group__group__interface__lpc__uart.html#gae892f955ef6cf4b46e120968d2d8bfbd">ewf_interface_lpc_uart_hardware_start</a></div><div class="ttdeci">ewf_result ewf_interface_lpc_uart_hardware_start(ewf_interface *interface_ptr)</div><div class="ttdoc">Start the LPC UART hardware interface.</div><div class="ttdef"><b>Definition:</b> ewf_interface_lpc_uart.c:60</div></div>
 <div class="ttc" id="agroup__group__interface__lpc__uart_html_gae9648d59025af6e40e3318c0414fcb7c"><div class="ttname"><a href="group__group__interface__lpc__uart.html#gae9648d59025af6e40e3318c0414fcb7c">ewf_interface_lpc_uart_hardware_send</a></div><div class="ttdeci">ewf_result ewf_interface_lpc_uart_hardware_send(ewf_interface *interface_ptr, const uint8_t *buffer_ptr, uint32_t buffer_length)</div><div class="ttdoc">Send a buffer using the LPC UART hardware interface.</div><div class="ttdef"><b>Definition:</b> ewf_interface_lpc_uart.c:125</div></div>
 <div class="ttc" id="astruct__ewf__interface__lpc__uart_html"><div class="ttname"><a href="struct__ewf__interface__lpc__uart.html">_ewf_interface_lpc_uart</a></div><div class="ttdoc">The LPC UART host interface implementation data structure type.</div><div class="ttdef"><b>Definition:</b> ewf_interface_lpc_uart.h:59</div></div>
-<div class="ttc" id="astruct__ewf__interface__message_html"><div class="ttname"><a href="struct__ewf__interface__message.html">_ewf_interface_message</a></div><div class="ttdoc">The interface message structure definition.</div><div class="ttdef"><b>Definition:</b> ewf_interface.h:66</div></div>
-<div class="ttc" id="astruct__ewf__interface_html"><div class="ttname"><a href="struct__ewf__interface.html">_ewf_interface</a></div><div class="ttdoc">The interface structure definition.</div><div class="ttdef"><b>Definition:</b> ewf_interface.h:95</div></div>
+<div class="ttc" id="astruct__ewf__interface_html"><div class="ttname"><a href="struct__ewf__interface.html">_ewf_interface</a></div><div class="ttdoc">The interface structure definition.</div><div class="ttdef"><b>Definition:</b> ewf_interface.h:66</div></div>
+<div class="ttc" id="astruct__ewf__message_html"><div class="ttname"><a href="struct__ewf__message.html">_ewf_message</a></div><div class="ttdoc">The interface message structure definition.</div><div class="ttdef"><b>Definition:</b> ewf_message.h:27</div></div>
 </div><!-- fragment -->
 <p>Declare a LPC UART host interface. </p>
 <dl class="params"><dt>Parameters</dt><dd>

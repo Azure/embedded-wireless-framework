@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: G:/src/ewf_adapter_quectel_common.h File Reference</title>
+<title>Embedded Wireless Framework: G:/src/ewf_adapter_quectel_common.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -99,6 +99,9 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:gabe785944cb54f9f7a118da152168ca74"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_QUECTEL_COMMON_DEFAULT_TIMEOUT</b>&#160;&#160;&#160;(<a class="el" href="group__group__configuration__platform__win32.html#ga1947843136a63a09ef4b7bc949e06c61">EWF_PLATFORM_TICKS_PER_SECOND</a> * 10)</td></tr>
+<tr class="separator:gabe785944cb54f9f7a118da152168ca74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf59c5fe3074d1bf5204d34479aab6662"><td class="memItemLeft" align="right" valign="top">
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EWF_ADAPTER_QUECTEL_COMMON_UFS_ENABLED</b>&#160;&#160;&#160;(1)</td></tr>
 <tr class="separator:gaf59c5fe3074d1bf5204d34479aab6662"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,6 +139,44 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#ga035773d3ca5289dab6205ab419efa119">EWF_ADAPTER_QUECTEL_COMMON_MQTT_SOCKET_INVALID</a>&#160;&#160;&#160;(-1)</td></tr>
 <tr class="memdesc:ga035773d3ca5289dab6205ab419efa119"><td class="mdescLeft">&#160;</td><td class="mdescRight">The MQTT socket invalid value. <br /></td></tr>
 <tr class="separator:ga035773d3ca5289dab6205ab419efa119"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3efb778c42217537ff66e8bcb4815dca"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#ga3efb778c42217537ff66e8bcb4815dca">EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_FILE_NAME</a>&#160;&#160;&#160;(&quot;root_ca_cert.pem&quot;)</td></tr>
+<tr class="memdesc:ga3efb778c42217537ff66e8bcb4815dca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trusted Certificate Authority certificate file name to be stored on the modem. <br /></td></tr>
+<tr class="separator:ga3efb778c42217537ff66e8bcb4815dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafb6eb3870ffa9b22f44a6cb607112df1"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#gafb6eb3870ffa9b22f44a6cb607112df1">EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_FILE_NAME</a>&#160;&#160;&#160;(&quot;ca_cert.pem&quot;)</td></tr>
+<tr class="memdesc:gafb6eb3870ffa9b22f44a6cb607112df1"><td class="mdescLeft">&#160;</td><td class="mdescRight">User Certificate Authority certificate file name to be stored on the modem. <br /></td></tr>
+<tr class="separator:gafb6eb3870ffa9b22f44a6cb607112df1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad13a94a68c719810ec38c96cf8760a5d"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#gad13a94a68c719810ec38c96cf8760a5d">EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CA_CERTIFICATE_FILE_NAME</a>&#160;&#160;&#160;(&quot;root_ca_cert.pem&quot;)</td></tr>
+<tr class="memdesc:gad13a94a68c719810ec38c96cf8760a5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">CA certificate index that will be used in the security/TLS profile configuration. This number will either be EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_FILE_NAME or EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_FILE_NAME Default to Root CA. <br /></td></tr>
+<tr class="separator:gad13a94a68c719810ec38c96cf8760a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga74f3718dd4177980372dfa8271e74128"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#ga74f3718dd4177980372dfa8271e74128">EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_FILE_NAME</a>&#160;&#160;&#160;(&quot;device_cert.pem&quot;)</td></tr>
+<tr class="memdesc:ga74f3718dd4177980372dfa8271e74128"><td class="mdescLeft">&#160;</td><td class="mdescRight">Client certificate file name to be stored on the modem. <br /></td></tr>
+<tr class="separator:ga74f3718dd4177980372dfa8271e74128"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2aa50dd7dab05f1fa2e868766d061ce0"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#ga2aa50dd7dab05f1fa2e868766d061ce0">EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_FILE_NAME</a>&#160;&#160;&#160;(&quot;device_key.pem&quot;)</td></tr>
+<tr class="memdesc:ga2aa50dd7dab05f1fa2e868766d061ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Client private key filename <br  />
+ <br /></td></tr>
+<tr class="separator:ga2aa50dd7dab05f1fa2e868766d061ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga12c5076d1b33f28cddbd56bace84a611"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#ga12c5076d1b33f28cddbd56bace84a611">EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_BUFFER_NAME</a>&#160;&#160;&#160;(root_ca_cert_pem)</td></tr>
+<tr class="memdesc:ga12c5076d1b33f28cddbd56bace84a611"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trusted Certificate Authority certificate pointer name. <br /></td></tr>
+<tr class="separator:ga12c5076d1b33f28cddbd56bace84a611"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa8f728a5c6cb4ab6663081e86c475fa0"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#gaa8f728a5c6cb4ab6663081e86c475fa0">EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_BUFFER_NAME</a>&#160;&#160;&#160;(ca_cert_pem)</td></tr>
+<tr class="memdesc:gaa8f728a5c6cb4ab6663081e86c475fa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">User Certificate Authority certificate pointing buffer name. <br /></td></tr>
+<tr class="separator:gaa8f728a5c6cb4ab6663081e86c475fa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7668a3e3d2afe214f4da831e2a9b18bb"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#ga7668a3e3d2afe214f4da831e2a9b18bb">EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_BUFFER_NAME</a>&#160;&#160;&#160;(device_cert_pem)</td></tr>
+<tr class="memdesc:ga7668a3e3d2afe214f4da831e2a9b18bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Client certificate pointing buffer name. <br /></td></tr>
+<tr class="separator:ga7668a3e3d2afe214f4da831e2a9b18bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga762b696b2ba94ed786ca26887af1217e"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__configuration__adapter__quectel__common.html#ga762b696b2ba94ed786ca26887af1217e">EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_BUFFER_NAME</a>&#160;&#160;&#160;(device_key_pem)</td></tr>
+<tr class="memdesc:ga762b696b2ba94ed786ca26887af1217e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Client private key filename <br  />
+ <br /></td></tr>
+<tr class="separator:ga762b696b2ba94ed786ca26887af1217e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -168,12 +209,24 @@ Enumerations</h2></td></tr>
 , <b>ewf_adapter_espressif_common_internet_socket_service_type_tcp_listener</b>
 , <br />
 &#160;&#160;<b>ewf_adapter_espressif_common_internet_socket_service_type_udp_listener</b>
+, <b>ewf_adapter_mxchip_common_internet_socket_service_type_not_initialized</b>
+, <b>ewf_adapter_mxchip_common_internet_socket_service_type_tcp</b>
+, <b>ewf_adapter_mxchip_common_internet_socket_service_type_udp</b>
+, <br />
+&#160;&#160;<b>ewf_adapter_mxchip_common_internet_socket_service_type_tcp_listener</b>
+, <b>ewf_adapter_mxchip_common_internet_socket_service_type_udp_listener</b>
 , <b>ewf_adapter_quectel_common_internet_socket_service_type_not_initialized</b>
 , <b>ewf_adapter_quectel_common_internet_socket_service_type_tcp</b>
-, <b>ewf_adapter_quectel_common_internet_socket_service_type_udp</b>
 , <br />
-&#160;&#160;<b>ewf_adapter_quectel_common_internet_socket_service_type_tcp_listener</b>
+&#160;&#160;<b>ewf_adapter_quectel_common_internet_socket_service_type_udp</b>
+, <b>ewf_adapter_quectel_common_internet_socket_service_type_tcp_listener</b>
 , <b>ewf_adapter_quectel_common_internet_socket_service_type_udp_listener</b>
+, <b>ewf_adapter_thales_common_internet_socket_service_type_not_initialized</b>
+, <br />
+&#160;&#160;<b>ewf_adapter_thales_common_internet_socket_service_type_tcp</b>
+, <b>ewf_adapter_thales_common_internet_socket_service_type_udp</b>
+, <b>ewf_adapter_thales_common_internet_socket_service_type_tcp_listener</b>
+, <b>ewf_adapter_thales_common_internet_socket_service_type_udp_listener</b>
 <br />
  }</td></tr>
 <tr class="memdesc:ga618f7baa4ee0af7012ecf723629618b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The socket service type <br  />
@@ -257,9 +310,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gaa4341c130ae624ce6d38cdd05e7ccd00"><td class="memItemLeft" align="right" valign="top">
 <a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_quectel_common_tcp_set_tls_configuration</b> (<a class="el" href="group__group__adapter__tcp.html#gad656fa792a56fd8de24ab6e7af6f68f9">ewf_socket_tcp</a> *socket_ptr, uint32_t tls_configuration_id)</td></tr>
 <tr class="separator:gaa4341c130ae624ce6d38cdd05e7ccd00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga34dc61f31522832af6a409695dce8a2b"><td class="memItemLeft" align="right" valign="top">
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_quectel_common_tcp_bind</b> (<a class="el" href="group__group__adapter__tcp.html#gad656fa792a56fd8de24ab6e7af6f68f9">ewf_socket_tcp</a> *socket_ptr, uint32_t port)</td></tr>
-<tr class="separator:ga34dc61f31522832af6a409695dce8a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga26ea6cb9e1f18f4338c7f2b66a786b24"><td class="memItemLeft" align="right" valign="top">
+<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_quectel_common_tcp_bind</b> (<a class="el" href="group__group__adapter__tcp.html#gad656fa792a56fd8de24ab6e7af6f68f9">ewf_socket_tcp</a> *socket_ptr, uint32_t local_port)</td></tr>
+<tr class="separator:ga26ea6cb9e1f18f4338c7f2b66a786b24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga94755a28dfc367624b8a8dd8c0a0c8a7"><td class="memItemLeft" align="right" valign="top">
 <a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_quectel_common_tcp_listen</b> (<a class="el" href="group__group__adapter__tcp.html#gad656fa792a56fd8de24ab6e7af6f68f9">ewf_socket_tcp</a> *socket_ptr)</td></tr>
 <tr class="separator:ga94755a28dfc367624b8a8dd8c0a0c8a7"><td class="memSeparator" colspan="2">&#160;</td></tr>

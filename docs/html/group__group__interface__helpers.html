@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: Interface helper functions</title>
+<title>Embedded Wireless Framework: Interface helper functions</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -89,10 +89,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga7f6ab80927f2346b4fd60e04095e65ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a response from the interface.  <a href="group__group__interface__helpers.html#ga7f6ab80927f2346b4fd60e04095e65ca">More...</a><br /></td></tr>
 <tr class="separator:ga7f6ab80927f2346b4fd60e04095e65ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga44e346577862662e5f3a8436967fb09c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface__helpers.html#ga44e346577862662e5f3a8436967fb09c">ewf_interface_verify_response</a> (<a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *interface_ptr, const char *expected_str)</td></tr>
-<tr class="memdesc:ga44e346577862662e5f3a8436967fb09c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify an interface response.  <a href="group__group__interface__helpers.html#ga44e346577862662e5f3a8436967fb09c">More...</a><br /></td></tr>
+<tr class="memdesc:ga44e346577862662e5f3a8436967fb09c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify an interface response, compare against a string.  <a href="group__group__interface__helpers.html#ga44e346577862662e5f3a8436967fb09c">More...</a><br /></td></tr>
 <tr class="separator:ga44e346577862662e5f3a8436967fb09c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga68a4e05e1e5f7378febd9d9120c937e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface__helpers.html#ga68a4e05e1e5f7378febd9d9120c937e4">ewf_interface_verify_responses</a> (<a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *interface_ptr, uint32_t response_count, const char **expected_str_arr)</td></tr>
-<tr class="memdesc:ga68a4e05e1e5f7378febd9d9120c937e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify an interface responses.  <a href="group__group__interface__helpers.html#ga68a4e05e1e5f7378febd9d9120c937e4">More...</a><br /></td></tr>
+<tr class="memdesc:ga68a4e05e1e5f7378febd9d9120c937e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify an interface response, compare agains an array of strings.  <a href="group__group__interface__helpers.html#ga68a4e05e1e5f7378febd9d9120c937e4">More...</a><br /></td></tr>
 <tr class="separator:ga68a4e05e1e5f7378febd9d9120c937e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab53f306e7da3630e4d48e4b20613464a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface__helpers.html#gab53f306e7da3630e4d48e4b20613464a">ewf_interface_verify_response_starts_with</a> (<a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *interface_ptr, const char *expected_start_str)</td></tr>
 <tr class="memdesc:gab53f306e7da3630e4d48e4b20613464a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify if interface response starts with expected string.  <a href="group__group__interface__helpers.html#gab53f306e7da3630e4d48e4b20613464a">More...</a><br /></td></tr>
@@ -291,7 +291,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Verify an interface response. </p>
+<p>Verify an interface response, compare against a string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">expected_str</td><td>a pointer to a NULL terminated string that will be compared agains the interface response. If different, the function will return an error code, if equal, the function will return a success code. </td></tr>
@@ -408,7 +408,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Verify an interface responses. </p>
+<p>Verify an interface response, compare agains an array of strings. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">expected_str_arr</td><td>is array of NULL terminated strings that will be compared against the interface response. If different, the function will return an error code, if match is found, the function will return a success code. </td></tr>

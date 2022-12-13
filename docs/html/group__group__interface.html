@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: EWF Interface API</title>
+<title>Embedded Wireless Framework: EWF Interface API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -79,6 +79,9 @@ Modules</h2></td></tr>
 <tr class="memitem:group__group__interface__common"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface__common.html">Common Interface API</a></td></tr>
 <tr class="memdesc:group__group__interface__common"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common interface functions. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__group__interface__timeout"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface__timeout.html">The Interface timeout API</a></td></tr>
+<tr class="memdesc:group__group__interface__timeout"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions for setting up and controlling the interface timeout. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:group__group__interface__tokenizer"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface__tokenizer.html">The Interface tokenizer API</a></td></tr>
 <tr class="memdesc:group__group__interface__tokenizer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functions for setting up and controlling the interface tokenizer. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -121,12 +124,6 @@ Modules</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__interface__message.html">_ewf_interface_message</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The interface message structure definition.  <a href="struct__ewf__interface__message.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__interface__tokenizer__pattern.html">_ewf_interface_tokenizer_pattern</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The interface tokenizer pattern structure definition.  <a href="struct__ewf__interface__tokenizer__pattern.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__ewf__interface.html">_ewf_interface</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The interface structure definition.  <a href="struct__ewf__interface.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,14 +147,14 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga3191a07d0c1cbbf67c68e05100941e4f"><td class="memItemLeft" align="right" valign="top"><a id="ga3191a07d0c1cbbf67c68e05100941e4f"></a>
-typedef struct <a class="el" href="struct__ewf__interface__message.html">_ewf_interface_message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface.html#ga3191a07d0c1cbbf67c68e05100941e4f">ewf_interface_message</a></td></tr>
-<tr class="memdesc:ga3191a07d0c1cbbf67c68e05100941e4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The interface message structure type definition. <br /></td></tr>
-<tr class="separator:ga3191a07d0c1cbbf67c68e05100941e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3e160e36796592601a61dd764c2dda2d"><td class="memItemLeft" align="right" valign="top"><a id="ga3e160e36796592601a61dd764c2dda2d"></a>
-typedef struct <a class="el" href="struct__ewf__interface__tokenizer__pattern.html">_ewf_interface_tokenizer_pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface.html#ga3e160e36796592601a61dd764c2dda2d">ewf_interface_tokenizer_pattern</a></td></tr>
-<tr class="memdesc:ga3e160e36796592601a61dd764c2dda2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The interface tokenizer pattern structure type definition. <br /></td></tr>
-<tr class="separator:ga3e160e36796592601a61dd764c2dda2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga76cd2c4975316702ff5b425f499710d2"><td class="memItemLeft" align="right" valign="top"><a id="ga76cd2c4975316702ff5b425f499710d2"></a>
+typedef <a class="el" href="group__group__ewf__types.html#ga70967cdf6a206fdcb021ef9cf8cafb68">ewf_message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface.html#ga76cd2c4975316702ff5b425f499710d2">ewf_interface_message</a></td></tr>
+<tr class="memdesc:ga76cd2c4975316702ff5b425f499710d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Legacy type for messages. <br /></td></tr>
+<tr class="separator:ga76cd2c4975316702ff5b425f499710d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2cf051347175abc4aae1472df5f0b306"><td class="memItemLeft" align="right" valign="top"><a id="ga2cf051347175abc4aae1472df5f0b306"></a>
+typedef <a class="el" href="group__group__ewf__types.html#gaae36a07e7a89546235cf276c7387ea85">ewf_tokenizer_pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface.html#ga2cf051347175abc4aae1472df5f0b306">ewf_interface_tokenizer_pattern</a></td></tr>
+<tr class="memdesc:ga2cf051347175abc4aae1472df5f0b306"><td class="mdescLeft">&#160;</td><td class="mdescRight">Legacy type for tokenizer patters. <br /></td></tr>
+<tr class="separator:ga2cf051347175abc4aae1472df5f0b306"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga129ee37c611cebee5290bdb02619f1ae"><td class="memItemLeft" align="right" valign="top"><a id="ga129ee37c611cebee5290bdb02619f1ae"></a>
 typedef <a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface.html#ga129ee37c611cebee5290bdb02619f1ae">ewf_interface_response_callback</a>) (<a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *interface_ptr, uint8_t *buffer_ptr, uint32_t length)</td></tr>
 <tr class="memdesc:ga129ee37c611cebee5290bdb02619f1ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">a function pointer type for response callbacks <br /></td></tr>
@@ -194,7 +191,7 @@ typedef <a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7
 <div class="line">        return <a class="code" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaa4164c1a8935c10af1639016ffb7a0533">EWF_RESULT_INVALID_FUNCTION_ARGUMENT</a>;                                \</div>
 <div class="line">    }                                                                               \</div>
 <div class="line">} <span class="keywordflow">while</span>(0)</div>
-<div class="ttc" id="agroup__group__ewf__result__codes_html_ggadaadb9461485808132ddc14cc05a72eaa4164c1a8935c10af1639016ffb7a0533"><div class="ttname"><a href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaa4164c1a8935c10af1639016ffb7a0533">EWF_RESULT_INVALID_FUNCTION_ARGUMENT</a></div><div class="ttdeci">@ EWF_RESULT_INVALID_FUNCTION_ARGUMENT</div><div class="ttdef"><b>Definition:</b> ewf.h:74</div></div>
+<div class="ttc" id="agroup__group__ewf__result__codes_html_ggadaadb9461485808132ddc14cc05a72eaa4164c1a8935c10af1639016ffb7a0533"><div class="ttname"><a href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaa4164c1a8935c10af1639016ffb7a0533">EWF_RESULT_INVALID_FUNCTION_ARGUMENT</a></div><div class="ttdeci">@ EWF_RESULT_INVALID_FUNCTION_ARGUMENT</div><div class="ttdef"><b>Definition:</b> ewf.h:69</div></div>
 </div><!-- fragment -->
 </div>
 </div>

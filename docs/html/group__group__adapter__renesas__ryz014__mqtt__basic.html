@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: MQTT basic API implementation</title>
+<title>Embedded Wireless Framework: MQTT basic API implementation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -62,57 +62,50 @@ $(function() {
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
-<div class="title">MQTT basic API implementation<div class="ingroups"><a class="el" href="group__group__adapter.html">EWF Adapter API</a> &raquo; <a class="el" href="group__group__adapter__renesas__ryz014.html">The Renesas RYX014 adapter driver</a></div></div>  </div>
+<div class="title">MQTT basic API implementation<div class="ingroups"><a class="el" href="group__group__adapter.html">EWF Adapter API</a> &raquo; <a class="el" href="group__group__adapter__renesas__ryz014.html">The Renesas RYZ014A modem adapter driver</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>The Renesas RYZ014 adapter MQTT basic API.  
+<p>Renesas RYZ014A adapter MQTT basic API.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:gae6bf9b166205bf115cf06c3d87d2f623"><td class="memItemLeft" align="right" valign="top"><a id="gae6bf9b166205bf115cf06c3d87d2f623"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_start</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr)</td></tr>
-<tr class="separator:gae6bf9b166205bf115cf06c3d87d2f623"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga187504b1ac71e6b53477ed92adcb636f"><td class="memItemLeft" align="right" valign="top"><a id="ga187504b1ac71e6b53477ed92adcb636f"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_stop</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr)</td></tr>
-<tr class="separator:ga187504b1ac71e6b53477ed92adcb636f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab95716d1c2837b57d719a57c6aca66fa"><td class="memItemLeft" align="right" valign="top"><a id="gab95716d1c2837b57d719a57c6aca66fa"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_urc_callback</b> (<a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *interface_ptr, uint8_t *buffer_ptr, uint32_t buffer_length)</td></tr>
-<tr class="separator:gab95716d1c2837b57d719a57c6aca66fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad45293f02008a2600b938daf38fa7c31"><td class="memItemLeft" align="right" valign="top"><a id="gad45293f02008a2600b938daf38fa7c31"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_default_state_callback</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, const char *state_cstr, const char *param_cstr)</td></tr>
-<tr class="separator:gad45293f02008a2600b938daf38fa7c31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga448ed28869bc6653e9dc9e110abfa4cc"><td class="memItemLeft" align="right" valign="top"><a id="ga448ed28869bc6653e9dc9e110abfa4cc"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_default_message_callback</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, const char *topic_cstr, const char *payload_cstr)</td></tr>
-<tr class="separator:ga448ed28869bc6653e9dc9e110abfa4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1b35be46a09991d11d5613d2c7da1df1"><td class="memItemLeft" align="right" valign="top"><a id="ga1b35be46a09991d11d5613d2c7da1df1"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_connect</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, char const *server_str, uint32_t port, char const *clientid, char const *username, char const *password)</td></tr>
-<tr class="separator:ga1b35be46a09991d11d5613d2c7da1df1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab66a61a61098e362a93d210ce1e279f4"><td class="memItemLeft" align="right" valign="top"><a id="gab66a61a61098e362a93d210ce1e279f4"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_disconnect</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr)</td></tr>
-<tr class="separator:gab66a61a61098e362a93d210ce1e279f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5563c3f9b53de59e5863bdfe1df05ce4"><td class="memItemLeft" align="right" valign="top"><a id="ga5563c3f9b53de59e5863bdfe1df05ce4"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_subscribe</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, char const *topic)</td></tr>
-<tr class="separator:ga5563c3f9b53de59e5863bdfe1df05ce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad2ac065fca2bfc3dabd2eac877208579"><td class="memItemLeft" align="right" valign="top"><a id="gad2ac065fca2bfc3dabd2eac877208579"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_unsubscribe</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, char const *topic)</td></tr>
-<tr class="separator:gad2ac065fca2bfc3dabd2eac877208579"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae5d17b44a90af36cfe8a6d9fbd0902c0"><td class="memItemLeft" align="right" valign="top"><a id="gae5d17b44a90af36cfe8a6d9fbd0902c0"></a>
-<a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_publish</b> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, const char *topic, const char *msg_cstr)</td></tr>
-<tr class="separator:gae5d17b44a90af36cfe8a6d9fbd0902c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga93a13f45484e109514d73c8822762111"><td class="memItemLeft" align="right" valign="top"><a id="ga93a13f45484e109514d73c8822762111"></a>
-<a class="el" href="group__group__adapter__mqtt__basic.html#ga0cff372464b46d05bb6f56321032c530">ewf_adapter_api_mqtt_basic</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_api_mqtt_basic</b></td></tr>
-<tr class="separator:ga93a13f45484e109514d73c8822762111"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:gaac1990f9d8c82c92ee3e07b2a9488d3f"><td class="memItemLeft" align="right" valign="top"><a id="gaac1990f9d8c82c92ee3e07b2a9488d3f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_start</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_start</td></tr>
+<tr class="separator:gaac1990f9d8c82c92ee3e07b2a9488d3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8707c545c00bde254c5e2ac9faf74fb7"><td class="memItemLeft" align="right" valign="top"><a id="ga8707c545c00bde254c5e2ac9faf74fb7"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_stop</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_stop</td></tr>
+<tr class="separator:ga8707c545c00bde254c5e2ac9faf74fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6fa0697404ef1822b072d569ea2ac321"><td class="memItemLeft" align="right" valign="top"><a id="ga6fa0697404ef1822b072d569ea2ac321"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_urc_callback</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_urc_callback</td></tr>
+<tr class="separator:ga6fa0697404ef1822b072d569ea2ac321"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacc77d4723048f8547ffe1b146987f6a5"><td class="memItemLeft" align="right" valign="top"><a id="gacc77d4723048f8547ffe1b146987f6a5"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_default_state_callback</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_default_state_callback</td></tr>
+<tr class="separator:gacc77d4723048f8547ffe1b146987f6a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac81abe7645adec0d5d8ccdf51a3d1d07"><td class="memItemLeft" align="right" valign="top"><a id="gac81abe7645adec0d5d8ccdf51a3d1d07"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_default_message_callback</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_default_message_callback</td></tr>
+<tr class="separator:gac81abe7645adec0d5d8ccdf51a3d1d07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga33b388f9cab9323ae8c6a88859682879"><td class="memItemLeft" align="right" valign="top"><a id="ga33b388f9cab9323ae8c6a88859682879"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_connect</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_connect</td></tr>
+<tr class="separator:ga33b388f9cab9323ae8c6a88859682879"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga01e95596b4a6d05ebb9e9b03c785bf59"><td class="memItemLeft" align="right" valign="top"><a id="ga01e95596b4a6d05ebb9e9b03c785bf59"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_disconnect</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_disconnect</td></tr>
+<tr class="separator:ga01e95596b4a6d05ebb9e9b03c785bf59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1f728eb0b2eefd94ddbc928786a7d6e8"><td class="memItemLeft" align="right" valign="top"><a id="ga1f728eb0b2eefd94ddbc928786a7d6e8"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_subscribe</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_subscribe</td></tr>
+<tr class="separator:ga1f728eb0b2eefd94ddbc928786a7d6e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac68309cbd3b7404d9cfbf8e10586af40"><td class="memItemLeft" align="right" valign="top"><a id="gac68309cbd3b7404d9cfbf8e10586af40"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_unsubscribe</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_unsubscribe</td></tr>
+<tr class="separator:gac68309cbd3b7404d9cfbf8e10586af40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf05baad0b9521abc21506d39b798a159"><td class="memItemLeft" align="right" valign="top"><a id="gaf05baad0b9521abc21506d39b798a159"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ewf_adapter_renesas_ryz014_mqtt_basic_publish</b>&#160;&#160;&#160;ewf_adapter_renesas_common_mqtt_basic_publish</td></tr>
+<tr class="separator:gaf05baad0b9521abc21506d39b798a159"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>The Renesas RYZ014 adapter MQTT basic API. </p>
+<p>Renesas RYZ014A adapter MQTT basic API. </p>
 <p>*** group_adapter_renesas_ryz014_mqtt </p>
 </div><!-- contents -->
 <!-- start footer part -->

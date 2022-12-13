@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: _ewf_adapter_espressif_common_internet_socket Struct Reference</title>
+<title>Embedded Wireless Framework: _ewf_adapter_espressif_common_internet_socket Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -79,9 +79,9 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a6275c1fec183f7aa25b5d7a7c5b742c4"><td class="memItemLeft" align="right" valign="top"><a id="a6275c1fec183f7aa25b5d7a7c5b742c4"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
 <tr class="separator:a6275c1fec183f7aa25b5d7a7c5b742c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0a21c16da254a6030d285defb12c97d"><td class="memItemLeft" align="right" valign="top"><a id="ae0a21c16da254a6030d285defb12c97d"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>port</b></td></tr>
-<tr class="separator:ae0a21c16da254a6030d285defb12c97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9983396f53a74321b8f3110bd331162f"><td class="memItemLeft" align="right" valign="top"><a id="a9983396f53a74321b8f3110bd331162f"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>local_port</b></td></tr>
+<tr class="separator:a9983396f53a74321b8f3110bd331162f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acea5854c2005db0056aeb206fb22016c"><td class="memItemLeft" align="right" valign="top"><a id="acea5854c2005db0056aeb206fb22016c"></a>
 volatile <a class="el" href="group__group__adapter__espressif__common__data.html#ga8ba3cd58ab8a4dfa1c041e829550003e">ewf_adapter_espressif_common_internet_socket_service_type</a>&#160;</td><td class="memItemRight" valign="bottom"><b>type</b></td></tr>
 <tr class="separator:acea5854c2005db0056aeb206fb22016c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -103,12 +103,9 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>conn_error</
 <tr class="memitem:a54d201b2cf49a03436a97d07adbc4da4"><td class="memItemLeft" align="right" valign="top"><a id="a54d201b2cf49a03436a97d07adbc4da4"></a>
 volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>recv</b></td></tr>
 <tr class="separator:a54d201b2cf49a03436a97d07adbc4da4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c5957777baed77d9a5d89cd646d86f3"><td class="memItemLeft" align="right" valign="top"><a id="a4c5957777baed77d9a5d89cd646d86f3"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>recv_size</b></td></tr>
-<tr class="separator:a4c5957777baed77d9a5d89cd646d86f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a053315fc1bbd47ec6f1804b1c12ec1ac"><td class="memItemLeft" align="right" valign="top"><a id="a053315fc1bbd47ec6f1804b1c12ec1ac"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>recv_buffer</b> [<a class="el" href="group__group__configuration__adapter__espressif__common.html#ga667223cd5abe3e27baed04a8792c49d7">EWF_ADAPTER_ESPRESSIF_COMMON_INTERNET_SOCKET_RECV_BUFFER_SIZE</a>]</td></tr>
-<tr class="separator:a053315fc1bbd47ec6f1804b1c12ec1ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4ab79bfc7a4ceb2cb6582f1f82cc63c"><td class="memItemLeft" align="right" valign="top"><a id="ad4ab79bfc7a4ceb2cb6582f1f82cc63c"></a>
+<a class="el" href="group__group__platform__queue.html#gac93bd0a11e423c7ad3995f608401d076">ewf_platform_queue</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>recv_queue_ptr</b></td></tr>
+<tr class="separator:ad4ab79bfc7a4ceb2cb6582f1f82cc63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Internal structure for internet socket status <br  />

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: G:/src/ewf_adapter_api_modem.c File Reference</title>
+<title>Embedded Wireless Framework: G:/src/ewf_adapter_api_modem.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -75,17 +75,20 @@ $(function() {
 <p>The Embedded Wireless Framework modem API (3GPP) implementation.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="ewf__adapter__api__modem_8h_source.html">ewf_adapter_api_modem.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ewf__adapter_8h_source.html">ewf_adapter.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ewf__lib_8h_source.html">ewf_lib.h</a>&quot;</code><br />
-<code>#include &lt;stddef.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga86c37d5c3911ebb7eee0dba6faddf82d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga86c37d5c3911ebb7eee0dba6faddf82d">ewf_adapter_modem_custom_command_send</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, const char *command_str)</td></tr>
+<tr class="memdesc:ga86c37d5c3911ebb7eee0dba6faddf82d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to send command that is not implmented in the framework.  <a href="group__group__adapter__modem__common.html#ga86c37d5c3911ebb7eee0dba6faddf82d">More...</a><br /></td></tr>
+<tr class="separator:ga86c37d5c3911ebb7eee0dba6faddf82d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga44358f36e885a86a344006371653120a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga44358f36e885a86a344006371653120a">ewf_adapter_modem_custom_command_receive</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, char **buffer_ptr_ptr, uint32_t *buffer_length_ptr)</td></tr>
+<tr class="memdesc:ga44358f36e885a86a344006371653120a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read command that is not implmented in the framework.  <a href="group__group__adapter__modem__common.html#ga44358f36e885a86a344006371653120a">More...</a><br /></td></tr>
+<tr class="separator:ga44358f36e885a86a344006371653120a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1c4289ae582fbab18f989d7332e92774"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga1c4289ae582fbab18f989d7332e92774">ewf_adapter_modem_functionality_set</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, const char *fun)</td></tr>
 <tr class="memdesc:ga1c4289ae582fbab18f989d7332e92774"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the modem functionality (+cfun)  <a href="group__group__adapter__modem__common.html#ga1c4289ae582fbab18f989d7332e92774">More...</a><br /></td></tr>
 <tr class="separator:ga1c4289ae582fbab18f989d7332e92774"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga313bc3aa7bbe8b8eecf972426ba2da65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga313bc3aa7bbe8b8eecf972426ba2da65">ewf_adapter_modem_network_registration_check</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, uint32_t timeout)</td></tr>
-<tr class="memdesc:ga313bc3aa7bbe8b8eecf972426ba2da65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if modem is registered to network.  <a href="group__group__adapter__modem__common.html#ga313bc3aa7bbe8b8eecf972426ba2da65">More...</a><br /></td></tr>
-<tr class="separator:ga313bc3aa7bbe8b8eecf972426ba2da65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The Embedded Wireless Framework modem API (3GPP) implementation. </p>

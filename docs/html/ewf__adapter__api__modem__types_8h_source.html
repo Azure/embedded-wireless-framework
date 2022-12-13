@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: G:/src/ewf_adapter_api_modem_types.h Source File</title>
+<title>Embedded Wireless Framework: G:/src/ewf_adapter_api_modem_types.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -73,115 +73,138 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#ifndef __ewf_adapter_modem_types__h__included__</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#define __ewf_adapter_modem_types__h__included__</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="struct__ewf__time.html">   19</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__ewf__time.html">_ewf_time</a></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    uint8_t year;        <span class="comment">/* Year indicating last two digits. (2022 will be 22) */</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    uint8_t month;       <span class="comment">/* Month, 1 (Jan)...12 (Dec) */</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    uint8_t day;         <span class="comment">/* Day, 1 to 31 */</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    uint8_t hour;        <span class="comment">/* Hour, 0 to 23 */</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    uint8_t min;         <span class="comment">/* Minute, 0 to 59 */</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    uint8_t sec;         <span class="comment">/* Second, 0 to 59 */</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">int</span> timezone;        <span class="comment">/* Timezone expressed in quarters if an hour, between local time and GMT.</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">                           e.g. 6th of May 1994, 22:10:00 GMT+2 hours equals to &quot;94/05/06,22:10:00+08&quot; */</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    uint8_t isdst;       <span class="comment">/* Daylight savings flag */</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}<a class="code" href="struct__ewf__time.html">ewf_time</a>;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _ewf_network_status</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    EWF_NOT_REGISTERED_NOT_SEARCHING = 0,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    EWF_REGISTERED_HOME = 1,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    EWF_SEARCHING = 2,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    EWF_REGISTRATION_DENIED = 3,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    EWF_UNKNOWN = 4,</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    EWF_REGISTERED_ROAMING = 5,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    EWF_REGISTERED_SMS_ONLY_HOME = 6,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    EWF_REGISTERED_SMS_ONLY_ROAMING = 7,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    EWF_EMERGENCY_ONLY = 8,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    EWF_REGISTERED_NO_CSFB_HOME = 9,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    EWF_REGISTERED_NO_CSFB_ROAMING= 10,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">/* Specific status for Renesas RYZ014 indicating registered, temporary connection lost */</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    EWF_TEMPORARY_CONNECTION_LOSS_RYZ014_PROPRIETARY =80</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} ewf_network_status;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ewf_8h.html">ewf.h</a>&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">/************************************************************************/</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__modem__time.html">   28</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__ewf__adapter__modem__time.html">_ewf_adapter_modem_time</a></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__modem__time.html#a2b741d677baca550a9649d7f20827d25">   30</a></span>&#160;    uint8_t <a class="code" href="struct__ewf__adapter__modem__time.html#a2b741d677baca550a9649d7f20827d25">year</a>;        </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__modem__time.html#a81b948f73d9b5626e8a61a1d6bdce302">   31</a></span>&#160;    uint8_t <a class="code" href="struct__ewf__adapter__modem__time.html#a81b948f73d9b5626e8a61a1d6bdce302">month</a>;       </div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__modem__time.html#a792030173a20701a6cba0416624aad06">   32</a></span>&#160;    uint8_t <a class="code" href="struct__ewf__adapter__modem__time.html#a792030173a20701a6cba0416624aad06">day</a>;         </div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__modem__time.html#aed6fe545d5097acf5374bb9e039aaee5">   33</a></span>&#160;    uint8_t <a class="code" href="struct__ewf__adapter__modem__time.html#aed6fe545d5097acf5374bb9e039aaee5">hour</a>;        </div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__modem__time.html#ad5f0eb09b7af22e8bb02bf2fc8c286e4">   34</a></span>&#160;    uint8_t <a class="code" href="struct__ewf__adapter__modem__time.html#ad5f0eb09b7af22e8bb02bf2fc8c286e4">min</a>;         </div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__modem__time.html#ac0c7f6452f890ec32fa34080cbc30b2b">   35</a></span>&#160;    uint8_t <a class="code" href="struct__ewf__adapter__modem__time.html#ac0c7f6452f890ec32fa34080cbc30b2b">sec</a>;         </div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__modem__time.html#abeac097ea14c1443f008fa2a99cef871">   36</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="struct__ewf__adapter__modem__time.html#abeac097ea14c1443f008fa2a99cef871">timezone</a>;        </div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__modem__time.html#ac0a9f6c54e91dff6570953d0f468def3">   38</a></span>&#160;    uint8_t <a class="code" href="struct__ewf__adapter__modem__time.html#ac0a9f6c54e91dff6570953d0f468def3">isdst</a>;       </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}<a class="code" href="struct__ewf__adapter__modem__time.html">ewf_adapter_modem_time</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">/* Network registration status check commands */</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#gabf7141c369cda2f85f7a1ef4b3972de1">   43</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__group__adapter__modem__types.html#gabf7141c369cda2f85f7a1ef4b3972de1">_ewf_adapter_modem_cmd_query_network_reg</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#ggabf7141c369cda2f85f7a1ef4b3972de1a6f657b1eb6cdb5a9b678413188b179b6">   45</a></span>&#160;    <a class="code" href="group__group__adapter__modem__types.html#ggabf7141c369cda2f85f7a1ef4b3972de1a6f657b1eb6cdb5a9b678413188b179b6">EWF_ADAPTER_MODEM_CMD_QUERY_NETWORK_REG</a> = 0,       </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#ggabf7141c369cda2f85f7a1ef4b3972de1a2861dd687d1a16a9786637a0b0dd58a7">   46</a></span>&#160;    <a class="code" href="group__group__adapter__modem__types.html#ggabf7141c369cda2f85f7a1ef4b3972de1a2861dd687d1a16a9786637a0b0dd58a7">EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG</a> = 1,   </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#ggabf7141c369cda2f85f7a1ef4b3972de1ad53877bdaae1d91869cdd8f11375df24">   47</a></span>&#160;    <a class="code" href="group__group__adapter__modem__types.html#ggabf7141c369cda2f85f7a1ef4b3972de1ad53877bdaae1d91869cdd8f11375df24">EWF_ADAPTER_MODEM_CMD_QUERY_CS_NETWORK_REG</a> = 2,    </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}ewf_adapter_modem_cmd_query_network_reg;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">/* Access technologies as per 3GPP TS 27.007 */</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _ewf_act</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">/* Network registration status */</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _ewf_adapter_modem_network_status</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    EWF_ACT_INVALID = -1,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    EWF_ACT_GSM = 0,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    EWF_ACT_GSM_COMPACT = 1,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    EWF_ACT_UTRAN = 2,</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    EWF_ACT_EGPRS = 3,</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    EWF_ACT_HSDPA = 4,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    EWF_ACT_HSUPA = 5,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    EWF_ACT_HSDPA_HSUPA = 6,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    EWF_ACT_EUTRAN = 7,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    EWF_ACT_LTE_CATM1 = 8,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    EWF_ACT_NBIOT = 9,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;} ewf_act;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    EWF_ADAPTER_MODEM_NOT_REGISTERED_NOT_SEARCHING = 0,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    EWF_ADAPTER_MODEM_REGISTERED_HOME = 1,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    EWF_ADAPTER_MODEM_SEARCHING = 2,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    EWF_ADAPTER_MODEM_REGISTRATION_DENIED = 3,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    EWF_ADAPTER_MODEM_UNKNOWN = 4,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    EWF_ADAPTER_MODEM_REGISTERED_ROAMING = 5,</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    EWF_ADAPTER_MODEM_REGISTERED_SMS_ONLY_HOME = 6,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    EWF_ADAPTER_MODEM_REGISTERED_SMS_ONLY_ROAMING = 7,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    EWF_ADAPTER_MODEM_EMERGENCY_ONLY = 8,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    EWF_ADAPTER_MODEM_REGISTERED_NO_CSFB_HOME = 9,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    EWF_ADAPTER_MODEM_REGISTERED_NO_CSFB_ROAMING = 10,</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="comment">/* Specific status for Renesas/ Sequans modem indicating registered, temporary connection lost */</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    EWF_ADAPTER_MODEM_TEMPORARY_CONNECTION_LOSS_RENESAS_SEQUANS_PROPRIETARY = 80</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _ewf_edrx_act</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    EWF_ACT_EDRX_INVALID = -1,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    EWF_ACT_NO_EDRX = 0,</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    EWF_ACT_EDRX_EC_GSM_IOT = 1,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    EWF_ACT_EDRX_GSM = 2,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    EWF_ACT_EDRX_UTRAN = 3,</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    EWF_ACT_EDRX_EUTRAN_LTE_CATM1 = 4,</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    EWF_ACT_EDRX_EUTRAN_NBIOT = 5,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;} ewf_edrx_act;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">/* Registration modes */</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _ewf_operator_sel_register_mode</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;{</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    EWF_SELECT_REGISTER_MODE_AUTO = 0,</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    EWF_SELECT_REGISTER_MODE_MANUAL = 1,</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    EWF_SELECT_REGISTER_MODE_DEREGISTER = 2,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    EWF_SELECT_REGISTER_MODE_NO_REGISTER_NO_DEREGISTER = 3,</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    EWF_SELECT_REGISTER_MODE_MANUAL_AUTO = 4</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;} ewf_operator_sel_register_mode;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810">   91</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810">_ewf_operator_name_format</a></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;{</div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810a36779b22970a7639feae58dfd4007939">   93</a></span>&#160;    <a class="code" href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810a36779b22970a7639feae58dfd4007939">EWF_OPERATOR_NAME_FORMAT_LONG</a> = 0,    </div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810a77d11a72cedb774559fbf800ebad9d65">   94</a></span>&#160;    <a class="code" href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810a77d11a72cedb774559fbf800ebad9d65">EWF_OPERATOR_NAME_FORMAT_SHORT</a>,       </div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810ac6a5e8ba116db9efd353f03888a83992">   95</a></span>&#160;    <a class="code" href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810ac6a5e8ba116db9efd353f03888a83992">EWF_OPERATOR_NAME_FORMAT_NUMERIC</a>,     </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;} ewf_operator_name_format;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;} ewf_adapter_modem_network_status;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">/* Access technologies as per 3GPP TS 27.007 */</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _ewf_adapter_modem_act</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    EWF_ADAPTER_MODEM_ACT_INVALID = -1,</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    EWF_ADAPTER_MODEM_ACT_GSM = 0,</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    EWF_ADAPTER_MODEM_ACT_GSM_COMPACT = 1,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    EWF_ADAPTER_MODEM_ACT_UTRAN = 2,</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    EWF_ADAPTER_MODEM_ACT_EGPRS = 3,</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    EWF_ADAPTER_MODEM_ACT_HSDPA = 4,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    EWF_ADAPTER_MODEM_ACT_HSUPA = 5,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    EWF_ADAPTER_MODEM_ACT_HSDPA_HSUPA = 6,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    EWF_ADAPTER_MODEM_ACT_EUTRAN = 7,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    EWF_ADAPTER_MODEM_ACT_LTE_CATM1 = 8,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    EWF_ADAPTER_MODEM_ACT_NBIOT = 9,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;} ewf_adapter_modem_act;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _ewf_adapter_modem_edrx_act</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;{</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    EWF_ADAPTER_MODEM_ACT_EDRX_INVALID = -1,</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    EWF_ADAPTER_MODEM_ACT_NO_EDRX = 0,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    EWF_ADAPTER_MODEM_ACT_EDRX_EC_GSM_IOT = 1,</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    EWF_ADAPTER_MODEM_ACT_EDRX_GSM = 2,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    EWF_ADAPTER_MODEM_ACT_EDRX_UTRAN = 3,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    EWF_ADAPTER_MODEM_ACT_EDRX_EUTRAN_LTE_CATM1 = 4,</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    EWF_ADAPTER_MODEM_ACT_EDRX_EUTRAN_NBIOT = 5,</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;} ewf_adapter_modem_edrx_act;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="ewf__adapter__api__modem__types_8h.html#a384b710b1f8880d234da41f616d7c262">  100</a></span>&#160;<span class="preprocessor">#define EWF_PDP_CONTEXT_TYPE_IP             &quot;IP&quot;</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#define EWF_PDP_CONTEXT_TYPE_IPV6           &quot;IPV6&quot;</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#define EWF_PDP_CONTEXT_TYPE_IPV4V6         &quot;IPV4V6&quot;</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">#define EWF_PDP_CONTEXT_TYPE_PPP            &quot;PPP&quot;</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8">  105</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8">_ewf_pdpauthtype</a></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;{</div>
-<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8ad90e91e36ce30cfcfe506147e98e5fcc">  107</a></span>&#160;    <a class="code" href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8ad90e91e36ce30cfcfe506147e98e5fcc">EWF_PDP_AUTH_NONE</a> = 0,   </div>
-<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8a3dd8f4bfa771777d11f2aab9d1dab009">  108</a></span>&#160;    <a class="code" href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8a3dd8f4bfa771777d11f2aab9d1dab009">EWF_PDP_AUTH_PAP</a>,        </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <a class="code" href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8aa72ed8793eb0d0177162305b50117f3f">EWF_PDP_AUTH_CHAP</a>        </div>
-<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8aa72ed8793eb0d0177162305b50117f3f">  111</a></span>&#160;} ewf_pdpauthtype;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;}</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">/* Modem Operator Registration modes */</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _ewf_adapter_modem_operator_sel_register_mode</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;{</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    EWF_ADAPTER_MODEM_SELECT_REGISTER_MODE_AUTO = 0,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    EWF_ADAPTER_MODEM_SELECT_REGISTER_MODE_MANUAL = 1,</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    EWF_ADAPTER_MODEM_SELECT_REGISTER_MODE_DEREGISTER = 2,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    EWF_ADAPTER_MODEM_SELECT_REGISTER_MODE_NO_REGISTER_NO_DEREGISTER = 3,</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;} ewf_adapter_modem_operator_sel_register_mode;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#gadc6f1e651b70fb2f68865c6c26343aa1">  109</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__group__adapter__modem__types.html#gadc6f1e651b70fb2f68865c6c26343aa1">_ewf_afapter_modem_operator_name_format</a></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;{</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#ggadc6f1e651b70fb2f68865c6c26343aa1ac109abe73eae7b083bb108b98c590c1b">  111</a></span>&#160;    <a class="code" href="group__group__adapter__modem__types.html#ggadc6f1e651b70fb2f68865c6c26343aa1ac109abe73eae7b083bb108b98c590c1b">EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_LONG</a> = 0,    </div>
+<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#ggadc6f1e651b70fb2f68865c6c26343aa1ad3010a50922281dd8cfe6fe578ea77e4">  112</a></span>&#160;    <a class="code" href="group__group__adapter__modem__types.html#ggadc6f1e651b70fb2f68865c6c26343aa1ad3010a50922281dd8cfe6fe578ea77e4">EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_SHORT</a>,       </div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#ggadc6f1e651b70fb2f68865c6c26343aa1a0e26e1c0f0fb62fc7f493a1119a7181a">  113</a></span>&#160;    <a class="code" href="group__group__adapter__modem__types.html#ggadc6f1e651b70fb2f68865c6c26343aa1a0e26e1c0f0fb62fc7f493a1119a7181a">EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_NUMERIC</a>,     </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;} ewf_afapter_modem_operator_name_format;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __ewf_adapter_modem_types__h__included__ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aewf__adapter__api__modem__types_8h_html_a8d55cff73a3821667e99c497c0b9d4a8"><div class="ttname"><a href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8">_ewf_pdpauthtype</a></div><div class="ttdeci">_ewf_pdpauthtype</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:106</div></div>
-<div class="ttc" id="aewf__adapter__api__modem__types_8h_html_a8d55cff73a3821667e99c497c0b9d4a8a3dd8f4bfa771777d11f2aab9d1dab009"><div class="ttname"><a href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8a3dd8f4bfa771777d11f2aab9d1dab009">EWF_PDP_AUTH_PAP</a></div><div class="ttdeci">@ EWF_PDP_AUTH_PAP</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:108</div></div>
-<div class="ttc" id="aewf__adapter__api__modem__types_8h_html_a8d55cff73a3821667e99c497c0b9d4a8aa72ed8793eb0d0177162305b50117f3f"><div class="ttname"><a href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8aa72ed8793eb0d0177162305b50117f3f">EWF_PDP_AUTH_CHAP</a></div><div class="ttdeci">@ EWF_PDP_AUTH_CHAP</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:109</div></div>
-<div class="ttc" id="aewf__adapter__api__modem__types_8h_html_a8d55cff73a3821667e99c497c0b9d4a8ad90e91e36ce30cfcfe506147e98e5fcc"><div class="ttname"><a href="ewf__adapter__api__modem__types_8h.html#a8d55cff73a3821667e99c497c0b9d4a8ad90e91e36ce30cfcfe506147e98e5fcc">EWF_PDP_AUTH_NONE</a></div><div class="ttdeci">@ EWF_PDP_AUTH_NONE</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:107</div></div>
-<div class="ttc" id="aewf__adapter__api__modem__types_8h_html_aa0b2d5e345528f3e7fb3f0bec511a810"><div class="ttname"><a href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810">_ewf_operator_name_format</a></div><div class="ttdeci">_ewf_operator_name_format</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:92</div></div>
-<div class="ttc" id="aewf__adapter__api__modem__types_8h_html_aa0b2d5e345528f3e7fb3f0bec511a810a36779b22970a7639feae58dfd4007939"><div class="ttname"><a href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810a36779b22970a7639feae58dfd4007939">EWF_OPERATOR_NAME_FORMAT_LONG</a></div><div class="ttdeci">@ EWF_OPERATOR_NAME_FORMAT_LONG</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:93</div></div>
-<div class="ttc" id="aewf__adapter__api__modem__types_8h_html_aa0b2d5e345528f3e7fb3f0bec511a810a77d11a72cedb774559fbf800ebad9d65"><div class="ttname"><a href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810a77d11a72cedb774559fbf800ebad9d65">EWF_OPERATOR_NAME_FORMAT_SHORT</a></div><div class="ttdeci">@ EWF_OPERATOR_NAME_FORMAT_SHORT</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:94</div></div>
-<div class="ttc" id="aewf__adapter__api__modem__types_8h_html_aa0b2d5e345528f3e7fb3f0bec511a810ac6a5e8ba116db9efd353f03888a83992"><div class="ttname"><a href="ewf__adapter__api__modem__types_8h.html#aa0b2d5e345528f3e7fb3f0bec511a810ac6a5e8ba116db9efd353f03888a83992">EWF_OPERATOR_NAME_FORMAT_NUMERIC</a></div><div class="ttdeci">@ EWF_OPERATOR_NAME_FORMAT_NUMERIC</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:95</div></div>
-<div class="ttc" id="astruct__ewf__time_html"><div class="ttname"><a href="struct__ewf__time.html">_ewf_time</a></div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:20</div></div>
+<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#gabde72d5fc06b6c688a227c90425e92c6">  118</a></span>&#160;<span class="preprocessor">#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_IP               &quot;IP&quot;</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_IPV6             &quot;IPV6&quot;</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_IPV4V6           &quot;IPV4V6&quot;</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#define EWF_ADAPTER_MODEM_PDP_CONTEXT_TYPE_PPP              &quot;PPP&quot;</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#ga0d2aeb78fe4034e17bda97966065e841">  123</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__group__adapter__modem__types.html#ga0d2aeb78fe4034e17bda97966065e841">_ewf_adapter_modem_pdpauthtype</a></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;{</div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#gga0d2aeb78fe4034e17bda97966065e841ac1f9354d37e5e28d3503b74c8091d7c8">  125</a></span>&#160;    <a class="code" href="group__group__adapter__modem__types.html#gga0d2aeb78fe4034e17bda97966065e841ac1f9354d37e5e28d3503b74c8091d7c8">EWF_ADAPTER_MODEM_PDP_AUTH_NONE</a> = 0,   </div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#gga0d2aeb78fe4034e17bda97966065e841a8bd343c8f86dd50a2b1f3bd76c7fb700">  126</a></span>&#160;    <a class="code" href="group__group__adapter__modem__types.html#gga0d2aeb78fe4034e17bda97966065e841a8bd343c8f86dd50a2b1f3bd76c7fb700">EWF_ADAPTER_MODEM_PDP_AUTH_PAP</a>,        </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <a class="code" href="group__group__adapter__modem__types.html#gga0d2aeb78fe4034e17bda97966065e841a4e9f00a2fb32fc7463fe4089200fc95b">EWF_ADAPTER_MODEM_PDP_AUTH_CHAP</a>        </div>
+<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="group__group__adapter__modem__types.html#gga0d2aeb78fe4034e17bda97966065e841a4e9f00a2fb32fc7463fe4089200fc95b">  129</a></span>&#160;} ewf_adapter_modem_pdpauthtype;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">/************************************************************************/</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __ewf_adapter_modem_types__h__included__ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="aewf_8h_html"><div class="ttname"><a href="ewf_8h.html">ewf.h</a></div><div class="ttdoc">The Embedded Wireless Framework.</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_ga0d2aeb78fe4034e17bda97966065e841"><div class="ttname"><a href="group__group__adapter__modem__types.html#ga0d2aeb78fe4034e17bda97966065e841">_ewf_adapter_modem_pdpauthtype</a></div><div class="ttdeci">_ewf_adapter_modem_pdpauthtype</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:124</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_gabf7141c369cda2f85f7a1ef4b3972de1"><div class="ttname"><a href="group__group__adapter__modem__types.html#gabf7141c369cda2f85f7a1ef4b3972de1">_ewf_adapter_modem_cmd_query_network_reg</a></div><div class="ttdeci">_ewf_adapter_modem_cmd_query_network_reg</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:44</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_gadc6f1e651b70fb2f68865c6c26343aa1"><div class="ttname"><a href="group__group__adapter__modem__types.html#gadc6f1e651b70fb2f68865c6c26343aa1">_ewf_afapter_modem_operator_name_format</a></div><div class="ttdeci">_ewf_afapter_modem_operator_name_format</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:110</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_gga0d2aeb78fe4034e17bda97966065e841a4e9f00a2fb32fc7463fe4089200fc95b"><div class="ttname"><a href="group__group__adapter__modem__types.html#gga0d2aeb78fe4034e17bda97966065e841a4e9f00a2fb32fc7463fe4089200fc95b">EWF_ADAPTER_MODEM_PDP_AUTH_CHAP</a></div><div class="ttdeci">@ EWF_ADAPTER_MODEM_PDP_AUTH_CHAP</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:127</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_gga0d2aeb78fe4034e17bda97966065e841a8bd343c8f86dd50a2b1f3bd76c7fb700"><div class="ttname"><a href="group__group__adapter__modem__types.html#gga0d2aeb78fe4034e17bda97966065e841a8bd343c8f86dd50a2b1f3bd76c7fb700">EWF_ADAPTER_MODEM_PDP_AUTH_PAP</a></div><div class="ttdeci">@ EWF_ADAPTER_MODEM_PDP_AUTH_PAP</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:126</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_gga0d2aeb78fe4034e17bda97966065e841ac1f9354d37e5e28d3503b74c8091d7c8"><div class="ttname"><a href="group__group__adapter__modem__types.html#gga0d2aeb78fe4034e17bda97966065e841ac1f9354d37e5e28d3503b74c8091d7c8">EWF_ADAPTER_MODEM_PDP_AUTH_NONE</a></div><div class="ttdeci">@ EWF_ADAPTER_MODEM_PDP_AUTH_NONE</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:125</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_ggabf7141c369cda2f85f7a1ef4b3972de1a2861dd687d1a16a9786637a0b0dd58a7"><div class="ttname"><a href="group__group__adapter__modem__types.html#ggabf7141c369cda2f85f7a1ef4b3972de1a2861dd687d1a16a9786637a0b0dd58a7">EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG</a></div><div class="ttdeci">@ EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:46</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_ggabf7141c369cda2f85f7a1ef4b3972de1a6f657b1eb6cdb5a9b678413188b179b6"><div class="ttname"><a href="group__group__adapter__modem__types.html#ggabf7141c369cda2f85f7a1ef4b3972de1a6f657b1eb6cdb5a9b678413188b179b6">EWF_ADAPTER_MODEM_CMD_QUERY_NETWORK_REG</a></div><div class="ttdeci">@ EWF_ADAPTER_MODEM_CMD_QUERY_NETWORK_REG</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:45</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_ggabf7141c369cda2f85f7a1ef4b3972de1ad53877bdaae1d91869cdd8f11375df24"><div class="ttname"><a href="group__group__adapter__modem__types.html#ggabf7141c369cda2f85f7a1ef4b3972de1ad53877bdaae1d91869cdd8f11375df24">EWF_ADAPTER_MODEM_CMD_QUERY_CS_NETWORK_REG</a></div><div class="ttdeci">@ EWF_ADAPTER_MODEM_CMD_QUERY_CS_NETWORK_REG</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:47</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_ggadc6f1e651b70fb2f68865c6c26343aa1a0e26e1c0f0fb62fc7f493a1119a7181a"><div class="ttname"><a href="group__group__adapter__modem__types.html#ggadc6f1e651b70fb2f68865c6c26343aa1a0e26e1c0f0fb62fc7f493a1119a7181a">EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_NUMERIC</a></div><div class="ttdeci">@ EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_NUMERIC</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:113</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_ggadc6f1e651b70fb2f68865c6c26343aa1ac109abe73eae7b083bb108b98c590c1b"><div class="ttname"><a href="group__group__adapter__modem__types.html#ggadc6f1e651b70fb2f68865c6c26343aa1ac109abe73eae7b083bb108b98c590c1b">EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_LONG</a></div><div class="ttdeci">@ EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_LONG</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:111</div></div>
+<div class="ttc" id="agroup__group__adapter__modem__types_html_ggadc6f1e651b70fb2f68865c6c26343aa1ad3010a50922281dd8cfe6fe578ea77e4"><div class="ttname"><a href="group__group__adapter__modem__types.html#ggadc6f1e651b70fb2f68865c6c26343aa1ad3010a50922281dd8cfe6fe578ea77e4">EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_SHORT</a></div><div class="ttdeci">@ EWF_ADAPTER_MODEM_OPERATOR_NAME_FORMAT_SHORT</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:112</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html">_ewf_adapter_modem_time</a></div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:29</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html_a2b741d677baca550a9649d7f20827d25"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html#a2b741d677baca550a9649d7f20827d25">_ewf_adapter_modem_time::year</a></div><div class="ttdeci">uint8_t year</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:30</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html_a792030173a20701a6cba0416624aad06"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html#a792030173a20701a6cba0416624aad06">_ewf_adapter_modem_time::day</a></div><div class="ttdeci">uint8_t day</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:32</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html_a81b948f73d9b5626e8a61a1d6bdce302"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html#a81b948f73d9b5626e8a61a1d6bdce302">_ewf_adapter_modem_time::month</a></div><div class="ttdeci">uint8_t month</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:31</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html_abeac097ea14c1443f008fa2a99cef871"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html#abeac097ea14c1443f008fa2a99cef871">_ewf_adapter_modem_time::timezone</a></div><div class="ttdeci">int timezone</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:36</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html_ac0a9f6c54e91dff6570953d0f468def3"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html#ac0a9f6c54e91dff6570953d0f468def3">_ewf_adapter_modem_time::isdst</a></div><div class="ttdeci">uint8_t isdst</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:38</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html_ac0c7f6452f890ec32fa34080cbc30b2b"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html#ac0c7f6452f890ec32fa34080cbc30b2b">_ewf_adapter_modem_time::sec</a></div><div class="ttdeci">uint8_t sec</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:35</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html_ad5f0eb09b7af22e8bb02bf2fc8c286e4"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html#ad5f0eb09b7af22e8bb02bf2fc8c286e4">_ewf_adapter_modem_time::min</a></div><div class="ttdeci">uint8_t min</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:34</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html_aed6fe545d5097acf5374bb9e039aaee5"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html#aed6fe545d5097acf5374bb9e039aaee5">_ewf_adapter_modem_time::hour</a></div><div class="ttdeci">uint8_t hour</div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:33</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

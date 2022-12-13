@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: Common Interface API</title>
+<title>Embedded Wireless Framework: Common Interface API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -106,12 +106,6 @@ Functions</h2></td></tr>
 <tr class="memitem:ga6dcdd8c77fc9f1979b932c00d44c8938"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface__common.html#ga6dcdd8c77fc9f1979b932c00d44c8938">ewf_interface_release_data</a> (<a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *interface_ptr, void *buffer_ptr)</td></tr>
 <tr class="memdesc:ga6dcdd8c77fc9f1979b932c00d44c8938"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release a data buffer returned by the interface.  <a href="group__group__interface__common.html#ga6dcdd8c77fc9f1979b932c00d44c8938">More...</a><br /></td></tr>
 <tr class="separator:ga6dcdd8c77fc9f1979b932c00d44c8938"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaac9e8059c4436230162e076a437f3ce1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface__common.html#gaac9e8059c4436230162e076a437f3ce1">ewf_interface_default_timeout_set</a> (<a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *interface_ptr, uint32_t timeout)</td></tr>
-<tr class="memdesc:gaac9e8059c4436230162e076a437f3ce1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the interface default timeout value.  <a href="group__group__interface__common.html#gaac9e8059c4436230162e076a437f3ce1">More...</a><br /></td></tr>
-<tr class="separator:gaac9e8059c4436230162e076a437f3ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8f4cc4581254c8d1be9d6c8936dba234"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__interface__common.html#ga8f4cc4581254c8d1be9d6c8936dba234">ewf_interface_default_timeout_get</a> (<a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *interface_ptr, uint32_t *timeout_ptr)</td></tr>
-<tr class="memdesc:ga8f4cc4581254c8d1be9d6c8936dba234"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current interface default timeout value.  <a href="group__group__interface__common.html#ga8f4cc4581254c8d1be9d6c8936dba234">More...</a><br /></td></tr>
-<tr class="separator:ga8f4cc4581254c8d1be9d6c8936dba234"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Common interface functions. </p>
@@ -173,82 +167,6 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">interface_ptr</td><td>A pointer to the interface structure </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9" title="Success and error result codes specific to the EWF API.">ewf_result</a> status code </dd></dl>
-
-</div>
-</div>
-<a id="ga8f4cc4581254c8d1be9d6c8936dba234"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8f4cc4581254c8d1be9d6c8936dba234">&#9670;&nbsp;</a></span>ewf_interface_default_timeout_get()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a> ewf_interface_default_timeout_get </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *&#160;</td>
-          <td class="paramname"><em>interface_ptr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t *&#160;</td>
-          <td class="paramname"><em>timeout_ptr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the current interface default timeout value. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">interface_ptr</td><td>A pointer to the interface structure </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">timeout_ptr</td><td>a pointer to a variable that will get the current interface default timeout value </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9" title="Success and error result codes specific to the EWF API.">ewf_result</a> status code </dd></dl>
-
-</div>
-</div>
-<a id="gaac9e8059c4436230162e076a437f3ce1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaac9e8059c4436230162e076a437f3ce1">&#9670;&nbsp;</a></span>ewf_interface_default_timeout_set()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a> ewf_interface_default_timeout_set </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group__group__ewf__types.html#gaab9b42f27eeab63dbe850937adc5994e">ewf_interface</a> *&#160;</td>
-          <td class="paramname"><em>interface_ptr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>timeout</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set the interface default timeout value. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">interface_ptr</td><td>A pointer to the interface structure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">timeout</td><td>the default timeout value, number of ticks to wait for a response </td></tr>
   </table>
   </dd>
 </dl>

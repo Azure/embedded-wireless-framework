@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: Modem adapter common API</title>
+<title>Embedded Wireless Framework: Modem adapter common API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -65,7 +65,7 @@ $(function() {
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Modem adapter common API<div class="ingroups"><a class="el" href="group__group__adapter__api.html">The EWF Adapter APIs</a> &raquo; <a class="el" href="group__group__adapter__modem.html">EWF modem adapter API</a></div></div>  </div>
+<div class="title">Modem adapter common API<div class="ingroups"><a class="el" href="group__group__adapter__api.html">EWF APIs</a> &raquo; <a class="el" href="group__group__adapter__modem.html">EWF modem adapter API</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -90,27 +90,24 @@ Functions</h2></td></tr>
 <tr class="memitem:ga86c37d5c3911ebb7eee0dba6faddf82d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga86c37d5c3911ebb7eee0dba6faddf82d">ewf_adapter_modem_custom_command_send</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, const char *command_str)</td></tr>
 <tr class="memdesc:ga86c37d5c3911ebb7eee0dba6faddf82d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to send command that is not implmented in the framework.  <a href="group__group__adapter__modem__common.html#ga86c37d5c3911ebb7eee0dba6faddf82d">More...</a><br /></td></tr>
 <tr class="separator:ga86c37d5c3911ebb7eee0dba6faddf82d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3496f4b13e2b121cff00dde54f11cfb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga3496f4b13e2b121cff00dde54f11cfb7">ewf_adapter_modem_custom_command_receive</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, char **buffer_ptr_ptr, uint32_t *buffer_lenght_ptr)</td></tr>
-<tr class="memdesc:ga3496f4b13e2b121cff00dde54f11cfb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read command that is not implmented in the framework.  <a href="group__group__adapter__modem__common.html#ga3496f4b13e2b121cff00dde54f11cfb7">More...</a><br /></td></tr>
-<tr class="separator:ga3496f4b13e2b121cff00dde54f11cfb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga44358f36e885a86a344006371653120a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga44358f36e885a86a344006371653120a">ewf_adapter_modem_custom_command_receive</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, char **buffer_ptr_ptr, uint32_t *buffer_length_ptr)</td></tr>
+<tr class="memdesc:ga44358f36e885a86a344006371653120a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read command that is not implmented in the framework.  <a href="group__group__adapter__modem__common.html#ga44358f36e885a86a344006371653120a">More...</a><br /></td></tr>
+<tr class="separator:ga44358f36e885a86a344006371653120a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1c4289ae582fbab18f989d7332e92774"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga1c4289ae582fbab18f989d7332e92774">ewf_adapter_modem_functionality_set</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, const char *fun_str)</td></tr>
 <tr class="memdesc:ga1c4289ae582fbab18f989d7332e92774"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the modem functionality (+cfun)  <a href="group__group__adapter__modem__common.html#ga1c4289ae582fbab18f989d7332e92774">More...</a><br /></td></tr>
 <tr class="separator:ga1c4289ae582fbab18f989d7332e92774"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga673e4296ba9fa9e705aa830828ef116d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga673e4296ba9fa9e705aa830828ef116d">ewf_adapter_modem_functionality_read</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, uint8_t *fun)</td></tr>
 <tr class="memdesc:ga673e4296ba9fa9e705aa830828ef116d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the modem functionality (+cfun?)  <a href="group__group__adapter__modem__common.html#ga673e4296ba9fa9e705aa830828ef116d">More...</a><br /></td></tr>
 <tr class="separator:ga673e4296ba9fa9e705aa830828ef116d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga313bc3aa7bbe8b8eecf972426ba2da65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga313bc3aa7bbe8b8eecf972426ba2da65">ewf_adapter_modem_network_registration_check</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, uint32_t timeout)</td></tr>
-<tr class="memdesc:ga313bc3aa7bbe8b8eecf972426ba2da65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if modem is registered to network.  <a href="group__group__adapter__modem__common.html#ga313bc3aa7bbe8b8eecf972426ba2da65">More...</a><br /></td></tr>
-<tr class="separator:ga313bc3aa7bbe8b8eecf972426ba2da65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5039d3874c7dd5ddf26708a6b86842dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga5039d3874c7dd5ddf26708a6b86842dd">ewf_adapter_modem_clock_set</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, <a class="el" href="struct__ewf__time.html">ewf_time</a> *time_info_ptr)</td></tr>
-<tr class="memdesc:ga5039d3874c7dd5ddf26708a6b86842dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the clock (+cclk)  <a href="group__group__adapter__modem__common.html#ga5039d3874c7dd5ddf26708a6b86842dd">More...</a><br /></td></tr>
-<tr class="separator:ga5039d3874c7dd5ddf26708a6b86842dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga54d5e0b5f4a7d2014a5e0a9d0980e3f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga54d5e0b5f4a7d2014a5e0a9d0980e3f6">ewf_adapter_modem_clock_read</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, <a class="el" href="struct__ewf__time.html">ewf_time</a> *time_info_ptr)</td></tr>
-<tr class="memdesc:ga54d5e0b5f4a7d2014a5e0a9d0980e3f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the clock (+cclk)  <a href="group__group__adapter__modem__common.html#ga54d5e0b5f4a7d2014a5e0a9d0980e3f6">More...</a><br /></td></tr>
-<tr class="separator:ga54d5e0b5f4a7d2014a5e0a9d0980e3f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9267035176142fb5b7918616f3d681f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga9267035176142fb5b7918616f3d681f2">ewf_adapter_modem_alarm_set</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, <a class="el" href="struct__ewf__time.html">ewf_time</a> *alarm_info_ptr, uint8_t n, uint32_t type, const char *text_str, uint32_t text_len, const char *recurr_str, uint32_t recurr_len, bool silent)</td></tr>
-<tr class="memdesc:ga9267035176142fb5b7918616f3d681f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the alarm (+cala)  <a href="group__group__adapter__modem__common.html#ga9267035176142fb5b7918616f3d681f2">More...</a><br /></td></tr>
-<tr class="separator:ga9267035176142fb5b7918616f3d681f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1b11be75f81685b0ffd67a9463b0949a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga1b11be75f81685b0ffd67a9463b0949a">ewf_adapter_modem_clock_set</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, <a class="el" href="struct__ewf__adapter__modem__time.html">ewf_adapter_modem_time</a> *time_info_ptr)</td></tr>
+<tr class="memdesc:ga1b11be75f81685b0ffd67a9463b0949a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the clock (+cclk)  <a href="group__group__adapter__modem__common.html#ga1b11be75f81685b0ffd67a9463b0949a">More...</a><br /></td></tr>
+<tr class="separator:ga1b11be75f81685b0ffd67a9463b0949a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1eb06893e1cf1d57d4c43a3b44b27de2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga1eb06893e1cf1d57d4c43a3b44b27de2">ewf_adapter_modem_clock_read</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, <a class="el" href="struct__ewf__adapter__modem__time.html">ewf_adapter_modem_time</a> *time_info_ptr)</td></tr>
+<tr class="memdesc:ga1eb06893e1cf1d57d4c43a3b44b27de2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the clock (+cclk)  <a href="group__group__adapter__modem__common.html#ga1eb06893e1cf1d57d4c43a3b44b27de2">More...</a><br /></td></tr>
+<tr class="separator:ga1eb06893e1cf1d57d4c43a3b44b27de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga273cac2a466b4bec50805d162f6d8c7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga273cac2a466b4bec50805d162f6d8c7f">ewf_adapter_modem_alarm_set</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, <a class="el" href="struct__ewf__adapter__modem__time.html">ewf_adapter_modem_time</a> *alarm_info_ptr, uint8_t n, uint32_t type, const char *text_str, uint32_t text_len, const char *recurr_str, uint32_t recurr_len, bool silent)</td></tr>
+<tr class="memdesc:ga273cac2a466b4bec50805d162f6d8c7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the alarm (+cala)  <a href="group__group__adapter__modem__common.html#ga273cac2a466b4bec50805d162f6d8c7f">More...</a><br /></td></tr>
+<tr class="separator:ga273cac2a466b4bec50805d162f6d8c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6c917b02db10ffc2d6e80d9c46177f83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group__adapter__modem__common.html#ga6c917b02db10ffc2d6e80d9c46177f83">ewf_adapter_modem_alarm_delete</a> (<a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *adapter_ptr, uint32_t index)</td></tr>
 <tr class="memdesc:ga6c917b02db10ffc2d6e80d9c46177f83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete the alarm (+cald)  <a href="group__group__adapter__modem__common.html#ga6c917b02db10ffc2d6e80d9c46177f83">More...</a><br /></td></tr>
 <tr class="separator:ga6c917b02db10ffc2d6e80d9c46177f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,8 +244,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga9267035176142fb5b7918616f3d681f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9267035176142fb5b7918616f3d681f2">&#9670;&nbsp;</a></span>ewf_adapter_modem_alarm_set()</h2>
+<a id="ga273cac2a466b4bec50805d162f6d8c7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga273cac2a466b4bec50805d162f6d8c7f">&#9670;&nbsp;</a></span>ewf_adapter_modem_alarm_set()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,7 +259,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__ewf__time.html">ewf_time</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__ewf__adapter__modem__time.html">ewf_adapter_modem_time</a> *&#160;</td>
           <td class="paramname"><em>alarm_info_ptr</em>, </td>
         </tr>
         <tr>
@@ -334,8 +331,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga54d5e0b5f4a7d2014a5e0a9d0980e3f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga54d5e0b5f4a7d2014a5e0a9d0980e3f6">&#9670;&nbsp;</a></span>ewf_adapter_modem_clock_read()</h2>
+<a id="ga1eb06893e1cf1d57d4c43a3b44b27de2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1eb06893e1cf1d57d4c43a3b44b27de2">&#9670;&nbsp;</a></span>ewf_adapter_modem_clock_read()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -349,7 +346,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__ewf__time.html">ewf_time</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__ewf__adapter__modem__time.html">ewf_adapter_modem_time</a> *&#160;</td>
           <td class="paramname"><em>time_info_ptr</em>&#160;</td>
         </tr>
         <tr>
@@ -372,8 +369,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga5039d3874c7dd5ddf26708a6b86842dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5039d3874c7dd5ddf26708a6b86842dd">&#9670;&nbsp;</a></span>ewf_adapter_modem_clock_set()</h2>
+<a id="ga1b11be75f81685b0ffd67a9463b0949a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1b11be75f81685b0ffd67a9463b0949a">&#9670;&nbsp;</a></span>ewf_adapter_modem_clock_set()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -387,7 +384,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="struct__ewf__time.html">ewf_time</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct__ewf__adapter__modem__time.html">ewf_adapter_modem_time</a> *&#160;</td>
           <td class="paramname"><em>time_info_ptr</em>&#160;</td>
         </tr>
         <tr>
@@ -455,8 +452,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga3496f4b13e2b121cff00dde54f11cfb7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3496f4b13e2b121cff00dde54f11cfb7">&#9670;&nbsp;</a></span>ewf_adapter_modem_custom_command_receive()</h2>
+<a id="ga44358f36e885a86a344006371653120a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga44358f36e885a86a344006371653120a">&#9670;&nbsp;</a></span>ewf_adapter_modem_custom_command_receive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -477,7 +474,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint32_t *&#160;</td>
-          <td class="paramname"><em>buffer_lenght_ptr</em>&#160;</td>
+          <td class="paramname"><em>buffer_length_ptr</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -492,7 +489,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">adapter_ptr</td><td>A pointer to the adapter structure </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer_ptr_ptr</td><td>A pointer to a string destination holding the output of read command </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">buffer_lenght_ptr</td><td>Lenght of the data in output buffer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer_length_ptr</td><td>Lenght of the data in output buffer </td></tr>
   </table>
   </dd>
 </dl>
@@ -696,44 +693,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This api will output complete output string from +cind. User application is expected to parse the output to get required values as per the modem used as the descriptions will differ accross modem manufacturers </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9" title="Success and error result codes specific to the EWF API.">ewf_result</a> status code </dd></dl>
-
-</div>
-</div>
-<a id="ga313bc3aa7bbe8b8eecf972426ba2da65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga313bc3aa7bbe8b8eecf972426ba2da65">&#9670;&nbsp;</a></span>ewf_adapter_modem_network_registration_check()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a> ewf_adapter_modem_network_registration_check </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group__group__ewf__types.html#ga97d849480af6ef5661cab370ad5925b5">ewf_adapter</a> *&#160;</td>
-          <td class="paramname"><em>adapter_ptr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>timeout</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Check if modem is registered to network. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">adapter_ptr</td><td>A pointer to the adapter structure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">timeout</td><td>a integer indicating timeout in seconds </td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9" title="Success and error result codes specific to the EWF API.">ewf_result</a> status code </dd></dl>
 
 </div>

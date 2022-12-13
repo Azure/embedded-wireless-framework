@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: G:/src/ewf_adapter_api_ntp.h Source File</title>
+<title>Embedded Wireless Framework: G:/src/ewf_adapter_api_ntp.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -83,10 +83,10 @@ $(function() {
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">/************************************************************************/</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="struct__ewf__adapter__api__modem__ntp.html">   29</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__ewf__adapter__api__modem__ntp.html">_ewf_adapter_api_modem_ntp</a></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>(*adapter_ntp_network_time_synchronize)(<a class="code" href="struct__ewf__adapter.html">ewf_adapter</a>* adapter_ptr, <span class="keyword">const</span> <span class="keywordtype">char</span>* server_str, uint16_t port, uint8_t autoset, <a class="code" href="struct__ewf__time.html">ewf_time</a> * time_info_ptr);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a>(*adapter_ntp_network_time_synchronize)(<a class="code" href="struct__ewf__adapter.html">ewf_adapter</a>* adapter_ptr, <span class="keyword">const</span> <span class="keywordtype">char</span>* server_str, uint16_t port, uint8_t autoset, <a class="code" href="struct__ewf__adapter__modem__time.html">ewf_adapter_modem_time</a> * time_info_ptr);</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;} <a class="code" href="struct__ewf__adapter__api__modem__ntp.html">ewf_adapter_api_modem_ntp</a>;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="group__group__adapter__ntp.html#ga25e79297fb327ac2efe6c8b95b2fabbc">   44</a></span>&#160;<a class="code" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a> <a class="code" href="group__group__adapter__ntp.html#ga25e79297fb327ac2efe6c8b95b2fabbc">ewf_adapter_ntp_network_time_synchronize</a>(<a class="code" href="struct__ewf__adapter.html">ewf_adapter</a>* adapter_ptr, <span class="keyword">const</span> <span class="keywordtype">char</span>* server_str, uint16_t port, uint8_t autoset, <a class="code" href="struct__ewf__time.html">ewf_time</a> * time_info_ptr);</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="group__group__adapter__ntp.html#gacee2f24c043f0620e4a8a7fccab9d717">   44</a></span>&#160;<a class="code" href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a> <a class="code" href="group__group__adapter__ntp.html#gacee2f24c043f0620e4a8a7fccab9d717">ewf_adapter_ntp_network_time_synchronize</a>(<a class="code" href="struct__ewf__adapter.html">ewf_adapter</a>* adapter_ptr, <span class="keyword">const</span> <span class="keywordtype">char</span>* server_str, uint16_t port, uint8_t autoset, <a class="code" href="struct__ewf__adapter__modem__time.html">ewf_adapter_modem_time</a> * time_info_ptr);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/************************************************************************/</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
@@ -95,11 +95,11 @@ $(function() {
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __ewf_adapter_ntp__h__included__ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aewf__adapter_8h_html"><div class="ttname"><a href="ewf__adapter_8h.html">ewf_adapter.h</a></div><div class="ttdoc">The Embedded Wireless Framework adapter API implementation.</div></div>
-<div class="ttc" id="agroup__group__adapter__ntp_html_ga25e79297fb327ac2efe6c8b95b2fabbc"><div class="ttname"><a href="group__group__adapter__ntp.html#ga25e79297fb327ac2efe6c8b95b2fabbc">ewf_adapter_ntp_network_time_synchronize</a></div><div class="ttdeci">ewf_result ewf_adapter_ntp_network_time_synchronize(ewf_adapter *adapter_ptr, const char *server_str, uint16_t port, uint8_t autoset, ewf_time *time_info_ptr)</div><div class="ttdoc">Synchronize time with NTP.</div></div>
-<div class="ttc" id="agroup__group__ewf__result__codes_html_gabc432ef8c6f7444607c2a7474b9722a9"><div class="ttname"><a href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a></div><div class="ttdeci">enum _ewf_result ewf_result</div><div class="ttdoc">Success and error result codes specific to the EWF API.</div><div class="ttdef"><b>Definition:</b> ewf.h:57</div></div>
+<div class="ttc" id="agroup__group__adapter__ntp_html_gacee2f24c043f0620e4a8a7fccab9d717"><div class="ttname"><a href="group__group__adapter__ntp.html#gacee2f24c043f0620e4a8a7fccab9d717">ewf_adapter_ntp_network_time_synchronize</a></div><div class="ttdeci">ewf_result ewf_adapter_ntp_network_time_synchronize(ewf_adapter *adapter_ptr, const char *server_str, uint16_t port, uint8_t autoset, ewf_adapter_modem_time *time_info_ptr)</div><div class="ttdoc">Synchronize time with NTP.</div></div>
+<div class="ttc" id="agroup__group__ewf__result__codes_html_gabc432ef8c6f7444607c2a7474b9722a9"><div class="ttname"><a href="group__group__ewf__result__codes.html#gabc432ef8c6f7444607c2a7474b9722a9">ewf_result</a></div><div class="ttdeci">enum _ewf_result ewf_result</div><div class="ttdoc">Success and error result codes specific to the EWF API.</div></div>
 <div class="ttc" id="astruct__ewf__adapter__api__modem__ntp_html"><div class="ttname"><a href="struct__ewf__adapter__api__modem__ntp.html">_ewf_adapter_api_modem_ntp</a></div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_ntp.h:30</div></div>
+<div class="ttc" id="astruct__ewf__adapter__modem__time_html"><div class="ttname"><a href="struct__ewf__adapter__modem__time.html">_ewf_adapter_modem_time</a></div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:29</div></div>
 <div class="ttc" id="astruct__ewf__adapter_html"><div class="ttname"><a href="struct__ewf__adapter.html">_ewf_adapter</a></div><div class="ttdoc">The EWF network adapter control structure definition.</div><div class="ttdef"><b>Definition:</b> ewf_adapter.h:50</div></div>
-<div class="ttc" id="astruct__ewf__time_html"><div class="ttname"><a href="struct__ewf__time.html">_ewf_time</a></div><div class="ttdef"><b>Definition:</b> ewf_adapter_api_modem_types.h:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

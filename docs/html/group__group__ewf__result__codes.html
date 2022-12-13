@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Azure Small Device Networking: EWF result codes</title>
+<title>Embedded Wireless Framework: EWF result codes</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,7 +21,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Azure Small Device Networking
+   <div id="projectname">Embedded Wireless Framework
    </div>
   </td>
  </tr>
@@ -113,7 +113,13 @@ Enumerations</h2></td></tr>
 , <a class="el" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaa1d6b527beac54b9f08474bb9d32409ed">EWF_RESULT_ADAPTER_TRANSMIT_FAILED</a> = -404
 , <br />
 &#160;&#160;<a class="el" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaaa2a7fa655f951202dbd51b2c466ad6e7">EWF_RESULT_ALLOCATOR_INITIALIZATION_FAILED</a> = -501
-, <a class="el" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaab529fa1bfd1b1d4ae7a2a63e65fb6db7">EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED</a> = -601
+, <a class="el" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaa3f00c050da9b19c5994478bc383df494">EWF_RESULT_ADAPTER_NETWORK_NOT_REGISTERED</a> = -601
+, <a class="el" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaae9d6d22db035baac786a512982acf388">EWF_RESULT_ADAPTER_MQTT_CONNECTION_FAILED</a> = -701
+, <a class="el" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaa9b4334f5d7e2e2c4168c1620fbd831e5">EWF_RESULT_ADAPTER_MQTT_DISCONNECTED</a> = -702
+, <br />
+&#160;&#160;<a class="el" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaa7e23131df81ea93d50ca90ab0fc09774">EWF_RESULT_ADAPTER_MQTT_PUBLISH_FAILED</a> = -703
+, <a class="el" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaab4b68bbfd1227cb15d31d26b4dde445a">EWF_RESULT_ADAPTER_MQTT_SUBSCRIBE_FAILED</a> = -704
+, <a class="el" href="group__group__ewf__result__codes.html#ggadaadb9461485808132ddc14cc05a72eaad122adc08b9201266ce14cdd0572be86">EWF_RESULT_ADAPTER_MQTT_MESSAGE_GET_FAILED</a> = -705
 <br />
  }</td></tr>
 <tr class="memdesc:gadaadb9461485808132ddc14cc05a72ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Success and error result codes specific to the EWF API.  <a href="group__group__ewf__result__codes.html#gadaadb9461485808132ddc14cc05a72ea">More...</a><br /></td></tr>
@@ -186,7 +192,17 @@ Enumerations</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="ggadaadb9461485808132ddc14cc05a72eaaa2a7fa655f951202dbd51b2c466ad6e7"></a>EWF_RESULT_ALLOCATOR_INITIALIZATION_FAILED&#160;</td><td class="fielddoc"><p>The allocator initialization failed. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggadaadb9461485808132ddc14cc05a72eaab529fa1bfd1b1d4ae7a2a63e65fb6db7"></a>EWF_RESULT_MODEM_NETWORK_NOT_REGISTERED&#160;</td><td class="fielddoc"><p>The modem not registered to network </p>
+<tr><td class="fieldname"><a id="ggadaadb9461485808132ddc14cc05a72eaa3f00c050da9b19c5994478bc383df494"></a>EWF_RESULT_ADAPTER_NETWORK_NOT_REGISTERED&#160;</td><td class="fielddoc"><p>The adapter not registered to network </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggadaadb9461485808132ddc14cc05a72eaae9d6d22db035baac786a512982acf388"></a>EWF_RESULT_ADAPTER_MQTT_CONNECTION_FAILED&#160;</td><td class="fielddoc"><p>The adapter failed to establish MQTT connection </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggadaadb9461485808132ddc14cc05a72eaa9b4334f5d7e2e2c4168c1620fbd831e5"></a>EWF_RESULT_ADAPTER_MQTT_DISCONNECTED&#160;</td><td class="fielddoc"><p>The MQTT link was disconnected </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggadaadb9461485808132ddc14cc05a72eaa7e23131df81ea93d50ca90ab0fc09774"></a>EWF_RESULT_ADAPTER_MQTT_PUBLISH_FAILED&#160;</td><td class="fielddoc"><p>The adapter failed to publish MQTT message </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggadaadb9461485808132ddc14cc05a72eaab4b68bbfd1227cb15d31d26b4dde445a"></a>EWF_RESULT_ADAPTER_MQTT_SUBSCRIBE_FAILED&#160;</td><td class="fielddoc"><p>The adapter failed to subscribe MQTT topic </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggadaadb9461485808132ddc14cc05a72eaad122adc08b9201266ce14cdd0572be86"></a>EWF_RESULT_ADAPTER_MQTT_MESSAGE_GET_FAILED&#160;</td><td class="fielddoc"><p>The adapter failed to get MQTT message </p>
 </td></tr>
 </table>
 
