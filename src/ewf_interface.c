@@ -571,7 +571,11 @@ ewf_result ewf_interface_urc_processing(ewf_interface* interface_ptr)
     uint8_t* buffer_ptr;
     uint32_t buffer_length;
 
-    result = ewf_interface_receive_urc(interface_ptr, &buffer_ptr, &buffer_length, 0);
+    result = ewf_interface_receive_urc(
+        interface_ptr, 
+        &buffer_ptr, 
+        &buffer_length, 
+        0 /* No wait*/);
     if (ewf_result_failed(result))
     {
         if (result != EWF_RESULT_EMPTY_QUEUE)
@@ -610,10 +614,11 @@ ewf_result ewf_interface_urc_process_message(ewf_interface* interface_ptr, uint8
 
     if (interface_ptr->urc_callback)
     {
-        if (ewf_result_failed(result = interface_ptr->urc_callback(
+        result = interface_ptr->urc_callback(
             interface_ptr,
             interface_ptr->current_message.buffer_ptr,
-            interface_ptr->current_message.buffer_length)))
+            interface_ptr->current_message.buffer_length);
+        if (ewf_result_failed(result))
         {
             EWF_LOG_ERROR("The URC callback failed: ewf_result %d.\n", result);
         }
@@ -621,10 +626,11 @@ ewf_result ewf_interface_urc_process_message(ewf_interface* interface_ptr, uint8
 
     if (interface_ptr->user_urc_callback)
     {
-        if (ewf_result_failed(result = interface_ptr->user_urc_callback(
+        result = interface_ptr->user_urc_callback(
             interface_ptr,
             interface_ptr->current_message.buffer_ptr,
-            interface_ptr->current_message.buffer_length)))
+            interface_ptr->current_message.buffer_length);
+        if (ewf_result_failed(result))
         {
             EWF_LOG_ERROR("The user URC callback failed: ewf_result %d.\n", result);
         }
@@ -856,6 +862,29 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
             }
         }
     }
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+    if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
+    {
+        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
+
+    return EWF_RESULT_OK;
+}
+
+ewf_result ewf_interface_process_buffer(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
+{
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    ewf_result result;
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+    if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
+    {
+        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
 #ifdef EWF_PLATFORM_HAS_THREADING
     if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))

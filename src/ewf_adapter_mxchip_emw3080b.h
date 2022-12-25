@@ -18,9 +18,9 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_configuration_adapter_mxchip_emw3080b MX-CHIP 8266 adapter configuration
+ * @defgroup group_configuration_adapter_mxchip_emw3080b MX-CHIP EMW3080B adapter configuration
  * @ingroup group_configuration
- * @brief MX-CHIP 8266 adapter configuration
+ * @brief MX-CHIP EMW3080B adapter configuration
  * @{
  ****************************************************************************/
 
@@ -63,14 +63,14 @@ extern "C" {
 #include "ewf_adapter_mxchip_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_mxchip_emw3080b The MX-CHIP ESP8266 adapter driver
+ * @defgroup group_adapter_mxchip_emw3080b MX-CHIP EMW3080B adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/
 
 /**
  * @defgroup group_adapter_mxchip_emw3080b_control Adapter control
- * @brief MX-CHIP ESP8266 adapter control API
+ * @brief MX-CHIP EMW3080B adapter control API
  * @{
  */
 
@@ -83,7 +83,7 @@ ewf_result ewf_adapter_mxchip_emw3080b_stop(ewf_adapter* adapter_ptr);
 
 /**
  * @defgroup group_adapter_mxchip_emw3080b_urc URC handling
- * @brief MX-CHIP ESP8266 adapter driver URC handling
+ * @brief MX-CHIP EMW3080B adapter driver URC handling
  * @{
  */
 
@@ -93,7 +93,7 @@ ewf_result ewf_adapter_mxchip_emw3080b_urc_callback(ewf_interface* interface_ptr
 
 /**
  * @defgroup group_adapter_mxchip_emw3080b_info Adapter information
- * @brief MX-CHIP ESP8266 adapter driver info API
+ * @brief MX-CHIP EMW3080B adapter driver info API
  * @{
  */
 
@@ -107,7 +107,7 @@ ewf_result ewf_adapter_mxchip_emw3080b_urc_callback(ewf_interface* interface_ptr
 
 /**
  * @defgroup group_adapter_mxchip_emw3080b_wifi_station Adapter information
- * @brief MX-CHIP ESP8266 adapter driver WiFi station API
+ * @brief MX-CHIP EMW3080B adapter driver WiFi station API
  * @{
  */
 
@@ -118,7 +118,7 @@ ewf_result ewf_adapter_mxchip_emw3080b_urc_callback(ewf_interface* interface_ptr
 
 /**
  * @defgroup group_adapter_mxchip_emw3080b_internet Common internet functions (TCP+UDP)
- * @brief Functions common to TCP and UDP in the Espressif ESP8266
+ * @brief Functions common to TCP and UDP in the MX-CHIP EMW3080B
  * @{
  */
 
@@ -131,7 +131,7 @@ ewf_result ewf_adapter_mxchip_emw3080b_urc_callback(ewf_interface* interface_ptr
 
 /**
  * @defgroup group_adapter_mxchip_emw3080b_tcp TCP API implementation
- * @brief Espressif ESP8266 adapter TCP API
+ * @brief MX-CHIP EMW3080B adapter TCP API
  * @{
  */
 
@@ -155,7 +155,7 @@ ewf_result ewf_adapter_mxchip_emw3080b_urc_callback(ewf_interface* interface_ptr
 
 /**
  * @defgroup group_adapter_mxchip_emw3080b_udp UDP API implementation
- * @brief Espressif ESP8266 adapter UDP API
+ * @brief MX-CHIP EMW3080B adapter UDP API
  * @{
  */
 
@@ -180,12 +180,12 @@ ewf_result ewf_adapter_mxchip_emw3080b_urc_callback(ewf_interface* interface_ptr
  ******************************************************************************/
 
 /**
- * @defgroup group_adapter_mxchip_emw3080b_data MX-CHIP 8266 driver internal data
- * @brief The MX-CHIP 8266 adapter internal data structure
+ * @defgroup group_adapter_mxchip_emw3080b_data MX-CHIP EMW3080 driver internal data
+ * @brief The MX-CHIP EMW3080 adapter internal data structure
  * @{
  */
 
-/** @brief The MX-CHIP 8266 adapter driver data structure */
+/** @brief The MX-CHIP EMW3080 adapter driver data structure */
 typedef struct _ewf_adapter_mxchip_emw3080b
 {
     /** The MX-CHIP common data, it must be the first in the implementation structure */
@@ -197,7 +197,7 @@ typedef struct _ewf_adapter_mxchip_emw3080b
 
 /**
  * @defgroup group_adapter_mxchip_emw3080b_declaration Adapter declaration and initialization
- * @brief MX-CHIP 8266 adapter declaration macros
+ * @brief MX-CHIP EMW3080 adapter declaration macros
  * @{
  */
 
@@ -250,7 +250,7 @@ adapter_ptr->mqtt_basic_api_ptr = &ewf_adapter_mxchip_common_api_mqtt_basic;    
 #endif /* EWF_ADAPTER_MXCHIP_EMW3080B_MQTT_BASIC_ENABLED */
 
 /**
- * @brief Declare a MX-CHIP 8266 adapter
+ * @brief Declare a MX-CHIP EMW3080 adapter
  * @param[in,out] adapter_ptr a pointer to an adapter that will be initialized to point to the one statically declared by the macro
  * @param[in] adapter_name_symb a unique symbol name that will be used as a name suffix for the statically declared data
  * @param[in] message_allocator_ptr_param a pointer to an allocator, used by the adapter to allocate command and response buffers

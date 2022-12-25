@@ -145,7 +145,7 @@ extern "C" {
 #include "ewf_adapter_renesas_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_renesas_ryz014 The Renesas RYZ014A modem adapter driver
+ * @defgroup group_adapter_renesas_ryz014 Renesas RYZ014A modem adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/

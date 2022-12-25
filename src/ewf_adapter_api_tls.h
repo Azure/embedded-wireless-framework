@@ -17,9 +17,9 @@ extern "C" {
 
 /************************************************************************//**
  *
- * @defgroup group_adapter_tls The adapter TLS API
+ * @defgroup group_adapter_tls Adapter TLS API
  * @ingroup group_adapter_api
- * @brief The adapter TLS API
+ * @brief Adapter TLS API
  * @{
  *
  ****************************************************************************/

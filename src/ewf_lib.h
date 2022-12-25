@@ -22,8 +22,8 @@ extern "C" {
  ****************************************************************************/
 
 /************************************************************************//**
- * @defgroup group_lib_string The EWF string utilities
- * @brief The EWF string utilities
+ * @defgroup group_lib_string EWF string utilities
+ * @brief EWF string utilities
  * @details
  * Low footprint string functions to avoid bringing in libraries.
  * Some of these functions are similar to C library functions but are
