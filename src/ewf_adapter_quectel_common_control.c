@@ -97,7 +97,7 @@ struct _ewf_adapter_quectel_common_message_tokenizer_pattern3_match_function_sta
 
 static struct _ewf_adapter_quectel_common_message_tokenizer_pattern3_match_function_state ewf_adapter_quectel_common_message_tokenizer_pattern3_match_function_state = { 0 };
 
-static bool _ewf_adapter_quectel_common_message_tokenizer_pattern3_match_function(const char* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
+static bool _ewf_adapter_quectel_common_message_tokenizer_pattern3_match_function(const uint8_t* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
 {
     if (!buffer_ptr) return false;
     if (!buffer_length) return false;
@@ -186,7 +186,7 @@ struct _ewf_adapter_quectel_common_message_tokenizer_pattern2_match_function_sta
 
 static struct _ewf_adapter_quectel_common_message_tokenizer_pattern2_match_function_state ewf_adapter_quectel_common_message_tokenizer_pattern2_match_function_state = { 0 };
 
-static bool _ewf_adapter_quectel_common_message_tokenizer_pattern2_match_function(const char* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
+static bool _ewf_adapter_quectel_common_message_tokenizer_pattern2_match_function(const uint8_t* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
 {
     if (!buffer_ptr) return false;
     if (!buffer_length) return false;
@@ -275,7 +275,7 @@ struct _ewf_adapter_quectel_common_message_tokenizer_pattern1_match_function_sta
 
 static struct _ewf_adapter_quectel_common_message_tokenizer_pattern1_match_function_state ewf_adapter_quectel_common_message_tokenizer_pattern1_match_function_state = { 0 };
 
-static bool _ewf_adapter_quectel_common_message_tokenizer_pattern1_match_function(const char* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
+static bool _ewf_adapter_quectel_common_message_tokenizer_pattern1_match_function(const uint8_t* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
 {
     if (!buffer_ptr) return false;
     if (!buffer_length) return false;

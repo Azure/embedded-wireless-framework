@@ -19,9 +19,9 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_allocator_threadx The ThreadX allocator
+ * @defgroup group_allocator_threadx ThreadX allocator
  * @ingroup group_allocator
- * @brief The ThreadX allocator
+ * @brief ThreadX allocator
  * @{
  ****************************************************************************/
 
@@ -45,12 +45,12 @@ ewf_result ewf_allocator_threadx_allocate(ewf_allocator* allocator_ptr, void** p
 ewf_result ewf_allocator_threadx_release(ewf_allocator* allocator_ptr, void* p);
 
 #ifdef EWF_PARAMETER_CHECKING
-#define EWF_ALLOCATOR_THREADX_INITIALIZE_HEADER(allocator_ptr)                                                                                     \
-do {                                                                                                                                                    \
-(allocator_ptr)->struct_magic = EWF_ALLOCATOR_STRUCT_MAGIC;                                                                                        \
-(allocator_ptr)->struct_size = EWF_ALLOCATOR_STRUCT_SIZE;                                                                                          \
-(allocator_ptr)->struct_version = EWF_ALLOCATOR_VERSION;                                                                                           \
-(allocator_ptr)->struct_type = EWF_ALLOCATOR_TYPE_THREADX;                                                                                         \
+#define EWF_ALLOCATOR_THREADX_INITIALIZE_HEADER(allocator_ptr)                                                                                  \
+do {                                                                                                                                            \
+(allocator_ptr)->struct_magic = EWF_ALLOCATOR_STRUCT_MAGIC;                                                                                     \
+(allocator_ptr)->struct_size = EWF_ALLOCATOR_STRUCT_SIZE;                                                                                       \
+(allocator_ptr)->struct_version = EWF_ALLOCATOR_VERSION;                                                                                        \
+(allocator_ptr)->struct_type = EWF_ALLOCATOR_TYPE_THREADX;                                                                                      \
 } while(0)
 #else
 #define EWF_ALLOCATOR_THREADX_INITIALIZE_HEADER(allocator_ptr)

@@ -63,7 +63,7 @@ extern "C" {
 #include "ewf_adapter_espressif_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_espressif_esp8285 The ESPRESSIF ESP8285 adapter driver
+ * @defgroup group_adapter_espressif_esp8285 ESPRESSIF ESP8285 adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/

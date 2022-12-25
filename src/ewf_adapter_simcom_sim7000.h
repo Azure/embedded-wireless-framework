@@ -61,11 +61,12 @@ extern "C" {
 /************************************************************************//**
  * @} *** group_configuration_adapter_quectel_bg96
  ****************************************************************************/
+
 /* Include the SIMCom common header here, to take the above configuration macros into account */
 #include "ewf_adapter_simcom_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_simcom_sim7000 The SIMCom SIM7000 modem adapter driver
+ * @defgroup group_adapter_simcom_sim7000 SIMCom SIM7000 modem adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/

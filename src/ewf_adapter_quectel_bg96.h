@@ -130,7 +130,7 @@ extern "C" {
 #include "ewf_adapter_quectel_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_quectel_bg96 The Quectel BG96 modem adapter driver
+ * @defgroup group_adapter_quectel_bg96 Quectel BG96 modem adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/

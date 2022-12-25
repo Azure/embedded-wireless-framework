@@ -24,9 +24,9 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_adapter_modem EWF modem adapter API
+ * @defgroup group_adapter_modem Adapter Modem API
  * @ingroup group_adapter_api
- * @brief Functions for modem adapters.
+ * @brief API for modem adapters.
  * @{
  ****************************************************************************/
 

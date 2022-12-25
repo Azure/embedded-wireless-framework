@@ -18,10 +18,10 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_adapter_wifi_station_api EWF WiFi adapter station API
+ * @defgroup group_adapter_wifi_station_api Adapter Wi-Fi station API
  * @ingroup group_adapter_wifi_api
  * @ingroup group_adapter_api
- * @brief Functions for WiFi adapters, station functionality.
+ * @brief Functions for Wi-Fi adapters, station functionality.
  * @{
  ****************************************************************************/
 

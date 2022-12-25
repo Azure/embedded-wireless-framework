@@ -3,9 +3,7 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
-
- * @details
- * The Embedded Wireless Framework C heap allocator definition
+ * @brief The Embedded Wireless Framework C heap allocator definition
  ****************************************************************************/
 
 #ifndef __ewf_allocator_c_heap__h__included__
@@ -18,9 +16,9 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_allocator_c_heap The C heap allocator
+ * @defgroup group_allocator_c_heap C heap allocator
  * @ingroup group_allocator
- * @brief The C heap allocator
+ * @brief C heap allocator
  * @{
  ****************************************************************************/
 
@@ -47,7 +45,7 @@ ewf_result ewf_allocator_c_heap_release(ewf_allocator* allocator_ptr, void* p);
 
 #ifdef EWF_PARAMETER_CHECKING
 #define EWF_ALLOCATOR_C_HEAP_INITIALIZE_HEADER(allocator_ptr)                                                                                      \
-do {                                                                                                                                                    \
+do {                                                                                                                                               \
 (allocator_ptr)->struct_magic = EWF_ALLOCATOR_STRUCT_MAGIC;                                                                                        \
 (allocator_ptr)->struct_size = EWF_ALLOCATOR_STRUCT_SIZE;                                                                                          \
 (allocator_ptr)->struct_version = EWF_ALLOCATOR_VERSION;                                                                                           \
@@ -65,16 +63,16 @@ do {                                                                            
  * @param[in] block_size the size of each block
  */
 #define EWF_ALLOCATOR_C_HEAP_STATIC_DECLARE(allocator_ptr, allocator_name_symb, block_count_param, block_size_param)                               \
-do {                                                                                                                                                    \
-static ewf_allocator_c_heap ewf_allocator_c_heap__##allocator_name_symb = {0};                                                                \
-static ewf_allocator ewf_allocator__##allocator_name_symb = {0};                                                                              \
+do {                                                                                                                                               \
+static ewf_allocator_c_heap ewf_allocator_c_heap__##allocator_name_symb = {0};                                                                     \
+static ewf_allocator ewf_allocator__##allocator_name_symb = {0};                                                                                   \
 ewf_allocator_c_heap__##allocator_name_symb.block_count = block_count_param;                                                                       \
 ewf_allocator_c_heap__##allocator_name_symb.block_size = block_size_param;                                                                         \
-ewf_allocator__##allocator_name_symb.start = ewf_allocator_c_heap_start;                                                                      \
-ewf_allocator__##allocator_name_symb.stop = ewf_allocator_c_heap_stop;                                                                        \
-ewf_allocator__##allocator_name_symb.allocate = ewf_allocator_c_heap_allocate;                                                                \
-ewf_allocator__##allocator_name_symb.release = ewf_allocator_c_heap_release;                                                                  \
-ewf_allocator__##allocator_name_symb.implementation_ptr = &(ewf_allocator_c_heap__##allocator_name_symb);                                     \
+ewf_allocator__##allocator_name_symb.start = ewf_allocator_c_heap_start;                                                                           \
+ewf_allocator__##allocator_name_symb.stop = ewf_allocator_c_heap_stop;                                                                             \
+ewf_allocator__##allocator_name_symb.allocate = ewf_allocator_c_heap_allocate;                                                                     \
+ewf_allocator__##allocator_name_symb.release = ewf_allocator_c_heap_release;                                                                       \
+ewf_allocator__##allocator_name_symb.implementation_ptr = &(ewf_allocator_c_heap__##allocator_name_symb);                                          \
 allocator_ptr = &(ewf_allocator__##allocator_name_symb);                                                                                           \
 EWF_ALLOCATOR_C_HEAP_INITIALIZE_HEADER(allocator_ptr);                                                                                             \
 } while(0)

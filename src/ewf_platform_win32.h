@@ -23,16 +23,16 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_platform_win32 The WIN32 platform
+ * @defgroup group_platform_win32 WIN32 platform
  * @ingroup group_platform
- * @brief The WIN32 platform
+ * @brief WIN32 platform
  * @{
  ****************************************************************************/
 
 /************************************************************************//**
  * @defgroup group_configuration_platform_win32 Platform configuration (WIN32)
  * @ingroup group_configuration
- * @brief The definitions used to configure the Azure SD-NET WIN32 platform.
+ * @brief Definitions used to configure the EWF WIN32 platform.
  * @{
  ****************************************************************************/
 
