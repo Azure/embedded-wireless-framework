@@ -155,22 +155,38 @@ ewf_result ewf_adapter_thales_common_context_configure_dns(ewf_adapter* adapter_
     const char * context_id_cstr = ewfl_unsigned_to_str(context_id, context_id_str, sizeof(context_id_str));
 
 #ifdef EWF_DEBUG
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIDNSCFG=", context_id_cstr, "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SICS?\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
-    if (ewf_result_failed(result = ewf_interface_send_commands(
-        interface_ptr,
-        "AT+QIDNSCFG=",
-        context_id_cstr, ",",
-        "\"", primary_dns ? primary_dns : "", "\",",
-        "\"", secondary_dns ? secondary_dns : "",
-        "\r", NULL)))
-        return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    if (primary_dns)
+    {
+        if (ewf_result_failed(result = ewf_interface_send_commands(
+            interface_ptr,
+            "AT^SICS=",
+            context_id_cstr, ",",
+            "\"dns1\",",
+            "\"", primary_dns, "\",",
+            "\r", NULL)))
+            return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    }
+
+    if (secondary_dns)
+    {
+        if (ewf_result_failed(result = ewf_interface_send_commands(
+            interface_ptr,
+            "AT^SICS=",
+            context_id_cstr, ",",
+            "\"dns2\",",
+            "\"", secondary_dns, "\",",
+            "\r", NULL)))
+            return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    }
 
 #ifdef EWF_DEBUG
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIDNSCFG=", context_id_cstr, "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SICS?\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
