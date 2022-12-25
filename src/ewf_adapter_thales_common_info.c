@@ -225,7 +225,7 @@ ewf_result ewf_adapter_thales_common_get_ipv4_dns(ewf_adapter* adapter_ptr, uint
         tok_str = ewfl_str_tok(NULL, ",", &save_ptr);
         tok_str = ewfl_str_tok(NULL, ",", &save_ptr);
 
-        sscanf(tok_str, "\"%d,%d.%d.%d\"", &dns1_a, &dns1_b, &dns1_c, &dns1_d);
+        sscanf(tok_str, "\"%d.%d.%d.%d\"", &dns1_a, &dns1_b, &dns1_c, &dns1_d);
 
         *dns =
             ((dns1_a & 0xFF) << 24) |
