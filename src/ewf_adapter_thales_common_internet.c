@@ -95,10 +95,6 @@ ewf_result ewf_adapter_thales_common_internet_start(ewf_adapter* adapter_ptr)
 
     ewf_result result = EWF_RESULT_OK;
 
-    /* Disable QISEND echo */
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QISDE=0\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
     /* Initialize the internal data */
     {
         uint32_t i;
@@ -140,11 +136,11 @@ ewf_result ewf_adapter_thales_common_internet_urc_callback(ewf_interface* interf
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_adapter_thales_common* implementation_ptr = (ewf_adapter_thales_common*)adapter_ptr->implementation_ptr;
 
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+QIOPEN: "))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "^SISO: "))
     {
         int connectionID = EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_INVALID;
         int err = -1;
-        int items = sscanf((char*)buffer_ptr, "+QIOPEN: %u,%u", &connectionID, &err);
+        int items = sscanf((char*)buffer_ptr, "^SISO: %u,%u", &connectionID, &err);
         if (items != 2 ||
             ((connectionID < 0) || (EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE <= connectionID)))
         {
@@ -171,96 +167,101 @@ ewf_result ewf_adapter_thales_common_internet_urc_callback(ewf_interface* interf
         }
     }
 
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+QIURC: \"closed\","))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "^SISW: "))
     {
         int connectionID = EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_INVALID;
-        int items = sscanf((char*)buffer_ptr, "+QIURC: \"closed\",%u", &connectionID);
-        if (items != 1 ||
+
+        int param1;
+        int param2;
+            
+        int items = sscanf((char*)buffer_ptr, "^SISW: %u,%u,%u", &connectionID, &param1, &param2);
+        if ((items != 2 && items != 3) ||
+            ((connectionID < 0) || (EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE <= connectionID)))
+        {
+            EWF_LOG("\nURC: unexpected format.");
+            return EWF_RESULT_OK;
+        }
+
+        ewf_adapter_thales_common_internet_socket* internet_socket_ptr = &(implementation_ptr->internet_socket_pool[connectionID]);
+
+        if (items == 2)
+        {
+            int err = param1;
+
+            if (err != 1 /* ready for accepting */ && err != 2 /* transfer finished */)
+            {
+                internet_socket_ptr->used = false;
+                internet_socket_ptr->conn = false;
+                internet_socket_ptr->conn_error = true;
+            }
+            else
+            {
+                internet_socket_ptr->used = true;
+                internet_socket_ptr->conn = true;
+                internet_socket_ptr->conn_error = false;
+            }
+            return EWF_RESULT_OK;
+        }
+
+        if (items == 3)
+        {
+            internet_socket_ptr->cnfWriteLength = param1;
+        }
+
+        return EWF_RESULT_OK;
+    }
+
+    if (ewfl_str_starts_with((char*)buffer_ptr, "^SISR: "))
+    {
+        int connectionID = EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_INVALID;
+        int param1 = -1;
+        int param2 = -1;
+        int param3 = -1;
+        int items = sscanf((char*)buffer_ptr, "^SISR: %u,%u,%u,%u", &connectionID, &param1, &param2, &param3);
+        if ((items != 2 && items != 3 && items != 4) ||
             ((connectionID < 0) || (EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE <= connectionID)))
         {
             EWF_LOG("\nURC: unexpected format.\n");
             return EWF_RESULT_OK;
         }
-        else
+
+        ewf_adapter_thales_common_internet_socket* internet_socket_ptr = &(implementation_ptr->internet_socket_pool[connectionID]);
+
+        if (items >= 2)
         {
-            ewf_adapter_thales_common_internet_socket* internet_socket_ptr = &(implementation_ptr->internet_socket_pool[connectionID]);
+            internet_socket_ptr->cnfReadLength = param1;
+        }
 
-            internet_socket_ptr->open = false;
-            internet_socket_ptr->open_error = false;
-            internet_socket_ptr->conn = false;
-            internet_socket_ptr->conn_error = false;
-
-            if (internet_socket_ptr->socket_ptr)
+        if (internet_socket_ptr->socket_ptr)
+        {
+            switch (internet_socket_ptr->type)
             {
-                switch (internet_socket_ptr->type)
+            case ewf_adapter_thales_common_internet_socket_service_type_tcp:
+            case ewf_adapter_thales_common_internet_socket_service_type_tcp_listener:
+            {
+                ewf_socket_tcp* socket_ptr = (ewf_socket_tcp*)internet_socket_ptr->socket_ptr;
+                if (socket_ptr->receive_callback)
                 {
-                case ewf_adapter_thales_common_internet_socket_service_type_tcp:
-                case ewf_adapter_thales_common_internet_socket_service_type_tcp_listener:
-                {
-                    ewf_socket_tcp* socket_ptr = (ewf_socket_tcp*)internet_socket_ptr->socket_ptr;
-                    if (socket_ptr->disconnect_callback) socket_ptr->disconnect_callback(socket_ptr);
-                }
-                break;
-                default:
-                    EWF_LOG_ERROR("Unexpected URC for this socket type.\n");
-                    break;
+                    /* TODO */
                 }
             }
-
-            return EWF_RESULT_OK;
-        }
-    }
-
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+QIURC: \"recv\","))
-    {
-        int connectionID = EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_INVALID;
-        int items = sscanf((char*)buffer_ptr, "+QIURC: \"recv\",%u", &connectionID);
-        if (items != 1 ||
-            ((connectionID < 0) || (EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE <= connectionID)))
-        {
-            EWF_LOG("\nURC: unexpected format.\n");
-            return EWF_RESULT_OK;
-        }
-        else
-        {
-            ewf_adapter_thales_common_internet_socket* internet_socket_ptr = &(implementation_ptr->internet_socket_pool[connectionID]);
-
-            if (internet_socket_ptr->socket_ptr)
+            break;
+            case ewf_adapter_thales_common_internet_socket_service_type_udp:
+            case ewf_adapter_thales_common_internet_socket_service_type_udp_listener:
             {
-                switch (internet_socket_ptr->type)
+                ewf_socket_udp* socket_ptr = (ewf_socket_udp*)internet_socket_ptr->socket_ptr;
+                if (socket_ptr->receive_callback)
                 {
-                case ewf_adapter_thales_common_internet_socket_service_type_tcp:
-                case ewf_adapter_thales_common_internet_socket_service_type_tcp_listener:
-                {
-                    ewf_socket_tcp* socket_ptr = (ewf_socket_tcp*)internet_socket_ptr->socket_ptr;
-                    if (socket_ptr->receive_callback)
-                    {
-                        /* TODO */
-                    }
-                }
-                break;
-                case ewf_adapter_thales_common_internet_socket_service_type_udp:
-                case ewf_adapter_thales_common_internet_socket_service_type_udp_listener:
-                {
-                    ewf_socket_udp* socket_ptr = (ewf_socket_udp*)internet_socket_ptr->socket_ptr;
-                    if (socket_ptr->receive_callback)
-                    {
-                        /* TODO */
-                    }
-                }
-                break;
-                default:
-                    EWF_LOG_ERROR("Unexpected URC for this socket type.\n");
-                    break;
+                    /* TODO */
                 }
             }
-            return EWF_RESULT_OK;
+            break;
+            default:
+                EWF_LOG_ERROR("Unexpected URC for this socket type.\n");
+                break;
+            }
         }
-    }
 
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+QIURC: \"incoming\","))
-    {
-        // TODO : incoming connection
         return EWF_RESULT_OK;
     }
 
@@ -273,7 +274,7 @@ ewf_result ewf_adapter_thales_common_internet_urc_callback(ewf_interface* interf
  *
  ******************************************************************************/
 
-ewf_result _ewf_adapter_thales_common_internet_log_last_error(ewf_adapter* adapter_ptr)
+static  ewf_result _ewf_adapter_thales_common_internet_log_last_error(ewf_adapter* adapter_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
@@ -281,13 +282,19 @@ ewf_result _ewf_adapter_thales_common_internet_log_last_error(ewf_adapter* adapt
 
     ewf_result result = EWF_RESULT_OK;
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QIGETERROR\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    for (uint32_t i = 0; i < 10; i++)
+    {
+        char connection_id_str[8];
+        const char* connection_id_cstr = ewfl_unsigned_to_str(i, connection_id_str, sizeof(connection_id_str));
+
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISE=", connection_id_cstr, ",0\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    }
 
     return result;
 }
 
-ewf_result _ewf_adapter_thales_common_internet_socket_open(ewf_adapter* adapter_ptr, ewf_adapter_thales_common_internet_socket* internet_socket_ptr, char const* service_type_str, uint16_t local_port, char const* server_str, uint16_t remote_port)
+static ewf_result _ewf_adapter_thales_common_internet_socket_open(ewf_adapter* adapter_ptr, ewf_adapter_thales_common_internet_socket* internet_socket_ptr, char const* service_type_str, uint16_t local_port, char const* server_str, uint16_t remote_port)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
@@ -311,28 +318,133 @@ ewf_result _ewf_adapter_thales_common_internet_socket_open(ewf_adapter* adapter_
     const char* connection_id_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, connection_id_str, sizeof(connection_id_str));
 
     /* Close an outstanding connection, just in case */
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QICLOSE=", connection_id_cstr, "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISC=", connection_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
-    char local_port_str[8];
-    const char* local_port_cstr = ewfl_unsigned_to_str(local_port, local_port_str, sizeof(local_port_str));
 
     char remote_port_str[8];
     const char* remote_port_cstr = ewfl_unsigned_to_str(remote_port, remote_port_str, sizeof(remote_port_str));
 
-    /* Open a connection */
+    char local_port_str[8];
+    const char* local_port_cstr = ewfl_unsigned_to_str(local_port, local_port_str, sizeof(local_port_str));
+
+    /* Configure the connection */
+
     result = ewf_interface_send_commands(
         interface_ptr,
-        "AT+QIOPEN=1,",
-        connection_id_cstr, ",",
-        "\"", service_type_str, "\",",
-        "\"", server_str, "\",",
-        remote_port_cstr, ",",
-        local_port_cstr, ",",
-        "0\r",
+        "AT^SISS=", connection_id_cstr, ",\"srvType\",\"Socket\"\r",
         NULL);
-    if (ewf_result_failed(result))
-    return result;
+    if (ewf_result_failed(result)) return result;
+    result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+    if (ewf_result_failed(result)) return result;
+
+    result = ewf_interface_send_commands(
+        interface_ptr,
+        "AT^SISS=", connection_id_cstr, ",\"conId\",\"1\"\r",
+        NULL);
+    if (ewf_result_failed(result)) return result;
+    result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+    if (ewf_result_failed(result)) return result;
+
+    if (ewfl_str_equals_str(service_type_str, "tcp_client"))
+    {
+        if (local_port)
+        {
+            /* TODO: how to set the local port? */
+
+            result = ewf_interface_send_commands(
+                interface_ptr,
+                "AT^SISS=",
+                connection_id_cstr, ",",
+                "address,\"socktcp://", server_str, ":", remote_port_cstr, "\"",
+                "\r",
+                NULL);
+            if (ewf_result_failed(result)) return result;
+            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+            if (ewf_result_failed(result)) return result;
+        }
+        else
+        {
+            result = ewf_interface_send_commands(
+                interface_ptr,
+                "AT^SISS=",
+                connection_id_cstr, ",",
+                "address,\"socktcp://", server_str, ":", remote_port_cstr, "\"",
+                "\r",
+                NULL);
+            if (ewf_result_failed(result)) return result;
+            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+            if (ewf_result_failed(result)) return result;
+        }
+    }
+    else if (ewfl_str_equals_str(service_type_str, "udp_client"))
+    {
+        if (local_port)
+        {
+            /* TODO: how to set the local port? */
+
+            result = ewf_interface_send_commands(
+                interface_ptr,
+                "AT^SISS=",
+                connection_id_cstr, ",",
+                "address,\"sockudp://", server_str, ":", remote_port_cstr, ";port=", local_port_cstr, "\"",
+                "\r",
+                NULL);
+            if (ewf_result_failed(result)) return result;
+            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+            if (ewf_result_failed(result)) return result;
+        }
+        else
+        {
+            result = ewf_interface_send_commands(
+                interface_ptr,
+                "AT^SISS=",
+                connection_id_cstr, ",",
+                "address,\"sockudp://", server_str, ":", remote_port_cstr, "\"",
+                "\r",
+                NULL);
+            if (ewf_result_failed(result)) return result;
+            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+            if (ewf_result_failed(result)) return result;
+        }
+    }
+    else if (ewfl_str_equals_str(service_type_str, "udp_listener"))
+    {
+        if (local_port)
+        {
+            /* TODO: how to set the local port? */
+
+            result = ewf_interface_send_commands(
+                interface_ptr,
+                "AT^SISS=",
+                connection_id_cstr, ",",
+                "address,\"sockudp://", server_str, ":", remote_port_cstr, ";port=", local_port_cstr, "\"",
+                "\r",
+                NULL);
+            if (ewf_result_failed(result)) return result;
+            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+            if (ewf_result_failed(result)) return result;
+        }
+        else
+        {
+            result = ewf_interface_send_commands(
+                interface_ptr,
+                "AT^SISS=",
+                connection_id_cstr, ",",
+                "address,\"sockudp://", server_str, ":", remote_port_cstr, "\"",
+                "\r",
+                NULL);
+            if (ewf_result_failed(result)) return result;
+            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+            if (ewf_result_failed(result)) return result;
+        }
+    }
+
+    /* Open the connection */
+    result = ewf_interface_send_commands(
+        interface_ptr,
+        "AT^SISO=", connection_id_cstr, "\r",
+        NULL);
+    if (ewf_result_failed(result)) return result;
 
     /* Verify the command result */
     result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
@@ -362,20 +474,20 @@ ewf_result _ewf_adapter_thales_common_internet_socket_open(ewf_adapter* adapter_
     /* If we reached the timeout*/
     if (!timeout)
     {
-        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QICLOSE=", connection_id_cstr, "\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISC=", connection_id_cstr, "\r", NULL))) return result;
         if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
         return EWF_RESULT_CONNECTION_FAILED;
     }
 
 #ifdef EWF_DEBUG
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QISTATE=1,", connection_id_cstr, "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISI=", connection_id_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 #endif
 
     return EWF_RESULT_OK;
 }
 
-ewf_result _ewf_adapter_thales_common_internet_socket_close(ewf_adapter* adapter_ptr, ewf_adapter_thales_common_internet_socket* internet_socket_ptr)
+static ewf_result _ewf_adapter_thales_common_internet_socket_close(ewf_adapter* adapter_ptr, ewf_adapter_thales_common_internet_socket* internet_socket_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
@@ -396,7 +508,7 @@ ewf_result _ewf_adapter_thales_common_internet_socket_close(ewf_adapter* adapter
     char socket_str[3];
     const char* socket_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, socket_str, sizeof(socket_str));
 
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QICLOSE=", socket_cstr, "\r", NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISC=", socket_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     return EWF_RESULT_OK;
@@ -421,7 +533,7 @@ ewf_result _ewf_adapter_thales_common_internet_socket_send(ewf_adapter* adapter_
     {
         if (remote_address_str == NULL || remote_port == 0)
         {
-            EWF_LOG_ERROR("The remote address and port need to be specified for a UDP SERVER send.");
+            EWF_LOG_ERROR("The remote address and port need to be specified for a UDP listener send.");
             return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
         }
     }
@@ -451,7 +563,7 @@ ewf_result _ewf_adapter_thales_common_internet_socket_send(ewf_adapter* adapter_
     {
         if (internet_socket_ptr->type == ewf_adapter_thales_common_internet_socket_service_type_udp)
         {
-            result = _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "UDP", internet_socket_ptr->local_port, remote_address_str, remote_port);
+            result = _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "udp_client", internet_socket_ptr->local_port, remote_address_str, remote_port);
             if (ewf_result_failed(result))
             {
                 EWF_LOG_ERROR("Filed to open the UDP socket.\n");
@@ -471,26 +583,10 @@ ewf_result _ewf_adapter_thales_common_internet_socket_send(ewf_adapter* adapter_
     char buffer_length_str[8];
     char const* buffer_length_cstr = ewfl_unsigned_to_str(buffer_length, buffer_length_str, sizeof(buffer_length_str));
 
-#ifdef EWF_DEBUG
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QISEND=", connection_id_cstr, ",0\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIRD=", connection_id_cstr, ",0\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-#endif
-
     {
-        char tokenizer_pattern1_str[] = "\r\n> ";
-        ewf_interface_tokenizer_pattern tokenizer_pattern1 = {
-            NULL,
-            tokenizer_pattern1_str,
-            sizeof(tokenizer_pattern1_str) - 1,
-            false,
-        };
+        internet_socket_ptr->cnfWriteLength = -1;
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern1))) return result;
-
-        ewf_result result_send_command;
-        ewf_result result_verify_response;
+        ewf_result result_send_command = EWF_RESULT_OK;
 
         if (internet_socket_ptr->type == ewf_adapter_thales_common_internet_socket_service_type_udp_listener)
         {
@@ -499,79 +595,50 @@ ewf_result _ewf_adapter_thales_common_internet_socket_send(ewf_adapter* adapter_
 
             result_send_command = ewf_interface_send_commands(
                 interface_ptr,
-                "AT+QISEND=",
+                "AT^SISW=",
                 connection_id_cstr, ",",
                 buffer_length_cstr, ",",
-                "\"", remote_address_str, "\",",
-                remote_port_cstr, "\r",
+                "\"", remote_address_str, ":", remote_port_cstr, "\"\r",
                 NULL);
         }
         else
         {
             result_send_command = ewf_interface_send_commands(
                 interface_ptr,
-                "AT+QISEND=",
+                "AT^SISW=",
                 connection_id_cstr, ",",
                 buffer_length_cstr, "\r",
                 NULL);
         }
 
-        if (ewf_result_succeeded(result_send_command))
-        {
-            result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern1_str);
-        }
-
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
-
         if (ewf_result_failed(result_send_command))
         {
-            EWF_LOG_ERROR("Failed to send the QISEND command, connection ID [%s], length [%s].\n", connection_id_cstr, buffer_length_cstr);
+            EWF_LOG_ERROR("Failed to send the SISW command, connection ID [%s], length [%s].\n", connection_id_cstr, buffer_length_cstr);
             return result_send_command;
         }
 
-        if (ewf_result_failed(result_verify_response))
+        while (internet_socket_ptr->cnfWriteLength == -1)
         {
-            _ewf_adapter_thales_common_internet_log_last_error(adapter_ptr);
-            return result_verify_response;
+            ewf_interface_poll(interface_ptr);
+            ewf_platform_sleep(1);
         }
     }
 
     {
-        char tokenizer_pattern2_str[] = "\r\nSEND OK\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
-            NULL,
-            tokenizer_pattern2_str,
-            sizeof(tokenizer_pattern2_str) - 1,
-            false,
-        };
-
         ewf_result result_send;
         ewf_result result_verify_response;
 
-        ewf_interface_tokenizer_pattern* saved_tokenizer_pattern_ptr = NULL;
-        result = ewf_interface_tokenizer_command_response_end_pattern_get(interface_ptr, &saved_tokenizer_pattern_ptr);
-        if (ewf_result_failed(result)) return result;
+        uint32_t send_length = (internet_socket_ptr->cnfWriteLength > buffer_length) ? buffer_length : internet_socket_ptr->cnfWriteLength;
 
-        result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, &tokenizer_pattern2);
-        if (ewf_result_failed(result)) return result;
-
-        result_send = ewf_interface_send(interface_ptr, (const uint8_t*)buffer_ptr, buffer_length);
-        if (ewf_result_succeeded(result_send))
-        {
-            result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern2_str);
-        }
-
-        /* Resotre the previously saved tokenizer pattern */
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, saved_tokenizer_pattern_ptr)))
-        {
-            return result;
-        }
+        result_send = ewf_interface_send(interface_ptr, (const uint8_t*)buffer_ptr, send_length);
 
         if (ewf_result_failed(result_send))
         {
             _ewf_adapter_thales_common_internet_log_last_error(adapter_ptr);
             return result_send;
         }
+
+        result_verify_response = ewf_interface_drop_response(interface_ptr);
 
         if (ewf_result_failed(result_verify_response))
         {
@@ -581,10 +648,18 @@ ewf_result _ewf_adapter_thales_common_internet_socket_send(ewf_adapter* adapter_
     }
 
 #ifdef EWF_DEBUG
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QISEND=", connection_id_cstr, ",0\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIRD=", connection_id_cstr, ",0\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    if (internet_socket_ptr->type == ewf_adapter_thales_common_internet_socket_service_type_udp)
+    {
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISR=", connection_id_cstr, ",0\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    }
+    else
+    {
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISR=", connection_id_cstr, ",0\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISW=", connection_id_cstr, ",0\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    }
 #endif
 
     return EWF_RESULT_OK;
@@ -637,8 +712,7 @@ ewf_result _ewf_adapter_thales_common_internet_socket_receive(
     char connection_id_str[8];
     char* connection_id_cstr = ewfl_unsigned_to_str(internet_socket_ptr->id, connection_id_str, sizeof(connection_id_str));
 
-    uint8_t* response_ptr = NULL;
-    uint32_t response_length = 0;
+    uint32_t read_length = 0;
 
     {
         uint32_t t = (wait) ? (t = (60 * EWF_PLATFORM_TICKS_PER_SECOND)) : 1;
@@ -652,33 +726,23 @@ ewf_result _ewf_adapter_thales_common_internet_socket_receive(
             uint32_t have_read_length = 0;
             uint32_t unread_length = 0;
 
-            if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIRD=", connection_id_cstr, ",0\r", NULL))) return result;
+            internet_socket_ptr->cnfReadLength = -1;
 
-            result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 30);
-            if (ewf_result_succeeded(result))
+            if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISR=", connection_id_cstr, ",0\r", NULL))) return result;
+
+            while (internet_socket_ptr->cnfReadLength == -1)
             {
-                int count = sscanf(response_ptr, "\r\n+QIRD: %lu,%lu,%lu\r\n\r\nOK\r\n", &total_receive_length, &have_read_length, &unread_length);
-                if (count != 3)
-                {
-                    result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                }
+                ewf_interface_poll(interface_ptr);
+                ewf_platform_sleep(1);
             }
 
-            ewf_interface_release(interface_ptr, response_ptr);
+            ewf_interface_drop_response(interface_ptr);
 
-            if (ewf_result_failed(result))
+            if (internet_socket_ptr->cnfReadLength > 0)
             {
-                EWF_LOG_ERROR("Unexpected response format, response [%s]!\n", (char*)response_ptr);
-                return result;
-            }
-
-            if (unread_length)
-            {
+                read_length = internet_socket_ptr->cnfReadLength;
                 break;
             }
-
-            ewf_interface_poll(interface_ptr);
-            ewf_platform_sleep(1);
         }
 
         /* Did the operation timed-out? */
@@ -692,25 +756,15 @@ ewf_result _ewf_adapter_thales_common_internet_socket_receive(
         }
     }
 
-#ifdef EWF_DEBUG
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QISEND=", connection_id_cstr, ",0\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIRD=", connection_id_cstr, ",0\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-#endif
-
-    uint32_t response_overhead = 40; /* Conservative estimate */
-
-    /* Read at most the buffer size, take into account the message overhead */
-    uint32_t read_length = interface_ptr->message_allocator_ptr->block_size - response_overhead;
-    read_length = (*buffer_length_ptr < read_length) ? *buffer_length_ptr : read_length;
+    uint8_t* response_ptr = NULL;
+    uint32_t response_length = 0;
 
     char read_length_str[8];
     char* read_length_cstr = ewfl_unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
 
     result = ewf_interface_send_commands(
         interface_ptr,
-        "AT+QIRD=",
+        "AT^SISR=",
         connection_id_cstr, ",",
         read_length_cstr, "\r",
         NULL);
@@ -719,136 +773,26 @@ ewf_result _ewf_adapter_thales_common_internet_socket_receive(
     result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 30);
     if (ewf_result_failed(result)) return result;
 
-    /* Terminate the string to make parsing safer and faster */
-    response_ptr[response_length] = 0;
+    /* Copy the response */
+    *buffer_length_ptr = (*buffer_length_ptr >= read_length) ? read_length : *buffer_length_ptr;
+    memcpy(buffer_ptr, response_ptr, *buffer_length_ptr);
 
-    /* Parse the response */
-    {
-        char data_read_response_str[] = "\r\n+QIRD: ";
-
-        uint32_t i = 0;
-
-        uint32_t read_actual_length = 0;
-        uint16_t remote_port = 0;
-
-        char term_str[] = "\r\n";
-
-        char* read_actual_length_str = NULL;
-        char* remote_ip_str = NULL;
-        char* remote_port_str = NULL;
-
-        char* p = NULL;
-
-        if (!ewfl_buffer_equals_buffer(response_ptr, data_read_response_str, sizeof(data_read_response_str) - 1))
-        {
-            result = EWF_RESULT_UNEXPECTED_RESPONSE;
-        }
-        else
-        {
-            p = response_ptr + sizeof(data_read_response_str) - 1;
-            read_actual_length_str = p;
-        }
-
-        if (internet_socket_ptr->type != ewf_adapter_thales_common_internet_socket_service_type_udp_listener)
-        {
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, "\r", NULL);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else 
-                {
-                    *p = 0; p++; 
-                    if (*p != '\n') result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                    else { p++; }
-                }
-            }
-        }
-        else
-        {
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, ",", term_str);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else { *p = 0; p++; }
-            }
-
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, "\"", term_str);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else 
-                {
-                    *p = 0; p++; 
-                    remote_ip_str = p;
-                }
-            }
-
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, "\"", term_str);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else { *p = 0; p++; }
-            }
-
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, ",", term_str);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else 
-                { 
-                    *p = 0; p++; 
-                    remote_port_str = p;
-                }
-            }
-
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, "\r", NULL);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else
-                {
-                    *p = 0; p++;
-                    if (*p != '\n') result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                    else { p++; }
-                }
-            }
-        }
-
-        if (ewf_result_succeeded(result))
-        {
-            read_actual_length = ewfl_str_to_unsigned(read_actual_length_str);
-        }
-
-        if (ewf_result_succeeded(result))
-        {
-            char ok_response_str[] = "\r\n\r\nOK\r\n";
-            if ((response_length != (((uint8_t*)p - response_ptr) + read_actual_length + 8)) ||
-                !ewfl_buffer_equals_buffer(p + read_actual_length, ok_response_str, sizeof(ok_response_str) - 1))
-            {
-                result = EWF_RESULT_UNEXPECTED_RESPONSE;
-            }
-        }
-
-        if (ewf_result_succeeded(result))
-        {
-            *buffer_length_ptr = (*buffer_length_ptr >= read_actual_length) ? read_actual_length : *buffer_length_ptr;
-            memcpy(buffer_ptr, p, *buffer_length_ptr);
-        }
-    }
-
+    /* Release the response */
     ewf_interface_release(interface_ptr, response_ptr);
 
-    if (ewf_result_failed(result))
-    {
-        EWF_LOG_ERROR("Unexpected response format, response [%s]!\n", (char*)response_ptr);
-        return result;
-    }
-
 #ifdef EWF_DEBUG
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QISEND=", connection_id_cstr, ",0\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIRD=", connection_id_cstr, ",0\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    if (internet_socket_ptr->type == ewf_adapter_thales_common_internet_socket_service_type_udp)
+    {
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISR=", connection_id_cstr, ",0\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    }
+    else
+    {
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISR=", connection_id_cstr, ",0\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISW=", connection_id_cstr, ",0\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    }
 #endif
 
     return result;
@@ -947,7 +891,7 @@ ewf_result ewf_adapter_thales_common_tcp_listen(ewf_socket_tcp* socket_ptr)
     
     internet_socket_ptr->type = ewf_adapter_thales_common_internet_socket_service_type_tcp_listener;
     
-    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "TCP LISTENER", internet_socket_ptr->local_port, "127.0.0.1", 0 /* no remote port during service creation */);
+    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "tcp_listener", internet_socket_ptr->local_port, "127.0.0.1", 0 /* no remote port during service creation */);
 }
 
 ewf_result ewf_adapter_thales_common_tcp_accept(ewf_socket_tcp* socket_ptr, ewf_socket_tcp* socket_new_ptr)
@@ -968,7 +912,7 @@ ewf_result ewf_adapter_thales_common_tcp_connect(ewf_socket_tcp* socket_ptr, con
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_adapter_thales_common_internet_socket* internet_socket_ptr = (ewf_adapter_thales_common_internet_socket*)socket_ptr->data_ptr;
 
-    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "TCP", 0 /* local port assigned automatically */, server_str, port);
+    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "tcp_client", 0 /* local port assigned automatically */, server_str, port);
 }
 
 ewf_result ewf_adapter_thales_common_tcp_shutdown(ewf_socket_tcp* socket_ptr)
@@ -1093,7 +1037,7 @@ ewf_result ewf_adapter_thales_common_udp_bind(ewf_socket_udp* socket_ptr, uint32
 
     internet_socket_ptr->local_port = local_port;
 
-    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "UDP SERVICE", internet_socket_ptr->local_port, "127.0.0.1", 0 /* No remote port during service creation */);
+    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "udp_listener", internet_socket_ptr->local_port, "127.0.0.1", 0 /* No remote port during service creation */);
 }
 
 ewf_result ewf_adapter_thales_common_udp_shutdown(ewf_socket_udp* socket_ptr)
@@ -1121,7 +1065,7 @@ ewf_result ewf_adapter_thales_common_udp_send_to(ewf_socket_udp* socket_ptr, con
         buffer_ptr, buffer_length);
 }
 
-ewf_result ewf_adapter_thales_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address_str, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
+ewf_result ewf_adapter_thales_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address_str, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
 {
     EWF_VALIDATE_UDP_SOCKET_POINTER(socket_ptr);
     ewf_adapter* adapter_ptr = socket_ptr->adapter_ptr;

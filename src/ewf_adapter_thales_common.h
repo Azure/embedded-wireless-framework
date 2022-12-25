@@ -60,7 +60,7 @@ extern "C" {
 
 #ifndef EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE
 /** @brief The total number of supported internet sockets in the adapter */
-#define EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE (12)
+#define EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE (10)
 #endif
 
 #ifndef EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_INVALID
@@ -70,7 +70,7 @@ extern "C" {
 
 #ifndef EWF_ADAPTER_THALES_COMMON_MQTT_SOCKET_POOL_SIZE
 /** @brief The total number of supported MQTT sockets in the adapter */
-#define EWF_ADAPTER_THALES_COMMON_MQTT_SOCKET_POOL_SIZE (12)
+#define EWF_ADAPTER_THALES_COMMON_MQTT_SOCKET_POOL_SIZE (10)
 #endif
 
 #ifndef EWF_ADAPTER_THALES_COMMON_MQTT_SOCKET_INVALID
@@ -118,6 +118,9 @@ typedef enum _ewf_adapter_common_internet_socket_service_type
     ewf_adapter_thales_common_internet_socket_service_type_udp,
     ewf_adapter_thales_common_internet_socket_service_type_tcp_listener,
     ewf_adapter_thales_common_internet_socket_service_type_udp_listener,
+    ewf_adapter_thales_common_internet_socket_service_type_ftp,
+    ewf_adapter_thales_common_internet_socket_service_type_http,
+    ewf_adapter_thales_common_internet_socket_service_type_mqtt,
 
 } ewf_adapter_thales_common_internet_socket_service_type;
 
@@ -133,46 +136,20 @@ typedef struct _ewf_adapter_thales_common_internet_socket
     volatile bool open_error : 1;
     volatile bool conn : 1;
     volatile bool conn_error : 1;
+    volatile int16_t cnfWriteLength;
+    volatile int16_t cnfReadLength;
 
 } ewf_adapter_thales_common_internet_socket;
-
-/** @brief Internal structure for MQTT socket status  */
-typedef struct _ewf_adapter_thales_common_mqtt_socket
-{
-    volatile bool open : 1;
-    volatile bool open_error : 1;
-    volatile bool conn : 1;
-    volatile bool conn_error : 1;
-
-} ewf_adapter_thales_common_mqtt_socket;
 
 /** @brief The Thales common adapter data structure */
 typedef struct _ewf_adapter_thales_common
 {
     uint32_t default_timeout;
 
-#if EWF_ADAPTER_THALES_COMMON_TCP_ENABLED || EWF_ADAPTER_THALES_COMMON_UDP_ENABLED
+#if EWF_ADAPTER_THALES_COMMON_TCP_ENABLED || EWF_ADAPTER_THALES_COMMON_UDP_ENABLED || EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED || EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED
     /**< The internal pool of internet sockets */
     ewf_adapter_thales_common_internet_socket internet_socket_pool[EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE];
 #endif
-
-#if EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED
-    /** @brief Internal MQTT basic API socket 0 status  */
-    volatile bool mqtt_basic_open : 1;
-    volatile bool mqtt_basic_open_error : 1;
-    volatile bool mqtt_basic_conn : 1;
-    volatile bool mqtt_basic_conn_error : 1;
-    volatile bool mqtt_basic_publish : 1;
-    volatile bool mqtt_basic_subscribe : 1;
-#endif /* EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED */
-
-#if EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED
-    /**< The internal pool of MQTT sockets */
-    ewf_adapter_thales_common_mqtt_socket mqtt_socket_pool[EWF_ADAPTER_THALES_COMMON_MQTT_SOCKET_POOL_SIZE];
-
-    /**< The MQTT message callback */
-    ewf_adapter_mqtt_message_callback mqtt_message_callback;
-#endif /* EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED */
 
 } ewf_adapter_thales_common;
 
@@ -352,7 +329,7 @@ ewf_result ewf_adapter_thales_common_udp_set_dtls_configuration(ewf_socket_udp* 
 ewf_result ewf_adapter_thales_common_udp_bind(ewf_socket_udp* socket_ptr, uint32_t port);
 ewf_result ewf_adapter_thales_common_udp_shutdown(ewf_socket_udp* socket_ptr);
 ewf_result ewf_adapter_thales_common_udp_send_to(ewf_socket_udp* socket_ptr, const char* remote_address_str, uint32_t remote_port, const uint8_t* buffer_ptr, uint32_t buffer_length);
-ewf_result ewf_adapter_thales_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
+ewf_result ewf_adapter_thales_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
 
 #endif /* EWF_ADAPTER_THALES_COMMON_UDP_ENABLED */
 

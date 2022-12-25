@@ -81,18 +81,15 @@ ewf_result ewf_adapter_thales_common_test(ewf_adapter* adapter_ptr)
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SISX=?\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
+    /*
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGATT=1\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    */
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SICA=1,1\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
-    /*
     if (ewf_result_failed(result = ewf_adapter_thales_common_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG("[WARNING][Failed to activate the context.]\n");
     }
-    */
 
     // Adapter tests - ping
     result = ewf_adapter_thales_common_test_command_ping(adapter_ptr);
@@ -115,12 +112,14 @@ ewf_result ewf_adapter_thales_common_test(ewf_adapter* adapter_ptr)
         EWF_LOG_ERROR("Failed to run the adapter NTP test: ewf_result %d.\n", result);
     }
 
+#if 0
     // Adapter tests - HTTP
     result = ewf_adapter_thales_common_test_command_http(adapter_ptr);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the adapter HTTP test: ewf_result %d.\n", result);
     }
+#endif
 
     // Adapter tests - Modem - FFS
     result = ewf_adapter_thales_common_test_api_ffs(adapter_ptr);
@@ -223,7 +222,7 @@ volatile bool ewf_adapter_thales_common_test_command_http_http_get = false;
 /** @brief HTTP test - URC callback */
 ewf_result ewf_adapter_thales_common_test_command_http_urc_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
 {
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+QHTTPGET: "))
+    if (ewfl_str_starts_with((char*)buffer_ptr, "^SIS: 4,1"))
     {
         ewf_adapter_thales_common_test_command_http_http_get = true;
 
@@ -242,77 +241,78 @@ ewf_result ewf_adapter_thales_common_test_command_http(ewf_adapter* adapter_ptr)
 
     ewf_result result;
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QHTTPCFG=\"contextid\",1\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QHTTPCFG=\"responseheader\",1\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
-
+    /* Start by closing the HTTP service, in case it is left open from a previous run */
     {
-#if 1
-        char url_str[] = "http://www.microsoft.com/";
-#else
-        char url_str[] = "http://www.sina.com.cn/";
-#endif
-        unsigned url_length = sizeof(url_str) - 1;
-        char tokenizer_pattern_str[] = "\r\nCONNECT\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern = {
-            NULL,
-            tokenizer_pattern_str ,
-            sizeof(tokenizer_pattern_str)-1,
-            false,
-        };
-
-        char url_length_str[4];
-        const char* url_length_cstr = ewfl_unsigned_to_str(url_length, url_length_str, sizeof(url_length_str));
-
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QHTTPURL=", url_length_cstr, ",80\r", NULL))) return result;
-        if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str)))
-        {
-            EWF_LOG_ERROR("Unexpected response.\n");
-            if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
-            return EWF_RESULT_UNEXPECTED_RESPONSE;
-        }
-        else
-        {
-            if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
-            if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, url_str, "\r", NULL))) return result;
-            if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
-        }
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SISC=4\r"))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
     }
 
-    /* Issue the HTTP GET request and wait for the asynchronous response */
+    /* Configure the connection */
     {
-        /* Set a user URC callback to wait for the HTTP GET response */
+        /* Select service type HTTP */
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SISS=4,srvType,\"Http\"\r"))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+        /* Select connection profile 1 */
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SISS=4,conId,\"1\"\r"))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+        char url_str[] = "http://www.microsoft.com/";
+        unsigned url_length = sizeof(url_str) - 1;
+
+        /* Specify access to the URL */
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT^SISS=4,address,\"", url_str, "\"\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+        /* Select command type download */
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SISS=4,cmd,\"get\"\r"))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    }
+
+    /* Open the service and wait for a connection */
+    {
+        /* Set a user URC callback to wait for the HTTP ready response */
         ewf_adapter_thales_common_test_command_http_http_get = false;
         if (ewf_result_failed(result = ewf_interface_set_user_urc_callback(interface_ptr, ewf_adapter_thales_common_test_command_http_urc_callback))) return result;
+
+        /* Open the service. */
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SISO=4\r"))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+        uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 10;
+
+        /* Wait until the response is recevied or a timeout is reached */
+        while (!ewf_adapter_thales_common_test_command_http_http_get && timeout != 0)
+        {
+            ewf_interface_poll(interface_ptr);
+            timeout--;
+            ewf_platform_sleep(1);
+        }
+
+        /* If we reached the timeout there was no response, fail */
+        if (timeout == 0)
+        {
+            return EWF_RESULT_UNEXPECTED_RESPONSE;
+        }
 
         ewf_result result_send_command = EWF_RESULT_OK;
         ewf_result result_verify_response = EWF_RESULT_OK;
 
-        uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 60;
-
-        result_send_command = ewf_interface_send_command(interface_ptr, "AT+QHTTPGET=80\r");
-        if (ewf_result_failed(result_send_command))
+        for (;;)
         {
-            EWF_LOG_ERROR("Failed to send the command.\n");
-        }
-        else
-        {
-            result_verify_response = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
-            if (ewf_result_failed(result_verify_response))
+            result_send_command = ewf_interface_send_command(interface_ptr, "AT^SISR=4,1500\r");
+            if (ewf_result_failed(result_send_command))
             {
-                EWF_LOG_ERROR("Failed to verify the response.\n");
+                EWF_LOG_ERROR("Failed to send the command.\n");
+                break;
             }
             else
             {
-                /* Wait until the response is recevied or a timeout is reached */
-                while (!ewf_adapter_thales_common_test_command_http_http_get && timeout != 0)
+                result_verify_response = ewf_interface_verify_response_starts_with(interface_ptr, "\r\n^SISR: 4,");
+                if (ewf_result_failed(result_verify_response))
                 {
-                    ewf_interface_poll(interface_ptr);
-                    timeout--;
-                    ewf_platform_sleep(1);
+                    EWF_LOG_ERROR("Failed to verify the response.\n");
+                    break;
                 }
             }
         }
@@ -322,59 +322,12 @@ ewf_result ewf_adapter_thales_common_test_command_http(ewf_adapter* adapter_ptr)
 
         if (ewf_result_failed(result_send_command)) return result_send_command;
         if (ewf_result_failed(result_verify_response)) return result_verify_response;
-
-        /* If we reached the timeout there was no response, fail */
-        if (timeout == 0)
-        {
-            return EWF_RESULT_UNEXPECTED_RESPONSE;
-        }
     }
 
-    /* Read the responses */
+    /* Close the HTTP service */
     {
-        char tokenizer_pattern_str[] = "\r\nCONNECT\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern = {
-            NULL,
-            tokenizer_pattern_str ,
-            sizeof(tokenizer_pattern_str)-1,
-            false,
-        };
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-
-        ewf_result result_send_command = EWF_RESULT_OK;
-        ewf_result result_verify_response = EWF_RESULT_OK;
-
-        result_send_command = ewf_interface_send_command(interface_ptr, "AT+QHTTPREAD=10\r");
-
-        if (ewf_result_failed(result_send_command))
-        {
-            EWF_LOG_ERROR("Failed to send the command.\n");
-        }
-        else
-        {
-            result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str);
-            if (ewf_result_failed(result_verify_response))
-            {
-                EWF_LOG_ERROR("Failed to verify the response.\n");
-            }
-        }
-
-        /* Clear the response pattern */
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
-
-        if (ewf_result_failed(result_send_command)) return result_send_command;
-        if (ewf_result_failed(result_verify_response)) return result_verify_response;
-
-        /* Wait for the read response time out */
-        uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 10;
-        while (timeout != 0)
-        {
-            ewf_interface_poll(interface_ptr);
-            ewf_interface_drop_all_responses(interface_ptr);
-            timeout--;
-            ewf_platform_sleep(1);
-        }
-
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SISC=4\r"))) return result;
+        if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
     }
 
     return EWF_RESULT_OK;
@@ -391,7 +344,21 @@ ewf_result ewf_adapter_thales_common_test_api_ffs(ewf_adapter* adapter_ptr)
 
     ewf_result result;
 
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SFSA=\"ls\",A:/\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SFSA=\"ls\",B:/\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SFSA=\"ls\",C:/\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT^SFSA=\"ls\",D:/\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+
+#if 0
     if (ewf_result_failed(result = ewf_adapter_thales_common_ffs_list(adapter_ptr))) return result;
+#endif
 
     return EWF_RESULT_OK;
 }
