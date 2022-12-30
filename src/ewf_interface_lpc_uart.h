@@ -71,14 +71,22 @@ typedef struct _ewf_interface_lpc_uart
 
     uint32_t baud_rate;
 
+#if FSL_FEATURE_SOC_LPUART_COUNT > 0
+    lpuart_config_t config;
+#elif FSL_FEATURE_SOC_USART_COUNT > 0
     usart_config_t config;
+#endif
 
     uint8_t ring_buffer[EWF_INTERFACE_LPC_UART_RING_BUFFER_SIZE];  /*!< ring buffer for background reception */
     uint32_t buffer_size;               /*!< Size of the ring buffer for background reception */
 
     ewf_platform_mutex* rx_mutex_ptr;
 
+#if FSL_FEATURE_SOC_LPUART_COUNT > 0
+    lpuart_transfer_t xfer;
+#elif FSL_FEATURE_SOC_USART_COUNT > 0
     usart_transfer_t xfer;
+#endif
 
 } ewf_interface_lpc_uart;
 
