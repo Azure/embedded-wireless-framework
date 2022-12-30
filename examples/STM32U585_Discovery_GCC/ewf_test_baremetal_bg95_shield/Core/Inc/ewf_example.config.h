@@ -1,8 +1,8 @@
 /************************************************************************//**
  * @file
  * @version Preview
- * SPDX-License-Identifier: MIT
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
+ * SPDX-License-Identifier: MIT
  * @brief The Embedded Wireless Framework example configuration.
  ****************************************************************************/
 
@@ -24,20 +24,15 @@ extern "C" {
  * @brief Modem configuration settings used in examples
  * @{
  */
+
 /** @brief The SIM PIN for the modem */
 #define EWF_CONFIG_SIM_PIN                                          ("0000")
-/** @} */
 
-/**
- * @defgroup group_example_configuration_iot_hub IoT Hub configuration
- * @brief IoT Hub configuration settings used in examples
- * @{
- */
-/** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME                                 ""
-/** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
-/** @} */
+/** @brief The modem context ID used */
+#define EWF_CONFIG_CONTEXT_ID                                       (1)
+
+/** @} *** group_example_configuration_modem */
+
 
 /************************************************************************//**
  * @} *** group_example_configuration

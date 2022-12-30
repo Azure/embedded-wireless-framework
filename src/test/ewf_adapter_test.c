@@ -251,7 +251,7 @@ ewf_result ewf_adapter_test_api_udp_echo(ewf_adapter* adapter_ptr)
     uint32_t remote_bufferewfl_str_length;
     uint32_t remote_port = 0;
 
-    static char receive_buffer[1500];
+    static uint8_t receive_buffer[1500];
     uint32_t receive_buffer_length;
 
     if (ewf_result_failed(result = ewf_adapter_udp_open(adapter_ptr, &socket_udp))) return result;
@@ -327,7 +327,7 @@ ewf_result ewf_adapter_test_api_udp_client_server(ewf_adapter* adapter_ptr)
     uint32_t remote_buffer_str_length;
     uint32_t remote_port = 0;
 
-    static char receive_buffer[1500];
+    static uint8_t receive_buffer[1500];
     uint32_t receive_buffer_length;
 
     uint32_t local_address;

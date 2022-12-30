@@ -305,8 +305,34 @@ char * ewfl_find_chars_with_terms(char* str, char* chars_str, char* terms_str)
 char* ewfl_str_tok(char* str, const char* delim, char** saveptr)
 {
 #if defined(_WIN32) || defined(_WIN64)
-	return strtok_s(str, delim, saveptr);
+    return strtok_s(str, delim, saveptr);
 #else
-	return strtok_r(str, delim, saveptr);
+    char* token;
+
+    if (str == NULL) {
+        str = *saveptr;
+    }
+
+    /* Scan leading delimiters.  */
+    str += strspn(str, delim);
+    if (*str == '\0') {
+        *saveptr = str;
+        return NULL;
+    }
+
+    /* Find the end of the token.  */
+    token = str;
+    str = strpbrk(token, delim);
+    if (str == NULL) {
+        /* This token finishes the string.  */
+        *saveptr = strchr(token, '\0');
+    }
+    else {
+        /* Terminate the token and make *saveptr point past it.  */
+        *str = '\0';
+        *saveptr = str + 1;
+    }
+
+    return token; 
 #endif
 }

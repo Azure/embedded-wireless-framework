@@ -76,7 +76,7 @@ extern "C" {
 
 extern ewf_interface_tokenizer_pattern* ewf_adapter_mxchip_common_message_tokenizer_pattern_ptr;
 extern ewf_interface_tokenizer_pattern* ewf_adapter_mxchip_common_command_response_end_tokenizer_pattern_ptr;
-static ewf_interface_tokenizer_pattern* ewf_adapter_mxchip_common_command_response_tokenizer_pattern_ptr;
+extern ewf_interface_tokenizer_pattern* ewf_adapter_mxchip_common_command_response_tokenizer_pattern_ptr;
 extern ewf_interface_tokenizer_pattern* ewf_adapter_mxchip_common_urc_tokenizer_pattern_ptr;
 
 /************************************************************************//**

@@ -112,7 +112,7 @@ struct _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_s
 
 static struct _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_state ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function_state = { 0 };
 
-static bool _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function(const char* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
+static bool _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_function(const uint8_t* buffer_ptr, uint32_t buffer_length, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* stop_ptr)
 {
     if (!buffer_ptr) return false;
     if (!buffer_length) return false;
@@ -135,7 +135,7 @@ static bool _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_funct
     ((char*)buffer_ptr)[buffer_length] = 0;
 
     /* Define the message prefix and calculate its length */
-    const char prefix_str[] = "\r\n+IPD,";
+    const uint8_t prefix_str[] = "\r\n+IPD,";
     const uint32_t prefix_length = sizeof(prefix_str) - 1;
 
     /* If the buffer is smaller than the prefix, then it is not yet for us */
@@ -180,7 +180,7 @@ static bool _ewf_adapter_espressif_common_message_tokenizer_pattern1_match_funct
         else
         {
             /* The message is complete, try to parse it */
-            int count = sscanf(buffer_ptr, "\r\n+IPD,%lu,%lu:", &state_ptr->link_id, &state_ptr->length);
+            int count = sscanf((char*)buffer_ptr, "\r\n+IPD,%lu,%lu:", &state_ptr->link_id, &state_ptr->length);
             if (count != 2)
             {
                 EWF_LOG_ERROR("Unexpected response format!\n");

@@ -600,7 +600,6 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_receive(
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    ewf_adapter_quectel_common* implementation_ptr = (ewf_adapter_quectel_common*)adapter_ptr->implementation_ptr;
 
     ewf_result result = EWF_RESULT_OK;
 
@@ -657,7 +656,7 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_receive(
             result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 30);
             if (ewf_result_succeeded(result))
             {
-                int count = sscanf(response_ptr, "\r\n+QIRD: %lu,%lu,%lu\r\n\r\nOK\r\n", &total_receive_length, &have_read_length, &unread_length);
+                int count = sscanf((char*)response_ptr, "\r\n+QIRD: %lu,%lu,%lu\r\n\r\nOK\r\n", &total_receive_length, &have_read_length, &unread_length);
                 if (count != 3)
                 {
                     result = EWF_RESULT_UNEXPECTED_RESPONSE;
@@ -724,12 +723,9 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_receive(
 
     /* Parse the response */
     {
-        char data_read_response_str[] = "\r\n+QIRD: ";
-
-        uint32_t i = 0;
+        uint8_t data_read_response_str[] = "\r\n+QIRD: ";
 
         uint32_t read_actual_length = 0;
-        uint16_t remote_port = 0;
 
         char term_str[] = "\r\n";
 
@@ -745,7 +741,7 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_receive(
         }
         else
         {
-            p = response_ptr + sizeof(data_read_response_str) - 1;
+            p = (char*)response_ptr + sizeof(data_read_response_str) - 1;
             read_actual_length_str = p;
         }
 
@@ -814,6 +810,9 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_receive(
             }
         }
 
+        (void)remote_ip_str;
+		(void)remote_port_str;
+
         if (ewf_result_succeeded(result))
         {
             read_actual_length = ewfl_str_to_unsigned(read_actual_length_str);
@@ -823,7 +822,7 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_receive(
         {
             char ok_response_str[] = "\r\n\r\nOK\r\n";
             if ((response_length != (((uint8_t*)p - response_ptr) + read_actual_length + 8)) ||
-                !ewfl_buffer_equals_buffer(p + read_actual_length, ok_response_str, sizeof(ok_response_str) - 1))
+                !ewfl_buffer_equals_buffer((uint8_t*)p + read_actual_length, (uint8_t*)ok_response_str, sizeof(ok_response_str) - 1))
             {
                 result = EWF_RESULT_UNEXPECTED_RESPONSE;
             }

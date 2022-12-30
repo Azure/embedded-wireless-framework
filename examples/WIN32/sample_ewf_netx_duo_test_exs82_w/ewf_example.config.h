@@ -26,10 +26,10 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (4)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (6)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (512)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1600)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -40,7 +40,7 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM16")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM5")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
 #define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (CBR_115200)
@@ -69,6 +69,18 @@ extern "C" {
 #define EWF_CONFIG_CONTEXT_ID                                       (1)
 
 /** @} *** group_example_configuration_modem */
+
+/**
+ * @defgroup group_example_configuration_netx_duo_test NetX Duo test configuration
+ * @brief NetX Duo test configuration settings used in examples
+ * @{
+ */
+
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_TEST_ENABLED             (1)
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_TEST_ENABLED             (1)
+#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_TEST_ENABLED             (1)
+
+/** @} *** group_example_configuration_netx_duo_test */
 
 /************************************************************************//**
  * @} *** group_example_configuration

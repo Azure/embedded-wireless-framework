@@ -81,16 +81,16 @@ extern "C" {
 /** @brief Trusted Certificate Authority certificate file name to be stored on the modem */
 #ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_FILE_NAME
 #define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_FILE_NAME      ("root_ca_cert.pem")
-#endif 
+#endif
 
 /** @brief User Certificate Authority certificate file name to be stored on the modem */
 #ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_FILE_NAME
 #define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_FILE_NAME      ("ca_cert.pem")
-#endif 
+#endif
 
 /**
- * @brief CA certificate index that will be used in the security/TLS profile 
- * configuration. This number will either be 
+ * @brief CA certificate index that will be used in the security/TLS profile
+ * configuration. This number will either be
  * EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_FILE_NAME or
  * EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_FILE_NAME
  * Default to Root CA.
@@ -102,32 +102,32 @@ extern "C" {
 /** @brief Client certificate file name to be stored on the modem */
 #ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_FILE_NAME
 #define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_FILE_NAME       ("device_cert.pem")
-#endif 
+#endif
 
 /** @brief Client private key filename  */
 #ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_FILE_NAME
 #define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_FILE_NAME       ("device_key.pem")
-#endif 
+#endif
 
 /** @brief Trusted Certificate Authority certificate pointer name*/
 #ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_BUFFER_NAME
 #define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_ROOT_CA_CERTIFICATE_BUFFER_NAME    (root_ca_cert_pem)
-#endif 
+#endif
 
 /** @brief User Certificate Authority certificate pointing buffer name */
 #ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_BUFFER_NAME
 #define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_USER_CA_CERTIFICATE_BUFFER_NAME    (ca_cert_pem)
-#endif 
+#endif
 
 /** @brief Client certificate pointing buffer name */
 #ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_BUFFER_NAME
 #define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_CERTIFICATE_BUFFER_NAME     (device_cert_pem)
-#endif 
+#endif
 
 /** @brief Client private key filename  */
 #ifndef EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_BUFFER_NAME
 #define EWF_CONFIG_ADAPTER_QUECTEL_COMMON_CLIENT_PRIVATE_KEY_BUFFER_NAME     (device_key_pem)
-#endif 
+#endif
 
 /************************************************************************//**
  * @} *** group_configuration_adapter_quectel_common
@@ -138,6 +138,21 @@ extern "C" {
  * @ingroup group_adapter
  * @brief Quectel common adapter implementation
  * @{
+ ****************************************************************************/
+
+/************************************************************************//**
+ * @defgroup group_adapter_quectel_common_tokenizer Quectel common driver tokenizer
+ * @brief Quectel common adapter tokenizer
+ * @{
+ ****************************************************************************/
+
+extern ewf_interface_tokenizer_pattern* ewf_adapter_quectel_common_message_tokenizer_pattern_ptr;
+extern ewf_interface_tokenizer_pattern* ewf_adapter_quectel_common_command_response_end_tokenizer_pattern_ptr;
+extern ewf_interface_tokenizer_pattern* ewf_adapter_quectel_common_command_response_tokenizer_pattern_ptr;
+extern ewf_interface_tokenizer_pattern* ewf_adapter_quectel_common_urc_tokenizer_pattern_ptr;
+
+/************************************************************************//**
+ * @} *** group_adapter_quectel_common_tokenizer
  ****************************************************************************/
 
 /************************************************************************//**

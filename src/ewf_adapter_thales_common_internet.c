@@ -265,6 +265,57 @@ ewf_result ewf_adapter_thales_common_internet_urc_callback(ewf_interface* interf
         return EWF_RESULT_OK;
     }
 
+    if (ewfl_str_starts_with((char*)buffer_ptr, "^SIS: "))
+    {
+        int connectionID = EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_INVALID;
+        int param1 = -1;
+        int items = sscanf((char*)buffer_ptr, "^SIS: %u,%u", &connectionID, &param1);
+        if ((items != 2) ||
+            ((connectionID < 0) || (EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE <= connectionID)))
+        {
+            EWF_LOG("\nURC: unexpected format.\n");
+            return EWF_RESULT_OK;
+        }
+
+        ewf_adapter_thales_common_internet_socket* internet_socket_ptr = &(implementation_ptr->internet_socket_pool[connectionID]);
+
+        if (items == 2)
+        {
+            int err = param1;
+
+            if (internet_socket_ptr->socket_ptr)
+            {
+                switch (internet_socket_ptr->type)
+                {
+                case ewf_adapter_thales_common_internet_socket_service_type_tcp_listener:
+                case ewf_adapter_thales_common_internet_socket_service_type_udp_listener:
+                    if (err == 5 /* ready */)
+                    {
+                        internet_socket_ptr->used = true;
+                        internet_socket_ptr->conn = true;
+                        internet_socket_ptr->conn_error = false;
+                    }
+                    else
+                    {
+                        internet_socket_ptr->used = false;
+                        internet_socket_ptr->conn = false;
+                        internet_socket_ptr->conn_error = true;
+                    }
+                    break;
+
+                case ewf_adapter_thales_common_internet_socket_service_type_tcp:
+                case ewf_adapter_thales_common_internet_socket_service_type_udp:
+                    break;
+
+                default:
+                    break;
+                }
+            }
+        }
+
+        return EWF_RESULT_OK;
+    }
+
     return EWF_RESULT_UNHANDLED_URC;
 }
 
@@ -376,12 +427,22 @@ static ewf_result _ewf_adapter_thales_common_internet_socket_open(ewf_adapter* a
             if (ewf_result_failed(result)) return result;
         }
     }
-    else if (ewfl_str_equals_str(service_type_str, "udp_client"))
+    else if (ewfl_str_equals_str(service_type_str, "udp_client") 
+        || ewfl_str_equals_str(service_type_str, "udp_listener"))
     {
-        if (local_port)
+        if (server_str[0] == 0 && local_port && !remote_port)
         {
-            /* TODO: how to set the local port? */
-
+            result = ewf_interface_send_commands(
+                interface_ptr,
+                "AT^SISS=",
+                connection_id_cstr, ",",
+                "address,\"sockudp://:", local_port_cstr, "\"",
+                "\r",
+                NULL);
+            if (ewf_result_failed(result)) return result;
+        }
+        else if (local_port)
+        {
             result = ewf_interface_send_commands(
                 interface_ptr,
                 "AT^SISS=",
@@ -389,8 +450,6 @@ static ewf_result _ewf_adapter_thales_common_internet_socket_open(ewf_adapter* a
                 "address,\"sockudp://", server_str, ":", remote_port_cstr, ";port=", local_port_cstr, "\"",
                 "\r",
                 NULL);
-            if (ewf_result_failed(result)) return result;
-            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
             if (ewf_result_failed(result)) return result;
         }
         else
@@ -403,40 +462,10 @@ static ewf_result _ewf_adapter_thales_common_internet_socket_open(ewf_adapter* a
                 "\r",
                 NULL);
             if (ewf_result_failed(result)) return result;
-            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
-            if (ewf_result_failed(result)) return result;
         }
-    }
-    else if (ewfl_str_equals_str(service_type_str, "udp_listener"))
-    {
-        if (local_port)
-        {
-            /* TODO: how to set the local port? */
 
-            result = ewf_interface_send_commands(
-                interface_ptr,
-                "AT^SISS=",
-                connection_id_cstr, ",",
-                "address,\"sockudp://", server_str, ":", remote_port_cstr, ";port=", local_port_cstr, "\"",
-                "\r",
-                NULL);
-            if (ewf_result_failed(result)) return result;
-            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
-            if (ewf_result_failed(result)) return result;
-        }
-        else
-        {
-            result = ewf_interface_send_commands(
-                interface_ptr,
-                "AT^SISS=",
-                connection_id_cstr, ",",
-                "address,\"sockudp://", server_str, ":", remote_port_cstr, "\"",
-                "\r",
-                NULL);
-            if (ewf_result_failed(result)) return result;
-            result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
-            if (ewf_result_failed(result)) return result;
-        }
+        result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+        if (ewf_result_failed(result)) return result;
     }
 
     /* Open the connection */
@@ -598,6 +627,7 @@ ewf_result _ewf_adapter_thales_common_internet_socket_send(ewf_adapter* adapter_
                 "AT^SISW=",
                 connection_id_cstr, ",",
                 buffer_length_cstr, ",",
+                "0,",
                 "\"", remote_address_str, ":", remote_port_cstr, "\"\r",
                 NULL);
         }
@@ -891,7 +921,7 @@ ewf_result ewf_adapter_thales_common_tcp_listen(ewf_socket_tcp* socket_ptr)
     
     internet_socket_ptr->type = ewf_adapter_thales_common_internet_socket_service_type_tcp_listener;
     
-    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "tcp_listener", internet_socket_ptr->local_port, "127.0.0.1", 0 /* no remote port during service creation */);
+    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "tcp_listener", internet_socket_ptr->local_port, "" /* Empty string as localhost */, 0 /* no remote port during service creation */);
 }
 
 ewf_result ewf_adapter_thales_common_tcp_accept(ewf_socket_tcp* socket_ptr, ewf_socket_tcp* socket_new_ptr)
@@ -1037,7 +1067,7 @@ ewf_result ewf_adapter_thales_common_udp_bind(ewf_socket_udp* socket_ptr, uint32
 
     internet_socket_ptr->local_port = local_port;
 
-    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "udp_listener", internet_socket_ptr->local_port, "127.0.0.1", 0 /* No remote port during service creation */);
+    return _ewf_adapter_thales_common_internet_socket_open(adapter_ptr, internet_socket_ptr, "udp_listener", internet_socket_ptr->local_port, "" /* Empty string as localhost */, 0 /* No remote port during service creation */);
 }
 
 ewf_result ewf_adapter_thales_common_udp_shutdown(ewf_socket_udp* socket_ptr)

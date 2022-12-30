@@ -29,7 +29,7 @@ extern "C" {
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (4)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (512)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1600)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -69,6 +69,30 @@ extern "C" {
 #define EWF_CONFIG_CONTEXT_ID                                       (1)
 
 /** @} *** group_example_configuration_modem */
+
+/**
+ * @defgroup group_example_configuration_test Echo test configuration
+ * @brief Echo test configuration settings used in examples
+ * @{
+ */
+
+#define EWF_ADAPTER_TEST_TCP_HTTP_TEST_ENABLED                      1
+
+#define EWF_ADAPTER_TEST_TCP_ECHO_TEST_ENABLED                      1
+#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               ""
+#define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      4000
+#define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS                       0
+
+#define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             0
+
+#define EWF_ADAPTER_TEST_UDP_ECHO_TEST_ENABLED                      1
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               ""
+#define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
+#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS                       0 // (EWF_PLATFORM_TICKS_PER_SECOND * 100 / 1000)
+
+#define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             0
+
+/** @} *** group_example_configuration_test_echo */
 
 /************************************************************************//**
  * @}

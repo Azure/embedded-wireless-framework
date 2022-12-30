@@ -291,9 +291,12 @@ ewf_result _ewf_adapter_mxchip_common_internet_socket_open(ewf_adapter* adapter_
         parsed_service_type_str = ewfl_str_tok(NULL, seps_str, &next_token_str);
         parsed_status_str = ewfl_str_tok(NULL, seps_str, &next_token_str);
 
+        (void)event_str;
+        (void)parsed_service_type_str;
+
         uint8_t expected_status_str[] = "close";
         uint32_t expected_status_length = sizeof(expected_status_str) - 1;
-        bool ok_found = ewfl_buffer_equals_buffer(expected_status_str, parsed_status_str, expected_status_length);
+        bool ok_found = ewfl_buffer_equals_buffer(expected_status_str, (uint8_t*)parsed_status_str, expected_status_length);
 
         ewf_interface_release(interface_ptr, response_ptr);
 
@@ -386,17 +389,24 @@ ewf_result _ewf_adapter_mxchip_common_internet_socket_open(ewf_adapter* adapter_
         const char* seps_str = "\r\n+:,";
         char* next_token_str = NULL;
 
-        char* event_str = ewfl_str_tok(response_ptr, seps_str, &next_token_str);
+        char* event_str = ewfl_str_tok((char*)response_ptr, seps_str, &next_token_str);
         char* parsed_service_type_str = ewfl_str_tok(NULL, seps_str, &next_token_str);
         char* parsed_status_str = ewfl_str_tok(NULL, seps_str, &next_token_str);
 
+        (void)event_str;
+        (void)parsed_service_type_str;
+
         char expected_connecting_str[] = "connecting";
         uint32_t expected_status_length = sizeof(expected_connecting_str) - 1;
+
+        (void)expected_status_length;
 
         bool ok_found_connecting = ewfl_str_equals_str(expected_connecting_str, parsed_status_str);
 
         char expected_close_str[] = "connecting";
         uint32_t expected_close_length = sizeof(expected_close_str) - 1;
+
+        (void)expected_close_length;
 
         bool ok_found_close = ewfl_str_equals_str(expected_close_str, parsed_status_str);
 

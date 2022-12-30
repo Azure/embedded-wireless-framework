@@ -6,6 +6,7 @@
  * @brief The Embedded Wireless Framework Common Quectel adapter driver
  ****************************************************************************/
 
+#include "ewf_adapter_quectel_common_tokenizer.c"
 #include "ewf_adapter_quectel_common_control.c"
 #include "ewf_adapter_quectel_common_urc.c"
 #include "ewf_adapter_quectel_common_info.c"

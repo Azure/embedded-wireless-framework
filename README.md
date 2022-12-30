@@ -25,7 +25,7 @@ The framework defines common *control and data APIs* (ewf_adapter_api_*.h), impl
 
 **Host Interface Driver** (ewf_interface in the code) serves as an abstraction for the logical communication channel between a Network Adapter Driver and the Network Adapter.  This means that a Network Adapter Driver can be developed to be independent of the Host interface used by using the *interface API* (ewf_interface.h). For example, a cellular modem connected to the microcontroller over UART, SPI, USB or GPIO, can use the same Network Adapter Driver.
 
-**Platform*** The Embedded Wireless Framework is abstracted from the host operating platform software by a thin wrapper *platform API* (ewf_platform.h) that offers access to the functionality necessary to develop Network Adapter Drivers and Host Interface Drivers. On the initial phase platform implementations are provided for Azure RTOS, FreeRTOS, bare-metal, and Windows, with more planned.
+**Platform** The Embedded Wireless Framework is abstracted from the host operating platform software by a thin wrapper *platform API* (ewf_platform.h) that offers access to the functionality necessary to develop Network Adapter Drivers and Host Interface Drivers. On the initial phase platform implementations are provided for Azure RTOS, FreeRTOS, bare-metal, and Windows, with more planned.
 
 <p align="center">
 <a href="README_Architecture_Framework.jpg"><img src="README_Architecture_Framework.jpg" alt="Architecture" width="75%"/></a>
