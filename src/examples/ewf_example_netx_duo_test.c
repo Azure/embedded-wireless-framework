@@ -169,29 +169,37 @@ ewf_result ewf_example_netx_duo_test(ewf_adapter* adapter_ptr)
         return EWF_RESULT_NOT_SUPPORTED;
     }
 
+#if EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_TEST_ENABLED
     result = ewf_example_test_netx_duo_http(&ip_0);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("NetX-Duo HTTP test failed, result %d\n", result);
     }
-
+#endif
+    
+#if EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_TEST_ENABLED
     result = ewf_example_test_netx_duo_tcp_echo(&ip_0);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("NetX-Duo TCP echo test failed, result %d\n", result);
     }
+#endif
 
+#if EWF_EXAMPLE_NETX_DUO_TEST_UDP_DNS_TEST_ENABLED
     result = ewf_example_test_netx_duo_dns(&ip_0);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("NetX-Duo DNS test failed, result %d\n", result);
     }
+#endif
 
+#if EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_TEST_ENABLED
     result = ewf_example_test_netx_duo_udp_echo(&ip_0);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("NetX-Duo UDP echo test failed, result %d\n", result);
     }
+#endif
 
     return EWF_RESULT_OK;
 }
