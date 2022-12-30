@@ -55,16 +55,7 @@
 #include "ewf_adapter_api_modem_packet_domain.c"
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
-#include "ewf_adapter_quectel.c"
-#include "ewf_adapter_quectel_bg96_control.c"
-#include "ewf_adapter_quectel_bg96_info.c"
-#include "ewf_adapter_quectel_bg96_ufs.c"
-#include "ewf_adapter_quectel_bg96_urc.c"
-#include "ewf_adapter_quectel_bg96_tls_basic.c"
-#include "ewf_adapter_quectel_bg96_mqtt_basic.c"
-#include "ewf_adapter_quectel_bg96_internet.c"
-#include "ewf_adapter_quectel_bg96_tls.c"
-#include "ewf_adapter_quectel_bg96_mqtt.c"
+#include "ewf_adapter_quectel_bg96.c"
 
 #include "ewf_example.config.h"
 /* USER CODE END Includes */
@@ -123,7 +114,7 @@ void thread_sample_entry(ULONG thread_input)
 
     EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_ALLOCATOR_THREADX_STATIC_DECLARE(data_allocator_ptr, data_allocator, 4, 1500);
-    EWF_INTERFACE_STM32_UART_STATIC_DECLARE(interface_ptr, stm32_uart_port, &huart3); 
+    EWF_INTERFACE_STM32_UART_STATIC_DECLARE(interface_ptr, stm32_uart_port, &huart3);
     EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, data_allocator_ptr, interface_ptr);
 
     /* Start the adapter.  */

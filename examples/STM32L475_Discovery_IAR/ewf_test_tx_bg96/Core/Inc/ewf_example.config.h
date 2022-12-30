@@ -50,18 +50,28 @@ extern "C" {
 /** @} *** group_example_configuration_modem */
 
 /**
- * @defgroup group_example_configuration_iot_hub IoT Hub configuration
- * @brief IoT Hub configuration settings used in examples
+ * @defgroup group_example_configuration_test Echo test configuration
+ * @brief Echo test configuration settings used in examples
  * @{
  */
 
-/** @brief The IoT Hub hostname */
-#define EWF_CONFIG_IOT_HUB_HOSTNAME                                 ""
+#define EWF_ADAPTER_TEST_TCP_HTTP_TEST_ENABLED                      1
 
-/** @brief The device ID */
-#define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
+#define EWF_ADAPTER_TEST_TCP_ECHO_TEST_ENABLED                      1
+#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-tcp.westus.azurecontainer.io"
+#define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      4000
+#define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS                       0
 
-/** @} *** group_example_configuration_iot_hub */
+#define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             0
+
+#define EWF_ADAPTER_TEST_UDP_ECHO_TEST_ENABLED                      0
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-udp.westus.azurecontainer.io"
+#define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
+#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS                       0
+
+#define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             0
+
+/** @} *** group_example_configuration_test_echo */
 
 /************************************************************************//**
  * @}
