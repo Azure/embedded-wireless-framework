@@ -7,7 +7,6 @@
  ****************************************************************************/
 
 #include "ewf_adapter_simcom_sim900.h"
-#include "ewf_adapter_simcom_common.c"
 
 ewf_adapter_api_control ewf_adapter_simcom_sim900_api_control =
 {

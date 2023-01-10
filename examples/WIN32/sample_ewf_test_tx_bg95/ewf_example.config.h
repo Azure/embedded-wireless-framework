@@ -3,8 +3,7 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @details
- * The Embedded Wireless Framework example configuration.
+ * @brief The Embedded Wireless Framework example configuration.
  ****************************************************************************/
 
 
@@ -28,7 +27,7 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (32)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
 
 /** @brief the size of each message allocator block */
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (512 * 3)
@@ -79,12 +78,12 @@ extern "C" {
  */
 
 #define EWF_ADAPTER_TEST_TCP_HTTP_TEST_ENABLED                      0
-#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-tcp.westus.azurecontainer.io"
+#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               ""
 #define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      4000
 #define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             0
 #define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS                       0
 
-#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               "andrejm-ewf-socat-udp.westus.azurecontainer.io"
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               ""
 #define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
 #define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             0
 #define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS                       0

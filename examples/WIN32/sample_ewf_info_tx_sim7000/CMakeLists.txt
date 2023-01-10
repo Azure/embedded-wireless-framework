@@ -54,6 +54,9 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_simcom_sim7000.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_simcom_sim7000.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_simcom_common_control.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_simcom_common_urc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_simcom_common_info.c
     ewf.config.h
     ewf_example.config.h
     sample_info.c)

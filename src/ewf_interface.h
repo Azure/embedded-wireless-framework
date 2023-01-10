@@ -202,6 +202,13 @@ do {                                                                            
 #define EWF_INTERFACE_VALIDATE_POINTER_TYPE(interface_ptr, interface_type)
 #endif
 
+/**
+ * @brief Maximum wait time for the interface to get response from the adapter
+ */
+#ifndef EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS
+#define EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS    (20000)
+#endif
+
 /************************************************************************//**
  * @defgroup group_interface_common Common Interface API
  * @brief Common interface functions

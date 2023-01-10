@@ -43,10 +43,10 @@ extern "C" {
 #define EWF_CONFIG_ENDPOINT                                         "global.azure-devices-provisioning.net"
 
 /** @brief The ID Scope value used by Provisioning service */
-#define EWF_CONFIG_ID_SCOPE                                         "0ne007EFCE4"
+#define EWF_CONFIG_ID_SCOPE                                         ""
 
 /** @brief The Device ID provide when creating a device on IoT Central */
-#define EWF_CONFIG_REGISTRATION_ID                                  "bhnaphad-ewf-iot-central-demo4-dev1"
+#define EWF_CONFIG_REGISTRATION_ID                                  ""
 
 /** @} *** group_example_configuration_iot_central */
 /**

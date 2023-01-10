@@ -220,6 +220,7 @@ add_subdirectory(sample_ewf_telemetry_basic_tx_ryz024a)
 
 # ThreadX
 add_subdirectory(sample_ewf_info_tx_sim7000)
+add_subdirectory(sample_ewf_test_tx_sim7000)
 
 #######################################
 # SIM7000
