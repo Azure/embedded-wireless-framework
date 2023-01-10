@@ -1085,7 +1085,7 @@ ewf_result ewf_adapter_renesas_common_udp_send_to(ewf_socket_udp* socket_ptr, co
         buffer_ptr, buffer_length);
 }
 
-ewf_result ewf_adapter_renesas_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address_str, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
+ewf_result ewf_adapter_renesas_common_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address_str, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait)
 {
     EWF_PARAMETER_NOT_USED(remote_address_str);
     EWF_PARAMETER_NOT_USED(remote_address_length_ptr);
