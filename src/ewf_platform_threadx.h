@@ -22,9 +22,9 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_platform_threadx The ThreadX platform
+ * @defgroup group_platform_threadx ThreadX platform
  * @ingroup group_platform
- * @brief The ThreadX platform
+ * @brief ThreadX platform
  * @{
  ****************************************************************************/
 
@@ -32,7 +32,7 @@ extern "C" {
  * @defgroup group_configuration_platform_threadx Platform configuration (ThreadX)
  * @ingroup group_configuration
  * @ingroup group_platform
- * @brief The definitions used to configure the Azure SD-NET platform.
+ * @brief The definitions used to configure the platform.
  * @{
  ****************************************************************************/
 

@@ -127,21 +127,19 @@ ewf_result ewf_adapter_thales_common_get_ipv4_address(ewf_adapter* adapter_ptr, 
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QIACT?\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+CGPADDR=", "1","\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 1 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
 
     if (response_ptr)
     {
         int context_id;
-        int context_state;
-        int context_type;
         int address_a;
         int address_b;
         int address_c;
         int address_d;
-        int fields = sscanf((char *) response_ptr, "\r\n+QIACT: %d,%d,%d,\"%d.%d.%d.%d\"", &context_id, &context_state, &context_type, &address_a, &address_b, &address_c, &address_d);
+        int fields = sscanf((char *) response_ptr, "\r\n+CGPADDR: %d,\"%d.%d.%d.%d\"", &context_id, &address_a, &address_b, &address_c, &address_d);
         ewf_interface_release(interface_ptr, response_ptr);
-        if (fields !=7)
+        if (fields != 5)
         {
             EWF_LOG_ERROR("Unexpected response format.\n");
             return EWF_RESULT_UNEXPECTED_RESPONSE;
@@ -205,34 +203,29 @@ ewf_result ewf_adapter_thales_common_get_ipv4_dns(ewf_adapter* adapter_ptr, uint
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QIDNSCFG=1\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+CGCONTRDP=1\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 1 * EWF_PLATFORM_TICKS_PER_SECOND))) return result;
 
     if (response_ptr)
     {
-        int context_id;
-
         int dns1_a;
         int dns1_b;
         int dns1_c;
         int dns1_d;
 
-        int dns2_a;
-        int dns2_b;
-        int dns2_c;
-        int dns2_d;
+        char* save_ptr = NULL;
 
-        int fields = sscanf(
-            (char *) response_ptr,
-            "\r\n+QIDNSCFG: %d,\"%d.%d.%d.%d\",\"%d.%d.%d.%d\"",
-            &context_id,
-            &dns1_a, &dns1_b, &dns1_c, &dns1_d,
-            &dns2_a, &dns2_b, &dns2_c, &dns2_d);
-        if (fields !=9)
-        {
-            EWF_LOG_ERROR("Unexpected response format.\n");
-            return EWF_RESULT_UNEXPECTED_RESPONSE;
-        }
+        char* tok_str = NULL;
+
+        tok_str = ewfl_str_tok(response_ptr, ",", &save_ptr);
+        tok_str = ewfl_str_tok(NULL, ",", &save_ptr);
+        tok_str = ewfl_str_tok(NULL, ",", &save_ptr);
+        tok_str = ewfl_str_tok(NULL, ",", &save_ptr);
+        tok_str = ewfl_str_tok(NULL, ",", &save_ptr);
+        tok_str = ewfl_str_tok(NULL, ",", &save_ptr);
+        tok_str = ewfl_str_tok(NULL, ",", &save_ptr);
+
+        sscanf(tok_str, "\"%d.%d.%d.%d\"", &dns1_a, &dns1_b, &dns1_c, &dns1_d);
 
         *dns =
             ((dns1_a & 0xFF) << 24) |

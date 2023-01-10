@@ -43,7 +43,7 @@ extern "C" {
  ****************************************************************************/
 
 /************************************************************************//**
- * @defgroup group_adapter_winsock2 The WinSock2 adapter driver
+ * @defgroup group_adapter_winsock2 WinSock2 adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/

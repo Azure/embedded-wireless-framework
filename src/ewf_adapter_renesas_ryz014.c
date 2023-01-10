@@ -7,7 +7,6 @@
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_ryz014.h"
-#include "ewf_adapter_renesas_common.c"
 
 ewf_adapter_api_control ewf_adapter_renesas_ryz014_api_control =
 {

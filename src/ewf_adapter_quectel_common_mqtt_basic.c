@@ -213,7 +213,6 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_urc_callback(ewf_interface* int
                         char* q1 = NULL;
                         char* q2 = NULL;
                         char* q3 = NULL;
-                        char* q4 = NULL;
                         char* p = parse_str;
 
                         q1 = ewfl_find_chars_with_terms(p, "\"", NULL);
@@ -573,7 +572,8 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_publish(ewf_adapter* adapter_pt
         if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QMTPUB=0,0,0,0,\"", topic_cstr, "\",", ewfl_unsigned_to_str(message_length, message_length_str, sizeof(message_length_str)), "\r", NULL))) return result;
         uint8_t* response_ptr = NULL;
         if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_ptr))) return result;
-        if (!ewfl_buffer_equals_buffer(tokenizer_pattern1_str, response_ptr, sizeof(tokenizer_pattern1_str) - 1) && !ewfl_buffer_equals_buffer(tokenizer_pattern2_str, response_ptr, sizeof(tokenizer_pattern2_str) - 1))
+        if (!ewfl_buffer_equals_buffer((uint8_t*)tokenizer_pattern1_str, response_ptr, sizeof(tokenizer_pattern1_str) - 1) &&
+        	!ewfl_buffer_equals_buffer((uint8_t*)tokenizer_pattern2_str, response_ptr, sizeof(tokenizer_pattern2_str) - 1))
         {
             ewf_interface_release(interface_ptr, response_ptr);
             return EWF_RESULT_UNEXPECTED_RESPONSE;

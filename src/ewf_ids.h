@@ -35,6 +35,7 @@
 #define EWF_DEVELOPER_UBLOX                        (0x00090000)
 #define EWF_DEVELOPER_ESPRESSIF                    (0x000A0000)
 #define EWF_DEVELOPER_WIZNET                       (0x000B0000)
+#define EWF_DEVELOPER_MXCHIP                       (0x000C0000)
 
 #define EWF_DEVELOPER_ANONYMOUS                    (0xFFFF0000)
 
@@ -68,6 +69,7 @@
 #define EWF_ADAPTER_TYPE_SEEED_LORA_E5             (EWF_DEVELOPER_MICROSOFT | 0x0014)
 #define EWF_ADAPTER_TYPE_SIMCOM_SIM900             (EWF_DEVELOPER_MICROSOFT | 0x0015)
 #define EWF_ADAPTER_TYPE_THALES_EXS82_W            (EWF_DEVELOPER_MICROSOFT | 0x0016)
+#define EWF_ADAPTER_TYPE_MXCHIP_EMW3080B           (EWF_DEVELOPER_MICROSOFT | 0x0004)
 
 /** @} *** group_ewf_ids_adapter */
 

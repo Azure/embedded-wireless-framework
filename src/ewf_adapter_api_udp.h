@@ -71,7 +71,7 @@ typedef struct _ewf_adapter_api_udp
     ewf_result(*bind)(ewf_socket_udp* socket_ptr, uint32_t local_port);
     ewf_result(*shutdown)(ewf_socket_udp* socket_ptr);
     ewf_result(*send_to)(ewf_socket_udp* socket_ptr, const char* remote_address_str, uint32_t remote_port, const uint8_t* buffer_ptr, uint32_t buffer_length);
-    ewf_result(*receive_from)(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
+    ewf_result(*receive_from)(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
 
 } ewf_adapter_api_udp;
 
@@ -145,7 +145,7 @@ ewf_result ewf_adapter_udp_send_to(ewf_socket_udp* socket_ptr, const char* remot
  * @param[in] wait a boolean indicating if the function should wait until data is available, true wait, false return immediately
  * @return #ewf_result success and error conditions
  */
-ewf_result ewf_adapter_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, char* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
+ewf_result ewf_adapter_udp_receive_from(ewf_socket_udp* socket_ptr, char* remote_address, uint32_t* remote_address_length_ptr, uint32_t* remote_port_ptr, uint8_t* buffer_ptr, uint32_t* buffer_length_ptr, bool wait);
 
 /**
  * @brief Register a user UDP receive callback function

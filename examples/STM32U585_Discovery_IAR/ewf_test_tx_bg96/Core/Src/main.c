@@ -54,19 +54,11 @@
 #include "ewf_adapter_api_modem_packet_domain.c"
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
-#include "ewf_adapter_quectel.c"
-#include "ewf_adapter_quectel_bg96_control.c"
-#include "ewf_adapter_quectel_bg96_info.c"
-#include "ewf_adapter_quectel_bg96_ufs.c"
-#include "ewf_adapter_quectel_bg96_urc.c"
-#include "ewf_adapter_quectel_bg96_tls_basic.c"
-#include "ewf_adapter_quectel_bg96_mqtt_basic.c"
-#include "ewf_adapter_quectel_bg96_internet.c"
-#include "ewf_adapter_quectel_bg96_tls.c"
-#include "ewf_adapter_quectel_bg96_mqtt.c"
+#include "ewf_adapter_quectel_bg96.c"
 
 #include "ewf_example.config.h"
 #include "ewf_adapter_quectel_bg96_test.c"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

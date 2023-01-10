@@ -30,7 +30,7 @@ extern "C" {
  ****************************************************************************/
 
 /************************************************************************//**
- * @defgroup group_adapter_seeed_lora_e5 The Seeed LoRa-E5 adapter driver
+ * @defgroup group_adapter_seeed_lora_e5 Seeed LoRa-E5 adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/

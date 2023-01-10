@@ -2,6 +2,9 @@
 
 #include "ewf_example.config.h"
 
+/* Inclusion of .c files is for demo purposes only.
+ * In production code, please compile the below .c files as you would do for other source files :
+ * In your IDE add the files to your project, in your make files add the files to your source list, etc.. */
 #include "ewf_lib.c"
 #include "ewf_platform_bare_metal.c"
 #include "ewf_allocator.c"
@@ -20,6 +23,13 @@
 #include "ewf_adapter_api_modem_network_service.c"
 #include "ewf_adapter_sequans.c"
 #include "ewf_adapter_renesas_ryz014.c"
+#include "ewf_adapter_renesas_common_control.c"
+#include "ewf_adapter_renesas_common_info.c"
+#include "ewf_adapter_renesas_common_urc.c"
+#include "ewf_adapter_renesas_common_internet.c"
+#include "ewf_adapter_renesas_common_nvm.c"
+#include "ewf_adapter_renesas_common_mqtt_basic.c"
+#include "ewf_adapter_renesas_common_tls_basic.c"
 
 #include "ewf_example_certs_basic_renesas_ryz014.c"
 

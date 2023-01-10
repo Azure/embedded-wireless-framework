@@ -15,8 +15,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#define EWF_MAX_RESPONSE_WAIT_TICKS 15000
-
 /************************************************************************//**
  *
  * Internal function declarations
@@ -573,7 +571,11 @@ ewf_result ewf_interface_urc_processing(ewf_interface* interface_ptr)
     uint8_t* buffer_ptr;
     uint32_t buffer_length;
 
-    result = ewf_interface_receive_urc(interface_ptr, &buffer_ptr, &buffer_length, 0);
+    result = ewf_interface_receive_urc(
+        interface_ptr, 
+        &buffer_ptr, 
+        &buffer_length, 
+        0 /* No wait*/);
     if (ewf_result_failed(result))
     {
         if (result != EWF_RESULT_EMPTY_QUEUE)
@@ -612,10 +614,11 @@ ewf_result ewf_interface_urc_process_message(ewf_interface* interface_ptr, uint8
 
     if (interface_ptr->urc_callback)
     {
-        if (ewf_result_failed(result = interface_ptr->urc_callback(
+        result = interface_ptr->urc_callback(
             interface_ptr,
             interface_ptr->current_message.buffer_ptr,
-            interface_ptr->current_message.buffer_length)))
+            interface_ptr->current_message.buffer_length);
+        if (ewf_result_failed(result))
         {
             EWF_LOG_ERROR("The URC callback failed: ewf_result %d.\n", result);
         }
@@ -623,10 +626,11 @@ ewf_result ewf_interface_urc_process_message(ewf_interface* interface_ptr, uint8
 
     if (interface_ptr->user_urc_callback)
     {
-        if (ewf_result_failed(result = interface_ptr->user_urc_callback(
+        result = interface_ptr->user_urc_callback(
             interface_ptr,
             interface_ptr->current_message.buffer_ptr,
-            interface_ptr->current_message.buffer_length)))
+            interface_ptr->current_message.buffer_length);
+        if (ewf_result_failed(result))
         {
             EWF_LOG_ERROR("The user URC callback failed: ewf_result %d.\n", result);
         }
@@ -655,7 +659,7 @@ static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface*
         {
             bool stop = false;
             if (pattern_ptr->match_function(
-                (const char*)interface_ptr->current_message.buffer_ptr,
+                interface_ptr->current_message.buffer_ptr,
                 interface_ptr->current_message.buffer_length,
                 pattern_ptr,
                 &stop))
@@ -869,6 +873,29 @@ ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
     return EWF_RESULT_OK;
 }
 
+ewf_result ewf_interface_process_buffer(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
+{
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    ewf_result result;
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+    if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
+    {
+        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+    if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
+    {
+        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
+
+    return EWF_RESULT_OK;
+}
+
 /************************************************************************//**
  *
  * Polling
@@ -1032,7 +1059,7 @@ ewf_result ewf_interface_drop_response(ewf_interface* interface_ptr)
     ewf_result result;
     uint8_t * response = NULL;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, NULL, EWF_MAX_RESPONSE_WAIT_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, NULL, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.\n");
@@ -1058,7 +1085,7 @@ ewf_result ewf_interface_get_response(ewf_interface* interface_ptr, uint8_t ** r
     ewf_result result;
     uint8_t * response = NULL;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, NULL, EWF_MAX_RESPONSE_WAIT_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, NULL, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.\n");
@@ -1086,7 +1113,7 @@ ewf_result ewf_interface_verify_response(ewf_interface* interface_ptr, const cha
     uint8_t * response = NULL;
     uint32_t response_legth;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_MAX_RESPONSE_WAIT_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.\n");
@@ -1124,7 +1151,7 @@ ewf_result ewf_interface_verify_responses(ewf_interface* interface_ptr, uint32_t
     uint32_t response_legth;
     uint8_t i;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_MAX_RESPONSE_WAIT_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.\n");
@@ -1160,7 +1187,7 @@ ewf_result ewf_interface_verify_response_starts_with(ewf_interface* interface_pt
     uint8_t * response = NULL;
     uint32_t response_legth;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_MAX_RESPONSE_WAIT_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.");
@@ -1197,7 +1224,7 @@ ewf_result ewf_interface_verify_response_ends_with(ewf_interface* interface_ptr,
     uint8_t* response = NULL;
     uint32_t response_legth;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_MAX_RESPONSE_WAIT_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.");

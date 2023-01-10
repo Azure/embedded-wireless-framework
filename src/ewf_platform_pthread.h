@@ -22,16 +22,16 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @defgroup group_platform_pthread The POSIX threads platform
+ * @defgroup group_platform_pthread POSIX threads platform (pthread)
  * @ingroup group_platform
- * @brief The POSIX threads platform
+ * @brief POSIX threads platform (pthread)
  * @{
  ****************************************************************************/
 
 /************************************************************************//**
- * @defgroup group_configuration_platform_pthread Platform configuration (pthreads)
+ * @defgroup group_configuration_platform_pthread POSIX threads (pthread) platform configuration
  * @ingroup group_configuration
- * @brief The definitions used to configure the EWF POSIX threads platform.
+ * @brief The definitions used to configure the EWF POSIX threads (pthread) platform.
  * @{
  ****************************************************************************/
 

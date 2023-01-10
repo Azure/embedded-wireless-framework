@@ -39,6 +39,9 @@
 #include "sample_config.h"
 #include "ewf_example.config.h"
 
+/* Inclusion of .c files is for demo purposes only.
+ * In production code, please compile the below .c files as you would do for other source files :
+ * In your IDE add the files to your project, in your make files add the files to your source list, etc.. */
 #include "ewf_lib.c"
 #include "ewf_platform_threadx.c"
 #include "ewf_allocator.c"
@@ -59,8 +62,18 @@
 #include "ewf_adapter_api_modem_network_service.c"
 #include "ewf_adapter_sequans.c"
 #include "ewf_adapter_renesas_ryz014.c"
+#include "ewf_adapter_renesas_common_control.c"
+#include "ewf_adapter_renesas_common_info.c"
+#include "ewf_adapter_renesas_common_urc.c"
+#include "ewf_adapter_renesas_common_internet.c"
+#include "ewf_adapter_renesas_common_nvm.c"
+#include "ewf_adapter_renesas_common_mqtt_basic.c"
+#include "ewf_adapter_renesas_common_tls_basic.c"
 
 #include "ewf_middleware_netxduo.c"
+
+/* Modem might take some minutes to attach and register to the network. Time out value in seconds */
+#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (1200)
 
 char ewf_log_buffer[1024];
 
@@ -155,16 +168,18 @@ void application_thread_entry(void)
     }
 
     // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
     {
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
         return;
     }
+    /* Wait time for modem to be ready after modem functionality set to full */
     ewf_platform_sleep(200);
 
     /* Wait for the modem to be registered to network
      * Refer system integration guide for more info */
-    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr,  EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, (uint32_t)-1));
+    while(EWF_RESULT_OK!=ewf_adapter_modem_network_registration_check(adapter_ptr,  EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT));
+    /* Wait time for modem to be ready after modem is registered to network */
     ewf_platform_sleep(200);
 
     /* Disable network Registration URC */

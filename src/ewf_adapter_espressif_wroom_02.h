@@ -63,7 +63,7 @@ extern "C" {
 #include "ewf_adapter_espressif_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_espressif_wroom_02 The ESPRESSIF WROOM_02 adapter driver
+ * @defgroup group_adapter_espressif_wroom_02 ESPRESSIF WROOM_02 adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/

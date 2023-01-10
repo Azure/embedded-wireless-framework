@@ -12,8 +12,8 @@
 /************************************************************************//**
  * Define the Doxygen groups order
  * @defgroup group_ewf_ids
- * @defgroup group_configuration The EWF configurable settings
- * @brief The EWF configurable settings
+ * @defgroup group_configuration EWF configurable settings
+ * @brief EWF configurable settings
  * @defgroup group_ewf
  * @defgroup group_lib
  * @defgroup group_adapter_api
@@ -33,7 +33,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <inttypes.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -170,39 +169,39 @@ do {                                                                            
 /** @} // group_ewf_logging */
 
 /**
- * @defgroup group_ewf_types The EWF types
- * @brief The EWF types
+ * @defgroup group_ewf_types EWF types
+ * @brief EWF types
  * @{
  */
 
-/** @brief The adapter struct type declaration */
+/** @brief Adapter structure type declaration */
 struct _ewf_adapter;
 
-/** @brief The adapter type definition */
+/** @brief Adapter type definition */
 typedef struct _ewf_adapter ewf_adapter;
 
-/** @brief The interface structure declaration */
+/** @brief Interface structure declaration */
 struct _ewf_interface;
 
-/** @brief The interface type definition */
+/** @brief Interface type definition */
 typedef struct _ewf_interface ewf_interface;
 
-/** @breif The allocator structure declaration */
+/** @breif Allocator structure declaration */
 struct _ewf_allocator;
 
-/** @breif The allocator type definition */
+/** @breif Allocator type definition */
 typedef struct _ewf_allocator ewf_allocator;
 
-/** @brief The interface message structure declaration */
+/** @brief Interface message structure declaration */
 struct _ewf_message;
 
-/** @brief The interface message structure type definition */
+/** @brief Interface message structure type definition */
 typedef struct _ewf_message ewf_message;
 
-/** @brief The interface tokenizer pattern structure declaration */
+/** @brief Interface tokenizer pattern structure declaration */
 struct _ewf_tokenizer_pattern;
 
-/** @brief The interface tokenizer pattern structure type definition */
+/** @brief Interface tokenizer pattern structure type definition */
 typedef struct _ewf_tokenizer_pattern ewf_tokenizer_pattern;
 
 /** @} // group_ewf_types */
@@ -210,8 +209,8 @@ typedef struct _ewf_tokenizer_pattern ewf_tokenizer_pattern;
 /* Disable warning of parameter not used. */
 
 /**
- * @defgroup group_ewf_utils The EWF utilities
- * @brief The EWF utilities
+ * @defgroup group_ewf_utils EWF utilities
+ * @brief EWF utilities
  * @{
  */
 

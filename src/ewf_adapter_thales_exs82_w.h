@@ -91,7 +91,7 @@ extern "C" {
 #include "ewf_adapter_thales_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_thales_exs82_w The Thales Cinterion EXS82-W modem adapter driver
+ * @defgroup group_adapter_thales_exs82_w Thales Cinterion EXS82-W modem adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/

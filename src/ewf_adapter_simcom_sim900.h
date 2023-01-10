@@ -65,7 +65,7 @@ extern "C" {
 #include "ewf_adapter_simcom_common.h"
 
 /************************************************************************//**
- * @defgroup group_adapter_simcom_sim900 The SIMCom SIM900 modem adapter driver
+ * @defgroup group_adapter_simcom_sim900 SIMCom SIM900 modem adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/

@@ -21,7 +21,7 @@ extern icu_instance_ctrl_t pushButtonS2_ctrl;
 extern const external_irq_cfg_t pushButtonS2_cfg;
 
 #ifndef pb_callback
-void pb_callback(external_irq_callback_args_t *p_args);
+void pb_callback(external_irq_callback_args_t * p_args);
 #endif
 /** External IRQ on ICU Instance. */
 extern const external_irq_instance_t pushButtonS1;
@@ -31,7 +31,7 @@ extern icu_instance_ctrl_t pushButtonS1_ctrl;
 extern const external_irq_cfg_t pushButtonS1_cfg;
 
 #ifndef pb_callback
-void pb_callback(external_irq_callback_args_t *p_args);
+void pb_callback(external_irq_callback_args_t * p_args);
 #endif
 /* IOPORT Instance */
 extern const ioport_instance_t g_ioport;

@@ -3,10 +3,8 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @details
- * The Embedded Wireless Framework example configuration.
+ * @brief The Embedded Wireless Framework example configuration.
  ****************************************************************************/
-
 
 #ifndef __ewf_example_conf__h__included__
 #define __ewf_example_conf__h__included__
@@ -72,14 +70,24 @@ extern "C" {
 
 /** @} *** group_example_configuration_modem */
 
-/** @brief The test server hostname */
-#define EWF_CONFIG_TEST_SERVER_HOSTNAME                             (andrejm-ewf-test-server.azurewebsites.net)
+/**
+ * @defgroup group_example_configuration_test_echo Echo test configuration
+ * @brief Echo test configuration settings used in examples
+ * @{
+ */
 
-/** @brief The test server TCP port */
-#define EWF_CONFIG_TEST_SERVER_TCP_PORT                             (7770)
+#define EWF_ADAPTER_TEST_TCP_HTTP_TEST_ENABLED                      0
+#define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               ""
+#define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      4000
+#define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             0
+#define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS                       0
 
-/** @brief The test server UDP port */
-#define EWF_CONFIG_TEST_SERVER_UDP_PORT                             (7780)
+#define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               ""
+#define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
+#define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             0
+#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS                       0
+
+/** @} *** group_example_configuration_test_echo */
 
 /************************************************************************//**
  * @}

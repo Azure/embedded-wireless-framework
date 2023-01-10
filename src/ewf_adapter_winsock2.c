@@ -103,7 +103,7 @@ ewf_result ewf_adapter_winsock2_start(ewf_adapter* adapter_ptr)
                 implementation_ptr->ipv4_netmask.S_un.S_un_b.s_b4 = a;
 
                 /* Add a default DNS */
-#if 1
+#if 0
                 implementation_ptr->ipv4_dns.S_un.S_un_b.s_b1 = 8;
                 implementation_ptr->ipv4_dns.S_un.S_un_b.s_b2 = 8;
                 implementation_ptr->ipv4_dns.S_un.S_un_b.s_b3 = 8;

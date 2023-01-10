@@ -43,7 +43,7 @@ extern "C" {
  ****************************************************************************/
 
 /************************************************************************//**
- * @defgroup group_adapter_bsd_sockets The BSD sockets adapter driver
+ * @defgroup group_adapter_bsd_sockets BSD sockets adapter driver
  * @ingroup group_adapter
  * @{
  ****************************************************************************/
