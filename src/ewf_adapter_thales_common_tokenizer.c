@@ -65,7 +65,7 @@ static ewf_interface_tokenizer_pattern ewf_adapter_thales_common_command_respons
     false,
 };
 
-static ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_command_response_end_tokenizer_pattern_ptr = &ewf_adapter_thales_common_command_response_end_tokenizer_pattern1;
+ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_command_response_end_tokenizer_pattern_ptr = &ewf_adapter_thales_common_command_response_end_tokenizer_pattern1;
 
 /************************************************************************//**
  * command response tokenizer pattern list
@@ -81,7 +81,7 @@ static ewf_interface_tokenizer_pattern ewf_adapter_thales_common_command_respons
     false,
 };
 
-static ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_command_response_tokenizer_pattern_ptr = &ewf_adapter_thales_common_command_response_tokenizer_pattern1;
+ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_command_response_tokenizer_pattern_ptr = &ewf_adapter_thales_common_command_response_tokenizer_pattern1;
 
 /************************************************************************//**
  * URC tokenizer pattern list
@@ -97,7 +97,7 @@ static ewf_interface_tokenizer_pattern ewf_adapter_thales_common_urc_tokenizer_p
     false,
 };
 
-static ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_urc_tokenizer_pattern_ptr = &ewf_adapter_thales_common_urc_tokenizer_pattern1;
+ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_urc_tokenizer_pattern_ptr = &ewf_adapter_thales_common_urc_tokenizer_pattern1;
 
 /************************************************************************//**
  * Message tokenizer pattern list
