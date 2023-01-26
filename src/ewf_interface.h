@@ -61,6 +61,11 @@ typedef ewf_result(*ewf_interface_response_callback)(ewf_interface* interface_pt
  */
 typedef ewf_result(*ewf_interface_urc_callback)(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t length);
 
+/**
+ * @brief a function pointer type for data mode callbacks
+ */
+typedef ewf_result(*ewf_interface_data_mode_callback)(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t length);
+
 /** @brief The interface structure definition */
 struct _ewf_interface
 {
@@ -78,6 +83,9 @@ struct _ewf_interface
 
     /**< Internal reception mode: command or URC */
     volatile bool command_mode;
+
+    /**< Adapter operation mode: data or command mode */
+    volatile bool data_mode;
 
     /**< URC processing policy: synchronous or asynchronous */
     volatile bool sync_urc_processing;
@@ -107,6 +115,9 @@ struct _ewf_interface
 
     /**< Pointers to the user URC callbacks */
     ewf_interface_urc_callback user_urc_callback;
+
+    /**< Pointers to the data mode callback */
+    ewf_interface_data_mode_callback data_mode_callback;
 
     /* *** Allocators *** */
 
@@ -508,6 +519,13 @@ ewf_result ewf_interface_set_urc_callback(ewf_interface* interface_ptr, ewf_inte
  * @return #ewf_result success and error conditions
  */
 ewf_result ewf_interface_set_user_urc_callback(ewf_interface* interface_ptr, ewf_interface_urc_callback callback);
+
+/**
+ * @brief register a user callback for URC
+ * @return #ewf_result success and error conditions
+ */
+ewf_result ewf_interface_set_data_mode_callback(ewf_interface* interface_ptr, ewf_interface_data_mode_callback callback);
+
 
 /************************************************************************//**
  * @} *** group_interface_callback

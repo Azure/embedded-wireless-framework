@@ -92,3 +92,20 @@ Wait until you see telemetry message sending logs on the RTT viewer terminal.
 > _NOTE:_
 Device posistioning service (ENABLE_DPS_SAMPLE) part of the examples is not tested. It will be tested and available in future updates.
 
+# Examples using Azure RTOS NetX Duo PPP with EWF (Modem in Data mode)
+1. Acquire the necessary hardware and software: the Evaluation Kit EK-RA6M4, a Renesas RYZ0124A PMOD, e2-studio with FSP 3.5 or newer, J-Link RTT viewer)
+2. Connect to RYZ024A PMOD to EK-RA6M4 board on PMOD2 connector. Connect Micro USB cable to USB Debug pin (DEBUG 1) and another USB cable to RYZ014A micro USB pin. 
+3. Open the ewf_netx_duo_ppp_ryz024a project in e2studio and edit the ewf_example.config.h to update the EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,  
+   EWF_CONFIG_SIM_PIN and EWF_CONFIG_SIM_APN.
+4. Open J-Link RTT Viewer for viewing debug information.   
+5. Build and Run the ewf_netx_duo_ppp_ryz024a. Observe the logs in RTT viewer.
+
+> _NOTE:_
+>1. The UDP echo test code is disabled in the ewf_example_test_netx_duo_ppp.c file.  
+    If you have a UDP echo test server update the ewf_example_test_netx_duo_udp_echo_server_ip value  
+	with the address of your UDP test server and enable the UDP test in ewf_example_ppp_mode_netx_duo_test function.  
+>2. Some tests might fail if there was not packet received within the expexted time frame of the test code.
+>3. If the application gets terminated abruptly when the modem has entered data mode, the modem must be power reset before  
+    running the application again. Alternatively you can send "+++" from any serial terminal to exit the modem from data mode  
+	and rerun the application. This will be improved in the next update for EWF.  
+	

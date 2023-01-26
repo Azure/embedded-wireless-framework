@@ -168,8 +168,9 @@ ewf_result ewf_adapter_quectel_common_get_ipv4_address(ewf_adapter* adapter_ptr,
         int address_b;
         int address_c;
         int address_d;
-        int fields = sscanf((char *) response_ptr, "\r\n+QIACT: %d,%d,%d,\"%d.%d.%d.%d\"", &context_id, &context_state, &context_type, &address_a, &address_b, &address_c, &address_d);
-        ewf_interface_release(interface_ptr, response_ptr);
+        int fields = sscanf((char *) response_ptr, "\r\n+QIACT: %d,%d,%d,\"%d.%d.%d.%d\"",
+                &context_id, &context_state, &context_type,
+                &address_a, &address_b, &address_c, &address_d);ewf_interface_release(interface_ptr, response_ptr);
         if (fields !=7)
         {
             EWF_LOG_ERROR("Unexpected response format.\n");

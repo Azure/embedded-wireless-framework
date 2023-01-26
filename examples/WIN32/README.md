@@ -1,40 +1,47 @@
-# The Embedded Wireless Framework (EWF) examples on x86/WIN32 (Windows) using CMake and/or Visual Studio
+# The Embedded Wireless Framework (EWF) example projects on x86/WIN32 (Windows) using CMake and/or Visual Studio
 
 *There are examples for Azure RTOS also in this directory. Go to the next section for more details.*
 
 ## Overview
 
-This directory contains a set of examples for the [Embedded Wireless Framework](https://github.com/Azure/embedded-wireless-framework) on x86/WIN32 (Windows) using CMake and/or Visual Studio.
+This directory contains a set of example projects for the [Embedded Wireless Framework](https://github.com/Azure/embedded-wireless-framework) on x86/WIN32 (Windows) using CMake and/or Visual Studio.
 
 ## Prerequisites
 
-- A PC running Microsoft Windows (Windows 10 recommended)
-- For some examples (telemetry to Azure IoT Hub) you will need an Azure subscription. If you don't have an Azure subscription, [create one for free](https://azure.microsoft.com/free/) before you begin.
+- A PC running Microsoft Windows (Windows 10 or newer recommended)
 - Internet connectivity for your PC.
+- For some example projects (telemetry to Azure IoT Hub and other Azure examples) you will need an Azure subscription. If you don't have an Azure subscription, [create one for free](https://azure.microsoft.com/free/).
 
 ## Prepare the development environment
 
 - Toolchain: [Visual Studio](https://visualstudio.com) and cmake. You can use any edition of Visual Studio, version 2019 or newer.
-- For examples that send telemetry to Azure IoT Hub: [Azure IoT Explorer](https://github.com/Azure/azure-iot-explorer/releases): Cross-platform utility to monitor and manage Azure IoT resources
+- For viewing telemetry from example projects that send telemetry to Azure IoT Hub install [Azure IoT Explorer](https://github.com/Azure/azure-iot-explorer/releases)
 
-### Build application on Windows with CMake (command line)
+## Building the example projects
 
-1. Open a terminal in current folder. Generate build files by command,
-```
-cmake -Bbuild -A WIN32 .
-```
-2. Build project in parallel,
-```
-cmake --build build -j 8
-```
+> Note: When building the example projects, you may see build errors in the certs examples (file not found); you need to add your own certificate header files to these examples.
+> Follow the [Generate Certificate](../../tools/cert-scripts/README.md) to generate the certificates.
+> You can ignore these errors if you are not going to use these examples.
 
-> Note: When building projects in parallel, you will notice build errors for file not found in the certs examples.  
-> When using the certificate example, copy the required certificate header files to the project and rebuild.  
-> Follow the [Generate Certificate](../../tools/cert-scripts/README.md) to generate certificates.  
+## CMake (command line) and Visual Studio (Recommended)
 
-### Build application on Windows with Visual Studio
+1. Open a terminal in the current folder. Generate the Visual Studio solution and projects files with the command,
 
-Open this directory with Visual Studio and you are ready to go!
+```cmake -Bbuild -A WIN32 .```
+
+2. Build the example projects from the command line (optional)
+
+```cmake --build build -j %NUMBER_OF_PROCESSORS%```
+
+3. Build/Debug/Run the example projects with Visual Studio
+
+Open the ```EWF_WIN32_Examples.sln``` solution located in the ```build``` directory with Visual Studio.
+
+## CMake projects in Visual Studio
+
+Visual Studio has native support for CMake enables you to edit, build, and debug CMake projects, more information here:
+https://learn.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170
+
 
 # Azure RTOS samples on x86 using CMake (also included in this package)
 
@@ -431,15 +438,15 @@ Connects the device to IoT Central application and then sends telemetry data to 
 - **sample_ewf_iot_pnp_provisioning_tx_bg96**
 - **sample_ewf_iot_provisioning_tx_bg96**
 
-1. Follow steps in [README_IoT_CENTRAL.md](../../tools/iot-central-scripts/README.md) to create Azure IoT Central application that will be used to run the example.  
-2. Once certifcates are created, upload them to the device in the IoT Central as mentioned in the corresponding readme document above.  
+1. Follow steps in [README_IoT_CENTRAL.md](../../tools/iot-central-scripts/README.md) to create Azure IoT Central application that will be used to run the example.
+2. Once certifcates are created, upload them to the device in the IoT Central as mentioned in the corresponding readme document above.
 Once certifcates are created, upload them to the device in the IoT Central as meantioned in the corresponding readme document above. Copy the .h files to the certificates example project (for eg. sample_ewf_certs_basic_tx_bg96) and provision the certificates. Then run the **sample_ewf_iot_pnp_provisioning_tx_bg96** project to connect to IoT Central
 
 
-5. Build and run the application. Verify the device provisions successfully.  
-Verify that telemetry appears on the device view in your IoT Central application:  
-6. Open the device you created and select the command tab. "Thermostat / Get Max-Min report" will be displayed.  
-Set any date and time in the "Since" option and click Run. There will be output similar to below in the Serial Terminal window.  
+5. Build and run the application. Verify the device provisions successfully.
+Verify that telemetry appears on the device view in your IoT Central application:
+6. Open the device you created and select the command tab. "Thermostat / Get Max-Min report" will be displayed.
+Set any date and time in the "Since" option and click Run. There will be output similar to below in the Serial Terminal window.
 ```
 [URC^][ 100][\r\n\r\n+QMTRECV: 0,0,"$iothub/methods/POST/getMaxMinReport/?$rid=2",26,""2022-10-27T22:00:00.000Z""\r\n\r\n]
 [URCv][ 100][\r\n\r\n+QMTRECV: 0,0,"$iothub/methods/POST/getMaxMinReport/?$rid=2",26,""2022-10-27T22:00:00.000Z""\r\n\r\n]
@@ -476,15 +483,15 @@ Client published the Command response.
 Status: 200
 Payload: {"maxTemp":22,"minTemp":22,"avgTemp":22,"startTime":"2022-10-27T22:00:00.000Z","endTime":"1987-01-06T12:43:36Z"}
 ```
-  
-7. This application has two writable properties defined "targetTemperature" and "LED0".  
-To view existing properties on the device, navigate to the device in the Devices section, select Manage device, and then Device Properties.  
-You can update the writable properties in this view. Type below message in the right window and click "Send to device".  
-  
-{ "targetTemperature": 67 }  
-  
-On the serial terminal there will be output like below. You can see temperature value is now set to 32. The same updates will be seen in the Telemetry data on the IoT Central Application.  
-  
+
+7. This application has two writable properties defined "targetTemperature" and "LED0".
+To view existing properties on the device, navigate to the device in the Devices section, select Manage device, and then Device Properties.
+You can update the writable properties in this view. Type below message in the right window and click "Send to device".
+
+{ "targetTemperature": 67 }
+
+On the serial terminal there will be output like below. You can see temperature value is now set to 32. The same updates will be seen in the Telemetry data on the IoT Central Application.
+
 ```
 v][  16][+QMTPUB: 0,0,0\r\n]
 [INFO][QUECTEL MQTT PUB]
@@ -553,10 +560,10 @@ Average Temperature: 27.000000
 [URCv][   2][\r\n]
 ````
 
-8.  Lets try another writable device property configured in the template. Type below message click "Send to device". 
-  
+8.  Lets try another writable device property configured in the template. Type below message click "Send to device".
+
 { "LED0": 1 }
-  
+
 
 Below output will be seen on the serial terminal.
 
@@ -580,7 +587,6 @@ Status: 200
 Message Type: Desired Properties
 LED status update command recieved, LED0 : ON
 ```
-  
+
 You can send below message to update the LED0 state to OFF.
-{ "LED0": 0 }  
-  
+{ "LED0": 0 }

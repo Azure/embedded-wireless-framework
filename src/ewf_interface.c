@@ -51,6 +51,9 @@ ewf_result ewf_interface_init(ewf_interface* interface_ptr)
     /* Not in command mode initially */
     interface_ptr->command_mode = false;
 
+    /* Not in Data mode initially */
+    interface_ptr->data_mode = false;
+
 #ifdef EWF_LOG_VERBOSE
     EWF_LOG("[COMMAND MODE: FALSE]\n");
 #endif
@@ -943,12 +946,19 @@ ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr)
             break;
         }
 
-        /* Process the received byte */
-        result = ewf_interface_process_byte(interface_ptr, buffer[0]);
-        if (ewf_result_failed(result))
+        if ((interface_ptr->data_mode) && (interface_ptr->data_mode_callback))
         {
-            EWF_LOG_ERROR("Failed to process a byte, byte [%02d], ewf_result %d.\n", buffer[0], result);
-            break;
+                interface_ptr->data_mode_callback(interface_ptr, (uint8_t*)&buffer, 1U);
+        }
+        else
+        {
+            /* Process the received byte */
+            result = ewf_interface_process_byte(interface_ptr, buffer[0]);
+            if (ewf_result_failed(result))
+            {
+                EWF_LOG_ERROR("Failed to process a byte, byte [%02d], ewf_result %d.\n", buffer[0], result);
+                break;
+            }
         }
     }
     while(ewf_result_succeeded(result));

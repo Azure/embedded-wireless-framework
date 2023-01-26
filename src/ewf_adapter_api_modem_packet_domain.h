@@ -19,6 +19,10 @@
 extern "C" {
 #endif
 
+#define EWF_ADAPTER_MODEM_PDP_TYPE_IP             ("IP") /**< Packet data protocol type IP (IPV4) */
+#define EWF_ADAPTER_MODEM_PDP_TYPE_IPV6           ("IPV6") /**< Packet data protocol type IPV6 */
+#define EWF_ADAPTER_MODEM_PDP_TYPE_IPV4V6         ("IPV4V6") /**< Packet data protocol type IPV4V6 */
+
 /************************************************************************//**
  *
  * @defgroup group_adapter_modem_packet_domain Modem adapter common API

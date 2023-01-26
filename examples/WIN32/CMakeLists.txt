@@ -178,6 +178,7 @@ add_subdirectory(sample_ewf_azure_iot_pnp_provisioning_tx_bg96)
 
 # NetX Duo
 add_subdirectory(sample_ewf_netx_duo_test_bg96)
+add_subdirectory(sample_ewf_netx_duo_ppp_bg96)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_bg96)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_bg96)
 add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_bg96)
@@ -213,6 +214,7 @@ add_subdirectory(sample_ewf_info_tx_ryz024a)
 add_subdirectory(sample_ewf_test_tx_ryz024a)
 add_subdirectory(sample_ewf_certs_basic_tx_ryz024a)
 add_subdirectory(sample_ewf_telemetry_basic_tx_ryz024a)
+add_subdirectory(sample_ewf_netx_duo_ppp_ryz024a)
 
 #######################################
 # SIM7000
@@ -256,6 +258,7 @@ add_subdirectory(sample_ewf_netx_duo_test_exs82_w)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_exs82_w)
 add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_pnp_exs82_w)
 add_subdirectory(sample_ewf_netx_duo_pnp_temperature_controller_exs82_w)
+add_subdirectory(sample_ewf_netx_duo_ppp_exs82_w)
 
 #######################################
 # ESP8266
