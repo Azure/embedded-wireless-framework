@@ -36,9 +36,9 @@ https://learn.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view
   
 # Getting started  
 Below are the projects using NetX Duo PPP.  
-- **sample_ewf_netx_duo_ppp_ryz024a  
-- **sample_ewf_netx_duo_ppp_exs_82_w  
-- **sample_ewf_netx_duo_ppp_ryz024a  
+- **sample_ewf_netx_duo_ppp_ryz024a**  
+- **sample_ewf_netx_duo_ppp_exs_82_w**  
+- **sample_ewf_netx_duo_ppp_bg96**  
   
 Once the PPP link is established between the modem and EWF NetX Duo PPP client, the application will run basic tests
 for ICMP ping, UDP echo to test server and TCP connection.
