@@ -17,6 +17,7 @@ ewf_adapter_api_control ewf_adapter_renesas_ryz014_api_control =
 ewf_result ewf_adapter_renesas_ryz014_start(ewf_adapter* adapter_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_RENESAS_RYZ014);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
@@ -35,6 +36,7 @@ ewf_result ewf_adapter_renesas_ryz014_start(ewf_adapter* adapter_ptr)
 ewf_result ewf_adapter_renesas_ryz014_stop(ewf_adapter* adapter_ptr)
 {
     EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
+    EWF_ADAPTER_VALIDATE_POINTER_TYPE(adapter_ptr, EWF_ADAPTER_TYPE_RENESAS_RYZ014);
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 

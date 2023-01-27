@@ -7,7 +7,6 @@ The EWF API is described in the Doxygen documentation generated out of the commo
 The source files of the EWF are located in the \src directory at the root of this repository.
 The current set of examples use the CK-RX65N board evaluation board and a ryz014a modem.
 
-
 ## Prerequisites
 
 - A PC running Renesas e2studio IDE.
@@ -19,7 +18,7 @@ Follow steps in [README_NETX_AZURE.md](README_NETX_AZURE.md) to create Azure res
 
 # Getting started - RYZ014A
 To get started with the examples, please follow these steps:
-1. Acquire the necessary hardware and software: the Evaluation Kit CK-RX65N board, a Renesas RYZ014AA PMOD, e2-studio with latest FIT modules, openssl, J-Link RTT viewer, Azure IoT Explorer(recommend to use v0.13.5 as latest version 0.14.x cannot show data correctly).
+1. Acquire the necessary hardware and software: the Evaluation Kit CK-RX65N board, a Renesas RYZ014A PMOD, e2-studio with latest FIT modules, openssl, J-Link RTT viewer, Azure IoT Explorer(recommend to use v0.13.5 as latest version 0.14.x cannot show data correctly).
 2. Connect to RYZ014A PMOD to CK-RX65N board on PMOD2 connector. Connect Host PC via USB cable to USB Debug pin (J14) and  another USB cable to USB-Serial pin (J20). Also connect micro USB cable to RYZ014A micro USB pin.
 3. Review and edit as necessary the files ewf.config.h and ewf_example.config.h in the different examples. Edit these files to match your configuration. Specially edit the variables EWF_CONFIG_SIM_PIN, EWF_CONFIG_IOT_HUB_HOSTNAME, EWF_CONFIG_IOT_HUB_DEVICEID.
 4. Start e2 studio and create a workspace in \examples\CK_RX65N_GCCRX cloud kit, import all the ryz014a examples into the workspace and build all examples.
@@ -67,3 +66,21 @@ Wait until you see telemetry message sending logs on the terminal.
 > _NOTE:_
 Device posistioning service (ENABLE_DPS_SAMPLE) part of the examples is not tested. It will be tested and available in future updates.
 
+# Examples using Azure RTOS NetX Duo PPP with EWF (Modem in Data mode)
+1. Acquire the necessary hardware and software: the Cloud Kit CK-RX65N, a Renesas RYZ024A PMOD, e2-studio.
+2. Connect to RYZ024A PMOD to CK-RX65N board on PMOD2 connector.  Connect Host PC via USB cable to USB  
+   Debug pin (J14) and  another USB cable to USB-Serial pin (J20). Also connect micro USB cable to RYZ024A micro USB pin.  
+3. Open the ewf_netx_duo_ppp_ryz024a project in e2studio and edit the ewf_example.config.h to update   
+   EWF_CONFIG_SIM_PIN and EWF_CONFIG_SIM_APN.  
+4. Open Terminal at com port connection from the board and set it to 115200 8N1.  
+5. Build and Run the ewf_netx_duo_ppp_ryz024a. Observe the logs in terminal.  
+
+> _NOTE:_
+>1. The UDP echo test code is disabled in the ewf_example_test_netx_duo_ppp.c file.  
+    If you have a UDP echo test server update the ewf_example_test_netx_duo_udp_echo_server_ip value  
+	with the address of your UDP test server and enable the UDP test in ewf_example_ppp_mode_netx_duo_test function.  
+>2. Some tests might fail if there was not packet received within the expexted time frame of the test code.
+>3. If the application gets terminated abruptly when the modem has entered data mode, the modem must be power reset before  
+    running the application again. Alternatively you can send "+++" from any serial terminal to exit the modem from data mode  
+	and rerun the application. This will be improved in the next update for EWF.  
+	

@@ -57,6 +57,7 @@ ewf_result ewf_interface_rx_uart_hardware_start(ewf_interface* interface_ptr)
 {
 	EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 	EWF_INTERFACE_VALIDATE_POINTER_TYPE(interface_ptr, EWF_INTERFACE_TYPE_RX_UART);
+	ewf_interface_rx_uart* implementation_ptr = (ewf_interface_rx_uart*)interface_ptr->implementation_ptr;
 
 	ewf_result result;
 
@@ -70,7 +71,7 @@ ewf_result ewf_interface_rx_uart_hardware_start(ewf_interface* interface_ptr)
 	R_SCI_PinSet_SCI0();
 
 	/* Set up the configuration data structure for asynchronous (UART) operation. */
-	ewf_rx_sci_config.async.baud_rate    = 921600;
+    ewf_rx_sci_config.async.baud_rate    = implementation_ptr->baudrate;
 	ewf_rx_sci_config.async.clk_src      = SCI_CLK_INT;
 	ewf_rx_sci_config.async.data_size    = SCI_DATA_8BIT;
 	ewf_rx_sci_config.async.parity_en    = SCI_PARITY_OFF;

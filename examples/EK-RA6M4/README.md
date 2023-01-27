@@ -93,10 +93,9 @@ Wait until you see telemetry message sending logs on the RTT viewer terminal.
 Device posistioning service (ENABLE_DPS_SAMPLE) part of the examples is not tested. It will be tested and available in future updates.
 
 # Examples using Azure RTOS NetX Duo PPP with EWF (Modem in Data mode)
-1. Acquire the necessary hardware and software: the Evaluation Kit EK-RA6M4, a Renesas RYZ0124A PMOD, e2-studio with FSP 3.5 or newer, J-Link RTT viewer)
-2. Connect to RYZ024A PMOD to EK-RA6M4 board on PMOD2 connector. Connect Micro USB cable to USB Debug pin (DEBUG 1) and another USB cable to RYZ014A micro USB pin. 
-3. Open the ewf_netx_duo_ppp_ryz024a project in e2studio and edit the ewf_example.config.h to update the EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,  
-   EWF_CONFIG_SIM_PIN and EWF_CONFIG_SIM_APN.
+1. Acquire the necessary hardware and software: the Evaluation Kit EK-RA6M4, a Renesas RYZ024A PMOD, e2-studio with FSP 3.5 or newer, J-Link RTT viewer)  
+2. Connect to RYZ024A PMOD to EK-RA6M4 board on PMOD2 connector. Connect Micro USB cable to USB Debug pin (DEBUG 1) and another USB cable to RYZ024A micro USB pin.  
+3. Open the ewf_netx_duo_ppp_ryz024a project in e2studio and edit the ewf_example.config.h to update the EWF_CONFIG_SIM_PIN and EWF_CONFIG_SIM_APN.  
 4. Open J-Link RTT Viewer for viewing debug information.   
 5. Build and Run the ewf_netx_duo_ppp_ryz024a. Observe the logs in RTT viewer.
 
