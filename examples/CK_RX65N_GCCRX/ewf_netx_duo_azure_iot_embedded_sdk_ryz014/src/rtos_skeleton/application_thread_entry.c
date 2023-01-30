@@ -185,23 +185,8 @@ void application_thread_entry(ULONG entry_input)
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
         EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
-        return;
+        exit(result);
     }
-
-    // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
-    {
-        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
-        return;
-    }
-    /* Wait time for modem to be ready after modem functionality set to full */
-    ewf_platform_sleep(500);
-
-    /* Wait for the modem to be registered to network
-     * Refer system integration guide for more info */
-    while (EWF_RESULT_OK != ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT));
-    /* Wait time for modem to be ready after modem is registered to network */
-    ewf_platform_sleep(200);
 
     /* Disable network Registration URC */
     if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
@@ -217,10 +202,42 @@ void application_thread_entry(ULONG entry_input)
         return;
     }
 
+    // Set the ME functionality to minimum to clear out any previous connections
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_MINIMUM)))
+    {
+        EWF_LOG("[Warning][Failed to the ME functionality]\n");
+    }
+
+    /* Wait time for modem to be ready*/
+    ewf_platform_sleep(300);
+
+    // Set the APN
+    if (ewf_result_failed(result = ewf_adapter_modem_pdp_apn_set(adapter_ptr, EWF_CONFIG_CONTEXT_ID, EWF_ADAPTER_MODEM_PDP_TYPE_IP, EWF_CONFIG_SIM_APN)))
+    {
+        EWF_LOG_ERROR("Failed to the set APN, ewf_result %d.\n", result);
+        return;
+    }
+
+    // Set the ME functionality
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
+    {
+        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
+        return;
+    }
+
+    /* Wait time for modem to be ready after modem is registered to network */
+    ewf_platform_sleep(200);
+
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
         EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
+        exit(result);
+    }
+
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, 1000)))
+    {
+        EWF_LOG("[ERROR][Failed to register to network.]\n");
         return;
     }
 
@@ -230,7 +247,6 @@ void application_thread_entry(ULONG entry_input)
         EWF_LOG_ERROR("Failed to activate the PDP context: ewf_result %d.\n", result);
         // continue despite the error
     }
-
 
     if (ewf_result_failed(result = ewf_adapter_get_ipv4_address(adapter_ptr, (uint32_t*)&g_ip_address)))
     {

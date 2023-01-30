@@ -44,6 +44,9 @@ extern "C" {
 /** @brief The SIM PIN for the modem */
 #define EWF_CONFIG_SIM_PIN                                          ("0000")
 
+/** @brief The SIM operator APN */
+#define EWF_CONFIG_SIM_APN                                          ("internet.telekom")
+
 /** @brief The modem context ID used */
 #define EWF_CONFIG_CONTEXT_ID                                       (1)
 

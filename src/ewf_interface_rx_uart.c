@@ -188,6 +188,10 @@ ewf_result ewf_interface_rx_uart_hardware_receive(ewf_interface* interface_ptr, 
 				err = R_SCI_Receive(ewf_rx_sci_handle, &(buffer_ptr[i]), sizeof(uint8_t));
 				if (err == SCI_ERR_INSUFFICIENT_DATA)
 				{
+					if(i>0)
+					{
+						return EWF_RESULT_EMPTY_QUEUE;
+					}
 					ewf_platform_sleep(1);
 				}
 			}
