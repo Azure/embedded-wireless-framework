@@ -1,0 +1,15 @@
+.bak
+.pdf
+.rcpc
+.metadata/
+.settings/
+HardwareDebug/
+Debug/
+Release/
+output/
+trash/
+output/
+root_ca_cert.pem.h
+ca_cert.pem.h
+device_cert.pem.h
+device_key.pem.h
