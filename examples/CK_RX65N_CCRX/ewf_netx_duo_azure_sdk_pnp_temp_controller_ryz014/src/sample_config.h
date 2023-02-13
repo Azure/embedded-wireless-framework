@@ -60,11 +60,11 @@ TODO`s: Configure core settings of application for your IoTHub.
    DEVICE_ID can be set to <device1>,
    DEVICE_SYMMETRIC_KEY can be set to <key1>.  */
 #ifndef HOST_NAME
-#define HOST_NAME                                   "azure-seminar-iothub.azure-devices.net"
+#define HOST_NAME                                   ""
 #endif /* HOST_NAME */
 
 #ifndef DEVICE_ID
-#define DEVICE_ID                                   "port_ccrx_sp23takahashi"
+#define DEVICE_ID                                   ""
 #endif /* DEVICE_ID */
 
 #else /* !ENABLE_DPS_SAMPLE */
@@ -86,7 +86,7 @@ TODO`s: Configure core settings of application for your IoTHub.
 
 /* Optional SYMMETRIC KEY.  */
 #ifndef DEVICE_SYMMETRIC_KEY
-#define DEVICE_SYMMETRIC_KEY                        "Gc9QYVjYKe6xDgc3lhs6vNnYLAuwINL5j21yIbba27g="
+#define DEVICE_SYMMETRIC_KEY                        ""
 #endif /* DEVICE_SYMMETRIC_KEY */
 
 /* Optional module ID.  */
