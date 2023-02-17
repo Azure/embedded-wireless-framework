@@ -1,0 +1,1655 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MicomToolCommonProjectFile Version="1.00">
+  <CreatorType Name="e2studio" Version=""/>
+  <Placeholders>
+    <PlaceholderPrefix>${</PlaceholderPrefix>
+    <PlaceholderPostfix>}</PlaceholderPostfix>
+  </Placeholders>
+  <Project Name="ewf_info_tx_ryz014" Type="Application">
+    <Files>
+      <Path>LICENSE.txt</Path>
+      <Path>LICENSED-HARDWARE.txt</Path>
+      <Path>r01an6455ej0100-rx-azure-rtos.pdf</Path>
+      <Category Name="ewf">
+        <Path>..\..\..\src\ewf.h</Path>
+        <Path>..\..\..\src\ewf_adapter.c</Path>
+        <Path>..\..\..\src\ewf_adapter.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_control.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_control.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_dtls.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_dtls.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_gnss.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_http.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_info.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_info.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_lora.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_lora.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_general.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_general.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_network_service.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_network_service.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_packet_domain.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_packet_domain.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_sim_utility.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_sim_utility.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_sms.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_sms.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_modem_types.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_mqtt.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_mqtt.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_mqtt_basic.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_mqtt_basic.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_ntp.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_tcp.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_tcp.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_tls.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_tls.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_tls_basic.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_tls_basic.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_udp.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_udp.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_wifi_ap.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_wifi_ap.h</Path>
+        <Path>..\..\..\src\ewf_adapter_api_wifi_station.c</Path>
+        <Path>..\..\..\src\ewf_adapter_api_wifi_station.h</Path>
+        <Path>..\..\..\src\ewf_adapter_bsd_sockets.c</Path>
+        <Path>..\..\..\src\ewf_adapter_bsd_sockets.h</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_common.c</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_common.h</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_common_control.c</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_common_info.c</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_common_internet.c</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_common_urc.c</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_common_wifi_station.c</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_esp8266.c</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_esp8266.h</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_esp8285.c</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_esp8285.h</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_wroom_02.c</Path>
+        <Path>..\..\..\src\ewf_adapter_espressif_wroom_02.h</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_common.c</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_common.h</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_common_control.c</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_common_info.c</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_common_internet.c</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_common_tokenizer.c</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_common_urc.c</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_common_wifi_station.c</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_emw3080b.c</Path>
+        <Path>..\..\..\src\ewf_adapter_mxchip_emw3080b.h</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_bg95.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_bg95.h</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_bg96.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_bg96.h</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common.h</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common_context.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common_control.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common_info.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common_internet.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common_mqtt_basic.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common_tls_basic.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common_tokenizer.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common_ufs.c</Path>
+        <Path>..\..\..\src\ewf_adapter_quectel_common_urc.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_common.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_common.h</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_common_control.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_common_info.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_common_internet.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_common_mqtt_basic.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_common_nvm.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_common_tls_basic.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_common_urc.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_ryz014.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_ryz014.h</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_ryz024a.c</Path>
+        <Path>..\..\..\src\ewf_adapter_renesas_ryz024a.h</Path>
+        <Path>..\..\..\src\ewf_adapter_seeed_lora_e5.c</Path>
+        <Path>..\..\..\src\ewf_adapter_seeed_lora_e5.h</Path>
+        <Path>..\..\..\src\ewf_adapter_sequans.c</Path>
+        <Path>..\..\..\src\ewf_adapter_sequans.h</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_common.c</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_common.h</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_common_control.c</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_common_info.c</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_common_urc.c</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_sim7000.c</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_sim7000.h</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_sim868.c</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_sim868.h</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_sim900.c</Path>
+        <Path>..\..\..\src\ewf_adapter_simcom_sim900.h</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_common.c</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_common.h</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_common_context.c</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_common_control.c</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_common_ffs.c</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_common_info.c</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_common_internet.c</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_common_tokenizer.c</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_common_urc.c</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_exs82_w.c</Path>
+        <Path>..\..\..\src\ewf_adapter_thales_exs82_w.h</Path>
+        <Path>..\..\..\src\ewf_adapter_winsock2.c</Path>
+        <Path>..\..\..\src\ewf_adapter_winsock2.h</Path>
+        <Path>..\..\..\src\ewf_allocator.c</Path>
+        <Path>..\..\..\src\ewf_allocator.h</Path>
+        <Path>..\..\..\src\ewf_allocator_c_heap.c</Path>
+        <Path>..\..\..\src\ewf_allocator_c_heap.h</Path>
+        <Path>..\..\..\src\ewf_allocator_memory_pool.c</Path>
+        <Path>..\..\..\src\ewf_allocator_memory_pool.h</Path>
+        <Path>..\..\..\src\ewf_allocator_netx.c</Path>
+        <Path>..\..\..\src\ewf_allocator_netx.h</Path>
+        <Path>..\..\..\src\ewf_allocator_threadx.c</Path>
+        <Path>..\..\..\src\ewf_allocator_threadx.h</Path>
+        <Path>..\..\..\src\ewf_ids.h</Path>
+        <Path>..\..\..\src\ewf_interface.c</Path>
+        <Path>..\..\..\src\ewf_interface.h</Path>
+        <Path>..\..\..\src\ewf_interface_linux_serial.c</Path>
+        <Path>..\..\..\src\ewf_interface_lpc_uart.c</Path>
+        <Path>..\..\..\src\ewf_interface_lpc_uart.h</Path>
+        <Path>..\..\..\src\ewf_interface_microchip_pic_uart.c</Path>
+        <Path>..\..\..\src\ewf_interface_microchip_pic_uart.h</Path>
+        <Path>..\..\..\src\ewf_interface_microchip_sam_uart.c</Path>
+        <Path>..\..\..\src\ewf_interface_microchip_sam_uart.h</Path>
+        <Path>..\..\..\src\ewf_interface_ra_uart.c</Path>
+        <Path>..\..\..\src\ewf_interface_ra_uart.h</Path>
+        <Path>..\..\..\src\ewf_interface_rx_uart.c</Path>
+        <Path>..\..\..\src\ewf_interface_rx_uart.h</Path>
+        <Path>..\..\..\src\ewf_interface_stm32_uart.c</Path>
+        <Path>..\..\..\src\ewf_interface_stm32_uart.h</Path>
+        <Path>..\..\..\src\ewf_interface_win32_com.c</Path>
+        <Path>..\..\..\src\ewf_interface_win32_com.h</Path>
+        <Path>..\..\..\src\ewf_lib.c</Path>
+        <Path>..\..\..\src\ewf_lib.h</Path>
+        <Path>..\..\..\src\ewf_message.h</Path>
+        <Path>..\..\..\src\ewf_middleware_netxduo.c</Path>
+        <Path>..\..\..\src\ewf_middleware_netxduo.h</Path>
+        <Path>..\..\..\src\ewf_netxduo_ppp.c</Path>
+        <Path>..\..\..\src\ewf_netxduo_ppp.h</Path>
+        <Path>..\..\..\src\ewf_platform.h</Path>
+        <Path>..\..\..\src\ewf_platform_bare_metal.c</Path>
+        <Path>..\..\..\src\ewf_platform_bare_metal.h</Path>
+        <Path>..\..\..\src\ewf_platform_freertos.c</Path>
+        <Path>..\..\..\src\ewf_platform_freertos.h</Path>
+        <Path>..\..\..\src\ewf_platform_pthread.c</Path>
+        <Path>..\..\..\src\ewf_platform_pthread.h</Path>
+        <Path>..\..\..\src\ewf_platform_threadx.c</Path>
+        <Path>..\..\..\src\ewf_platform_threadx.h</Path>
+        <Path>..\..\..\src\ewf_platform_win32.c</Path>
+        <Path>..\..\..\src\ewf_platform_win32.h</Path>
+        <Path>..\..\..\src\ewf_tokenizer.h</Path>
+        <Category Name="examples">
+          <Path>..\..\..\src\examples\ewf_example_azure_iot_pnp_provisioning.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_azure_iot_provisioning.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_certs_basic_quectel_bg95.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_certs_basic_quectel_bg96.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_certs_basic_quectel_common.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_certs_basic_renesas_common.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_certs_basic_renesas_ryz014.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_certs_basic_renesas_ryz024a.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_certs_basic_winsock2.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_netx_duo_ppp_test.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_netx_duo_ppp_test.h</Path>
+          <Path>..\..\..\src\examples\ewf_example_netx_duo_test.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_netx_duo_test.h</Path>
+          <Path>..\..\..\src\examples\ewf_example_telemetry.c</Path>
+          <Path>..\..\..\src\examples\ewf_example_telemetry_basic.c</Path>
+        </Category>
+        <Category Name="test">
+          <Path>..\..\..\src\test\ewf_adapter_bsd_sockets_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_espressif_common_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_espressif_esp8266_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_espressif_esp8285_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_espressif_wroom_02_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_mxchip_common_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_mxchip_emw3080b_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_quectel_bg95_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_quectel_bg96_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_quectel_common_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_renesas_common_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_renesas_ryz014_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_renesas_ryz024a_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_simcom_common_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_simcom_sim7000_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_test.h</Path>
+          <Path>..\..\..\src\test\ewf_adapter_thales_common_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_thales_exs82_w_test.c</Path>
+          <Path>..\..\..\src\test\ewf_adapter_winsock2_test.c</Path>
+        </Category>
+      </Category>
+      <Category Name="libs">
+        <Category Name="threadx">
+          <Path>libs\threadx\tx_user.h</Path>
+          <Category Name="common">
+            <Path>libs\threadx\common\CMakeLists.txt</Path>
+            <Category Name="inc">
+              <Path>libs\threadx\common\inc\tx_api.h</Path>
+              <Path>libs\threadx\common\inc\tx_block_pool.h</Path>
+              <Path>libs\threadx\common\inc\tx_byte_pool.h</Path>
+              <Path>libs\threadx\common\inc\tx_event_flags.h</Path>
+              <Path>libs\threadx\common\inc\tx_initialize.h</Path>
+              <Path>libs\threadx\common\inc\tx_mutex.h</Path>
+              <Path>libs\threadx\common\inc\tx_queue.h</Path>
+              <Path>libs\threadx\common\inc\tx_semaphore.h</Path>
+              <Path>libs\threadx\common\inc\tx_thread.h</Path>
+              <Path>libs\threadx\common\inc\tx_timer.h</Path>
+              <Path>libs\threadx\common\inc\tx_trace.h</Path>
+              <Path>libs\threadx\common\inc\tx_user_sample.h</Path>
+            </Category>
+            <Category Name="src">
+              <Path>libs\threadx\common\src\tx_block_allocate.c</Path>
+              <Path>libs\threadx\common\src\tx_block_pool_cleanup.c</Path>
+              <Path>libs\threadx\common\src\tx_block_pool_create.c</Path>
+              <Path>libs\threadx\common\src\tx_block_pool_delete.c</Path>
+              <Path>libs\threadx\common\src\tx_block_pool_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_block_pool_initialize.c</Path>
+              <Path>libs\threadx\common\src\tx_block_pool_performance_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_block_pool_performance_system_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_block_pool_prioritize.c</Path>
+              <Path>libs\threadx\common\src\tx_block_release.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_allocate.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_pool_cleanup.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_pool_create.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_pool_delete.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_pool_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_pool_initialize.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_pool_performance_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_pool_performance_system_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_pool_prioritize.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_pool_search.c</Path>
+              <Path>libs\threadx\common\src\tx_byte_release.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_cleanup.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_create.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_delete.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_get.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_initialize.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_performance_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_performance_system_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_set.c</Path>
+              <Path>libs\threadx\common\src\tx_event_flags_set_notify.c</Path>
+              <Path>libs\threadx\common\src\tx_initialize_high_level.c</Path>
+              <Path>libs\threadx\common\src\tx_initialize_kernel_enter.c</Path>
+              <Path>libs\threadx\common\src\tx_initialize_kernel_setup.c</Path>
+              <Path>libs\threadx\common\src\tx_misra.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_cleanup.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_create.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_delete.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_get.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_initialize.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_performance_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_performance_system_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_prioritize.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_priority_change.c</Path>
+              <Path>libs\threadx\common\src\tx_mutex_put.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_cleanup.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_create.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_delete.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_flush.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_front_send.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_initialize.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_performance_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_performance_system_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_prioritize.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_receive.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_send.c</Path>
+              <Path>libs\threadx\common\src\tx_queue_send_notify.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_ceiling_put.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_cleanup.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_create.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_delete.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_get.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_initialize.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_performance_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_performance_system_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_prioritize.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_put.c</Path>
+              <Path>libs\threadx\common\src\tx_semaphore_put_notify.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_create.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_delete.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_entry_exit_notify.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_identify.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_initialize.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_performance_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_performance_system_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_preemption_change.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_priority_change.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_relinquish.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_reset.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_resume.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_shell_entry.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_sleep.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_stack_analyze.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_stack_error_handler.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_stack_error_notify.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_suspend.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_system_preempt_check.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_system_resume.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_system_suspend.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_terminate.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_time_slice.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_time_slice_change.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_timeout.c</Path>
+              <Path>libs\threadx\common\src\tx_thread_wait_abort.c</Path>
+              <Path>libs\threadx\common\src\tx_time_get.c</Path>
+              <Path>libs\threadx\common\src\tx_time_set.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_activate.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_change.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_create.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_deactivate.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_delete.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_expiration_process.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_initialize.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_performance_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_performance_system_info_get.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_system_activate.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_system_deactivate.c</Path>
+              <Path>libs\threadx\common\src\tx_timer_thread_entry.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_buffer_full_notify.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_disable.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_enable.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_event_filter.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_event_unfilter.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_initialize.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_interrupt_control.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_isr_enter_insert.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_isr_exit_insert.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_object_register.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_object_unregister.c</Path>
+              <Path>libs\threadx\common\src\tx_trace_user_event_insert.c</Path>
+              <Path>libs\threadx\common\src\txe_block_allocate.c</Path>
+              <Path>libs\threadx\common\src\txe_block_pool_create.c</Path>
+              <Path>libs\threadx\common\src\txe_block_pool_delete.c</Path>
+              <Path>libs\threadx\common\src\txe_block_pool_info_get.c</Path>
+              <Path>libs\threadx\common\src\txe_block_pool_prioritize.c</Path>
+              <Path>libs\threadx\common\src\txe_block_release.c</Path>
+              <Path>libs\threadx\common\src\txe_byte_allocate.c</Path>
+              <Path>libs\threadx\common\src\txe_byte_pool_create.c</Path>
+              <Path>libs\threadx\common\src\txe_byte_pool_delete.c</Path>
+              <Path>libs\threadx\common\src\txe_byte_pool_info_get.c</Path>
+              <Path>libs\threadx\common\src\txe_byte_pool_prioritize.c</Path>
+              <Path>libs\threadx\common\src\txe_byte_release.c</Path>
+              <Path>libs\threadx\common\src\txe_event_flags_create.c</Path>
+              <Path>libs\threadx\common\src\txe_event_flags_delete.c</Path>
+              <Path>libs\threadx\common\src\txe_event_flags_get.c</Path>
+              <Path>libs\threadx\common\src\txe_event_flags_info_get.c</Path>
+              <Path>libs\threadx\common\src\txe_event_flags_set.c</Path>
+              <Path>libs\threadx\common\src\txe_event_flags_set_notify.c</Path>
+              <Path>libs\threadx\common\src\txe_mutex_create.c</Path>
+              <Path>libs\threadx\common\src\txe_mutex_delete.c</Path>
+              <Path>libs\threadx\common\src\txe_mutex_get.c</Path>
+              <Path>libs\threadx\common\src\txe_mutex_info_get.c</Path>
+              <Path>libs\threadx\common\src\txe_mutex_prioritize.c</Path>
+              <Path>libs\threadx\common\src\txe_mutex_put.c</Path>
+              <Path>libs\threadx\common\src\txe_queue_create.c</Path>
+              <Path>libs\threadx\common\src\txe_queue_delete.c</Path>
+              <Path>libs\threadx\common\src\txe_queue_flush.c</Path>
+              <Path>libs\threadx\common\src\txe_queue_front_send.c</Path>
+              <Path>libs\threadx\common\src\txe_queue_info_get.c</Path>
+              <Path>libs\threadx\common\src\txe_queue_prioritize.c</Path>
+              <Path>libs\threadx\common\src\txe_queue_receive.c</Path>
+              <Path>libs\threadx\common\src\txe_queue_send.c</Path>
+              <Path>libs\threadx\common\src\txe_queue_send_notify.c</Path>
+              <Path>libs\threadx\common\src\txe_semaphore_ceiling_put.c</Path>
+              <Path>libs\threadx\common\src\txe_semaphore_create.c</Path>
+              <Path>libs\threadx\common\src\txe_semaphore_delete.c</Path>
+              <Path>libs\threadx\common\src\txe_semaphore_get.c</Path>
+              <Path>libs\threadx\common\src\txe_semaphore_info_get.c</Path>
+              <Path>libs\threadx\common\src\txe_semaphore_prioritize.c</Path>
+              <Path>libs\threadx\common\src\txe_semaphore_put.c</Path>
+              <Path>libs\threadx\common\src\txe_semaphore_put_notify.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_create.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_delete.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_entry_exit_notify.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_info_get.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_preemption_change.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_priority_change.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_relinquish.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_reset.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_resume.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_suspend.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_terminate.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_time_slice_change.c</Path>
+              <Path>libs\threadx\common\src\txe_thread_wait_abort.c</Path>
+              <Path>libs\threadx\common\src\txe_timer_activate.c</Path>
+              <Path>libs\threadx\common\src\txe_timer_change.c</Path>
+              <Path>libs\threadx\common\src\txe_timer_create.c</Path>
+              <Path>libs\threadx\common\src\txe_timer_deactivate.c</Path>
+              <Path>libs\threadx\common\src\txe_timer_delete.c</Path>
+              <Path>libs\threadx\common\src\txe_timer_info_get.c</Path>
+            </Category>
+          </Category>
+          <Category Name="ports">
+            <Category Name="rxv2">
+              <Category Name="ccrx">
+                <Path>libs\threadx\ports\rxv2\ccrx\readme_threadx.txt</Path>
+                <Category Name="inc">
+                  <Path>libs\threadx\ports\rxv2\ccrx\inc\tx_port.h</Path>
+                </Category>
+                <Category Name="src">
+                  <Path>libs\threadx\ports\rxv2\ccrx\src\tx_initialize_low_level.src</Path>
+                  <Path>libs\threadx\ports\rxv2\ccrx\src\tx_thread_context_restore.src</Path>
+                  <Path>libs\threadx\ports\rxv2\ccrx\src\tx_thread_context_save.src</Path>
+                  <Path>libs\threadx\ports\rxv2\ccrx\src\tx_thread_interrupt_control.src</Path>
+                  <Path>libs\threadx\ports\rxv2\ccrx\src\tx_thread_schedule.src</Path>
+                  <Path>libs\threadx\ports\rxv2\ccrx\src\tx_thread_stack_build.src</Path>
+                  <Path>libs\threadx\ports\rxv2\ccrx\src\tx_thread_system_return.src</Path>
+                  <Path>libs\threadx\ports\rxv2\ccrx\src\tx_timer_interrupt.src</Path>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+          <Category Name="utility">
+            <Category Name="low_power">
+              <Path>libs\threadx\utility\low_power\tx_low_power.c</Path>
+              <Path>libs\threadx\utility\low_power\tx_low_power.h</Path>
+            </Category>
+          </Category>
+        </Category>
+      </Category>
+      <Category Name="src">
+        <Path>src\demo_printf.c</Path>
+        <Path>src\demo_printf.h</Path>
+        <Path>src\ewf.config.h</Path>
+        <Path>src\ewf_example.config.h</Path>
+        <Path>src\hardware_setup.c</Path>
+        <Path>src\hardware_setup.h</Path>
+        <Path>src\main.c</Path>
+        <Category Name="rtos_config">
+          <Path>src\rtos_config\azurertos_object_init.c</Path>
+          <Path>src\rtos_config\azurertos_object_init.h</Path>
+        </Category>
+        <Category Name="smc_gen">
+          <Category Name="general">
+            <Path>src\smc_gen\general\r_cg_hardware_setup.c</Path>
+            <Path>src\smc_gen\general\r_cg_macrodriver.h</Path>
+            <Path>src\smc_gen\general\r_cg_userdefine.h</Path>
+            <Path>src\smc_gen\general\r_smc_cgc.c</Path>
+            <Path>src\smc_gen\general\r_smc_cgc.h</Path>
+            <Path>src\smc_gen\general\r_smc_cgc_user.c</Path>
+            <Path>src\smc_gen\general\r_smc_entry.h</Path>
+            <Path>src\smc_gen\general\r_smc_interrupt.c</Path>
+            <Path>src\smc_gen\general\r_smc_interrupt.h</Path>
+          </Category>
+          <Category Name="r_bsp">
+            <Path>src\smc_gen\r_bsp\platform.h</Path>
+            <Path>src\smc_gen\r_bsp\readme.txt</Path>
+            <Category Name="board">
+              <Category Name="generic_rx65n">
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.c</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.h</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\r_bsp.h</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_config_reference.h</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_interrupt_config_reference.h</Path>
+              </Category>
+              <Category Name="user">
+                <Path>src\smc_gen\r_bsp\board\user\r_bsp.h</Path>
+              </Category>
+            </Category>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_bsp\doc\en\r01an1685ej0721-rx-bsp.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_bsp\doc\ja\r01an1685jj0721-rx-bsp.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="mcu">
+              <Category Name="all">
+                <Path>src\smc_gen\r_bsp\mcu\all\dbsct.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\fsp_common_api.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\lowlvl.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\lowlvl.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\lowsrc.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\lowsrc.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\mcu_locks.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_common.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_common.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_cpu.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_locking.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_fsp_error.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_rtos.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_rx_compiler.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_typedefs.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\resetprg.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\sbrk.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\sbrk.h</Path>
+              </Category>
+              <Category Name="rx65n">
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_info.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_init.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_init.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_locks.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts_private.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\r_bsp_cpu.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\r_bsp_locking.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\vecttbl.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\vecttbl.h</Path>
+                <Category Name="register_access">
+                  <Category Name="ccrx">
+                    <Path>src\smc_gen\r_bsp\mcu\rx65n\register_access\ccrx\iodefine.h</Path>
+                  </Category>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+          <Category Name="r_byteq">
+            <Path>src\smc_gen\r_byteq\r_byteq_if.h</Path>
+            <Path>src\smc_gen\r_byteq\readme.txt</Path>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_byteq\doc\en\r01an1683ej0210-rx-apl.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_byteq\doc\ja\r01an1683jj0210-rx-apl.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="src">
+              <Path>src\smc_gen\r_byteq\src\r_byteq.c</Path>
+              <Path>src\smc_gen\r_byteq\src\r_byteq_private.h</Path>
+            </Category>
+          </Category>
+          <Category Name="r_cmt_rx">
+            <Path>src\smc_gen\r_cmt_rx\r_cmt_rx_if.h</Path>
+            <Path>src\smc_gen\r_cmt_rx\readme.txt</Path>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_cmt_rx\doc\en\r01an1856ej0540-rx-timer.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_cmt_rx\doc\ja\r01an1856jj0540-rx-timer.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="src">
+              <Path>src\smc_gen\r_cmt_rx\src\r_cmt_rx.c</Path>
+            </Category>
+          </Category>
+          <Category Name="r_config">
+            <Path>src\smc_gen\r_config\r_bsp_config.h</Path>
+            <Path>src\smc_gen\r_config\r_bsp_config_readme.txt</Path>
+            <Path>src\smc_gen\r_config\r_bsp_interrupt_config.h</Path>
+            <Path>src\smc_gen\r_config\r_byteq_config.h</Path>
+            <Path>src\smc_gen\r_config\r_cmt_rx_config.h</Path>
+            <Path>src\smc_gen\r_config\r_sci_rx_config.h</Path>
+          </Category>
+          <Category Name="r_pincfg">
+            <Path>src\smc_gen\r_pincfg\Pin.c</Path>
+            <Path>src\smc_gen\r_pincfg\Pin.h</Path>
+            <Path>src\smc_gen\r_pincfg\r_pinset.h</Path>
+            <Path>src\smc_gen\r_pincfg\r_sci_rx_pinset.c</Path>
+            <Path>src\smc_gen\r_pincfg\r_sci_rx_pinset.h</Path>
+          </Category>
+          <Category Name="r_sci_rx">
+            <Path>src\smc_gen\r_sci_rx\r_sci_rx_if.h</Path>
+            <Path>src\smc_gen\r_sci_rx\readme.txt</Path>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_sci_rx\doc\en\r01an1815ej0460-rx-serial.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_sci_rx\doc\ja\r01an1815jj0460-rx-serial.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="src">
+              <Path>src\smc_gen\r_sci_rx\src\r_sci_rx.c</Path>
+              <Path>src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.c</Path>
+              <Path>src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.h</Path>
+              <Path>src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.c</Path>
+              <Path>src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.h</Path>
+              <Path>src\smc_gen\r_sci_rx\src\r_sci_rx_platform.h</Path>
+              <Path>src\smc_gen\r_sci_rx\src\r_sci_rx_private.h</Path>
+              <Category Name="targets">
+                <Category Name="rx65n">
+                  <Path>src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n.c</Path>
+                  <Path>src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_data.c</Path>
+                  <Path>src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_private.h</Path>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+        </Category>
+      </Category>
+      <Category Name="trash">
+        <Category Name="2023-02-13-15-54-13">
+          <Category Name="src">
+            <Category Name="rtos_config">
+              <Path>trash\2023-02-13-15-54-13\src\rtos_config\azurertos_object_init.c</Path>
+              <Path>trash\2023-02-13-15-54-13\src\rtos_config\azurertos_object_init.h</Path>
+            </Category>
+            <Category Name="smc_gen">
+              <Category Name="general">
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\general\r_cg_hardware_setup.c</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\general\r_cg_macrodriver.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\general\r_cg_userdefine.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\general\r_smc_cgc.c</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\general\r_smc_cgc.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\general\r_smc_cgc_user.c</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\general\r_smc_entry.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\general\r_smc_interrupt.c</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\general\r_smc_interrupt.h</Path>
+              </Category>
+              <Category Name="r_bsp">
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\platform.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\readme.txt</Path>
+                <Category Name="board">
+                  <Category Name="generic_rx65n">
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\board\generic_rx65n\r_bsp.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_config_reference.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_interrupt_config_reference.h</Path>
+                  </Category>
+                  <Category Name="user">
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\board\user\r_bsp.h</Path>
+                  </Category>
+                </Category>
+                <Category Name="mcu">
+                  <Category Name="all">
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\dbsct.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\fsp_common_api.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\lowlvl.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\lowlvl.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\lowsrc.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\lowsrc.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\mcu_locks.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_common.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_common.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_cpu.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_locking.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_fsp_error.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_rtos.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_rx_compiler.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_typedefs.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\resetprg.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\sbrk.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\sbrk.h</Path>
+                  </Category>
+                  <Category Name="rx65n">
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_info.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_init.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_init.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_locks.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts_private.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\r_bsp_cpu.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\r_bsp_locking.h</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\vecttbl.c</Path>
+                    <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\vecttbl.h</Path>
+                    <Category Name="register_access">
+                      <Category Name="ccrx">
+                        <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\register_access\ccrx\iodefine.h</Path>
+                      </Category>
+                    </Category>
+                  </Category>
+                </Category>
+              </Category>
+              <Category Name="r_byteq">
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_byteq\r_byteq_if.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_byteq\readme.txt</Path>
+                <Category Name="src">
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_byteq\src\r_byteq.c</Path>
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_byteq\src\r_byteq_private.h</Path>
+                </Category>
+              </Category>
+              <Category Name="r_cmt_rx">
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_cmt_rx\r_cmt_rx_if.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_cmt_rx\readme.txt</Path>
+                <Category Name="src">
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_cmt_rx\src\r_cmt_rx.c</Path>
+                </Category>
+              </Category>
+              <Category Name="r_config">
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_config\r_bsp_config.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_config\r_bsp_config_readme.txt</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_config\r_bsp_interrupt_config.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_config\r_byteq_config.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_config\r_cmt_rx_config.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_config\r_sci_rx_config.h</Path>
+              </Category>
+              <Category Name="r_pincfg">
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_pincfg\Pin.c</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_pincfg\Pin.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_pincfg\r_pinset.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_pincfg\r_sci_rx_pinset.c</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_pincfg\r_sci_rx_pinset.h</Path>
+              </Category>
+              <Category Name="r_sci_rx">
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\r_sci_rx_if.h</Path>
+                <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\readme.txt</Path>
+                <Category Name="src">
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx.c</Path>
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.c</Path>
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.h</Path>
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.c</Path>
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.h</Path>
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx_platform.h</Path>
+                  <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx_private.h</Path>
+                  <Category Name="targets">
+                    <Category Name="rx65n">
+                      <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n.c</Path>
+                      <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_data.c</Path>
+                      <Path>trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_private.h</Path>
+                    </Category>
+                  </Category>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+        </Category>
+        <Category Name="2023-02-13-16-01-26">
+          <Category Name="src">
+            <Category Name="rtos_config">
+              <Path>trash\2023-02-13-16-01-26\src\rtos_config\azurertos_object_init.c</Path>
+              <Path>trash\2023-02-13-16-01-26\src\rtos_config\azurertos_object_init.h</Path>
+            </Category>
+            <Category Name="smc_gen">
+              <Category Name="general">
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\general\r_cg_hardware_setup.c</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\general\r_cg_macrodriver.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\general\r_cg_userdefine.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\general\r_smc_cgc.c</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\general\r_smc_cgc.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\general\r_smc_cgc_user.c</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\general\r_smc_entry.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\general\r_smc_interrupt.c</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\general\r_smc_interrupt.h</Path>
+              </Category>
+              <Category Name="r_bsp">
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\platform.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\readme.txt</Path>
+                <Category Name="board">
+                  <Category Name="generic_rx65n">
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\board\generic_rx65n\r_bsp.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_config_reference.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_interrupt_config_reference.h</Path>
+                  </Category>
+                  <Category Name="user">
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\board\user\r_bsp.h</Path>
+                  </Category>
+                </Category>
+                <Category Name="mcu">
+                  <Category Name="all">
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\dbsct.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\fsp_common_api.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\lowlvl.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\lowlvl.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\lowsrc.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\lowsrc.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\mcu_locks.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_common.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_common.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_cpu.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_locking.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_fsp_error.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_rtos.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_rx_compiler.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_typedefs.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\resetprg.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\sbrk.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\sbrk.h</Path>
+                  </Category>
+                  <Category Name="rx65n">
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_info.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_init.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_init.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_locks.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts_private.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\r_bsp_cpu.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\r_bsp_locking.h</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\vecttbl.c</Path>
+                    <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\vecttbl.h</Path>
+                    <Category Name="register_access">
+                      <Category Name="ccrx">
+                        <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\register_access\ccrx\iodefine.h</Path>
+                      </Category>
+                    </Category>
+                  </Category>
+                </Category>
+              </Category>
+              <Category Name="r_byteq">
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_byteq\r_byteq_if.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_byteq\readme.txt</Path>
+                <Category Name="src">
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_byteq\src\r_byteq.c</Path>
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_byteq\src\r_byteq_private.h</Path>
+                </Category>
+              </Category>
+              <Category Name="r_cmt_rx">
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_cmt_rx\r_cmt_rx_if.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_cmt_rx\readme.txt</Path>
+                <Category Name="src">
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_cmt_rx\src\r_cmt_rx.c</Path>
+                </Category>
+              </Category>
+              <Category Name="r_config">
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_config\r_bsp_config.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_config\r_bsp_config_readme.txt</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_config\r_bsp_interrupt_config.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_config\r_byteq_config.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_config\r_cmt_rx_config.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_config\r_sci_rx_config.h</Path>
+              </Category>
+              <Category Name="r_pincfg">
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_pincfg\Pin.c</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_pincfg\Pin.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_pincfg\r_pinset.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_pincfg\r_sci_rx_pinset.c</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_pincfg\r_sci_rx_pinset.h</Path>
+              </Category>
+              <Category Name="r_sci_rx">
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\r_sci_rx_if.h</Path>
+                <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\readme.txt</Path>
+                <Category Name="src">
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx.c</Path>
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.c</Path>
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.h</Path>
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.c</Path>
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.h</Path>
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx_platform.h</Path>
+                  <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx_private.h</Path>
+                  <Category Name="targets">
+                    <Category Name="rx65n">
+                      <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n.c</Path>
+                      <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_data.c</Path>
+                      <Path>trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_private.h</Path>
+                    </Category>
+                  </Category>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+        </Category>
+        <Category Name="2023-02-13-21-21-22">
+          <Category Name="libs">
+            <Category Name="threadx">
+              <Path>trash\2023-02-13-21-21-22\libs\threadx\tx_user.h</Path>
+            </Category>
+          </Category>
+          <Category Name="src">
+            <Category Name="rtos_config">
+              <Path>trash\2023-02-13-21-21-22\src\rtos_config\azurertos_object_init.c</Path>
+              <Path>trash\2023-02-13-21-21-22\src\rtos_config\azurertos_object_init.h</Path>
+            </Category>
+            <Category Name="smc_gen">
+              <Category Name="general">
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\general\r_cg_hardware_setup.c</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\general\r_cg_macrodriver.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\general\r_cg_userdefine.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\general\r_smc_cgc.c</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\general\r_smc_cgc.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\general\r_smc_cgc_user.c</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\general\r_smc_entry.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\general\r_smc_interrupt.c</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\general\r_smc_interrupt.h</Path>
+              </Category>
+              <Category Name="r_bsp">
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\platform.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\readme.txt</Path>
+                <Category Name="board">
+                  <Category Name="generic_rx65n">
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\board\generic_rx65n\r_bsp.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_config_reference.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_interrupt_config_reference.h</Path>
+                  </Category>
+                  <Category Name="user">
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\board\user\r_bsp.h</Path>
+                  </Category>
+                </Category>
+                <Category Name="mcu">
+                  <Category Name="all">
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\dbsct.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\fsp_common_api.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\lowlvl.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\lowlvl.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\lowsrc.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\lowsrc.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\mcu_locks.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_common.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_common.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_cpu.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_locking.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_fsp_error.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_rtos.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_rx_compiler.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_typedefs.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\resetprg.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\sbrk.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\sbrk.h</Path>
+                  </Category>
+                  <Category Name="rx65n">
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_info.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_init.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_init.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_locks.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts_private.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\r_bsp_cpu.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\r_bsp_locking.h</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\vecttbl.c</Path>
+                    <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\vecttbl.h</Path>
+                    <Category Name="register_access">
+                      <Category Name="ccrx">
+                        <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\register_access\ccrx\iodefine.h</Path>
+                      </Category>
+                    </Category>
+                  </Category>
+                </Category>
+              </Category>
+              <Category Name="r_byteq">
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_byteq\r_byteq_if.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_byteq\readme.txt</Path>
+                <Category Name="src">
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_byteq\src\r_byteq.c</Path>
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_byteq\src\r_byteq_private.h</Path>
+                </Category>
+              </Category>
+              <Category Name="r_cmt_rx">
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_cmt_rx\r_cmt_rx_if.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_cmt_rx\readme.txt</Path>
+                <Category Name="src">
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_cmt_rx\src\r_cmt_rx.c</Path>
+                </Category>
+              </Category>
+              <Category Name="r_config">
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_config\r_bsp_config.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_config\r_bsp_config_readme.txt</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_config\r_bsp_interrupt_config.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_config\r_byteq_config.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_config\r_cmt_rx_config.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_config\r_sci_rx_config.h</Path>
+              </Category>
+              <Category Name="r_pincfg">
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_pincfg\Pin.c</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_pincfg\Pin.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_pincfg\r_pinset.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_pincfg\r_sci_rx_pinset.c</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_pincfg\r_sci_rx_pinset.h</Path>
+              </Category>
+              <Category Name="r_sci_rx">
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\r_sci_rx_if.h</Path>
+                <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\readme.txt</Path>
+                <Category Name="src">
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx.c</Path>
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.c</Path>
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.h</Path>
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.c</Path>
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.h</Path>
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx_platform.h</Path>
+                  <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx_private.h</Path>
+                  <Category Name="targets">
+                    <Category Name="rx65n">
+                      <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n.c</Path>
+                      <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_data.c</Path>
+                      <Path>trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_private.h</Path>
+                    </Category>
+                  </Category>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+        </Category>
+      </Category>
+    </Files>
+    <Device Category="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.cpu.rx600" Series="RX">R5F565NEHxFB</Device>
+    <BuildOptions Name="CC-RX" Version="v3.05.00">
+      <BuildMode Active="True" Name="HardwareDebug">
+        <GeneralOptions/>
+        <CompileOptions>
+          <Option>-isa=rxv2</Option>
+          <Option>-fpu</Option>
+          <Option>-dbl_size=8</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\ewf"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\ewf\src"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\rtos_config\"</Option>
+          <Option>-include="C:\t-comms\comms_framework\src"</Option>
+          <Option>-include="C:\t-comms\comms_framework\src\examples"</Option>
+          <Option>-include="C:\t-comms\comms_framework\src\test"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\rtos_skeleton\"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\general"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_pincfg"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_bsp"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_config"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_cmt_rx"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_cmt_rx\src"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_byteq"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_byteq\src"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_sci_rx"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_sci_rx\src"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\threadx\ports\rxv2\ccrx\inc"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\threadx"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\threadx\common\inc"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\threadx\utility\low_power"</Option>
+          <Option>-define=TX_INCLUDE_USER_DEFINE_FILE,NX_ENABLE_TCPIP_OFFLOAD,NX_ENABLE_INTERFACE_CAPABILITY,NX_DNS_CLIENT_USER_CREATE_PACKET_POOL,NX_DNS_CLIENT_CLEAR_QUEUE,NX_SNTP_CLIENT_MAX_ROOT_DISPERSION=0,NX_SNTP_CURRENT_YEAR=2022</Option>
+          <Option>-utf8</Option>
+          <Option>-nomessage</Option>
+          <Option>-debug</Option>
+          <Option>-nostuff=B</Option>
+          <Option>-outcode=utf8</Option>
+          <Option>-nologo</Option>
+          <Option>-lang=c99</Option>
+          <Option>-lang=cpp</Option>
+          <Option>-output=obj=${CONFIGDIR}\${FILELEAF}.obj</Option>
+          <Option>-obj_path=${CONFIGDIR}</Option>
+        </CompileOptions>
+        <AssembleOptions>
+          <Option>-isa=rxv2</Option>
+          <Option>-fpu</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\general"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_pincfg"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_bsp"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_config"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_cmt_rx"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_cmt_rx\src"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_byteq"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_byteq\src"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_sci_rx"</Option>
+          <Option>-include="${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_sci_rx\src"</Option>
+          <Option>-define=TX_LOW_POWER=0,TX_ENABLE_WAIT=0</Option>
+          <Option>-utf8</Option>
+          <Option>-debug</Option>
+          <Option>-nologo</Option>
+          <Option>-output=${CONFIGDIR}</Option>
+        </AssembleOptions>
+        <LinkOptions>
+          <Option>-output="${ProjName}.abs"</Option>
+          <Option>-form=absolute</Option>
+          <Option>-nomessage</Option>
+          <Option>-vect=_undefined_interrupt_source_isr</Option>
+          <Option>-list=${ProjName}.map</Option>
+          <Option>-nooptimize</Option>
+          <Option>-rom=D=R,D_1=R_1,D_2=R_2</Option>
+          <Option>-cpu=RAM=00000000-0003ffff,FIX=00080000-00083fff,FIX=00086000-00087fff,FIX=00088000-0009ffff,FIX=000a0000-000a3fff,RAM=000a4000-000a5fff,FIX=000a6000-000bffff,FIX=000c0000-000dffff,FIX=000e0000-000fffff,ROM=00100000-00107fff,FIX=007fc000-007fcfff,FIX=007fe000-007fffff,RAM=00800000-0085ffff,RAM=fe7f5d00-fe7f5d7f,RAM=fe7f7d70-fe7f7d9f,ROM=ffe00000-ffffffff</Option>
+          <Option>-nologo</Option>
+          <Option>-start=SU,SI,B_1,R_1,B_2,R_2,R/04,B,FREEMEM/0800000,C_1,C_2,C,C$*,D*,W*,L,P*/0FFE00000,EXCEPTVECT/0FFFFFF80,RESETVECT/0FFFFFFFC</Option>
+          <PreLinker>Auto</PreLinker>
+        </LinkOptions>
+        <LibraryGenerateOptions>
+          <Option>-isa=rxv2</Option>
+          <Option>-fpu</Option>
+          <Option>-dbl_size=8</Option>
+          <Option>-lang=c99</Option>
+          <Option>-head=runtime,ctype,math,mathf,stdarg,stdio,stdlib,string,ios,new,complex,cppstring,C99_complex,fenv,inttypes,wchar,wctype</Option>
+          <Option>-output="${ProjName}.lib"</Option>
+          <Option>-nologo</Option>
+          <GenerateMode>BuildOptionChanged</GenerateMode>
+        </LibraryGenerateOptions>
+        <LinkOrder>
+          <Path>HardwareDebug\tx_initialize_low_level.obj</Path>
+          <Path>HardwareDebug\tx_thread_context_restore.obj</Path>
+          <Path>HardwareDebug\tx_thread_context_save.obj</Path>
+          <Path>HardwareDebug\tx_thread_interrupt_control.obj</Path>
+          <Path>HardwareDebug\tx_thread_schedule.obj</Path>
+          <Path>HardwareDebug\tx_thread_stack_build.obj</Path>
+          <Path>HardwareDebug\tx_thread_system_return.obj</Path>
+          <Path>HardwareDebug\tx_timer_interrupt.obj</Path>
+          <Path>HardwareDebug\ewf_adapter.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_control.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_dtls.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_info.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_modem.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_modem_general.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_modem_network_service.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_modem_packet_domain.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_modem_sim_utility.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_modem_sms.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_mqtt.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_mqtt_basic.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_tcp.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_tls.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_tls_basic.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_udp.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_api_wifi_station.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_common.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_common_control.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_common_info.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_common_internet.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_common_mqtt_basic.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_common_nvm.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_common_tls_basic.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_common_urc.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_ryz014.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_renesas_ryz024a.obj</Path>
+          <Path>HardwareDebug\ewf_adapter_sequans.obj</Path>
+          <Path>HardwareDebug\ewf_allocator.obj</Path>
+          <Path>HardwareDebug\ewf_allocator_threadx.obj</Path>
+          <Path>HardwareDebug\ewf_interface.obj</Path>
+          <Path>HardwareDebug\ewf_interface_rx_uart.obj</Path>
+          <Path>HardwareDebug\ewf_lib.obj</Path>
+          <Path>HardwareDebug\ewf_platform_threadx.obj</Path>
+          <Path>HardwareDebug\tx_block_allocate.obj</Path>
+          <Path>HardwareDebug\tx_block_pool_cleanup.obj</Path>
+          <Path>HardwareDebug\tx_block_pool_create.obj</Path>
+          <Path>HardwareDebug\tx_block_pool_delete.obj</Path>
+          <Path>HardwareDebug\tx_block_pool_info_get.obj</Path>
+          <Path>HardwareDebug\tx_block_pool_initialize.obj</Path>
+          <Path>HardwareDebug\tx_block_pool_performance_info_get.obj</Path>
+          <Path>HardwareDebug\tx_block_pool_performance_system_info_get.obj</Path>
+          <Path>HardwareDebug\tx_block_pool_prioritize.obj</Path>
+          <Path>HardwareDebug\tx_block_release.obj</Path>
+          <Path>HardwareDebug\tx_byte_allocate.obj</Path>
+          <Path>HardwareDebug\tx_byte_pool_cleanup.obj</Path>
+          <Path>HardwareDebug\tx_byte_pool_create.obj</Path>
+          <Path>HardwareDebug\tx_byte_pool_delete.obj</Path>
+          <Path>HardwareDebug\tx_byte_pool_info_get.obj</Path>
+          <Path>HardwareDebug\tx_byte_pool_initialize.obj</Path>
+          <Path>HardwareDebug\tx_byte_pool_performance_info_get.obj</Path>
+          <Path>HardwareDebug\tx_byte_pool_performance_system_info_get.obj</Path>
+          <Path>HardwareDebug\tx_byte_pool_prioritize.obj</Path>
+          <Path>HardwareDebug\tx_byte_pool_search.obj</Path>
+          <Path>HardwareDebug\tx_byte_release.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_cleanup.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_create.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_delete.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_get.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_info_get.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_initialize.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_performance_info_get.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_performance_system_info_get.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_set.obj</Path>
+          <Path>HardwareDebug\tx_event_flags_set_notify.obj</Path>
+          <Path>HardwareDebug\tx_initialize_high_level.obj</Path>
+          <Path>HardwareDebug\tx_initialize_kernel_enter.obj</Path>
+          <Path>HardwareDebug\tx_initialize_kernel_setup.obj</Path>
+          <Path>HardwareDebug\tx_misra.obj</Path>
+          <Path>HardwareDebug\tx_mutex_cleanup.obj</Path>
+          <Path>HardwareDebug\tx_mutex_create.obj</Path>
+          <Path>HardwareDebug\tx_mutex_delete.obj</Path>
+          <Path>HardwareDebug\tx_mutex_get.obj</Path>
+          <Path>HardwareDebug\tx_mutex_info_get.obj</Path>
+          <Path>HardwareDebug\tx_mutex_initialize.obj</Path>
+          <Path>HardwareDebug\tx_mutex_performance_info_get.obj</Path>
+          <Path>HardwareDebug\tx_mutex_performance_system_info_get.obj</Path>
+          <Path>HardwareDebug\tx_mutex_prioritize.obj</Path>
+          <Path>HardwareDebug\tx_mutex_priority_change.obj</Path>
+          <Path>HardwareDebug\tx_mutex_put.obj</Path>
+          <Path>HardwareDebug\tx_queue_cleanup.obj</Path>
+          <Path>HardwareDebug\tx_queue_create.obj</Path>
+          <Path>HardwareDebug\tx_queue_delete.obj</Path>
+          <Path>HardwareDebug\tx_queue_flush.obj</Path>
+          <Path>HardwareDebug\tx_queue_front_send.obj</Path>
+          <Path>HardwareDebug\tx_queue_info_get.obj</Path>
+          <Path>HardwareDebug\tx_queue_initialize.obj</Path>
+          <Path>HardwareDebug\tx_queue_performance_info_get.obj</Path>
+          <Path>HardwareDebug\tx_queue_performance_system_info_get.obj</Path>
+          <Path>HardwareDebug\tx_queue_prioritize.obj</Path>
+          <Path>HardwareDebug\tx_queue_receive.obj</Path>
+          <Path>HardwareDebug\tx_queue_send.obj</Path>
+          <Path>HardwareDebug\tx_queue_send_notify.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_ceiling_put.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_cleanup.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_create.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_delete.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_get.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_info_get.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_initialize.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_performance_info_get.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_performance_system_info_get.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_prioritize.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_put.obj</Path>
+          <Path>HardwareDebug\tx_semaphore_put_notify.obj</Path>
+          <Path>HardwareDebug\tx_thread_create.obj</Path>
+          <Path>HardwareDebug\tx_thread_delete.obj</Path>
+          <Path>HardwareDebug\tx_thread_entry_exit_notify.obj</Path>
+          <Path>HardwareDebug\tx_thread_identify.obj</Path>
+          <Path>HardwareDebug\tx_thread_info_get.obj</Path>
+          <Path>HardwareDebug\tx_thread_initialize.obj</Path>
+          <Path>HardwareDebug\tx_thread_performance_info_get.obj</Path>
+          <Path>HardwareDebug\tx_thread_performance_system_info_get.obj</Path>
+          <Path>HardwareDebug\tx_thread_preemption_change.obj</Path>
+          <Path>HardwareDebug\tx_thread_priority_change.obj</Path>
+          <Path>HardwareDebug\tx_thread_relinquish.obj</Path>
+          <Path>HardwareDebug\tx_thread_reset.obj</Path>
+          <Path>HardwareDebug\tx_thread_resume.obj</Path>
+          <Path>HardwareDebug\tx_thread_shell_entry.obj</Path>
+          <Path>HardwareDebug\tx_thread_sleep.obj</Path>
+          <Path>HardwareDebug\tx_thread_stack_analyze.obj</Path>
+          <Path>HardwareDebug\tx_thread_stack_error_handler.obj</Path>
+          <Path>HardwareDebug\tx_thread_stack_error_notify.obj</Path>
+          <Path>HardwareDebug\tx_thread_suspend.obj</Path>
+          <Path>HardwareDebug\tx_thread_system_preempt_check.obj</Path>
+          <Path>HardwareDebug\tx_thread_system_resume.obj</Path>
+          <Path>HardwareDebug\tx_thread_system_suspend.obj</Path>
+          <Path>HardwareDebug\tx_thread_terminate.obj</Path>
+          <Path>HardwareDebug\tx_thread_time_slice.obj</Path>
+          <Path>HardwareDebug\tx_thread_time_slice_change.obj</Path>
+          <Path>HardwareDebug\tx_thread_timeout.obj</Path>
+          <Path>HardwareDebug\tx_thread_wait_abort.obj</Path>
+          <Path>HardwareDebug\tx_time_get.obj</Path>
+          <Path>HardwareDebug\tx_time_set.obj</Path>
+          <Path>HardwareDebug\tx_timer_activate.obj</Path>
+          <Path>HardwareDebug\tx_timer_change.obj</Path>
+          <Path>HardwareDebug\tx_timer_create.obj</Path>
+          <Path>HardwareDebug\tx_timer_deactivate.obj</Path>
+          <Path>HardwareDebug\tx_timer_delete.obj</Path>
+          <Path>HardwareDebug\tx_timer_expiration_process.obj</Path>
+          <Path>HardwareDebug\tx_timer_info_get.obj</Path>
+          <Path>HardwareDebug\tx_timer_initialize.obj</Path>
+          <Path>HardwareDebug\tx_timer_performance_info_get.obj</Path>
+          <Path>HardwareDebug\tx_timer_performance_system_info_get.obj</Path>
+          <Path>HardwareDebug\tx_timer_system_activate.obj</Path>
+          <Path>HardwareDebug\tx_timer_system_deactivate.obj</Path>
+          <Path>HardwareDebug\tx_timer_thread_entry.obj</Path>
+          <Path>HardwareDebug\tx_trace_buffer_full_notify.obj</Path>
+          <Path>HardwareDebug\tx_trace_disable.obj</Path>
+          <Path>HardwareDebug\tx_trace_enable.obj</Path>
+          <Path>HardwareDebug\tx_trace_event_filter.obj</Path>
+          <Path>HardwareDebug\tx_trace_event_unfilter.obj</Path>
+          <Path>HardwareDebug\tx_trace_initialize.obj</Path>
+          <Path>HardwareDebug\tx_trace_interrupt_control.obj</Path>
+          <Path>HardwareDebug\tx_trace_isr_enter_insert.obj</Path>
+          <Path>HardwareDebug\tx_trace_isr_exit_insert.obj</Path>
+          <Path>HardwareDebug\tx_trace_object_register.obj</Path>
+          <Path>HardwareDebug\tx_trace_object_unregister.obj</Path>
+          <Path>HardwareDebug\tx_trace_user_event_insert.obj</Path>
+          <Path>HardwareDebug\txe_block_allocate.obj</Path>
+          <Path>HardwareDebug\txe_block_pool_create.obj</Path>
+          <Path>HardwareDebug\txe_block_pool_delete.obj</Path>
+          <Path>HardwareDebug\txe_block_pool_info_get.obj</Path>
+          <Path>HardwareDebug\txe_block_pool_prioritize.obj</Path>
+          <Path>HardwareDebug\txe_block_release.obj</Path>
+          <Path>HardwareDebug\txe_byte_allocate.obj</Path>
+          <Path>HardwareDebug\txe_byte_pool_create.obj</Path>
+          <Path>HardwareDebug\txe_byte_pool_delete.obj</Path>
+          <Path>HardwareDebug\txe_byte_pool_info_get.obj</Path>
+          <Path>HardwareDebug\txe_byte_pool_prioritize.obj</Path>
+          <Path>HardwareDebug\txe_byte_release.obj</Path>
+          <Path>HardwareDebug\txe_event_flags_create.obj</Path>
+          <Path>HardwareDebug\txe_event_flags_delete.obj</Path>
+          <Path>HardwareDebug\txe_event_flags_get.obj</Path>
+          <Path>HardwareDebug\txe_event_flags_info_get.obj</Path>
+          <Path>HardwareDebug\txe_event_flags_set.obj</Path>
+          <Path>HardwareDebug\txe_event_flags_set_notify.obj</Path>
+          <Path>HardwareDebug\txe_mutex_create.obj</Path>
+          <Path>HardwareDebug\txe_mutex_delete.obj</Path>
+          <Path>HardwareDebug\txe_mutex_get.obj</Path>
+          <Path>HardwareDebug\txe_mutex_info_get.obj</Path>
+          <Path>HardwareDebug\txe_mutex_prioritize.obj</Path>
+          <Path>HardwareDebug\txe_mutex_put.obj</Path>
+          <Path>HardwareDebug\txe_queue_create.obj</Path>
+          <Path>HardwareDebug\txe_queue_delete.obj</Path>
+          <Path>HardwareDebug\txe_queue_flush.obj</Path>
+          <Path>HardwareDebug\txe_queue_front_send.obj</Path>
+          <Path>HardwareDebug\txe_queue_info_get.obj</Path>
+          <Path>HardwareDebug\txe_queue_prioritize.obj</Path>
+          <Path>HardwareDebug\txe_queue_receive.obj</Path>
+          <Path>HardwareDebug\txe_queue_send.obj</Path>
+          <Path>HardwareDebug\txe_queue_send_notify.obj</Path>
+          <Path>HardwareDebug\txe_semaphore_ceiling_put.obj</Path>
+          <Path>HardwareDebug\txe_semaphore_create.obj</Path>
+          <Path>HardwareDebug\txe_semaphore_delete.obj</Path>
+          <Path>HardwareDebug\txe_semaphore_get.obj</Path>
+          <Path>HardwareDebug\txe_semaphore_info_get.obj</Path>
+          <Path>HardwareDebug\txe_semaphore_prioritize.obj</Path>
+          <Path>HardwareDebug\txe_semaphore_put.obj</Path>
+          <Path>HardwareDebug\txe_semaphore_put_notify.obj</Path>
+          <Path>HardwareDebug\txe_thread_create.obj</Path>
+          <Path>HardwareDebug\txe_thread_delete.obj</Path>
+          <Path>HardwareDebug\txe_thread_entry_exit_notify.obj</Path>
+          <Path>HardwareDebug\txe_thread_info_get.obj</Path>
+          <Path>HardwareDebug\txe_thread_preemption_change.obj</Path>
+          <Path>HardwareDebug\txe_thread_priority_change.obj</Path>
+          <Path>HardwareDebug\txe_thread_relinquish.obj</Path>
+          <Path>HardwareDebug\txe_thread_reset.obj</Path>
+          <Path>HardwareDebug\txe_thread_resume.obj</Path>
+          <Path>HardwareDebug\txe_thread_suspend.obj</Path>
+          <Path>HardwareDebug\txe_thread_terminate.obj</Path>
+          <Path>HardwareDebug\txe_thread_time_slice_change.obj</Path>
+          <Path>HardwareDebug\txe_thread_wait_abort.obj</Path>
+          <Path>HardwareDebug\txe_timer_activate.obj</Path>
+          <Path>HardwareDebug\txe_timer_change.obj</Path>
+          <Path>HardwareDebug\txe_timer_create.obj</Path>
+          <Path>HardwareDebug\txe_timer_deactivate.obj</Path>
+          <Path>HardwareDebug\txe_timer_delete.obj</Path>
+          <Path>HardwareDebug\txe_timer_info_get.obj</Path>
+          <Path>HardwareDebug\tx_low_power.obj</Path>
+          <Path>HardwareDebug\demo_printf.obj</Path>
+          <Path>HardwareDebug\hardware_setup.obj</Path>
+          <Path>HardwareDebug\main.obj</Path>
+          <Path>HardwareDebug\azurertos_object_init.obj</Path>
+          <Path>HardwareDebug\r_cg_hardware_setup.obj</Path>
+          <Path>HardwareDebug\r_smc_cgc.obj</Path>
+          <Path>HardwareDebug\r_smc_cgc_user.obj</Path>
+          <Path>HardwareDebug\r_smc_interrupt.obj</Path>
+          <Path>HardwareDebug\hwsetup.obj</Path>
+          <Path>HardwareDebug\dbsct.obj</Path>
+          <Path>HardwareDebug\lowlvl.obj</Path>
+          <Path>HardwareDebug\lowsrc.obj</Path>
+          <Path>HardwareDebug\mcu_locks.obj</Path>
+          <Path>HardwareDebug\r_bsp_common.obj</Path>
+          <Path>HardwareDebug\r_bsp_cpu.obj</Path>
+          <Path>HardwareDebug\r_bsp_interrupts.obj</Path>
+          <Path>HardwareDebug\r_bsp_locking.obj</Path>
+          <Path>HardwareDebug\r_bsp_mcu_startup.obj</Path>
+          <Path>HardwareDebug\r_bsp_software_interrupt.obj</Path>
+          <Path>HardwareDebug\r_rx_intrinsic_functions.obj</Path>
+          <Path>HardwareDebug\resetprg.obj</Path>
+          <Path>HardwareDebug\sbrk.obj</Path>
+          <Path>HardwareDebug\mcu_clocks.obj</Path>
+          <Path>HardwareDebug\mcu_init.obj</Path>
+          <Path>HardwareDebug\mcu_interrupts.obj</Path>
+          <Path>HardwareDebug\mcu_mapped_interrupts.obj</Path>
+          <Path>HardwareDebug\vecttbl.obj</Path>
+          <Path>HardwareDebug\r_byteq.obj</Path>
+          <Path>HardwareDebug\r_cmt_rx.obj</Path>
+          <Path>HardwareDebug\Pin.obj</Path>
+          <Path>HardwareDebug\r_sci_rx_pinset.obj</Path>
+          <Path>HardwareDebug\r_sci_rx.obj</Path>
+          <Path>HardwareDebug\r_sci_rx_dmaca.obj</Path>
+          <Path>HardwareDebug\r_sci_rx_dtc.obj</Path>
+          <Path>HardwareDebug\r_sci_rx65n.obj</Path>
+          <Path>HardwareDebug\r_sci_rx65n_data.obj</Path>
+          <Path>HardwareDebug\ewf_info_tx_ryz014.lib</Path>
+        </LinkOrder>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_api_lora.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_api_wifi_ap.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_bsd_sockets.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_espressif_common.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_espressif_common_control.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_espressif_common_info.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_espressif_common_internet.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_espressif_common_urc.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_espressif_common_wifi_station.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_espressif_esp8266.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_espressif_esp8285.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_espressif_wroom_02.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_mxchip_common.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_mxchip_common_control.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_mxchip_common_info.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_mxchip_common_internet.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_mxchip_common_tokenizer.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_mxchip_common_urc.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_mxchip_common_wifi_station.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_mxchip_emw3080b.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_bg95.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_bg96.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common_context.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common_control.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common_info.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common_internet.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common_mqtt_basic.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common_tls_basic.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common_tokenizer.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common_ufs.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_quectel_common_urc.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_seeed_lora_e5.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_simcom_common.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_simcom_common_control.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_simcom_common_info.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_simcom_common_urc.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_simcom_sim7000.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_simcom_sim868.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_simcom_sim900.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_thales_common.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_thales_common_context.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_thales_common_control.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_thales_common_ffs.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_thales_common_info.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_thales_common_internet.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_thales_common_tokenizer.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_thales_common_urc.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_thales_exs82_w.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_adapter_winsock2.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_allocator_c_heap.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_allocator_memory_pool.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_allocator_netx.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_interface_linux_serial.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_interface_lpc_uart.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_interface_microchip_pic_uart.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_interface_microchip_sam_uart.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_interface_ra_uart.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_interface_stm32_uart.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_interface_win32_com.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_middleware_netxduo.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_netxduo_ppp.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_platform_bare_metal.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_platform_freertos.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_platform_pthread.c"/>
+        <NoTargetFile Target="..\..\..\src\ewf_platform_win32.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_azure_iot_pnp_provisioning.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_azure_iot_provisioning.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_certs_basic_quectel_bg95.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_certs_basic_quectel_bg96.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_certs_basic_quectel_common.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_certs_basic_renesas_common.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_certs_basic_renesas_ryz014.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_certs_basic_renesas_ryz024a.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_certs_basic_winsock2.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_netx_duo_ppp_test.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_netx_duo_test.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_telemetry.c"/>
+        <NoTargetFile Target="..\..\..\src\examples\ewf_example_telemetry_basic.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_bsd_sockets_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_espressif_common_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_espressif_esp8266_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_espressif_esp8285_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_espressif_wroom_02_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_mxchip_common_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_mxchip_emw3080b_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_quectel_bg95_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_quectel_bg96_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_quectel_common_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_renesas_common_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_renesas_ryz014_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_renesas_ryz024a_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_simcom_common_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_simcom_sim7000_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_thales_common_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_thales_exs82_w_test.c"/>
+        <NoTargetFile Target="..\..\..\src\test\ewf_adapter_winsock2_test.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\rtos_config\azurertos_object_init.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\general\r_cg_hardware_setup.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\general\r_smc_cgc.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\general\r_smc_cgc_user.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\general\r_smc_interrupt.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\dbsct.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\lowlvl.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\lowsrc.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\mcu_locks.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_common.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_cpu.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_locking.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\resetprg.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\all\sbrk.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_init.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_bsp\mcu\rx65n\vecttbl.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_byteq\src\r_byteq.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_cmt_rx\src\r_cmt_rx.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_pincfg\Pin.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_pincfg\r_sci_rx_pinset.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n.c"/>
+        <NoTargetFile Target="trash\2023-02-13-15-54-13\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_data.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\rtos_config\azurertos_object_init.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\general\r_cg_hardware_setup.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\general\r_smc_cgc.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\general\r_smc_cgc_user.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\general\r_smc_interrupt.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\dbsct.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\lowlvl.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\lowsrc.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\mcu_locks.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_common.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_cpu.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_locking.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\resetprg.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\all\sbrk.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_init.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_bsp\mcu\rx65n\vecttbl.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_byteq\src\r_byteq.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_cmt_rx\src\r_cmt_rx.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_pincfg\Pin.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_pincfg\r_sci_rx_pinset.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n.c"/>
+        <NoTargetFile Target="trash\2023-02-13-16-01-26\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_data.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\rtos_config\azurertos_object_init.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\general\r_cg_hardware_setup.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\general\r_smc_cgc.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\general\r_smc_cgc_user.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\general\r_smc_interrupt.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\dbsct.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\lowlvl.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\lowsrc.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\mcu_locks.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_common.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_cpu.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_locking.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\resetprg.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\all\sbrk.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_init.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_bsp\mcu\rx65n\vecttbl.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_byteq\src\r_byteq.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_cmt_rx\src\r_cmt_rx.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_pincfg\Pin.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_pincfg\r_sci_rx_pinset.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx_dmaca.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\r_sci_rx_dtc.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n.c"/>
+        <NoTargetFile Target="trash\2023-02-13-21-21-22\src\smc_gen\r_sci_rx\src\targets\rx65n\r_sci_rx65n_data.c"/>
+        <CommonOptions>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\ewf"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\ewf\src"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\rtos_config\"</IncludePathForC>
+          <IncludePathForC>"C:\t-comms\comms_framework\src"</IncludePathForC>
+          <IncludePathForC>"C:\t-comms\comms_framework\src\examples"</IncludePathForC>
+          <IncludePathForC>"C:\t-comms\comms_framework\src\test"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\rtos_skeleton\"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\general"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_pincfg"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_bsp"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_config"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_cmt_rx"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_cmt_rx\src"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_byteq"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_byteq\src"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_sci_rx"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_sci_rx\src"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\threadx\ports\rxv2\ccrx\inc"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\threadx"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\threadx\common\inc"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\libs\threadx\utility\low_power"</IncludePathForC>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\general"</IncludePathForAsm>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_pincfg"</IncludePathForAsm>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_bsp"</IncludePathForAsm>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_config"</IncludePathForAsm>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_cmt_rx"</IncludePathForAsm>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_cmt_rx\src"</IncludePathForAsm>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_byteq"</IncludePathForAsm>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_byteq\src"</IncludePathForAsm>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_sci_rx"</IncludePathForAsm>
+          <IncludePathForAsm>"${ProjDirPath}\..\..\..\..\..\Users\bhnaphad\e2_studio\CK-RX65N-CCRX\${ProjName}\src\smc_gen\r_sci_rx\src"</IncludePathForAsm>
+          <MacroForC>TX_INCLUDE_USER_DEFINE_FILE</MacroForC>
+          <MacroForC>NX_ENABLE_TCPIP_OFFLOAD</MacroForC>
+          <MacroForC>NX_ENABLE_INTERFACE_CAPABILITY</MacroForC>
+          <MacroForC>NX_DNS_CLIENT_USER_CREATE_PACKET_POOL</MacroForC>
+          <MacroForC>NX_DNS_CLIENT_CLEAR_QUEUE</MacroForC>
+          <MacroForC>NX_SNTP_CLIENT_MAX_ROOT_DISPERSION=0</MacroForC>
+          <MacroForC>NX_SNTP_CURRENT_YEAR=2022</MacroForC>
+          <MacroForAsm>TX_LOW_POWER=0</MacroForAsm>
+          <MacroForAsm>TX_ENABLE_WAIT=0</MacroForAsm>
+        </CommonOptions>
+      </BuildMode>
+    </BuildOptions>
+  </Project>
+</MicomToolCommonProjectFile>
