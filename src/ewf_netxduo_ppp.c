@@ -40,6 +40,8 @@ static NX_PPP* g_ppp0_ptr;
 static NX_IP* g_ip0_ptr;
 #endif
 
+ewf_netxduo_ppp_cfg* g_ppp_cfg;
+
 static ewf_interface* g_interface0_ptr = NULL;
 bool ppp_linkup = false;
 
@@ -51,10 +53,10 @@ void ewf_ppp_rx_thread_entry(ULONG thread_input);
 
 void ewf_ppp_rx_thread_entry(ULONG thread_input)
 {
-	EWF_PARAMETER_NOT_USED(thread_input);
+    EWF_PARAMETER_NOT_USED(thread_input);
     while(1)
     {
-        ewf_result result = ewf_interface_poll(g_interface0_ptr);
+        ewf_result result = ewf_interface_receive_poll(g_interface0_ptr);
         if (result == EWF_RESULT_EMPTY_QUEUE || result == EWF_RESULT_NO_DATA_AVAILABLE)
         {
             tx_thread_sleep(1);
@@ -115,6 +117,9 @@ ewf_result ewf_adapter_data_mode_exit(ewf_adapter* adapter_ptr)
     ewf_result result;
 
 #ifdef EWF_PLATFORM_THREADX
+
+    nx_ppp_stop(g_ppp0_ptr);
+
     nx_ip_delete(g_ip0_ptr);
 
     nx_ppp_delete(g_ppp0_ptr);
@@ -175,11 +180,15 @@ void ewf_ppp_link_down_callback(NX_PPP *ppp_ptr)
 
 void ewf_ppp_invalid_packet_handler(NX_PACKET *packet_ptr)
 {
-    nx_packet_release(packet_ptr);
+    if (g_ppp_cfg->ppp_invalid_packet_callback)
+    {
+        g_ppp_cfg->ppp_invalid_packet_callback(packet_ptr);
+    }
 }
 
  ewf_result ewf_netxduo_ppp_config(ewf_adapter* adapter_ptr, ewf_netxduo_ppp_cfg* ppp_cfg_ptr)
 {
+    g_ppp_cfg = ppp_cfg_ptr;
     g_ppp0_ptr = ppp_cfg_ptr->ppp_ptr;
     g_ip0_ptr = ppp_cfg_ptr->ip_ptr;
 
@@ -340,8 +349,8 @@ void ewf_ppp_invalid_packet_handler(NX_PACKET *packet_ptr)
 
 ewf_result ewf_interface_data_mode_ppp_byte_receive_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
 {
-	EWF_PARAMETER_NOT_USED(interface_ptr);
-	EWF_PARAMETER_NOT_USED(buffer_length);
+    EWF_PARAMETER_NOT_USED(interface_ptr);
+    EWF_PARAMETER_NOT_USED(buffer_length);
 
 #ifdef EWF_DEBUG
     EWF_LOG("[%s][%c]\n", "PPP_RECV", *buffer_ptr);

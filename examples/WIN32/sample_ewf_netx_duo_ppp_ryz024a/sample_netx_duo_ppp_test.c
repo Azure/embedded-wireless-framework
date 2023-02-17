@@ -30,8 +30,8 @@ static ULONG sample_thread_stack[SAMPLE_STACK_SIZE / sizeof(ULONG)];
 /* The thread entry point.  */
 void sample_thread_entry(ULONG parameter);
 
-/* The EWF NetX Duo test.  */
-ewf_result ewf_example_netx_duo_test(ewf_adapter* adapter_ptr);
+/* The EWF NetX Duo PPP test.  */
+ewf_result ewf_example_netx_duo_ppp_test(ewf_adapter* adapter_ptr);
 
 /**
  *  @brief The application entry point, initialize the hardware and start ThreadX
@@ -131,7 +131,7 @@ void sample_thread_entry(ULONG parameter)
         return;
     }
 
-    // Call the NetX Duo test example
+    // Call the NetX Duo PPP test example
     if (ewf_result_failed(result = ewf_example_netx_duo_ppp_test(adapter_ptr)))
     {
         EWF_LOG_ERROR("The NetX Duo test example failed, ewf_result %d.\n", result);

@@ -915,12 +915,13 @@ ewf_result ewf_interface_poll(ewf_interface* interface_ptr)
         return result;
 
     }
+
     result = ewf_interface_process_poll(interface_ptr);
     if (ewf_result_failed(result))
     {
         return result;
     }
-
+ 
     return result;
 }
 
@@ -948,7 +949,7 @@ ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr)
 
         if ((interface_ptr->data_mode) && (interface_ptr->data_mode_callback))
         {
-                interface_ptr->data_mode_callback(interface_ptr, (uint8_t*)&buffer, 1U);
+                interface_ptr->data_mode_callback(interface_ptr, (uint8_t*)&buffer, buffer_length);
         }
         else
         {

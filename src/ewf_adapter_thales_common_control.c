@@ -85,6 +85,24 @@ ewf_result ewf_adapter_thales_common_start(ewf_adapter* adapter_ptr)
 
     /* AT - wake the modem */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr)))
+    {
+        EWF_LOG("Modem did not respond, trying to switch modem in command mode.\r\n");
+        /* If the modem doesnt respond, check if is in data mode and switch to coammand mode */
+        /* Wait for 1 second before inputing the exit string ("+++") */
+        ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+        /* Exit Data Mode */
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "\x2B\x2B\x2B"))) return result;
+        ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
+        if (ewf_result_failed(result = ewf_interface_drop_all_responses(interface_ptr))) return result;
+
+        /* Wait for 1 second after inputing the exit string ("+++") */
+        ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+    }
+
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;

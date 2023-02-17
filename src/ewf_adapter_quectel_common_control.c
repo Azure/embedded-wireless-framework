@@ -77,6 +77,25 @@ ewf_result ewf_adapter_quectel_common_start(ewf_adapter* adapter_ptr)
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
 
+
+    /* AT - wake the modem */
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr)))
+    {
+        /* If the modem doesnt respond, check if is in data mode and switch to coammand mode */
+        /* Wait for 1 second before inputing the exit string ("+++") */
+        ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+        /* Exit Data Mode */
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "\x2B\x2B\x2B"))) return result;
+        ewf_platform_sleep(5 * EWF_PLATFORM_TICKS_PER_SECOND);
+        if (ewf_result_failed(result = ewf_interface_drop_all_responses(interface_ptr))) return result;
+
+        /* Wait for 1 second after inputing the exit string ("+++") */
+        ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+    }
+
     /* AT - wake the modem */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;

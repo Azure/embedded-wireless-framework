@@ -112,7 +112,7 @@ ULONG http_message_length = sizeof(http_request) - 1;
 #endif
 
 CHAR ewf_example_test_netx_duo_udp_echo_server_hostname[] = EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_HOSTNAME_STR;
-ULONG ewf_example_test_netx_duo_udp_echo_server_ip = IP_ADDRESS(0,0,0,0);
+ULONG ewf_example_test_netx_duo_udp_echo_server_ip = IP_ADDRESS(168, 61, 1, 33);
 UINT ewf_example_test_netx_duo_udp_echo_server_port = EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_PORT;
 CHAR ewf_example_test_netx_duo_udp_echo_message[] = EWF_EXAMPLE_NETX_DUO_TEST_UDP_LARGE_MESSAGE_STR;
 UINT ewf_example_test_netx_duo_udp_echo_message_length = sizeof(ewf_example_test_netx_duo_udp_echo_message);

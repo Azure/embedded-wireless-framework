@@ -34,6 +34,7 @@ typedef struct _ewf_netxduo_ppp_cfg
     uint8_t* ppp_thread_stack_ptr;
     uint32_t ppp_thread_stack_size;
     uint8_t ppp_thread_priority;
+    void (*ppp_invalid_packet_callback)(NX_PACKET* p_packet_ptr);
     NX_IP* ip_ptr;
     uint8_t* ip_thread_stack_ptr;
     uint32_t ip_thread_stack_size;

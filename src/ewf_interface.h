@@ -217,7 +217,7 @@ do {                                                                            
  * @brief Maximum wait time for the interface to get response from the adapter
  */
 #ifndef EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS
-#define EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS    (20000)
+#define EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS    (1000)
 #endif
 
 /************************************************************************//**
