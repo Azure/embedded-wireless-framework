@@ -11,6 +11,7 @@ The current set of examples use the CK-RX65N board evaluation board and a ryz014
 - Get the evaluation board [CK-RX65N](https://www.renesas.com/products/microcontrollers-microprocessors/rx-32-bit-performance-efficiency-mcus/ck-rx65n-cloud-kit-based-rx65n-mcu-group).
 - A PC running [Renesas e2studio IDE](https://www.renesas.com/software-tool/e-studio).
 - Introduce compiler [cc-rx](https://www.renesas.com/software-tool/cc-compiler-package-rx-family) 3.0.5 or later.
+- Introduce [RX Driver Package](https://www.renesas.com/software-tool/rx-driver-package) 1.37 or later.
 - If you don't have an Azure subscription, [create one for free](https://azure.microsoft.com/free/) before you begin.
 - Internet connectivity for your PC.
 
