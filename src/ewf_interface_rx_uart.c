@@ -6,9 +6,9 @@
  * @brief The Embedded Wireless Framework RX UART HOST interface API
  ****************************************************************************/
 
+
 #include "ewf_interface_rx_uart.h"
 #include "ewf_lib.h"
-
 
 
 /******************************************************************************
@@ -68,7 +68,7 @@ ewf_result ewf_interface_rx_uart_hardware_start(ewf_interface* interface_ptr)
 	uint8_t     priority = 14;
 #endif
 
-	R_SCI_PinSet_SCI0();
+	R_SCI_CFG_PINSET_EWF_CELLULAR_SERIAL();
 
 	/* Set up the configuration data structure for asynchronous (UART) operation. */
     ewf_rx_sci_config.async.baud_rate    = implementation_ptr->baudrate;
@@ -83,7 +83,7 @@ ewf_result ewf_interface_rx_uart_hardware_start(ewf_interface* interface_ptr)
 	 *  Provide address of the config structure,
 	 *  the callback function to be assigned,
 	 *  and the location for the handle to be stored.*/
-	sci_err = R_SCI_Open(SCI_CH0, SCI_MODE_ASYNC, &ewf_rx_sci_config, ewf_rx_uart_callback, &ewf_rx_sci_handle);
+	sci_err = R_SCI_Open(R_SCI_CFG_EWF_CELLULAR_SERIAL_CH, SCI_MODE_ASYNC, &ewf_rx_sci_config, ewf_rx_uart_callback, &ewf_rx_sci_handle);
 
 	/* If there were an error this would demonstrate error detection of API calls. */
 	if (SCI_SUCCESS != sci_err)
@@ -99,8 +99,8 @@ ewf_result ewf_interface_rx_uart_hardware_start(ewf_interface* interface_ptr)
 
 
 #ifdef EWF_RENESAS_RX65N_CK_ENABLE
-		PORT3.PODR.BIT.B4= 0;
-		PORT3.PDR.BIT.B4= 1;
+		EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RTS_PORT, EWF_CELLULAR_CFG_RTS_PIN) = 0;
+		EWF_CELLULAR_SET_PDR(EWF_CELLULAR_CFG_RTS_PORT, EWF_CELLULAR_CFG_RTS_PIN) = EWF_CELLULAR_PIN_DIRECTION_MODE_OUTPUT;
 #else
 		/* Cloud KIT RX65N */
 		PORT2.PODR.BIT.B2= 0;
@@ -121,7 +121,7 @@ ewf_result ewf_interface_rx_uart_hardware_stop(ewf_interface* interface_ptr)
 	ewf_platform_mutex_destroy(&implementation_ptr->mutex);
 #endif
 
-	R_SCI_Close(SCI_CH0);
+	R_SCI_Close(ewf_rx_sci_handle);
 
 	return EWF_RESULT_OK;
 }

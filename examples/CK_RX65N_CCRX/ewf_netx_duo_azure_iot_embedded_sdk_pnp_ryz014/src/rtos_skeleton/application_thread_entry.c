@@ -52,6 +52,8 @@ Includes   <System Includes> , "Project Includes"
 
 #include "ewf_example.config.h"
 
+#include "ewf_cellular_private.h"
+
 /* Modem might take some minutes to attach and register to the network. Time out value in seconds */
 #define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (1200)
 
@@ -150,10 +152,10 @@ void application_thread_entry(ULONG entry_input)
 
 
 	// Release the RYZ014A from reset
-	PORTA.PODR.BIT.B1= 1;
-	PORTA.PDR.BIT.B1= 1;
+	EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_ON;
+	EWF_CELLULAR_SET_PDR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_PIN_DIRECTION_MODE_OUTPUT;
 	tx_thread_sleep (200);
-	PORTA.PODR.BIT.B1= 0;
+	EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_OFF;
 	printf("Waiting for the module to Power Reset!\r\n");
 	ewf_platform_sleep(300);
 	printf("Ready\r\n");

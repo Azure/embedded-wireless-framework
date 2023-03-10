@@ -497,14 +497,14 @@
         <pinItem allocation="10" comments="" direction="None" id="EMLE" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="20" comments="" direction="None" id="XTAL" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="18" comments="" direction="None" id="XCOUT" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
-        <pinItem allocation="13" comments="" direction="None" id="CTS0#" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="70" comments="" direction="None" id="RXD5" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
-        <pinItem allocation="26" comments="" direction="None" id="RXD0" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
-        <pinItem allocation="27" comments="" direction="None" id="SMOSI0" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
-        <pinItem allocation="67" comments="" direction="None" id="SMOSI5" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
+        <pinItem allocation="7" comments="" direction="None" id="RXD6" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="17" comments="" direction="None" id="XCIN" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
+        <pinItem allocation="8" comments="" direction="None" id="TXD6" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
+        <pinItem allocation="67" comments="" direction="None" id="TXD5" isUsedBySoftware="false" locked="false" operationMode="" status="0"/>
         <pinItem allocation="22" comments="" direction="None" id="EXTAL" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinItem allocation="16" comments="" direction="None" id="FINED" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
+        <pinItem allocation="13" comments="" direction="None" id="CTS6#" isUsedBySoftware="true" locked="false" operationMode="" status="0"/>
         <pinnumItem comment="LED2_B" id="88"/>
         <pinnumItem comment="SERIAL-CTS" id="89"/>
         <pinnumItem comment="OUTDOOR-AIR-QUALITY-RES_N" id="113"/>
@@ -571,11 +571,11 @@
         <option id="com.renesas.smc.code.type" value="Normal Folder"/>
     </tool>
     <tool id="SWComponent" version="1.0.0.0">
-        <configuration enable="true" exclude="false" id="6986836f-491b-42bd-a529-da217fbd8620" inuse="true" name="netxduo_addons">
+        <configuration enable="true" exclude="false" id="d9d81e45-fe58-4cc9-ab6c-569996de2ade" inuse="true" name="netxduo_addons">
             <component description="Dependency: filex, netxduo&#10;Azure RTOS NetX Duo Addons provide additional libraries for NetX Duo such as azure_iot (azure-sdk-for-c), cloud, dhcp, dns, http, mqtt, nat, smtp, snmp etc." detailDescription="Azure RTOS NetX Duo Addons provide additional libraries for NetX Duo such as azure_iot (azure-sdk-for-c), cloud, dhcp, dns, http, mqtt, nat, smtp, snmp etc." display="Azure RTOS NetX Duo Addons" id="netxduo_addons6.2.0_rel-rx-1.0.0" version="6.2.0_rel-rx-1.0.0"/>
             <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
         </configuration>
-        <configuration enable="true" exclude="false" id="c3d0a9df-ef69-4611-9b15-b928eff6d63a" inuse="true" name="threadx">
+        <configuration enable="true" exclude="false" id="ca870b4e-e967-4b9a-a2c6-42dea10be412" inuse="true" name="threadx">
             <component description="Dependency: None&#10;Azure RTOS ThreadX is an advanced real-time operating system (RTOS) designed specifically for deeply embedded applications" detailDescription="Azure RTOS ThreadX is an advanced real-time operating system (RTOS) designed specifically for deeply embedded applications" display="Azure RTOS ThreadX" id="threadx6.2.0_rel-rx-1.0.0" version="6.2.0_rel-rx-1.0.0">
                 <gridItem id="USE_TX_MAX_PRIORITIES" selectedIndex="0"/>
                 <gridItem id="TX_MAX_PRIORITIES" selectedIndex="32"/>
@@ -624,7 +624,7 @@
             </component>
             <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
         </configuration>
-        <configuration enable="true" exclude="false" id="95bbdede-31a5-49e3-99c2-3ddf45fe575c" inuse="true" name="netxduo">
+        <configuration enable="true" exclude="false" id="ec3884cb-1e4a-482e-9728-e4d86624b66a" inuse="true" name="netxduo">
             <component description="Dependency: threadx&#10;Azure RTOS NetX Duo is an advanced, industrial-grade TCP/IP network stack designed specifically for deeply embedded real-time and IoT applications" detailDescription="Azure RTOS NetX Duo is an advanced, industrial-grade TCP/IP network stack designed specifically for deeply embedded real-time and IoT applications" display="Azure RTOS NetX Duo" id="netxduo6.2.0_rel-rx-1.0.0" version="6.2.0_rel-rx-1.0.0">
                 <gridItem id="USE_NX_MAX_PHYSICAL_INTERFACES" selectedIndex="0"/>
                 <gridItem id="NX_MAX_PHYSICAL_INTERFACES" selectedIndex="1"/>
@@ -805,7 +805,7 @@
             </component>
             <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
         </configuration>
-        <configuration enable="true" exclude="false" id="7346a97d-3737-4af6-bdfd-81a4c1a73594" inuse="true" name="filex">
+        <configuration enable="true" exclude="false" id="3a41ea4a-8bf1-4f01-acc9-d33f8fdac392" inuse="true" name="filex">
             <component description="Dependency: threadx&#10;Azure RTOS FileX is a high-performance, FAT-compatible file system that’s fully integrated with Azure RTOS ThreadX" detailDescription="Azure RTOS FileX is a high-performance, FAT-compatible file system that’s fully integrated with Azure RTOS ThreadX" display="Azure RTOS FileX" id="filex6.2.0_rel-rx-1.0.0" version="6.2.0_rel-rx-1.0.0">
                 <gridItem id="USE_FX_MAX_LONG_NAME_LEN" selectedIndex="0"/>
                 <gridItem id="FX_MAX_LONG_NAME_LEN" selectedIndex="256"/>
@@ -850,7 +850,7 @@
             </component>
             <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
         </configuration>
-        <configuration enable="true" exclude="false" id="dda0d872-dd6f-4bf9-92c5-6182fdfc6c57" inuse="true" name="azurertos_object">
+        <configuration enable="true" exclude="false" id="6524437f-ef03-4455-8614-3c4b058a5b52" inuse="true" name="azurertos_object">
             <allocatable id="" name="" type="">
                 <allocatable id="THREAD" name="THREAD" type="TABALLOCATABLE">
                     <allocatable id="THREAD1" name="THREAD1" type="ROWALLOCATABLE">
@@ -929,10 +929,10 @@
                 <gridItem id="CTS5#/RTS5#/SS5#" selectedIndex="0"/>
                 <gridItem id="SCI5" selectedIndex="1"/>
                 <gridItem id="SCK6" selectedIndex="0"/>
-                <gridItem id="RXD6/SMISO6/SSCL6" selectedIndex="0"/>
-                <gridItem id="TXD6/SMOSI6/SSDA6" selectedIndex="0"/>
-                <gridItem id="CTS6#/RTS6#/SS6#" selectedIndex="0"/>
-                <gridItem id="SCI6" selectedIndex="0"/>
+                <gridItem id="RXD6/SMISO6/SSCL6" selectedIndex="1"/>
+                <gridItem id="TXD6/SMOSI6/SSDA6" selectedIndex="1"/>
+                <gridItem id="CTS6#/RTS6#/SS6#" selectedIndex="1"/>
+                <gridItem id="SCI6" selectedIndex="1"/>
                 <gridItem id="SCK7" selectedIndex="0"/>
                 <gridItem id="RXD7/SMISO7/SSCL7" selectedIndex="0"/>
                 <gridItem id="TXD7/SMOSI7/SSDA7" selectedIndex="0"/>
@@ -974,13 +974,13 @@
                 <gridItem id="SCI_CFG_IRDA_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_USE_CIRCULAR_BUFFER" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_DUMMY_TX_BYTE" selectedIndex="0xFF"/>
-                <gridItem id="SCI_CFG_CH0_INCLUDED" selectedIndex="1"/>
+                <gridItem id="SCI_CFG_CH0_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH1_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH2_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH3_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH4_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH5_INCLUDED" selectedIndex="1"/>
-                <gridItem id="SCI_CFG_CH6_INCLUDED" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH6_INCLUDED" selectedIndex="1"/>
                 <gridItem id="SCI_CFG_CH7_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH8_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH9_INCLUDED" selectedIndex="0"/>
@@ -1039,26 +1039,26 @@
                 <gridItem id="SCI_CFG_CH10_EN_ERI_NESTED_INT" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH11_EN_ERI_NESTED_INT" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH12_EN_ERI_NESTED_INT" selectedIndex="0"/>
-                <gridItem id="SCI_CFG_CH0_TX_BUFSIZ" selectedIndex="4096"/>
+                <gridItem id="SCI_CFG_CH0_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH1_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH2_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH3_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH4_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH5_TX_BUFSIZ" selectedIndex="2048"/>
-                <gridItem id="SCI_CFG_CH6_TX_BUFSIZ" selectedIndex="80"/>
+                <gridItem id="SCI_CFG_CH6_TX_BUFSIZ" selectedIndex="4096"/>
                 <gridItem id="SCI_CFG_CH7_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH8_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH9_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH10_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH11_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH12_TX_BUFSIZ" selectedIndex="80"/>
-                <gridItem id="SCI_CFG_CH0_RX_BUFSIZ" selectedIndex="8192"/>
+                <gridItem id="SCI_CFG_CH0_RX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH1_RX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH2_RX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH3_RX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH4_RX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH5_RX_BUFSIZ" selectedIndex="80"/>
-                <gridItem id="SCI_CFG_CH6_RX_BUFSIZ" selectedIndex="80"/>
+                <gridItem id="SCI_CFG_CH6_RX_BUFSIZ" selectedIndex="8192"/>
                 <gridItem id="SCI_CFG_CH7_RX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH8_RX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH9_RX_BUFSIZ" selectedIndex="80"/>

@@ -5,22 +5,26 @@ An adapter is the device or software used to connect the application using the E
 An adapter can be a cellular modem, a WiFi adapter, an Ethernet adapter, a WinSock software layer, a BSD software layer or other type of device or software.
 The EWF API is described in the Doxygen documentation generated out of the common code.
 The source files of the EWF are located in the \src directory at the root of this repository.
-The current set of examples use the CK-RX65N board evaluation board and a ryz014a modem.
+The current set of examples use the CK-RX65N board evaluation board and a ryz014a/ryz024a modem.
 
 ## Prerequisites
+
 - Get the evaluation board [CK-RX65N](https://www.renesas.com/products/microcontrollers-microprocessors/rx-32-bit-performance-efficiency-mcus/ck-rx65n-cloud-kit-based-rx65n-mcu-group).
 - A PC running [Renesas e2studio IDE](https://www.renesas.com/software-tool/e-studio).
 - Introduce compiler [cc-rx](https://www.renesas.com/software-tool/cc-compiler-package-rx-family) 3.0.5 or later.
+- Introduce [RDP](https://www.renesas.com/software-tool/rx-driver-package) v1.37 or later.
 - If you don't have an Azure subscription, [create one for free](https://azure.microsoft.com/free/) before you begin.
 - Internet connectivity for your PC.
+- Place it directly under the cloned project drive to shorten the path. Also shorten the project name (e.g c:\embedded-wireless-flamework -> c:\ewf-xxxx)
 
 ## Prepare Azure Resources
 Follow steps in [README_NETX_AZURE.md](README_NETX_AZURE.md) to create Azure resources that will be used to run the examples in the next steps of this document.
 
-# Getting started - RYZ014A
+# Getting started - RYZ014A/RYZ024A
 To get started with the examples, please follow these steps:
-1. Acquire the necessary hardware and software: the Evaluation Kit CK-RX65N board, a Renesas RYZ014A PMOD, e2-studio with latest FIT modules, openssl, J-Link RTT viewer, Azure IoT Explorer.
-2. Connect to RYZ014A PMOD to CK-RX65N board on PMOD2 connector. Connect Host PC via USB cable to USB Debug pin (J14) and  another USB cable to USB-Serial pin (J20). Also connect micro USB cable to RYZ014A micro USB pin.
+1. Acquire the necessary hardware and software: the Evaluation Kit CK-RX65N board, a Renesas RYZ014A/RYZ024A PMOD, e2-studio with latest FIT modules, openssl, J-Link RTT viewer, Azure IoT Explorer.
+2. Connect to RYZ014A PMOD to CK-RX65N board on PMOD1 connector. Connect Host PC via USB cable to USB Debug pin (J14) and  another USB cable to USB-Serial pin (J20). Also connect micro USB cable to RYZ014A/RYZ024A  micro USB pin.  
+![Connection diagram of CK-RX65N and RYZ014A/RYZ024A](CKRX65N_RYZ014A_RYZ024A.PNG)
 3. Review and edit as necessary the files ewf.config.h and ewf_example.config.h in the different examples. Edit these files to match your configuration. Specially edit the variables EWF_CONFIG_SIM_PIN, EWF_CONFIG_IOT_HUB_HOSTNAME, EWF_CONFIG_IOT_HUB_DEVICEID.
 4. Start e2 studio and create a workspace in \examples\CK_RX65N_CCRX cloud kit, import all the ryz014a examples into the workspace and build all examples.
 5. Open Terminal at com port connection from the board and set it to 115200 8N1.
@@ -69,7 +73,7 @@ Device posistioning service (ENABLE_DPS_SAMPLE) part of the examples is not test
 
 # Examples using Azure RTOS NetX Duo PPP with EWF (Modem in Data mode)
 1. Acquire the necessary hardware and software: the Cloud Kit CK-RX65N, a Renesas RYZ024A PMOD, e2-studio.
-2. Connect to RYZ024A PMOD to CK-RX65N board on PMOD2 connector.  Connect Host PC via USB cable to USB  
+2. Connect to RYZ024A PMOD to CK-RX65N board on PMOD1 connector.  Connect Host PC via USB cable to USB  
    Debug pin (J14) and  another USB cable to USB-Serial pin (J20). Also connect micro USB cable to RYZ024A micro USB pin.  
 3. Open the ewf_netx_duo_ppp_ryz024a project in e2studio and edit the ewf_example.config.h to update   
    EWF_CONFIG_SIM_PIN and EWF_CONFIG_SIM_APN.  

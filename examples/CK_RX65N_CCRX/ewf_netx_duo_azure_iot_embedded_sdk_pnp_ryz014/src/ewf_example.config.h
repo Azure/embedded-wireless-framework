@@ -36,23 +36,6 @@ extern "C" {
 /** @} *** group_example_configuration_allocator */
 
 /**
- * @defgroup group_example_configuration_modem Modem configuration
- * @brief Modem configuration settings used in examples
- * @{
- */
-
-/** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN                                          ("0000")
-
-/** @brief The SIM operator APN */
-#define EWF_CONFIG_SIM_APN                                          ("globaldata.iot")
-
-/** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                                       (1)
-
-/** @} *** group_example_configuration_modem */
-
-/**
  * @defgroup group_example_configuration_iot_hub IoT Hub configuration
  * @brief IoT Hub configuration settings used in examples
  * @{

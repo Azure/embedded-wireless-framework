@@ -17,6 +17,8 @@
 #include "r_byteq_if.h"         // The BYTEQ module API interface file.
 #include "r_sci_rx_config.h"    // User configurable options for the SCI module
 #include "r_sci_rx_pinset.h"
+#include "ewf_cellular_private.h"
+
 
 #ifdef __cplusplus
 extern "C" {
