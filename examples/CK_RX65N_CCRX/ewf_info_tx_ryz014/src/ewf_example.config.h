@@ -36,20 +36,6 @@ extern "C" {
 /** @} *** group_example_configuration_allocator */
 
 /**
- * @defgroup group_example_configuration_modem Modem configuration
- * @brief Modem configuration settings used in examples
- * @{
- */
-
-/** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN                                          ("0000")
-
-/** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                                       (1)
-
-/** @} *** group_example_configuration_modem */
-
-/**
  * @defgroup group_example_configuration_iot_hub IoT Hub configuration
  * @brief IoT Hub configuration settings used in examples
  * @{
@@ -62,6 +48,37 @@ extern "C" {
 #define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
 
 /** @} *** group_example_configuration_iot_hub */
+
+/**
+ * @defgroup group_example_configuration_telemetry
+ * @brief Telemetry example configuration
+ * @{
+ */
+
+/** @brief The size of the buffer used to hold the IoT Hub username */
+#define EWF_CONFIG_TELEMETRY_USERNAME_LENGTH                        (256)
+
+/** @brief The size of the buffer used to hold the IoT Hub client ID */
+#define EWF_CONFIG_TELEMETRY_CLIENT_ID_LENGTH                       (64)
+
+/** @brief The size of the buffer used to hold the IoT Hub topic length */
+#define EWF_CONFIG_TELEMETRY_TOPIC_LENGTH                           (256)
+
+/** @brief The number of minutes to run the telemetry loop, 0 means to run forever */
+#define EWF_CONFIG_TELEMETRY_LOOP_MINUTES                           (60)
+
+/** @} */
+
+/**
+ * @defgroup group_example_configuration_netx_duo NetX Duo driver configuration
+ * @brief NetX Duo Driver configuration settings used in middleware driver
+ * @{
+ */
+
+/* MTU size should be equal to the modems maximum socket send size */
+#define EWF_CONFIG_ADAPTER_MTU                                       (1460)
+
+/** @} */
 
 /************************************************************************//**
  * @}
