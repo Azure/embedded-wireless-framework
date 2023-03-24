@@ -10,10 +10,19 @@
 #define __ewf_adapter_thales_common__h__included__
 
 #include "ewf_adapter.h"
+#include "ewf_allocator.h"
+#include "ewf_interface.h"
+#include "ewf_adapter_api_modem.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* Disable TLS and MQTT */
+#define EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED (0)
+#define EWF_ADAPTER_THALES_COMMON_TLS_ENABLED (0)
+#define EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED (0)
+#define EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED (0)
 
 /************************************************************************//**
  * @defgroup group_configuration_adapter_thales_common Thales common configuration
@@ -30,14 +39,12 @@ extern "C" {
 #define EWF_ADAPTER_THALES_COMMON_FFS_ENABLED (1)
 #endif
 
-#if !defined(EWF_ADAPTER_THALES_COMMON_TLS_ENABLED) && !defined(EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED)
-#if 1
+#ifndef EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED
 #define EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED (1)
-#define EWF_ADAPTER_THALES_COMMON_TLS_ENABLED (0)
-#else
-#define EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_TLS_ENABLED (1)
 #endif
+
+#ifndef EWF_ADAPTER_THALES_COMMON_TLS_ENABLED
+#define EWF_ADAPTER_THALES_COMMON_TLS_ENABLED (1)
 #endif
 
 #ifndef EWF_ADAPTER_THALES_COMMON_TCP_ENABLED
@@ -48,14 +55,12 @@ extern "C" {
 #define EWF_ADAPTER_THALES_COMMON_UDP_ENABLED (1)
 #endif
 
-#if !defined(EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED) && !defined(EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED)
-#if 1
-#define EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED (1)
-#define EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED (0)
-#else
-#define EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED (0)
+#ifndef EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED 
 #define EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED (1)
 #endif
+
+#ifndef EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED
+#define EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED (1)
 #endif
 
 #ifndef EWF_ADAPTER_THALES_COMMON_INTERNET_SOCKET_POOL_SIZE
@@ -79,29 +84,7 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @} *** group_configuration_adapter_thales_common
- ****************************************************************************/
-
-/************************************************************************//**
- * @defgroup group_adapter_thales_common Thales common driver implementation
- * @ingroup group_adapter
- * @brief Thales common adapter implementation
- * @{
- ****************************************************************************/
-
-/************************************************************************//**
- * @defgroup group_adapter_thales_common_tokenizer Thales common driver tokenizer
- * @brief Thales common adapter tokenizer
- * @{
- ****************************************************************************/
-
-extern ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_message_tokenizer_pattern_ptr;
-extern ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_command_response_end_tokenizer_pattern_ptr;
-static ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_command_response_tokenizer_pattern_ptr;
-extern ewf_interface_tokenizer_pattern* ewf_adapter_thales_common_urc_tokenizer_pattern_ptr;
-
-/************************************************************************//**
- * @} *** group_adapter_thales_common_tokenizer
+ * @}
  ****************************************************************************/
 
 /************************************************************************//**
@@ -386,11 +369,11 @@ ewf_result ewf_adapter_thales_common_mqtt_basic_publish(ewf_adapter* adapter_ptr
 /** @} *** group_adapter_thales_common_mqtt_basic */
 
 /************************************************************************//**
- * @} *** group_adapter_thales_common_functions
+ * @}
  ****************************************************************************/
 
 /************************************************************************//**
- * @} *** group_adapter_thales_common
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

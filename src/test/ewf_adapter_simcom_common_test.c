@@ -7,6 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_test.h"
+#include "ewf_tokenizer_basic.h"
 #include "ewf_adapter_simcom_common.h"
 
 ewf_result ewf_adapter_simcom_common_test(ewf_adapter* adapter_ptr);
@@ -41,10 +42,12 @@ ewf_result ewf_adapter_simcom_common_test(ewf_adapter* adapter_ptr)
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QIDNSCFG=1\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
+#if 0
     if (ewf_result_failed(result = ewf_adapter_simcom_common_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG("[WARNING][Failed to activate the context.]\n");
     }
+#endif
 
 #if 0
 
@@ -92,10 +95,12 @@ ewf_result ewf_adapter_simcom_common_test(ewf_adapter* adapter_ptr)
         EWF_LOG_ERROR("Failed to run the adapter common tests: ewf_result %d.\n", result);
     }
 
+#if 0
     if (ewf_result_failed(result = ewf_adapter_simcom_common_context_deactivate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
         EWF_LOG("Failed to deactivate the context.\n");
     }
+#endif
 
     return EWF_RESULT_OK;
 }
@@ -221,7 +226,7 @@ ewf_result ewf_adapter_simcom_common_test_command_http(ewf_adapter* adapter_ptr)
 #endif
         unsigned url_length = sizeof(url_str) - 1;
         char tokenizer_pattern_str[] = "\r\nCONNECT\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern = {
             NULL,
             tokenizer_pattern_str ,
             sizeof(tokenizer_pattern_str)-1,
@@ -231,17 +236,19 @@ ewf_result ewf_adapter_simcom_common_test_command_http(ewf_adapter* adapter_ptr)
         char url_length_str[4];
         const char* url_length_cstr = ewfl_unsigned_to_str(url_length, url_length_str, sizeof(url_length_str));
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern))) return result;
         if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QHTTPURL=", url_length_cstr, ",80\r", NULL))) return result;
         if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str)))
         {
             EWF_LOG_ERROR("Unexpected response.\n");
-            if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+            if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL))) return result;
             return EWF_RESULT_UNEXPECTED_RESPONSE;
         }
         else
         {
-            if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+            if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL))) return result;
             if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, url_str, "\r", NULL))) return result;
             if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
         }
@@ -298,13 +305,16 @@ ewf_result ewf_adapter_simcom_common_test_command_http(ewf_adapter* adapter_ptr)
     /* Read the responses */
     {
         char tokenizer_pattern_str[] = "\r\nCONNECT\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern = {
             NULL,
             tokenizer_pattern_str ,
             sizeof(tokenizer_pattern_str)-1,
             false,
         };
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
+
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern))) return result;
 
         ewf_result result_send_command = EWF_RESULT_OK;
         ewf_result result_verify_response = EWF_RESULT_OK;
@@ -325,7 +335,7 @@ ewf_result ewf_adapter_simcom_common_test_command_http(ewf_adapter* adapter_ptr)
         }
 
         /* Clear the response pattern */
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL))) return result;
 
         if (ewf_result_failed(result_send_command)) return result_send_command;
         if (ewf_result_failed(result_verify_response)) return result_verify_response;
@@ -345,6 +355,7 @@ ewf_result ewf_adapter_simcom_common_test_command_http(ewf_adapter* adapter_ptr)
     return EWF_RESULT_OK;
 }
 
+#if 0
 /**
  * @brief UFS API test
  */
@@ -360,3 +371,4 @@ ewf_result ewf_adapter_simcom_common_test_api_ufs(ewf_adapter* adapter_ptr)
 
     return EWF_RESULT_OK;
 }
+#endif

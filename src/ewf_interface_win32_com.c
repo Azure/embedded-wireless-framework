@@ -24,19 +24,6 @@ ewf_result ewf_interface_win32_com_hardware_start(ewf_interface* interface_ptr)
     EWF_INTERFACE_VALIDATE_POINTER_TYPE(interface_ptr, EWF_INTERFACE_TYPE_WIN32_COM);
     ewf_interface_win32_com* win32_com_interface_ptr = (ewf_interface_win32_com*)interface_ptr->implementation_ptr;
 
-    DCB dcb;
-    DWORD dwBytesTransferred;
-    DWORD dwCommModemStatus = 0;
-    LPSTR lpBuffer;
-    DWORD dwNoOFBytestoWrite;
-    BOOL Status;
-    DWORD dwCommEvent = 0;
-    COMMTIMEOUTS CommTimeouts = { 0 };
-
-    BYTE Byte;
-    DWORD dwWritten;
-    DWORD dwRes;
-
     win32_com_interface_ptr->hComm = CreateFile(
         win32_com_interface_ptr->com_port_cstr, // Port name
         GENERIC_READ | GENERIC_WRITE,           // Read/Write
@@ -52,6 +39,7 @@ ewf_result ewf_interface_win32_com_hardware_start(ewf_interface* interface_ptr)
     }
 
     // Initialize the DCB structure.
+    DCB dcb;
     SecureZeroMemory(&dcb, sizeof(DCB));
     dcb.DCBlength = sizeof(DCB);
     if (!GetCommState(win32_com_interface_ptr->hComm, &dcb))
@@ -73,6 +61,13 @@ ewf_result ewf_interface_win32_com_hardware_start(ewf_interface* interface_ptr)
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
 
+    COMMTIMEOUTS CommTimeouts = {
+        MAXDWORD, // ReadIntervalTimeout
+        0,        // ReadTotalTimeoutMultiplier
+        0,        // ReadTotalTimeoutConstant
+        0,        // WriteTotalTimeoutMultiplier
+        0         // WriteTotalTimeoutConstant
+    };
     if (!SetCommTimeouts(win32_com_interface_ptr->hComm, &CommTimeouts))
     {
         EWF_LOG_ERROR("SetCommTimeouts failed.\n");
@@ -202,19 +197,36 @@ ewf_result ewf_interface_win32_com_hardware_receive(ewf_interface* interface_ptr
     if (!buffer_length_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     if (*buffer_length_ptr < 1) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
-    if (!wait)
+    if (wait)
     {
-        COMSTAT Stat;
-
-        if (!ClearCommError(win32_com_interface_ptr->hComm, NULL, &Stat))
+        COMMTIMEOUTS CommTimeouts = {
+            MAXDWORD,   // ReadIntervalTimeout
+            MAXDWORD,   // ReadTotalTimeoutMultiplier
+            1,          // ReadTotalTimeoutConstant
+            0,          // WriteTotalTimeoutMultiplier
+            0           // WriteTotalTimeoutConstant
+        };
+        if (!SetCommTimeouts(win32_com_interface_ptr->hComm, &CommTimeouts))
         {
-            EWF_LOG_ERROR("The function ClearCommError failed with error 0x%08X.", GetLastError());
-            return EWF_RESULT_IRRECOVERABLE_ERROR;
+            EWF_LOG_ERROR("SetCommTimeouts failed.\n");
+            CloseHandle(win32_com_interface_ptr->hComm);
+            return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
         }
-
-        if (Stat.cbInQue == 0)
+    }
+    else
+    {
+        COMMTIMEOUTS CommTimeouts = {
+            MAXDWORD,   // ReadIntervalTimeout
+            0,          // ReadTotalTimeoutMultiplier
+            0,          // ReadTotalTimeoutConstant
+            0,          // WriteTotalTimeoutMultiplier
+            0           // WriteTotalTimeoutConstant
+        };
+        if (!SetCommTimeouts(win32_com_interface_ptr->hComm, &CommTimeouts))
         {
-            return EWF_RESULT_NO_DATA_AVAILABLE;
+            EWF_LOG_ERROR("SetCommTimeouts failed.\n");
+            CloseHandle(win32_com_interface_ptr->hComm);
+            return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
         }
     }
 
@@ -230,6 +242,11 @@ ewf_result ewf_interface_win32_com_hardware_receive(ewf_interface* interface_ptr
         &dwRead,
         &win32_com_interface_ptr->osReader))
     {
+        if (dwRead == 0)
+        {
+            return EWF_RESULT_NO_DATA_AVAILABLE;
+        }
+
         *buffer_length_ptr = dwRead;
         return EWF_RESULT_OK;
     }
@@ -241,7 +258,7 @@ ewf_result ewf_interface_win32_com_hardware_receive(ewf_interface* interface_ptr
         return EWF_RESULT_RECEPTION_FAILED;
     }
 
-    dwRes = WaitForSingleObject(win32_com_interface_ptr->osReader.hEvent, INFINITE);
+    dwRes = WaitForSingleObject(win32_com_interface_ptr->osReader.hEvent, (wait ? INFINITE : 0));
     switch (dwRes)
     {
     case WAIT_OBJECT_0:
@@ -250,11 +267,12 @@ ewf_result ewf_interface_win32_com_hardware_receive(ewf_interface* interface_ptr
             dwLastError = GetLastError();
             EWF_LOG_ERROR("The overlapped read operation failed with error 0x%08X.", dwLastError);
             // Error in communications; report it.
+            return EWF_RESULT_RECEPTION_FAILED;
         }
         else
         {
             *buffer_length_ptr = dwRead;
-            break;
+            return EWF_RESULT_OK;
         }
         break;
 
@@ -262,14 +280,12 @@ ewf_result ewf_interface_win32_com_hardware_receive(ewf_interface* interface_ptr
         // Operation isn't complete yet. fWaitingOnRead flag isn't
         // changed since I'll loop back around, and I don't want
         // to issue another read until the first one finishes.
-        //
-        // This is a good time to do some background work.
-        break;
+        return EWF_RESULT_NO_DATA_AVAILABLE;
 
     default:
         // Error in the WaitForSingleObject; abort.
         // This indicates a problem with the OVERLAPPED structure's event handle.
-        break;
+        return EWF_RESULT_RECEPTION_FAILED;
     }
 
     /* All ok! */

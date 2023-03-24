@@ -41,11 +41,9 @@ extern "C" {
  * @{
  */
 
-/** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN                                          ("0000")
-
-/** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                                       (1)
+void renesas_ryz014a_adapter_power_on();
+/** @brief The modem power on user function */
+#define EWF_ADAPTER_USER_POWER_ON                                   renesas_ryz014a_adapter_power_on
 
 /** @} *** group_example_configuration_modem */
 
@@ -62,6 +60,17 @@ extern "C" {
 #define EWF_CONFIG_IOT_HUB_DEVICEID                                 ""
 
 /** @} *** group_example_configuration_iot_hub */
+
+/**
+ * @defgroup group_example_configuration_netx_duo NetX Duo driver configuration
+ * @brief NetX Duo Driver configuration settings used in middleware driver
+ * @{
+ */
+
+/* MTU size should be equal to the modems maximum socket send size */
+#define EWF_CONFIG_ADAPTER_MTU                                       (1460)
+
+/** @} */
 
 /************************************************************************//**
  * @}

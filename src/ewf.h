@@ -29,6 +29,8 @@
 
 #ifdef EWF_DEBUG
 #include <stdio.h>
+#else
+#include <stddef.h>
 #endif
 
 #include <stdint.h>
@@ -198,11 +200,11 @@ struct _ewf_message;
 /** @brief Interface message structure type definition */
 typedef struct _ewf_message ewf_message;
 
-/** @brief Interface tokenizer pattern structure declaration */
-struct _ewf_tokenizer_pattern;
+/** @brief Tokenizer structure declaration */
+struct _ewf_tokenizer;
 
-/** @brief Interface tokenizer pattern structure type definition */
-typedef struct _ewf_tokenizer_pattern ewf_tokenizer_pattern;
+/** @brief Tokenizer structure type definition */
+typedef struct _ewf_tokenizer ewf_tokenizer;
 
 /** @} // group_ewf_types */
 

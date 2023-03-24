@@ -7,7 +7,6 @@
  ****************************************************************************/
 
 #include "ewf_adapter_quectel_bg95.h"
-#include "ewf_adapter_quectel_common.c"
 
 ewf_adapter_api_control ewf_adapter_quectel_bg95_api_control =
 {

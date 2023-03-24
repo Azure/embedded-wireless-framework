@@ -218,8 +218,6 @@ typedef struct _ewf_adapter_renesas_common_socket
 /** @brief The Renesas adapter data structure */
 typedef struct _ewf_adapter_renesas_common
 {
-    /**< The user URC callback, called to process URC not handled by the driver */
-    ewf_interface_urc_callback user_urc_callback;
 
 #if EWF_ADAPTER_RENESAS_COMMON_TCP_ENABLED || EWF_ADAPTER_RENESAS_COMMON_UDP_ENABLED
     /**< The internal pool of internet sockets */
@@ -253,6 +251,22 @@ typedef struct _ewf_adapter_renesas_common
 /************************************************************************//**
  * @} *** group_adapter_renesas_common_data
  ****************************************************************************/
+
+/************************************************************************//**
+ * @defgroup group_adapter_renesas_common_tokenizer Renesas adapter tokenizer functions
+ * @brief Renesas adapter tokenizer functions
+ * @{
+ ****************************************************************************/
+
+/**
+ * @brief Initialize the tokenizer
+ * @return #ewf_result success and error conditions
+ */
+ewf_result ewf_adapter_renesas_common_tokenizer_init(ewf_interface* interface_ptr);
+
+/************************************************************************//**
+  * @} *** group_adapter_renesas_common_tokenizer
+  ****************************************************************************/
 
 /************************************************************************//**
  * @defgroup group_adapter_renesas_common_functions Renesas generic adapter functions

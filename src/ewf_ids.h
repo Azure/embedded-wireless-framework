@@ -110,6 +110,16 @@
 
 /** @} *** group_ewf_ids_allocator */
 
-/** @} *** group_ewf_ids */
+/**
+ * @defgroup group_ewf_ids_tokenizer EWF tokenizer IDs
+ * @brief EWF allocator IDs
+ * @{
+ */
+
+#define EWF_TOKENIZER_TYPE_BASIC                   (EWF_DEVELOPER_MICROSOFT | 0x0001)
+
+ /** @} *** group_ewf_ids_allocator */
+
+ /** @} *** group_ewf_ids */
 
 #endif /* __ewf__ids__h__included__ */

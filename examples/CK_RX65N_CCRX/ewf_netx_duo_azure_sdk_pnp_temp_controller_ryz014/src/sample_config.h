@@ -89,6 +89,7 @@ TODO`s: Configure core settings of application for your IoTHub.
 #define DEVICE_SYMMETRIC_KEY                        ""
 #endif /* DEVICE_SYMMETRIC_KEY */
 
+
 /* Optional module ID.  */
 #ifndef MODULE_ID
 #define MODULE_ID                                   ""

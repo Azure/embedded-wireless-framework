@@ -44,34 +44,18 @@ ewf_result ewf_adapter_mxchip_common_start(ewf_adapter* adapter_ptr)
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
 
-    /* Initialize the interface tokenizer patterns */
-
-    ewf_adapter_mxchip_common_message_tokenizer_pattern1_match_function_state.interface_ptr = interface_ptr;
-    ewf_adapter_mxchip_common_message_tokenizer_pattern2_match_function_state.interface_ptr = interface_ptr;
-    ewf_adapter_mxchip_common_message_tokenizer_pattern3_match_function_state.interface_ptr = interface_ptr;
-
-    if (ewf_result_failed(result = ewf_interface_tokenizer_message_pattern_set(interface_ptr, ewf_adapter_mxchip_common_message_tokenizer_pattern_ptr)))
-    {
-        EWF_LOG_ERROR("Failed to set the interface message tokenizer pattern: ewf_result %d.\n", result);
-        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
-    }
-
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, ewf_adapter_mxchip_common_command_response_end_tokenizer_pattern_ptr)))
-    {
-        EWF_LOG_ERROR("Failed to set the interface command response end tokenizer pattern: ewf_result %d.\n", result);
-        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
-    }
-
-    if (ewf_result_failed(result = ewf_interface_tokenizer_urc_pattern_set(interface_ptr, ewf_adapter_mxchip_common_urc_tokenizer_pattern_ptr)))
-    {
-        EWF_LOG_ERROR("Failed to set the interface URC tokenizer pattern: ewf_result %d.\n", result);
-        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
-    }
-
     /* Start the interface */
     if (ewf_result_failed(result = ewf_interface_start(interface_ptr)))
     {
         EWF_LOG_ERROR("Failed to start the interface: ewf_result %d.\n", result);
+        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
+    }
+
+    /* Initialize the tokenizer */
+    result = ewf_adapter_mxchip_common_tokenizer_init(interface_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to initialize the tokenizer: ewf_result %d.\n", result);
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
 
@@ -100,7 +84,17 @@ ewf_result ewf_adapter_mxchip_common_start(ewf_adapter* adapter_ptr)
         ewf_platform_queue_create(implementation_ptr->internet_socket_pool[4].recv_queue_ptr);
     }
 
-    /* AT - wake the module */
+    /* AT - wake the modem */
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr)))
+    {
+#ifdef EWF_ADAPTER_USER_POWER_ON
+       /* EWF does not process Power ON URC's at init.
+          Application code must add delay of atleast 500ms after modem is power on to skip the URC's
+          */
+       EWF_ADAPTER_USER_POWER_ON();
+#endif
+    }
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;

@@ -51,10 +51,6 @@
 							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC.1705601752" name="Compiler" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.includeFileDir.1596236244" name="Include file directories (-I)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.includeFileDir" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/ports/rxv2/gnu/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/common/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/utility/low_power}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/rtos_config/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ewf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ewf/examples}&quot;"/>
@@ -69,6 +65,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_byteq/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_sci_rx}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_sci_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/rtos_skeleton/}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/ports/rxv2/gnu/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/common/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/utility/low_power}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/netxduo/ports/rxv2/gnu/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/netxduo}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/netxduo/common/inc}&quot;"/>
@@ -96,27 +97,25 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/filex}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/filex/common/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/filex/ports/generic/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/rtos_skeleton/}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/netxduo_addons/addons/ppp}&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.std.657772248" name="Language standard" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.std" useByScannerDiscovery="true" value="com.renesas.cdt.managedbuild.gcc.core.option.compiler.common.gnu99" valueType="enumerated"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.macroDefines.1192504101" name="Macro Defines (-D)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.macroDefines" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NX_INCLUDE_USER_DEFINE_FILE"/>
-									<listOptionValue builtIn="false" value="FLATCC_NO_ASSERT"/>
 									<listOptionValue builtIn="false" value="TX_INCLUDE_USER_DEFINE_FILE"/>
-									<listOptionValue builtIn="false" value="NX_ENABLE_IP_PACKET_FILTER"/>
 									<listOptionValue builtIn="false" value="NX_ENABLE_TCPIP_OFFLOAD"/>
 									<listOptionValue builtIn="false" value="NX_ENABLE_INTERFACE_CAPABILITY"/>
-									<listOptionValue builtIn="false" value="NX_AZURE_IOT_LOG_LEVEL=0"/>
-									<listOptionValue builtIn="false" value="NX_ENABLE_EXTENDED_NOTIFY_SUPPORT"/>
 									<listOptionValue builtIn="false" value="NX_DNS_CLIENT_USER_CREATE_PACKET_POOL"/>
 									<listOptionValue builtIn="false" value="NX_DNS_CLIENT_CLEAR_QUEUE"/>
 									<listOptionValue builtIn="false" value="NX_SNTP_CLIENT_MIN_SERVER_STRATUM=3"/>
 									<listOptionValue builtIn="false" value="NX_SNTP_CLIENT_MAX_ROOT_DISPERSION=0"/>
 									<listOptionValue builtIn="false" value="NX_SNTP_CURRENT_YEAR=2022"/>
-									<listOptionValue builtIn="false" value="NX_SECURE_ENABLE"/>
-									<listOptionValue builtIn="false" value="NXD_MQTT_CLOUD_ENABLE"/>
 									<listOptionValue builtIn="false" value="FX_INCLUDE_USER_DEFINE_FILE"/>
+									<listOptionValue builtIn="false" value="NXD_MQTT_CLOUD_ENABLE"/>
+									<listOptionValue builtIn="false" value="NX_SECURE_ENABLE"/>
+									<listOptionValue builtIn="false" value="NX_ENABLE_EXTENDED_NOTIFY_SUPPORT"/>
+									<listOptionValue builtIn="false" value="NX_ENABLE_IP_PACKET_FILTER"/>
+									<listOptionValue builtIn="false" value="FLATCC_NO_ASSERT"/>
+									<listOptionValue builtIn="false" value="NX_AZURE_IOT_LOG_LEVEL=0"/>
 								</option>
 								<inputType id="com.renesas.cdt.managedbuild.gcc.core.inputType.compiler.c.1171024009" superClass="com.renesas.cdt.managedbuild.gcc.core.inputType.compiler.c"/>
 							</tool>

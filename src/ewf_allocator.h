@@ -48,38 +48,38 @@ struct _ewf_allocator
 #define EWF_ALLOCATOR_VERSION              (EWF_DEVELOPER_MICROSOFT | 0x0001)
 
 #ifdef EWF_PARAMETER_CHECKING
-#define EWF_ALLOCATOR_VALIDATE_POINTER(allocator_ptr)                          \
+#define EWF_ALLOCATOR_VALIDATE_POINTER(allocator_ptr)                               \
 do {                                                                                \
     if ((allocator_ptr == NULL) ||                                                  \
-        (allocator_ptr->struct_magic != EWF_ALLOCATOR_STRUCT_MAGIC) ||         \
-        (allocator_ptr->struct_size != EWF_ALLOCATOR_STRUCT_SIZE) ||           \
-        (allocator_ptr->struct_version != EWF_ALLOCATOR_VERSION) ||            \
+        (allocator_ptr->struct_magic != EWF_ALLOCATOR_STRUCT_MAGIC) ||              \
+        (allocator_ptr->struct_size != EWF_ALLOCATOR_STRUCT_SIZE) ||                \
+        (allocator_ptr->struct_version != EWF_ALLOCATOR_VERSION) ||                 \
         (allocator_ptr->implementation_ptr == NULL))                                \
     {                                                                               \
-        EWF_LOG_ERROR("The allocator pointer is invalid.");                    \
-        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                           \
+        EWF_LOG_ERROR("The allocator pointer is invalid.");                         \
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                                \
     }                                                                               \
 } while(0)
 #else
-#define EWF_ALLOCATOR_VALIDATE_POINTER(allocator_ptr)                          \
+#define EWF_ALLOCATOR_VALIDATE_POINTER(allocator_ptr)                               \
 do {                                                                                \
     if ((allocator_ptr == NULL) ||                                                  \
         (allocator_ptr->implementation_ptr == NULL))                                \
     {                                                                               \
-        EWF_LOG_ERROR("The allocator pointer is invalid.");                    \
-        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                           \
+        EWF_LOG_ERROR("The allocator pointer is invalid.");                         \
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                                \
     }                                                                               \
 } while(0)
 #endif /* EWF_PARAMETER_CHECKING */
 
 #ifdef EWF_PARAMETER_CHECKING
-#define EWF_ALLOCATOR_VALIDATE_POINTER_TYPE(allocator_ptr, allocator_type)     \
+#define EWF_ALLOCATOR_VALIDATE_POINTER_TYPE(allocator_ptr, allocator_type)          \
 do {                                                                                \
     if ((allocator_ptr == NULL) ||                                                  \
         (allocator_ptr->struct_type != allocator_type))                             \
     {                                                                               \
-        EWF_LOG_ERROR("The allocator pointer type is invalid.");               \
-        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                           \
+        EWF_LOG_ERROR("The allocator pointer type is invalid.");                    \
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;                                \
     }                                                                               \
 } while(0)
 #else

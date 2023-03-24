@@ -8,8 +8,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_common.h"
-#include "ewf_platform.h"
-#include "ewf_lib.h"
+#include "ewf_tokenizer_basic.h"
 
 /******************************************************************************
  *
@@ -423,7 +422,7 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
 
     {
         char tokenizer_pattern1_str[] = "\r\n> ";
-        ewf_interface_tokenizer_pattern tokenizer_pattern1 = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern1 = {
             NULL,
             tokenizer_pattern1_str,
             sizeof(tokenizer_pattern1_str) - 1,
@@ -432,7 +431,9 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
             NULL,
         };
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern1))) return result;
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern1))) return result;
 
         ewf_result result_send_command;
         ewf_result result_verify_response;
@@ -449,7 +450,7 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
             result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern1_str);
         }
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL))) return result;
 
         if (ewf_result_failed(result_send_command))
         {
@@ -464,7 +465,7 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
 
     {
         char tokenizer_pattern2_str[] = "\r\nOK\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern2 = {
             NULL,
             tokenizer_pattern2_str,
             sizeof(tokenizer_pattern2_str) - 1,
@@ -476,11 +477,13 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
         ewf_result result_send = EWF_RESULT_OK;
         ewf_result result_verify_response = EWF_RESULT_OK;
 
-        ewf_interface_tokenizer_pattern* saved_tokenizer_pattern_ptr = NULL;
-        result = ewf_interface_tokenizer_command_response_end_pattern_get(interface_ptr, &saved_tokenizer_pattern_ptr);
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        ewf_tokenizer_basic_pattern* saved_tokenizer_pattern_ptr = NULL;
+        result = ewf_tokenizer_basic_command_response_end_pattern_get(tokenizer_data_ptr, &saved_tokenizer_pattern_ptr);
         if (ewf_result_failed(result)) return result;
 
-        result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, &tokenizer_pattern2);
+        result = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, &tokenizer_pattern2);
         if (ewf_result_failed(result)) return result;
 
         result_send = ewf_interface_send(interface_ptr, (const uint8_t*)buffer_ptr, buffer_length);
@@ -491,7 +494,7 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
         }
 
         /* Restore the previously saved tokenizer pattern */
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, saved_tokenizer_pattern_ptr)))
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, saved_tokenizer_pattern_ptr)))
         {
             return result;
         }
@@ -679,7 +682,7 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_receive(
 
         char* p = NULL;
 
-        if (!ewfl_buffer_equals_buffer((char* )response_ptr, data_read_response_str, sizeof(data_read_response_str) - 1))
+        if (!ewfl_buffer_equals_buffer(response_ptr, (uint8_t*)data_read_response_str, sizeof(data_read_response_str) - 1))
         {
             result = EWF_RESULT_UNEXPECTED_RESPONSE;
         }
@@ -696,7 +699,7 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_receive(
             if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
             else
             {
-                *p = 0; p++;
+                p++;
                 if (*p != '\n') result = EWF_RESULT_UNEXPECTED_RESPONSE;
                 else { p++; }
             }
@@ -858,7 +861,7 @@ ewf_result ewf_adapter_renesas_common_tcp_accept(ewf_socket_tcp* socket_ptr,  ew
 
     ewf_result result;
 
-    if ((internet_socket_ptr->id = 0) || (EWF_ADAPTER_RENESAS_COMMON_INTERNET_SOCKET_POOL_SIZE < internet_socket_ptr->id))
+    if ((internet_socket_ptr->id == 0) || (EWF_ADAPTER_RENESAS_COMMON_INTERNET_SOCKET_POOL_SIZE < internet_socket_ptr->id))
     {
         EWF_LOG_ERROR("Invalid socket value.");
         return EWF_RESULT_INVALID_SOCKET;

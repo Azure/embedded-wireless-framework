@@ -10,6 +10,9 @@
 #define __ewf_adapter_quectel_common__h__included__
 
 #include "ewf_adapter.h"
+#include "ewf_allocator.h"
+#include "ewf_interface.h"
+#include "ewf_adapter_api_modem.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -130,7 +133,7 @@ extern "C" {
 #endif
 
 /************************************************************************//**
- * @} *** group_configuration_adapter_quectel_common
+ * @} 
  ****************************************************************************/
 
 /************************************************************************//**
@@ -138,21 +141,6 @@ extern "C" {
  * @ingroup group_adapter
  * @brief Quectel common adapter implementation
  * @{
- ****************************************************************************/
-
-/************************************************************************//**
- * @defgroup group_adapter_quectel_common_tokenizer Quectel common driver tokenizer
- * @brief Quectel common adapter tokenizer
- * @{
- ****************************************************************************/
-
-extern ewf_interface_tokenizer_pattern* ewf_adapter_quectel_common_message_tokenizer_pattern_ptr;
-extern ewf_interface_tokenizer_pattern* ewf_adapter_quectel_common_command_response_end_tokenizer_pattern_ptr;
-extern ewf_interface_tokenizer_pattern* ewf_adapter_quectel_common_command_response_tokenizer_pattern_ptr;
-extern ewf_interface_tokenizer_pattern* ewf_adapter_quectel_common_urc_tokenizer_pattern_ptr;
-
-/************************************************************************//**
- * @} *** group_adapter_quectel_common_tokenizer
  ****************************************************************************/
 
 /************************************************************************//**
@@ -232,8 +220,24 @@ typedef struct _ewf_adapter_quectel_common
  ****************************************************************************/
 
 /************************************************************************//**
- * @defgroup group_adapter_quectel_common_functions Quectel generic adapter functions
- * @brief Quectel generic adapter functions
+ * @defgroup group_adapter_quectel_common_tokenizer Quectel adapter tokenizer functions
+ * @brief Quectel adapter tokenizer functions
+ * @{
+ ****************************************************************************/
+
+/**
+ * @brief Initialize the tokenizer
+ * @return #ewf_result success and error conditions
+ */
+ewf_result ewf_adapter_quectel_common_tokenizer_init(ewf_interface* interface_ptr);
+
+/************************************************************************//**
+  * @} *** group_adapter_quectel_common_tokenizer
+  ****************************************************************************/
+
+/************************************************************************//**
+ * @defgroup group_adapter_quectel_common_functions Quectel adapter common functions
+ * @brief Quectel adapter common functions
  * @{
  ****************************************************************************/
 
@@ -244,9 +248,9 @@ typedef struct _ewf_adapter_quectel_common
  */
 
 /**
-  * @brief Activate a context
-  * @return #ewf_result success and error conditions
-  */
+ * @brief Activate a context
+ * @return #ewf_result success and error conditions
+ */
 ewf_result ewf_adapter_quectel_common_context_activate(ewf_adapter* adapter_ptr, uint32_t ctx);
 
 /**
@@ -460,11 +464,11 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_publish(ewf_adapter* adapter_pt
 /** @} *** group_adapter_quectel_common_mqtt_basic */
 
 /************************************************************************//**
- * @} *** group_adapter_quectel_common_functions
+ * @}
  ****************************************************************************/
 
 /************************************************************************//**
- * @} *** group_adapter_quectel_common
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

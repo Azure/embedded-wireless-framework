@@ -170,7 +170,7 @@ bool ewfl_buffer_ends_with_wildcard_string(const uint8_t* buffer_ptr, uint32_t b
     if (suffix_length > buffer_length) return false;
     const uint8_t* buffer_tail = &(buffer_ptr[buffer_length - 1]);
     const uint8_t* suffix_tail = &(suffix_ptr[suffix_length - 1]);
-    for (; (buffer_tail != buffer_ptr) && (suffix_tail != suffix_ptr); buffer_tail--, suffix_tail--)
+    for (; suffix_tail >= suffix_ptr; buffer_tail--, suffix_tail--)
     {
         if (*suffix_tail == '?')
         {
@@ -178,7 +178,11 @@ bool ewfl_buffer_ends_with_wildcard_string(const uint8_t* buffer_ptr, uint32_t b
             continue;
         }
 
-        if (*buffer_tail != *suffix_tail) return false;
+        if (*buffer_tail != *suffix_tail)
+        {
+            // Missmatch
+            return false;
+        }
     }
     return true;
 }

@@ -79,7 +79,7 @@ extern "C" {
 #endif
 
 #ifndef EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_HOSTNAME_STR
-#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_HOSTNAME_STR          "andrejm-ewf-socat-tcp.westus.azurecontainer.io"
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_HOSTNAME_STR          ""
 #endif
 
 #ifndef EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_PORT
@@ -143,7 +143,7 @@ extern "C" {
 #endif
 
 #ifndef EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_HOSTNAME_STR
-#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_HOSTNAME_STR          "andrejm-ewf-socat-udp.westus.azurecontainer.io"
+#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_HOSTNAME_STR          ""
 #endif
 
 #ifndef EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_PORT

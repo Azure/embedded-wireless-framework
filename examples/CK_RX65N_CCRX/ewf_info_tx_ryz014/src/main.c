@@ -15,6 +15,8 @@
 #include "ewf_platform_threadx.h"
 #include "ewf_allocator.h"
 #include "ewf_allocator_threadx.h"
+#include "ewf_tokenizer.h"
+#include "ewf_tokenizer_basic.h"
 #include "ewf_interface.h"
 #include "ewf_interface_rx_uart.h"
 #include "ewf_adapter.h"
@@ -29,14 +31,15 @@
 #include "ewf_adapter_api_modem_sim_utility.h"
 #include "ewf_adapter_api_modem_packet_domain.h"
 #include "ewf_adapter_api_modem_network_service.h"
-#include "ewf_adapter_sequans.h"
 #include "ewf_adapter_renesas_ryz014.h"
 
 #include "ewf_example.config.h"
 
+#include "ewf_cellular_private.h"
+
 
 /* Modem might take some minutes to attach and register to the network. Time out value in seconds */
-#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (1200)
+#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (120)
 
 TX_THREAD               ewf_info_thread;
 UCHAR                   ewf_info_thread_memory_stack[4096];
@@ -46,6 +49,20 @@ static void ewf_info_thread_entry(ULONG parameter);
 
 
 void platform_setup(void);
+
+void renesas_ryz014a_adapter_power_on()
+{
+
+    // Release the RYZ014A from reset
+    EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_ON;
+    EWF_CELLULAR_SET_PDR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_PIN_DIRECTION_MODE_OUTPUT;
+    tx_thread_sleep (100);
+    EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_OFF;
+    demo_printf("Waiting for the module to Power Reset!\r\n");
+    ewf_platform_sleep(300);
+    demo_printf("Ready\r\n");
+
+}
 
 /* Define main entry point.  */
 int main(void)
@@ -87,6 +104,9 @@ void ewf_info_thread_entry(ULONG parameter)
     /* Initialize the demo printf implementation. */
     demo_printf_init();
 
+    /* Power On the adapter*/
+    renesas_ryz014a_adapter_power_on();
+
     ewf_result result;
 
     ewf_allocator* message_allocator_ptr = NULL;
@@ -97,37 +117,12 @@ void ewf_info_thread_entry(ULONG parameter)
     EWF_INTERFACE_RX_UART_STATIC_DECLARE(interface_ptr , sci_uart);
     EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
 
-
-    // Release the RYZ014A from reset
-    PORTA.PODR.BIT.B1= 1;
-    PORTA.PDR.BIT.B1= 1;
-    tx_thread_sleep (100);
-    PORTA.PODR.BIT.B1= 0;
-    EWF_LOG("Waiting for the module to Power Reset!\r\n");
-    ewf_platform_sleep(300);
-    EWF_LOG("Ready\r\n");
-
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
         EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
         return;
     }
-
-    // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
-    {
-        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
-        return;
-    }
-    /* Wait time for modem to be ready after modem functionality set to full */
-    ewf_platform_sleep(200);
-
-    /* Wait for the modem to be registered to network
-     * Refer system integration guide for more info */
-    while (EWF_RESULT_OK != ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT));
-    /* Wait time for modem to be ready after modem is registered to network */
-    ewf_platform_sleep(200);
 
     /* Disable network Registration URC */
     if (ewf_result_failed(result = ewf_adapter_modem_network_registration_urc_set(adapter_ptr, "0")))
@@ -142,6 +137,32 @@ void ewf_info_thread_entry(ULONG parameter)
         EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
         return;
     }
+
+    // Set the ME functionality
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
+    {
+        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
+        return;
+    }
+    /* Wait time for modem to be ready after modem functionality set to full */
+    ewf_platform_sleep(3 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+    // Set the APN
+    if (ewf_result_failed(result = ewf_adapter_modem_pdp_apn_set(adapter_ptr, EWF_CONFIG_CONTEXT_ID, EWF_ADAPTER_MODEM_PDP_TYPE_IP, EWF_CONFIG_SIM_APN)))
+    {
+        EWF_LOG_ERROR("Failed to the set APN, ewf_result %d.\n", result);
+        while(1);
+    }
+
+    /* Wait for the modem to be registered to network
+     * Refer system integration guide for more info */
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT)))
+    {
+        EWF_LOG("[ERROR][Failed to register to network.]\n");
+        return;
+    }
+    /* Wait time for modem to be ready after modem to be ready */
+    ewf_platform_sleep(3 * EWF_PLATFORM_TICKS_PER_SECOND);
 
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))

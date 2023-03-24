@@ -58,13 +58,6 @@ ewf_result ewf_adapter_renesas_common_test(ewf_adapter* adapter_ptr)
         EWF_LOG_ERROR("Failed to run the adapter NTP test: ewf_result %d.\n", result);
     }
 
-    // Adapter tests - HTTP
-    result = ewf_adapter_renesas_common_test_command_http(adapter_ptr);
-    if (ewf_result_failed(result))
-    {
-        EWF_LOG_ERROR("Failed to run the adapter HTTP test: ewf_result %d.\n", result);
-    }
-
     // Adapter tests - TCP
     result = ewf_adapter_test_api_tcp(adapter_ptr);
     if (ewf_result_failed(result))
@@ -84,6 +77,13 @@ ewf_result ewf_adapter_renesas_common_test(ewf_adapter* adapter_ptr)
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Failed to run the modem adapter NVM test: ewf_result %d.\n", result);
+    }
+
+    // Adapter tests - HTTP
+    result = ewf_adapter_renesas_common_test_command_http(adapter_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to run the adapter HTTP test: ewf_result %d.\n", result);
     }
 
     return EWF_RESULT_OK;
@@ -106,7 +106,7 @@ ewf_result ewf_adapter_renesas_common_test_command_ping(ewf_adapter* adapter_ptr
     if (ewf_result_failed (result = ewf_interface_drop_response(interface_ptr))) return result;
 
     if (ewf_result_failed (result = ewf_interface_send_command(interface_ptr, "AT+PING=\"www.microsoft.com\"\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 500)))
+    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 200)))
     {
         ewf_interface_release(interface_ptr, response);
         ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 1);
@@ -131,7 +131,7 @@ ewf_result ewf_adapter_renesas_common_test_command_dns(ewf_adapter* adapter_ptr)
     uint32_t length;
 
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNDNSLKUP=\"www.microsoft.com\"\r"))) return result;
-    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 500)))
+    while (!ewf_result_failed(result = ewf_interface_receive_response(interface_ptr, (uint8_t**)&response, &length, 200)))
     {
         ewf_interface_release(interface_ptr, (uint8_t*)response);
         ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND * 1);
@@ -179,9 +179,9 @@ volatile bool ewf_adapter_renesas_common_test_command_http_http_get = false;
 ewf_result ewf_adapter_renesas_common_test_command_http_urc_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length);
 ewf_result ewf_adapter_renesas_common_test_command_http_urc_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
 {
-	EWF_PARAMETER_NOT_USED(interface_ptr);
-	EWF_PARAMETER_NOT_USED(buffer_length);
-    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNHTTPRING: "))
+    EWF_PARAMETER_NOT_USED(interface_ptr);
+    EWF_PARAMETER_NOT_USED(buffer_length);
+    if (ewfl_str_starts_with((char*)buffer_ptr, "+SQNHTTPRING:"))
     {
         ewf_adapter_renesas_common_test_command_http_http_get = true;
 
@@ -204,21 +204,39 @@ ewf_result ewf_adapter_renesas_common_test_command_http(ewf_adapter* adapter_ptr
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNHTTPCFG?\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
-    uint8_t url_str [] = "\"www.w3.org\"";
+    uint8_t url_str [] = "\"www.microsoft.com\"";
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNHTTPCFG=1,", url_str, ",80\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
     ewf_adapter_renesas_common_test_command_http_http_get = false;
     if (ewf_result_failed(result = ewf_interface_set_user_urc_callback(interface_ptr, ewf_adapter_renesas_common_test_command_http_urc_callback))) return result;
 
-    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+SQNHTTPQRY=1,0,\"/Summary.html\"\r"))) return result;
-
+    ewf_result result_send_command = EWF_RESULT_OK;
+    ewf_result result_verify_response = EWF_RESULT_OK;
     uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 60;
-    while (!ewf_adapter_renesas_common_test_command_http_http_get && timeout != 0)
+
+    result_send_command = ewf_interface_send_command(interface_ptr, "AT+SQNHTTPQRY=1,0,\"/Summary.html\"\r");
+    if (ewf_result_failed(result_send_command))
     {
-        ewf_interface_poll(interface_ptr);
-        ewf_platform_sleep(1);
-        timeout--;
+        EWF_LOG_ERROR("Failed to send the command.\n");
+    }
+    else
+    {
+        result_verify_response = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n");
+        if (ewf_result_failed(result_verify_response))
+        {
+            EWF_LOG_ERROR("Failed to verify the response.\n");
+        }
+        else
+        {
+            /* Wait until the response is recevied or a timeout is reached */
+            while (!ewf_adapter_renesas_common_test_command_http_http_get && timeout != 0)
+            {
+                ewf_interface_poll(interface_ptr);
+                timeout--;
+                ewf_platform_sleep(1);
+            }
+        }
     }
 
     /* Clear the user URC callback */
@@ -231,12 +249,14 @@ ewf_result ewf_adapter_renesas_common_test_command_http(ewf_adapter* adapter_ptr
 
     /* Read the responses */
     {
-         ewf_interface_send_commands(interface_ptr, "AT+SQNHTTPRCV=1,100\r",NULL);
+         if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNHTTPRCV=1,100\r", NULL))) return result;
+         if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 
          /* Wait for the read response time out */
          timeout = EWF_PLATFORM_TICKS_PER_SECOND * 10;
          while (timeout != 0)
          {
+             ewf_interface_poll(interface_ptr);
              ewf_interface_drop_all_responses(interface_ptr);
              timeout--;
              ewf_platform_sleep(1);

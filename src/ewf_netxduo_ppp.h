@@ -11,12 +11,15 @@
 #ifndef __ewf_netxduo_ppp__h__included__
 #define __ewf_netxduo_ppp__h__included__
 
+/* EWF enabled to use with Azure RTOS NetX */
+#ifdef EWF_CONFIG_AZURE_RTOS_NETX
+
 /**************************************************************************/
 /**************************************************************************/
 /**                                                                       */
-/** NetX Component                                                        */
+/** NetX PPP EWF driver                                                        */
 /**                                                                       */
-/**   Generic Driver for Embedded Wireless Framework Adapters           */
+/**   NetX PPP Driver for Embedded Wireless Framework Adapters             */
 /**                                                                       */
 /**************************************************************************/
 /**************************************************************************/
@@ -30,15 +33,15 @@ extern "C" {
 
 typedef struct _ewf_netxduo_ppp_cfg
 {
-    NX_PPP* ppp_ptr;
-    uint8_t* ppp_thread_stack_ptr;
-    uint32_t ppp_thread_stack_size;
-    uint8_t ppp_thread_priority;
-    void (*ppp_invalid_packet_callback)(NX_PACKET* p_packet_ptr);
-    NX_IP* ip_ptr;
-    uint8_t* ip_thread_stack_ptr;
-    uint32_t ip_thread_stack_size;
-    NX_PACKET_POOL* pool_ptr;
+	NX_PPP* ppp_ptr;
+	uint8_t* ppp_thread_stack_ptr;
+	uint32_t ppp_thread_stack_size;
+	uint8_t ppp_thread_priority;
+	void (*ppp_invalid_packet_callback)(NX_PACKET* p_packet_ptr);
+	NX_IP* ip_ptr;
+	uint8_t* ip_thread_stack_ptr;
+	uint32_t ip_thread_stack_size;
+	NX_PACKET_POOL* pool_ptr;
 }ewf_netxduo_ppp_cfg;
 
 /* Define the PPP config function. */
@@ -58,4 +61,7 @@ ewf_result ewf_interface_data_mode_ppp_byte_receive_callback(ewf_interface* inte
 }
 #endif
 
+#endif
+
 #endif /* __ewf_netxduo_ppp__h__included__ */
+

@@ -117,12 +117,12 @@ ewf_interface_win32_com__implementation__##interface_name_symb.StopBits = StopBi
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \
     ewf_interface_win32_com__interface__##interface_name_symb.response_queue_ptr,                                                                   \
     ewf_interface_win32_com__response_queue__##interface_name_symb,                                                                                 \
-    ewf_interface_message,                                                                                                                          \
+    ewf_message,                                                                                                                                    \
     EWF_INTERFACE_WIN32_COM_CONFIG_RESPONSE_QUEUE_SIZE);                                                                                            \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \
     ewf_interface_win32_com__interface__##interface_name_symb.urc_queue_ptr,                                                                        \
     ewf_interface_win32_com__urc_queue__##interface_name_symb,                                                                                      \
-    ewf_interface_message,                                                                                                                          \
+    ewf_message,                                                                                                                                    \
     EWF_INTERFACE_WIN32_COM_CONFIG_URC_QUEUE_SIZE);                                                                                                 \
 ewf_interface_win32_com__interface__##interface_name_symb.hardware_start = ewf_interface_win32_com_hardware_start;                                  \
 ewf_interface_win32_com__interface__##interface_name_symb.hardware_stop = ewf_interface_win32_com_hardware_stop;                                    \

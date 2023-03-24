@@ -7,8 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_mxchip_common.h"
-#include "ewf_platform.h"
-#include "ewf_lib.h"
+#include "ewf_tokenizer_basic.h"
 
 /******************************************************************************
  *
@@ -309,30 +308,37 @@ ewf_result _ewf_adapter_mxchip_common_internet_socket_open(ewf_adapter* adapter_
     char remote_port_str[7];
     const char* remote_port_cstr = ewfl_unsigned_to_str(remote_port, remote_port_str, sizeof(remote_port_str));
 
-    char param_str[12];
-    param_str[0] = 0;
     if (local_port != 0 &&
         (ewfl_str_equals_str("udp_unicast", service_type_str) ||
          ewfl_str_equals_str("udp_broadcast", service_type_str)))
     {
-        sprintf(param_str, ",%lu\r", local_port);
+        char local_port_str[12];
+        const char* local_port_cstr = ewfl_unsigned_to_str(local_port, local_port_str, sizeof(local_port_str));
+
+        result = ewf_interface_send_commands(
+            interface_ptr,
+            "AT+CIPSTART=",
+            socket_cstr, ",",
+            service_type_str, ",",
+            server_str, ",",
+            remote_port_cstr, ",",
+            local_port_cstr, "\r",
+            NULL);
     }
     else
     {
-        sprintf(param_str, "\r");
-    }
+        result = ewf_interface_send_commands(
+            interface_ptr,
+            "AT+CIPSTART=",
+            socket_cstr, ",",
+            service_type_str, ",",
+            server_str, ",",
+            remote_port_cstr, "\r",
+            NULL);
 
-    /* Open a connection */
-    if (ewf_result_failed(result = ewf_interface_send_commands(
-        interface_ptr,
-        "AT+CIPSTART=",
-        socket_cstr, ",",
-        service_type_str, ",",
-        server_str, ",",
-        remote_port_cstr,
-        param_str,
-        NULL)))
-        return result;
+        /* Open a connection */
+        if (ewf_result_failed(result)) return result;
+    }
 
     uint8_t* response_ptr;
     uint32_t response_length;
@@ -362,8 +368,9 @@ ewf_result _ewf_adapter_mxchip_common_internet_socket_open(ewf_adapter* adapter_
     internet_socket_ptr->used = true;
     internet_socket_ptr->conn_error = false;
 
-    while (internet_socket_ptr->conn != true)
+    for (uint32_t timeout = 10 * EWF_PLATFORM_TICKS_PER_SECOND; timeout > 0; timeout--)
     {
+        if (internet_socket_ptr->conn == true) break;
         ewf_interface_poll(interface_ptr);
         ewf_platform_sleep(1);
     }
@@ -489,17 +496,19 @@ ewf_result _ewf_adapter_mxchip_common_internet_socket_send(ewf_adapter* adapter_
 
         char tokenizer_pattern_prompt_str[] = ">";
         uint32_t tokenizer_pattern_prompt_length = sizeof(tokenizer_pattern_prompt_str) - 1;
-        ewf_interface_tokenizer_pattern tokenizer_pattern_prompt = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern_prompt = {
             NULL,
             tokenizer_pattern_prompt_str,
             tokenizer_pattern_prompt_length,
             false,
         };
 
-        ewf_interface_tokenizer_pattern* saved_end_pattern_ptr = NULL;
-        ewf_interface_tokenizer_command_response_end_pattern_get(interface_ptr, &saved_end_pattern_ptr);
-        ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, NULL);
-        ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern_prompt);
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+        
+        ewf_tokenizer_basic_pattern* saved_end_pattern_ptr = NULL;
+        ewf_tokenizer_basic_command_response_end_pattern_get(tokenizer_data_ptr, &saved_end_pattern_ptr);
+        ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, NULL);
+        ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern_prompt);
         result = ewf_interface_send_commands(
             interface_ptr,
             "AT+CIPSEND=",
@@ -512,8 +521,8 @@ ewf_result _ewf_adapter_mxchip_common_internet_socket_send(ewf_adapter* adapter_
         result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_prompt_str);
         if (ewf_result_failed(result)) EWF_LOG_ERROR("Error result returned, %d\n", result);
 
-        ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, saved_end_pattern_ptr);
-        ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL);
+        ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, saved_end_pattern_ptr);
+        ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL);
 
         result = ewf_interface_send(interface_ptr, (const uint8_t*)buffer_ptr, buffer_length);
         if (ewf_result_failed(result)) EWF_LOG_ERROR("Error result returned, %d\n", result);

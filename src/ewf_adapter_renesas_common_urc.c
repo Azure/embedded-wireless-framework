@@ -75,25 +75,6 @@ ewf_result ewf_adapter_renesas_common_urc_callback(ewf_interface* interface_ptr,
     if (result != EWF_RESULT_UNHANDLED_URC) return EWF_RESULT_OK;
 #endif
 
-    if (adapter_renesas_common_ptr->user_urc_callback)
-    {
-        if (ewf_result_succeeded(adapter_renesas_common_ptr->user_urc_callback(interface_ptr, buffer_ptr, buffer_length)))
-        {
-            return EWF_RESULT_OK;
-        }
-    }
-
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_adapter_renesas_common_set_user_urc_callback(ewf_adapter* adapter_ptr, ewf_interface_urc_callback callback)
-{
-    EWF_ADAPTER_VALIDATE_POINTER(adapter_ptr);
-    ewf_adapter_renesas_common* adapter_renesas_common_ptr = (ewf_adapter_renesas_common*)adapter_ptr->implementation_ptr;
-    ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-    adapter_renesas_common_ptr->user_urc_callback = callback;
-
-    return EWF_RESULT_OK;
-}

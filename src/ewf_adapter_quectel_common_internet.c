@@ -7,8 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_quectel_common.h"
-#include "ewf_platform.h"
-#include "ewf_lib.h"
+#include "ewf_tokenizer_basic.h"
 
 /******************************************************************************
  *
@@ -480,14 +479,16 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_send(ewf_adapter* adapter
 
     {
         char tokenizer_pattern1_str[] = "\r\n> ";
-        ewf_interface_tokenizer_pattern tokenizer_pattern1 = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern1 = {
             NULL,
             tokenizer_pattern1_str,
             sizeof(tokenizer_pattern1_str) - 1,
             false,
         };
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern1))) return result;
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern1))) return result;
 
         ewf_result result_send_command;
         ewf_result result_verify_response;
@@ -521,7 +522,7 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_send(ewf_adapter* adapter
             result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern1_str);
         }
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL))) return result;
 
         if (ewf_result_failed(result_send_command))
         {
@@ -538,7 +539,7 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_send(ewf_adapter* adapter
 
     {
         char tokenizer_pattern2_str[] = "\r\nSEND OK\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern2 = {
             NULL,
             tokenizer_pattern2_str,
             sizeof(tokenizer_pattern2_str) - 1,
@@ -548,11 +549,13 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_send(ewf_adapter* adapter
         ewf_result result_send;
         ewf_result result_verify_response;
 
-        ewf_interface_tokenizer_pattern* saved_tokenizer_pattern_ptr = NULL;
-        result = ewf_interface_tokenizer_command_response_end_pattern_get(interface_ptr, &saved_tokenizer_pattern_ptr);
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        ewf_tokenizer_basic_pattern* saved_tokenizer_pattern_ptr = NULL;
+        result = ewf_tokenizer_basic_command_response_end_pattern_get(tokenizer_data_ptr, &saved_tokenizer_pattern_ptr);
         if (ewf_result_failed(result)) return result;
 
-        result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, &tokenizer_pattern2);
+        result = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, &tokenizer_pattern2);
         if (ewf_result_failed(result)) return result;
 
         result_send = ewf_interface_send(interface_ptr, (const uint8_t*)buffer_ptr, buffer_length);
@@ -562,7 +565,7 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_send(ewf_adapter* adapter
         }
 
         /* Resotre the previously saved tokenizer pattern */
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, saved_tokenizer_pattern_ptr)))
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, saved_tokenizer_pattern_ptr)))
         {
             return result;
         }
@@ -588,6 +591,99 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_send(ewf_adapter* adapter
 #endif
 
     return EWF_RESULT_OK;
+}
+
+struct _ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function_state
+{
+    ewf_interface* interface_ptr;
+    bool prefix_matches;
+    bool parsed;
+    uint32_t read_actual_length;
+    uint32_t total_expected_length;
+    uint8_t* data_ptr;
+};
+
+static bool _ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function(const uint8_t* buffer_ptr, uint32_t buffer_length, const ewf_tokenizer_basic_pattern* pattern_ptr, bool* stop_ptr)
+{
+    if (!buffer_ptr) return false;
+    if (!buffer_length) return false;
+    if (!pattern_ptr) return false;
+    if (!stop_ptr) return false;
+
+    struct _ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function_state* state_ptr =
+        (struct _ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function_state*)pattern_ptr->data_ptr;
+
+    /* Define the message prefix and calculate its length */
+    const uint8_t prefix_str[] = "\r\n+QIRD: ";
+    const uint32_t prefix_length = sizeof(prefix_str) - 1;
+
+    /* If the buffer is smaller than the prefix, then it is not yet for us */
+    if (buffer_length < prefix_length)
+    {
+        return false;
+    }
+
+    /* If the buffer contains as many characters as the prefix, then look if it is for us */
+    if (buffer_length == prefix_length)
+    {
+        if (ewfl_buffer_equals_buffer(buffer_ptr, prefix_str, prefix_length))
+        {
+            state_ptr->prefix_matches = true;
+            return false;
+        }
+    }
+
+    /* At this point the buffer it is longer than the prefix */
+
+    /* We did not match the prefix in previous runs, just ignore the rest of the incoming characters */
+    if (!state_ptr->prefix_matches)
+    {
+        return false;
+    }
+    else
+    {
+        /* This is for us, stop parsing other tokens further down the list */
+        *stop_ptr = true;
+    }
+
+    /* At this point we have a matching prefix */
+
+    /* If the message parameters were not yet parsed */ 
+    if (!state_ptr->parsed)
+    {
+        /* and we have a whole line, then parse it now */
+        if (buffer_ptr[buffer_length - 2] == '\r' && buffer_ptr[buffer_length - 1] == '\n')
+        {
+            /* The message is complete, try to parse it */
+            int count = sscanf((char*)buffer_ptr, "\r\n+QIRD: %lu\r\n", &state_ptr->read_actual_length);
+            if (count != 1)
+            {
+                EWF_LOG_ERROR("Unexpected response format!\n");
+                return false;
+            }
+
+            state_ptr->total_expected_length = buffer_length + state_ptr->read_actual_length + 2 + 6;
+            state_ptr->data_ptr = (uint8_t*)buffer_ptr + buffer_length;
+
+            state_ptr->parsed = true;
+        }
+
+        return false;
+    }
+
+    /* From this point we parsed data */
+
+    /* Is the message complete? */
+    if ((buffer_length) >= state_ptr->total_expected_length)
+    {
+        /* Signal the match */
+        return true;
+    }
+    else
+    {
+        /* Not yet matched */
+        return false;
+    }
 }
 
 ewf_result _ewf_adapter_quectel_common_internet_socket_receive(
@@ -651,7 +747,11 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_receive(
             uint32_t have_read_length = 0;
             uint32_t unread_length = 0;
 
-            if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QIRD=", connection_id_cstr, ",0\r", NULL))) return result;
+            result = ewf_interface_send_commands(interface_ptr, "AT+QIRD=", connection_id_cstr, ",0\r", NULL);
+            if (ewf_result_failed(result))
+            {
+                return result;
+            }
 
             result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 30);
             if (ewf_result_succeeded(result))
@@ -707,134 +807,90 @@ ewf_result _ewf_adapter_quectel_common_internet_socket_receive(
     char read_length_str[8];
     char* read_length_cstr = ewfl_unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
 
-    result = ewf_interface_send_commands(
-        interface_ptr,
-        "AT+QIRD=",
-        connection_id_cstr, ",",
-        read_length_cstr, "\r",
-        NULL);
-    if (ewf_result_failed(result)) return result;
+    struct _ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function_state ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function_state = { 0 };
+    ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function_state.interface_ptr = interface_ptr;
 
-    result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 30);
-    if (ewf_result_failed(result)) return result;
-
-    /* Terminate the string to make parsing safer and faster */
-    response_ptr[response_length] = 0;
-
-    /* Parse the response */
     {
-        uint8_t data_read_response_str[] = "\r\n+QIRD: ";
-
-        uint32_t read_actual_length = 0;
-
-        char term_str[] = "\r\n";
-
-        char* read_actual_length_str = NULL;
-        char* remote_ip_str = NULL;
-        char* remote_port_str = NULL;
-
-        char* p = NULL;
-
-        if (!ewfl_buffer_equals_buffer(response_ptr, data_read_response_str, sizeof(data_read_response_str) - 1))
+        ewf_tokenizer_basic_pattern ewf_adapter_quectel_common_qird_message_tokenizer_pattern =
         {
-            result = EWF_RESULT_UNEXPECTED_RESPONSE;
+            NULL,
+            NULL,
+            0,
+            false,
+            _ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function,
+            &ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function_state
+        };
+
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        ewf_tokenizer_basic_pattern* tokenizer_basic_message_pattern_saved_ptr = NULL;
+        ewf_tokenizer_basic_pattern* tokenizer_basic_command_response_pattern_saved_ptr = NULL;
+        ewf_tokenizer_basic_pattern* tokenizer_basic_command_response_end_pattern_saved_ptr = NULL;
+        ewf_tokenizer_basic_pattern* tokenizer_basic_urc_pattern_saved_ptr = NULL;
+
+        ewf_result ewf_result_send_command = EWF_RESULT_OK;
+        ewf_result ewf_result_receive_response = EWF_RESULT_OK;
+
+        if (ewf_result_failed(result = ewf_tokenizer_basic_message_pattern_get(tokenizer_data_ptr, &tokenizer_basic_message_pattern_saved_ptr))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_get(tokenizer_data_ptr, &tokenizer_basic_command_response_pattern_saved_ptr))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_end_pattern_get(tokenizer_data_ptr, &tokenizer_basic_command_response_end_pattern_saved_ptr))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_urc_pattern_get(tokenizer_data_ptr, &tokenizer_basic_urc_pattern_saved_ptr))) return result;
+
+        result = ewf_tokenizer_basic_message_pattern_set(tokenizer_data_ptr, &ewf_adapter_quectel_common_qird_message_tokenizer_pattern);
+        ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL);
+        ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, NULL);
+        ewf_tokenizer_basic_urc_pattern_set(tokenizer_data_ptr, NULL);
+        if (ewf_result_failed(result))
+        {
+            return result;
         }
         else
         {
-            p = (char*)response_ptr + sizeof(data_read_response_str) - 1;
-            read_actual_length_str = p;
-        }
-
-        if (internet_socket_ptr->type != ewf_adapter_quectel_common_internet_socket_service_type_udp_listener)
-        {
-            if (ewf_result_succeeded(result))
+            ewf_result_send_command = ewf_interface_send_commands(
+                interface_ptr,
+                "AT+QIRD=",
+                connection_id_cstr, ",",
+                read_length_cstr, "\r",
+                NULL);
+            if (ewf_result_failed(ewf_result_send_command))
             {
-                p = ewfl_find_chars_with_terms(p, "\r", NULL);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else 
+                // error handled below
+            }
+            else
+            {
+                ewf_result_receive_response = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, interface_ptr->default_timeout);
+                if (ewf_result_failed(ewf_result_receive_response))
                 {
-                    *p = 0; p++; 
-                    if (*p != '\n') result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                    else { p++; }
-                }
-            }
-        }
-        else
-        {
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, ",", term_str);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else { *p = 0; p++; }
-            }
-
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, "\"", term_str);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else 
-                {
-                    *p = 0; p++; 
-                    remote_ip_str = p;
+                    // error handled below
                 }
             }
 
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, "\"", term_str);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else { *p = 0; p++; }
-            }
+            ewf_result result_restore_message_pattern = ewf_tokenizer_basic_message_pattern_set(tokenizer_data_ptr, tokenizer_basic_message_pattern_saved_ptr);
+            ewf_result result_restore_command_response_pattern = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, tokenizer_basic_command_response_pattern_saved_ptr);
+            ewf_result result_restore_command_response_end_pattern  = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, tokenizer_basic_command_response_end_pattern_saved_ptr);
+            ewf_result result_restore_urc_pattern = ewf_tokenizer_basic_urc_pattern_set(tokenizer_data_ptr, tokenizer_basic_urc_pattern_saved_ptr);
 
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, ",", term_str);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else 
-                { 
-                    *p = 0; p++; 
-                    remote_port_str = p;
-                }
-            }
-
-            if (ewf_result_succeeded(result))
-            {
-                p = ewfl_find_chars_with_terms(p, "\r", NULL);
-                if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else
-                {
-                    *p = 0; p++;
-                    if (*p != '\n') result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                    else { p++; }
-                }
-            }
+            if (ewf_result_failed(result_restore_message_pattern)) return result_restore_message_pattern;
+            if (ewf_result_failed(result_restore_command_response_pattern)) return result_restore_command_response_pattern;
+            if (ewf_result_failed(result_restore_command_response_end_pattern)) return result_restore_command_response_end_pattern;
+            if (ewf_result_failed(result_restore_urc_pattern)) return result_restore_urc_pattern;
         }
 
-        (void)remote_ip_str;
-		(void)remote_port_str;
-
-        if (ewf_result_succeeded(result))
+        if (ewf_result_failed(ewf_result_send_command))
         {
-            read_actual_length = ewfl_str_to_unsigned(read_actual_length_str);
+            return ewf_result_send_command;
         }
 
-        if (ewf_result_succeeded(result))
+        if (ewf_result_failed(ewf_result_receive_response))
         {
-            char ok_response_str[] = "\r\n\r\nOK\r\n";
-            if ((response_length != (((uint8_t*)p - response_ptr) + read_actual_length + 8)) ||
-                !ewfl_buffer_equals_buffer((uint8_t*)p + read_actual_length, (uint8_t*)ok_response_str, sizeof(ok_response_str) - 1))
-            {
-                result = EWF_RESULT_UNEXPECTED_RESPONSE;
-            }
-        }
-
-        if (ewf_result_succeeded(result))
-        {
-            *buffer_length_ptr = (*buffer_length_ptr >= read_actual_length) ? read_actual_length : *buffer_length_ptr;
-            memcpy(buffer_ptr, p, *buffer_length_ptr);
+            return ewf_result_receive_response;
         }
     }
 
+    /* Copy the buffer */
+    memcpy(buffer_ptr, ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function_state.data_ptr, ewf_adapter_quectel_common_qird_message_tokenizer_pattern_match_function_state.read_actual_length);
+
+    /* Release the buffer */
     ewf_interface_release(interface_ptr, response_ptr);
 
     if (ewf_result_failed(result))

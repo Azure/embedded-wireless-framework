@@ -220,31 +220,13 @@ ewf_result ewf_adapter_quectel_common_test_command_http(ewf_adapter* adapter_ptr
         char url_str[] = "http://www.sina.com.cn/";
 #endif
         unsigned url_length = sizeof(url_str) - 1;
-        char tokenizer_pattern_str[] = "\r\nCONNECT\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern = {
-            NULL,
-            tokenizer_pattern_str ,
-            sizeof(tokenizer_pattern_str)-1,
-            false,
-        };
 
         char url_length_str[4];
         const char* url_length_cstr = ewfl_unsigned_to_str(url_length, url_length_str, sizeof(url_length_str));
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QHTTPURL=", url_length_cstr, ",80\r", NULL))) return result;
-        if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str)))
-        {
-            EWF_LOG_ERROR("Unexpected response.\n");
-            if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
-            return EWF_RESULT_UNEXPECTED_RESPONSE;
-        }
-        else
-        {
-            if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
-            if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, url_str, "\r", NULL))) return result;
-            if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
-        }
+        if (ewf_result_failed(result = ewf_interface_send_commands_wait_for_prompt(interface_ptr, "\r\nCONNECT\r\n", "AT+QHTTPURL=", url_length_cstr, ",80\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, url_str, "\r", NULL))) return result;
+        if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
     }
 
     /* Issue the HTTP GET request and wait for the asynchronous response */
@@ -297,38 +279,7 @@ ewf_result ewf_adapter_quectel_common_test_command_http(ewf_adapter* adapter_ptr
 
     /* Read the responses */
     {
-        char tokenizer_pattern_str[] = "\r\nCONNECT\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern = {
-            NULL,
-            tokenizer_pattern_str ,
-            sizeof(tokenizer_pattern_str)-1,
-            false,
-        };
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-
-        ewf_result result_send_command = EWF_RESULT_OK;
-        ewf_result result_verify_response = EWF_RESULT_OK;
-
-        result_send_command = ewf_interface_send_command(interface_ptr, "AT+QHTTPREAD=10\r");
-
-        if (ewf_result_failed(result_send_command))
-        {
-            EWF_LOG_ERROR("Failed to send the command.\n");
-        }
-        else
-        {
-            result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str);
-            if (ewf_result_failed(result_verify_response))
-            {
-                EWF_LOG_ERROR("Failed to verify the response.\n");
-            }
-        }
-
-        /* Clear the response pattern */
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
-
-        if (ewf_result_failed(result_send_command)) return result_send_command;
-        if (ewf_result_failed(result_verify_response)) return result_verify_response;
+        if (ewf_result_failed(result = ewf_interface_send_commands_wait_for_prompt(interface_ptr, "\r\nCONNECT\r\n", "AT+QHTTPREAD=10\r", NULL))) return result;
 
         /* Wait for the read response time out */
         uint32_t timeout = EWF_PLATFORM_TICKS_PER_SECOND * 10;

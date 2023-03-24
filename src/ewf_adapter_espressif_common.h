@@ -238,7 +238,7 @@ ewf_result ewf_adapter_espressif_common_udp_receive_from(ewf_socket_udp* socket_
 /** @} *** group_adapter_espressif_common_udp */
 
 /************************************************************************//**
- * @} *** group_adapter_espressif_common
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

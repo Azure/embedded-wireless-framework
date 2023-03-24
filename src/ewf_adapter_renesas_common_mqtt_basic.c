@@ -7,7 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_common.h"
-#include "ewf_lib.h"
+#include "ewf_tokenizer_basic.h"
 
 /******************************************************************************
  * API
@@ -187,9 +187,12 @@ ewf_result ewf_adapter_renesas_common_mqtt_basic_default_state_callback(ewf_adap
 
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
+#ifdef EWF_DEBUG
     EWF_LOG("[MQTT-Basic][State callback:][%s][%s]\n", state_cstr, param_cstr);
-
+#else
+    EWF_PARAMETER_NOT_USED(state_cstr);
+    EWF_PARAMETER_NOT_USED(param_cstr);
+#endif
     return EWF_RESULT_OK;
 }
 
@@ -201,8 +204,12 @@ ewf_result ewf_adapter_renesas_common_mqtt_basic_default_message_callback(ewf_ad
     ewf_interface* interface_ptr = adapter_ptr->interface_ptr;
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
+#ifdef EWF_DEBUG
     EWF_LOG("[MQTT-Basic][Message callback][TOPIC:][%s]\r\n", topic_cstr);
-
+#else
+    EWF_PARAMETER_NOT_USED(topic_cstr);
+    EWF_PARAMETER_NOT_USED(payload_cstr);
+#endif
     return EWF_RESULT_OK;
 }
 
@@ -367,7 +374,7 @@ ewf_result ewf_adapter_renesas_common_mqtt_basic_publish(ewf_adapter* adapter_pt
     uint32_t message_length = (message_cstr == NULL) ? 0 : strlen(message_cstr);
 
     char tokenizer_pattern_str[] = "\r\n> ";
-    ewf_interface_tokenizer_pattern tokenizer_pattern = {
+    ewf_tokenizer_basic_pattern tokenizer_pattern = {
         NULL,
         tokenizer_pattern_str ,
         sizeof(tokenizer_pattern_str) - 1,
@@ -376,10 +383,11 @@ ewf_result ewf_adapter_renesas_common_mqtt_basic_publish(ewf_adapter* adapter_pt
         NULL,
     };
     char message_length_str[6] = {0};
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
+    ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+    if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern))) return result;
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSMQTTPUBLISH=0,\"", topic, "\",,", ewfl_unsigned_to_str(message_length, message_length_str, sizeof(message_length_str)), "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str))) return result;
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+    if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (uint8_t*)message_cstr, message_length))) return result;
     if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response))) return result;
     if (!ewfl_str_starts_with((char*)response, "\r\n+SQNSMQTTPUBLISH: "))

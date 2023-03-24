@@ -221,7 +221,7 @@ ewf_result ewf_platform_queue_dequeue(ewf_platform_queue* queue_ptr, void* buffe
     UINT status = tx_queue_receive(
         &(queue_ptr->queue),
         buffer_ptr,
-		wait ? TX_WAIT_FOREVER : TX_NO_WAIT);
+        wait ? TX_WAIT_FOREVER : TX_NO_WAIT);
     switch (status)
     {
     case TX_QUEUE_EMPTY:
