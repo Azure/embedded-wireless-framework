@@ -56,10 +56,10 @@ void renesas_ryz014a_adapter_power_on()
     // Release the RYZ014A from reset
     EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_ON;
     EWF_CELLULAR_SET_PDR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_PIN_DIRECTION_MODE_OUTPUT;
-    tx_thread_sleep (100);
+    ewf_platform_sleep (1 * EWF_PLATFORM_TICKS_PER_SECOND);
     EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_OFF;
     demo_printf("Waiting for the module to Power Reset!\r\n");
-    ewf_platform_sleep(300);
+    ewf_platform_sleep(3 * EWF_PLATFORM_TICKS_PER_SECOND);
     demo_printf("Ready\r\n");
 
 }

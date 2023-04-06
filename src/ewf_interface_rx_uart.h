@@ -18,9 +18,7 @@
 #include "r_sci_rx_config.h"    // User configurable options for the SCI module
 #include "r_sci_rx_pinset.h"
 
-#ifdef EWF_RENESAS_RX65N_CK_ENABLE
 #include "ewf_cellular_private.h"
-#endif
 
 #ifdef __cplusplus
 extern "C" {

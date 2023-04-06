@@ -50,9 +50,6 @@
 							</tool>
 							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC.250974865" name="Compiler" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.includeFileDir.1909978064" name="Include file directories (-I)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.includeFileDir" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/ports/rxv2/gnu/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/common/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/rtos_config/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/rtos_skeleton/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/azure_sdk_for_c/inc}&quot;"/>
@@ -74,6 +71,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_byteq/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/ports/rxv2/gnu/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/common/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/utility/low_power}&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.std.1546086714" name="Language standard" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.std" useByScannerDiscovery="true" value="com.renesas.cdt.managedbuild.gcc.core.option.compiler.common.gnu99" valueType="enumerated"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.macroDefines.956024219" name="Macro Defines (-D)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.macroDefines" useByScannerDiscovery="false" valueType="definedSymbols">
@@ -140,6 +141,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_byteq/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx/src}&quot;"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.assembler.source.userDefinedOptions.1064068525" name="User defined options" superClass="com.renesas.cdt.managedbuild.gcc.core.option.assembler.source.userDefinedOptions" useByScannerDiscovery="false" valueType="stringList">
+									<listOptionValue builtIn="false" value="-DTX_LOW_POWER=0"/>
+									<listOptionValue builtIn="false" value="-DTX_ENABLE_WAIT=0"/>
 								</option>
 								<inputType id="com.renesas.cdt.managedbuild.gcc.core.inputType.assembler.1235700426" superClass="com.renesas.cdt.managedbuild.gcc.core.inputType.assembler"/>
 							</tool>
@@ -385,6 +390,9 @@
 									<listOptionValue builtIn="false" value="&quot;.\libs/threadx/common/src\txe_timer_info_get.o&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.managedbuild.gcc.core.option.linker.newlibnano.1786120998" name="Use newlib-nano (--specs=nano.specs)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.linker.newlibnano" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.linker.other.userDefinedOptions.1678489057" name="User defined options" superClass="com.renesas.cdt.managedbuild.gcc.core.option.linker.other.userDefinedOptions" useByScannerDiscovery="false" valueType="stringList">
+									<listOptionValue builtIn="false" value="--specs=nosys.specs"/>
+								</option>
 							</tool>
 							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.linker.615196181" name="Linker CPP" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.linker">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.linker.source.linkerScript.644464346" name="Linker script" superClass="com.renesas.cdt.managedbuild.gcc.core.option.linker.source.linkerScript" useByScannerDiscovery="false" valueType="stringList">
@@ -398,31 +406,6 @@
 							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.printsize.779171603" name="Print Size" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.printsize">
 								<option id="com.renesas.cdt.managedbuild.gcc.core.option.printsize.format.1772458333" name="Size Format" superClass="com.renesas.cdt.managedbuild.gcc.core.option.printsize.format" useByScannerDiscovery="false"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.update.1465912291.324669010" name="/" resourcePath="azure_sdk_for_c">
-						<toolChain id="com.renesas.cdt.managedbuild.gcc.rx.toolchain.debug.update.6043823" name="GCC for Renesas RX" superClass="com.renesas.cdt.managedbuild.gcc.rx.toolchain.debug.update" unusedChildren="">
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.optimizationLevel.207773333.700852765" name="Optimization Level" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.optimizationLevel.207773333"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.fdatasections.41998457.481689940" name="Data sections (-fdata-sections)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.fdatasections.41998457"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.debug.debugFormat.321145734.984813112" name="Debug format" superClass="com.renesas.cdt.managedbuild.gcc.core.option.debug.debugFormat.321145734"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.addtools.printsize.1969566263.2114284352" name="Create Print Size" superClass="com.renesas.cdt.managedbuild.gcc.core.option.addtools.printsize.1969566263"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.1202685320.1954619598" name="Architecture" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.1202685320"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.applicability.1779024736.1836421567" name="Architecture Applicability" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.applicability.1779024736"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.cpuType.521390377.723525854" name="CPU Type" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.cpuType.521390377"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.deviceShortName.387811547.630532727" name="DeviceName" superClass="com.renesas.cdt.managedbuild.gcc.core.option.deviceShortName.387811547"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.deviceCommand.1592727080.623973386" name="DeviceCommand" superClass="com.renesas.cdt.managedbuild.gcc.core.option.deviceCommand.1592727080"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.rx.option.fdiagnostics.94431263.1438508570" name="Fixit error parser" superClass="com.renesas.cdt.managedbuild.gcc.rx.option.fdiagnostics.94431263"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.functionsections.830263777.868493807" name="Function sections (-ffunction-sections)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.functionsections.830263777"/>
-							<option id="com.renesas.cdt.managedbuild.gcc.core.option.debug.warnStackSize.1146336863.1464721480" name="Warn if stack size exceeds the limit, in bytes (-Wstack-usage)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.debug.warnStackSize.1146336863"/>
-							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.libgen.1181489640" name="Library Generator" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.libgen.1095049278"/>
-							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC.1643248057" name="Compiler" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC.250974865"/>
-							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerCPP.783444663" name="Compiler CPP" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerCPP.1191815275"/>
-							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.assembler.1898466139" name="Assembler" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.assembler.1903880142"/>
-							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.linker.695758869" name="Linker" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.linker.740284743"/>
-							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.linker.2058144142" name="Linker CPP" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.linker.615196181"/>
-							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.objcopy.343893449" name="Objcopy" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.objcopy.1308974831"/>
-							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.archiver.1879460754" name="Archiver" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.archiver.1939164612"/>
-							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.printsize.481339551" name="Print Size" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.printsize.779171603"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -484,9 +467,6 @@
 							</tool>
 							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC.1439874413" name="Compiler" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.compilerC">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.includeFileDir.1955070623" name="Include file directories (-I)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.includeFileDir" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/ports/rxv2/gnu/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/common/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/rtos_config/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/rtos_skeleton/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/azure_sdk_for_c/inc/azure}&quot;"/>
@@ -520,6 +500,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_byteq/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/ports/rxv2/gnu/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/common/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libs/threadx/utility/low_power}&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.std.1556820398" name="Language standard" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.std" useByScannerDiscovery="true" value="com.renesas.cdt.managedbuild.gcc.core.option.compiler.common.gnu99" valueType="enumerated"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.macroDefines.115806765" name="Macro Defines (-D)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.macroDefines" useByScannerDiscovery="false" valueType="definedSymbols">
@@ -585,6 +569,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_byteq/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx/src}&quot;"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.assembler.source.userDefinedOptions.1251131665" name="User defined options" superClass="com.renesas.cdt.managedbuild.gcc.core.option.assembler.source.userDefinedOptions" valueType="stringList">
+									<listOptionValue builtIn="false" value="-DTX_LOW_POWER=0"/>
+									<listOptionValue builtIn="false" value="-DTX_ENABLE_WAIT=0"/>
 								</option>
 								<inputType id="com.renesas.cdt.managedbuild.gcc.core.inputType.assembler.2050962326" superClass="com.renesas.cdt.managedbuild.gcc.core.inputType.assembler"/>
 							</tool>

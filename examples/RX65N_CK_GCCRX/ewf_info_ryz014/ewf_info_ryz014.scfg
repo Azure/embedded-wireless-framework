@@ -7,7 +7,7 @@
                 <option id="com.renesas.smc.toolchain.option.language" key="com.renesas.smc.toolchain.option.language.c"/>
                 <option id="com.renesas.smc.toolchain.option.buildArtefactType" key="com.renesas.smc.toolchain.option.buildArtefactType.exe"/>
                 <option id="com.renesas.smc.toolchain.option.rtos" key="com.renesas.smc.toolchain.option.rtos.azurertos">
-                    <item id="com.renesas.smc.toolchain.option.rtos.azurertos" value="6.1.10_rel-rx-1.0.0"/>
+                    <item id="com.renesas.smc.toolchain.option.rtos.azurertos" value="6.2.0_rel-rx-1.0.0"/>
                 </option>
                 <option id="com.renesas.smc.toolchain.option.dual" key="com.renesas.smc.toolchain.option.dual.false"/>
             </toolchain>
@@ -341,7 +341,7 @@
         <Item currentVect="107" groupchild="&lt;br&gt;1-SDIOI" id="BL2" priority="15" usedState="Not Use"/>
         <Item currentVect="108" id="RSPI2_SPRI2" priority="15" usedState="Not Use"/>
         <Item currentVect="109" id="RSPI2_SPTI2" priority="15" usedState="Not Use"/>
-        <Item currentVect="110" groupchild="&lt;br&gt;1-TEI0&lt;br&gt;2-ERI0&lt;br&gt;3-TEI1&lt;br&gt;4-ERI1&lt;br&gt;5-TEI2&lt;br&gt;6-ERI2&lt;br&gt;7-TEI3&lt;br&gt;8-ERI3&lt;br&gt;9-TEI4&lt;br&gt;10-ERI4&lt;br&gt;11-TEI5&lt;br&gt;12-ERI5&lt;br&gt;13-TEI6&lt;br&gt;14-ERI6&lt;br&gt;15-TEI7&lt;br&gt;16-ERI7&lt;br&gt;17-TEI12&lt;br&gt;18-ERI12&lt;br&gt;19-SCIX0&lt;br&gt;20-SCIX1&lt;br&gt;21-SCIX2&lt;br&gt;22-SCIX3&lt;br&gt;23-QSPSSLI&lt;br&gt;24-FERRI&lt;br&gt;25-MENDI&lt;br&gt;26-OVFI&lt;br&gt;27-DOPCI&lt;br&gt;28-PCFEI&lt;br&gt;29-PCERI" id="BL0" priority="15" usedState="Not Use"/>
+        <Item currentVect="110" groupchild="&lt;br&gt;1-TEI0&lt;br&gt;2-ERI0&lt;br&gt;3-TEI1&lt;br&gt;4-ERI1&lt;br&gt;5-TEI2&lt;br&gt;6-ERI2&lt;br&gt;7-TEI3&lt;br&gt;8-ERI3&lt;br&gt;9-TEI4&lt;br&gt;10-ERI4&lt;br&gt;11-TEI5&lt;br&gt;12-ERI5&lt;br&gt;13-TEI6&lt;br&gt;14-ERI6&lt;br&gt;15-TEI7&lt;br&gt;16-ERI7&lt;br&gt;17-TEI12&lt;br&gt;18-ERI12&lt;br&gt;19-SCIX0&lt;br&gt;20-SCIX1&lt;br&gt;21-SCIX2&lt;br&gt;22-SCIX3&lt;br&gt;23-QSPSSLI&lt;br&gt;24-FERRI&lt;br&gt;25-MENDI&lt;br&gt;26-OVFI&lt;br&gt;27-DOPCI&lt;br&gt;28-PCFEI&lt;br&gt;29-PCERI" id="BL0" priority="3" usedState="Used"/>
         <Item currentVect="111" groupchild="&lt;br&gt;1-CDETI&lt;br&gt;2-CACI&lt;br&gt;3-SDACI&lt;br&gt;4-CDETIO&lt;br&gt;5-ERRIO&lt;br&gt;6-ACCIO&lt;br&gt;7-OEI1&lt;br&gt;8-OEI2&lt;br&gt;9-OEI3&lt;br&gt;10-OEI4&lt;br&gt;11-TEI0&lt;br&gt;12-EEI0&lt;br&gt;13-TEI2&lt;br&gt;14-EEI2&lt;br&gt;15-S12CMPAI&lt;br&gt;16-S12CMPBI&lt;br&gt;17-S12CMPAI1&lt;br&gt;18-S12CMPBI1&lt;br&gt;19-TEI8&lt;br&gt;20-ERI8&lt;br&gt;21-TEI9&lt;br&gt;22-ERI9&lt;br&gt;23-TEI1&lt;br&gt;24-EEI1" id="BL1" priority="15" usedState="Not Use"/>
         <Item currentVect="112" groupchild="&lt;br&gt;1-TEI10&lt;br&gt;2-ERI10&lt;br&gt;3-TEI11&lt;br&gt;4-ERI11&lt;br&gt;5-SPII0&lt;br&gt;6-SPEI0&lt;br&gt;7-SPII1&lt;br&gt;8-SPEI1&lt;br&gt;9-SPII2&lt;br&gt;10-SPEI2" id="AL0" priority="15" usedState="Not Use"/>
         <Item currentVect="113" groupchild="&lt;br&gt;1-EINT0&lt;br&gt;2-VPOS&lt;br&gt;3-GR1UF&lt;br&gt;4-GR2UF&lt;br&gt;5-DRW_IRQ" id="AL1" priority="15" usedState="Not Use"/>
@@ -528,7 +528,7 @@
     </tool>
     <tool id="SWComponent" version="1.0.0.0">
         <configuration inuse="true" name="r_bsp">
-            <component description="Dependencies : None&#10;The r_bsp package provides a foundation for code to be built on top of. It provides startup code, iodefines, and MCU information for different boards. There are 2 folders that make up the r_bsp package. The 'mcu' folder contains files that are common to a MCU group. These files provide functionality such as easy register access, CPU functions, and a file named 'mcu_info.h' for each MCU group. The 'mcu_info.h' file has information about the MCU on the board and is configured based on the information given in r_bsp_config.h. The information in 'mcu_info.h' is used to help configure Renesas middleware that uses the r_bsp package. The 'board' folder has a folder with startup code for each supported board.  Which MCU and board is chosen is decided by the settings in 'platform.h'. The user can choose which board they are using by uncommenting the include path that applies to their board. For example, if you are using the RSK+RX64M then you would uncomment the #include &quot;./board/generic_rx64m/r_bsp.h&quot; include path. Users are encouraged to add their own boards to the 'board' directory. BSPs are configured by using the r_bsp_config.h file. Each board will have a reference configuration file named r_bsp_config_reference.h. The user should copy this file to their project, rename it to r_bsp_config.h, and use the options inside the file to configure the BSP for their project." detailDescription="Board Support Packages." display="r_bsp" id="r_bsp6.20" version="6.20">
+            <component description="Dependencies : None&#10;The r_bsp package provides a foundation for code to be built on top of. It provides startup code, iodefines, and MCU information for different boards. There are 2 folders that make up the r_bsp package. The 'mcu' folder contains files that are common to a MCU group. These files provide functionality such as easy register access, CPU functions, and a file named 'mcu_info.h' for each MCU group. The 'mcu_info.h' file has information about the MCU on the board and is configured based on the information given in r_bsp_config.h. The information in 'mcu_info.h' is used to help configure Renesas middleware that uses the r_bsp package. The 'board' folder has a folder with startup code for each supported board.  Which MCU and board is chosen is decided by the settings in 'platform.h'. The user can choose which board they are using by uncommenting the include path that applies to their board. For example, if you are using the RSK+RX64M then you would uncomment the #include &quot;./board/generic_rx64m/r_bsp.h&quot; include path. Users are encouraged to add their own boards to the 'board' directory. BSPs are configured by using the r_bsp_config.h file. Each board will have a reference configuration file named r_bsp_config_reference.h. The user should copy this file to their project, rename it to r_bsp_config.h, and use the options inside the file to configure the BSP for their project." detailDescription="Board Support Packages." display="r_bsp" id="r_bsp7.21" version="7.21">
                 <gridItem id="BSP_CFG_USER_STACK_ENABLE" selectedIndex="1"/>
                 <gridItem id="BSP_CFG_USTACK_BYTES" selectedIndex="0x1000"/>
                 <gridItem id="BSP_CFG_ISTACK_BYTES" selectedIndex="0x400"/>
@@ -543,11 +543,11 @@
                 <gridItem id="BSP_CFG_ID_CODE_LONG_2" selectedIndex="0xFFFFFFFF"/>
                 <gridItem id="BSP_CFG_ID_CODE_LONG_3" selectedIndex="0xFFFFFFFF"/>
                 <gridItem id="BSP_CFG_ID_CODE_LONG_4" selectedIndex="0xFFFFFFFF"/>
+                <gridItem id="BSP_CFG_SERIAL_PROGRAMMER_CONECT_ENABLE" selectedIndex="1"/>
                 <gridItem id="BSP_CFG_ROM_CACHE_ENABLE" selectedIndex="0"/>
                 <gridItem id="BSP_CFG_TRUSTED_MODE_FUNCTION" selectedIndex="0xFFFFFFFF"/>
                 <gridItem id="BSP_CFG_FAW_REG_VALUE" selectedIndex="0xFFFFFFFF"/>
                 <gridItem id="BSP_CFG_ROMCODE_REG_VALUE" selectedIndex="0xFFFFFFFF"/>
-                <gridItem id="BSP_CFG_CODE_FLASH_BANK_MODE" selectedIndex="1"/>
                 <gridItem id="BSP_CFG_CODE_FLASH_START_BANK" selectedIndex="0"/>
                 <gridItem id="BSP_CFG_USER_LOCKING_ENABLED" selectedIndex="0"/>
                 <gridItem id="BSP_CFG_USER_LOCKING_TYPE" selectedIndex="bsp_lock_t"/>
@@ -578,79 +578,15 @@
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
         </configuration>
-        <configuration inuse="true" name="r_cmt_rx">
-            <component description="Dependency : r_bsp version(s) 6.20&#10;This module creates a timer tick using a CMT channel based on a frequency input by the user." detailDescription="CMT driver" display="r_cmt_rx" id="r_cmt_rx4.90" version="4.90">
-                <gridItem id="CMT_RX_CFG_IPR" selectedIndex="5"/>
+        <configuration inuse="true" name="r_gpio_rx">
+            <component description="Dependency : r_bsp version(s) 7.20&#10;This code implements a General Purpose Input/Output driver. Common features such as reading, writing, and setting the direction of ports and pins is supported. Enabling features such as open-drain outputs and internal pull-ups are also supported." detailDescription="GPIO Driver" display="r_gpio_rx" id="r_gpio_rx4.70" version="4.70">
+                <gridItem id="GPIO_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
             </component>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-        </configuration>
-        <configuration enable="true" exclude="false" id="61a0af02-342f-4de3-a7f9-73dd823f02c2" inuse="true" name="threadx">
-            <component description="Dependency: None&#10;Azure RTOS ThreadX is an advanced real-time operating system (RTOS) designed specifically for deeply embedded applications" detailDescription="Azure RTOS ThreadX is an advanced real-time operating system (RTOS) designed specifically for deeply embedded applications" display="Azure RTOS ThreadX" id="threadx6.1.10_rel-rx-1.0.0" version="6.1.10_rel-rx-1.0.0">
-                <gridItem id="USE_TX_MAX_PRIORITIES" selectedIndex="0"/>
-                <gridItem id="TX_MAX_PRIORITIES" selectedIndex="32"/>
-                <gridItem id="USE_TX_MINIMUM_STACK" selectedIndex="0"/>
-                <gridItem id="TX_MINIMUM_STACK" selectedIndex="0"/>
-                <gridItem id="USE_TX_TIMER_THREAD_STACK_SIZE" selectedIndex="0"/>
-                <gridItem id="TX_TIMER_THREAD_STACK_SIZE" selectedIndex="128"/>
-                <gridItem id="USE_TX_TIMER_THREAD_PRIORITY" selectedIndex="0"/>
-                <gridItem id="TX_TIMER_THREAD_PRIORITY" selectedIndex="1"/>
-                <gridItem id="USE_TX_TIMER_TICKS_PER_SECOND" selectedIndex="0"/>
-                <gridItem id="TX_TIMER_TICKS_PER_SECOND" selectedIndex="100"/>
-                <gridItem id="USE_TX_THREAD_USER_EXTENSION" selectedIndex="0"/>
-                <gridItem id="USE_TX_NO_FILEX_POINTER" selectedIndex="0"/>
-                <gridItem id="USE_TX_TIMER_PROCESS_IN_ISR" selectedIndex="0"/>
-                <gridItem id="USE_TX_REACTIVATE_INLINE" selectedIndex="0"/>
-                <gridItem id="USE_TX_DISABLE_STACK_FILLING " selectedIndex="0"/>
-                <gridItem id="USE_TX_ENABLE_STACK_CHECKING " selectedIndex="0"/>
-                <gridItem id="USE_TX_DISABLE_PREEMPTION_THRESHOLD " selectedIndex="0"/>
-                <gridItem id="USE_TX_DISABLE_REDUNDANT_CLEARING" selectedIndex="0"/>
-                <gridItem id="USE_TX_NO_TIMER" selectedIndex="0"/>
-                <gridItem id="USE_TX_DISABLE_NOTIFY_CALLBACKS" selectedIndex="0"/>
-                <gridItem id="USE_TX_INLINE_THREAD_RESUME_SUSPEND" selectedIndex="0"/>
-                <gridItem id="USE_TX_NOT_INTERRUPTABLE" selectedIndex="0"/>
-                <gridItem id="USE_TX_ENABLE_EVENT_TRACE" selectedIndex="0"/>
-                <gridItem id="USE_TX_BLOCK_POOL_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
-                <gridItem id="USE_TX_BYTE_POOL_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
-                <gridItem id="USE_TX_EVENT_FLAGS_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
-                <gridItem id="USE_TX_MUTEX_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
-                <gridItem id="USE_TX_QUEUE_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
-                <gridItem id="USE_TX_SEMAPHORE_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
-                <gridItem id="USE_TX_THREAD_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
-                <gridItem id="USE_TX_TIMER_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
-                <gridItem id="USE_TX_BYTE_POOL_MULTIPLE_BLOCK_SEARCH" selectedIndex="0"/>
-                <gridItem id="TX_BYTE_POOL_MULTIPLE_BLOCK_SEARCH" selectedIndex="20"/>
-                <gridItem id="USE_TX_BYTE_POOL_DELAY_VALUE" selectedIndex="0"/>
-                <gridItem id="TX_BYTE_POOL_DELAY_VALUE" selectedIndex="3"/>
-            </component>
-            <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
-        </configuration>
-        <configuration enable="true" exclude="false" id="faad02f7-6df7-4d1c-9fc5-83be4e75d2fa" inuse="true" name="azurertos_object">
-            <allocatable id="" name="" type="">
-                <allocatable id="THREAD" name="THREAD" type="TABALLOCATABLE">
-                    <allocatable id="THREAD1" name="THREAD1" type="ROWALLOCATABLE">
-                        <option defaultValue="new_thread[X]" id="threadpointer" value="ewf_info_thread"/>
-                        <option defaultValue="New Thread" id="threadname" value="EWF information thread"/>
-                        <option defaultValue="new_thread[X]_entry" id="entryfunction" value="ewf_info_thread_entry"/>
-                        <option defaultValue="0" id="entryinput" value="0"/>
-                        <option defaultValue="1024" id="stacksize" value="2048"/>
-                        <option defaultValue="1" id="priority" value="5"/>
-                        <option defaultValue="1" id="preemptionthreshold" value="5"/>
-                        <option defaultValue="0" id="timeslice" value="0"/>
-                        <option defaultValue="TX_AUTO_START" id="autostart" value="TX_AUTO_START"/>
-                    </allocatable>
-                </allocatable>
-                <allocatable id="QUEUE" name="QUEUE" type="TABALLOCATABLE"/>
-                <allocatable id="SEMAPHORE" name="SEMAPHORE" type="TABALLOCATABLE"/>
-                <allocatable id="MUTEX" name="MUTEX" type="TABALLOCATABLE"/>
-                <allocatable id="EVENT" name="EVENT" type="TABALLOCATABLE"/>
-                <allocatable id="TIMER" name="TIMER" type="TABALLOCATABLE"/>
-            </allocatable>
-            <component description="" detailDescription="" display="AzureRTOS Object" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.azurertos.object" version="1.0.111"/>
-            <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
         </configuration>
         <configuration inuse="true" name="r_sci_rx">
-            <component description="Dependency : r_bsp version(s) 6.20&#10;Dependency : r_byteq version(s) 1.40, 1.50, 1.60, 1.70, 1.71, 1.80, 1.81, 1.82, 1.90&#10;This module allows any number of SCI channels on the MCU to run in full duplex Asynchronous mode, single master Simple SPI mode, or master Synchronous mode simultaneously. The driver is interrupt driven and non-blocking. Transmit and receive buffer queues are used in Asynchronous mode and their sizes may be configured independently for each channel. Resources for unused channels or modes may be removed via settings in the driver's config.h file." detailDescription="SCI Driver" display="r_sci_rx" id="r_sci_rx4.10" version="4.10">
+            <component description="Dependency : r_bsp version(s) 7.20&#10;Dependency : r_byteq version(s) 1.40, 1.50, 1.60, 1.70, 1.71, 1.80, 1.81, 1.82, 1.90, 2.00&#10;This module allows any number of SCI channels on the MCU to run in full duplex Asynchronous mode, single master Simple SPI mode, or master Synchronous mode simultaneously. The driver is interrupt driven and non-blocking. Transmit and receive buffer queues are used in Asynchronous mode and their sizes may be configured independently for each channel. Resources for unused channels or modes may be removed via settings in the driver's config.h file." detailDescription="SCI Driver" display="r_sci_rx" id="r_sci_rx4.60" version="4.60">
                 <gridItem id="SCK0" selectedIndex="0"/>
                 <gridItem id="RXD0/SMISO0/SSCL0" selectedIndex="1"/>
                 <gridItem id="TXD0/SMOSI0/SSDA0" selectedIndex="1"/>
@@ -740,6 +676,58 @@
                 <gridItem id="SCI_CFG_CH10_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH11_INCLUDED" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH12_INCLUDED" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH0_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH1_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH2_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH3_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH4_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH5_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH6_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH7_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH8_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH9_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH10_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH11_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH12_EN_TXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH0_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH1_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH2_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH3_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH4_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH5_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH6_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH7_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH8_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH9_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH10_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH11_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH12_EN_RXI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH0_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH1_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH2_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH3_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH4_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH5_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH6_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH7_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH8_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH9_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH10_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH11_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH12_EN_TEI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH0_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH1_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH2_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH3_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH4_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH5_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH6_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH7_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH8_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH9_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH10_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH11_EN_ERI_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="SCI_CFG_CH12_EN_ERI_NESTED_INT" selectedIndex="0"/>
                 <gridItem id="SCI_CFG_CH0_TX_BUFSIZ" selectedIndex="2048"/>
                 <gridItem id="SCI_CFG_CH1_TX_BUFSIZ" selectedIndex="80"/>
                 <gridItem id="SCI_CFG_CH2_TX_BUFSIZ" selectedIndex="80"/>
@@ -878,22 +866,100 @@
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
         </configuration>
-        <configuration inuse="true" name="r_byteq">
-            <component description="Dependency : r_bsp version(s) 6.10&#10;This module allocates a queue control block in an Open() call to handle indexing for buffers provided by the user application. Additional functions are provided to put and get data from the buffer queue, inspect the number of bytes available or in use, and to flush the queue. There is no limit to the number of queues supported, and queue control blocks can be allocated statically at build time or dynamically at run time." detailDescription="Byte-based circular buffer library." display="r_byteq" id="r_byteq1.90" version="1.90">
-                <gridItem id="BYTEQ_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
-                <gridItem id="BYTEQ_CFG_USE_HEAP_FOR_CTRL_BLKS" selectedIndex="0"/>
-                <gridItem id="BYTEQ_CFG_MAX_CTRL_BLKS" selectedIndex="32"/>
-                <gridItem id="BYTEQ_CFG_PROTECT_QUEUE" selectedIndex="0"/>
+        <configuration inuse="true" name="r_cmt_rx">
+            <component description="Dependency : r_bsp version(s) 7.20&#10;This module creates a timer tick using a CMT channel based on a frequency input by the user." detailDescription="CMT driver" display="r_cmt_rx" id="r_cmt_rx5.40" version="5.40">
+                <gridItem id="CMT_RX_CFG_IPR" selectedIndex="5"/>
+                <gridItem id="CMT_CFG_CH0_EN_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="CMT_CFG_CH1_EN_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="CMT_CFG_CH2_EN_NESTED_INT" selectedIndex="0"/>
+                <gridItem id="CMT_CFG_CH3_EN_NESTED_INT" selectedIndex="0"/>
             </component>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
         </configuration>
-        <configuration inuse="true" name="r_gpio_rx">
-            <component description="Dependency : r_bsp version(s) 6.20&#10;This code implements a General Purpose Input/Output driver. Common features such as reading, writing, and setting the direction of ports and pins is supported. Enabling features such as open-drain outputs and internal pull-ups are also supported." detailDescription="GPIO Driver" display="r_gpio_rx" id="r_gpio_rx4.20" version="4.20">
-                <gridItem id="GPIO_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
+        <configuration inuse="true" name="r_byteq">
+            <component description="Dependency : r_bsp version(s) 7.20&#10;This module allocates a queue control block in an Open() call to handle indexing for buffers provided by the user application. Additional functions are provided to put and get data from the buffer queue, inspect the number of bytes available or in use, and to flush the queue. There is no limit to the number of queues supported, and queue control blocks can be allocated statically at build time or dynamically at run time." detailDescription="Byte-based circular buffer library." display="r_byteq" id="r_byteq2.10" version="2.10">
+                <gridItem id="BYTEQ_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
+                <gridItem id="BYTEQ_CFG_USE_HEAP_FOR_CTRL_BLKS" selectedIndex="0"/>
+                <gridItem id="BYTEQ_CFG_MAX_CTRL_BLKS" selectedIndex="32"/>
+                <gridItem id="BYTEQ_CFG_PROTECT_QUEUE" selectedIndex="0"/>
+                <gridItem id="BYTEQ_CFG_CRITICAL_SECTION" selectedIndex="0"/>
             </component>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
             <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+        </configuration>
+        <configuration enable="true" exclude="false" id="55a02a25-1d7e-4779-9b4f-70fbb8a58e96" inuse="true" name="threadx">
+            <component description="Dependency: None&#10;Azure RTOS ThreadX is an advanced real-time operating system (RTOS) designed specifically for deeply embedded applications" detailDescription="Azure RTOS ThreadX is an advanced real-time operating system (RTOS) designed specifically for deeply embedded applications" display="Azure RTOS ThreadX" id="threadx6.2.0_rel-rx-1.0.0" version="6.2.0_rel-rx-1.0.0">
+                <gridItem id="USE_TX_MAX_PRIORITIES" selectedIndex="0"/>
+                <gridItem id="TX_MAX_PRIORITIES" selectedIndex="32"/>
+                <gridItem id="USE_TX_MINIMUM_STACK" selectedIndex="0"/>
+                <gridItem id="TX_MINIMUM_STACK" selectedIndex="0"/>
+                <gridItem id="USE_TX_TIMER_THREAD_STACK_SIZE" selectedIndex="0"/>
+                <gridItem id="TX_TIMER_THREAD_STACK_SIZE" selectedIndex="128"/>
+                <gridItem id="USE_TX_TIMER_THREAD_PRIORITY" selectedIndex="0"/>
+                <gridItem id="TX_TIMER_THREAD_PRIORITY" selectedIndex="1"/>
+                <gridItem id="USE_TX_TIMER_TICKS_PER_SECOND" selectedIndex="0"/>
+                <gridItem id="TX_TIMER_TICKS_PER_SECOND" selectedIndex="100"/>
+                <gridItem id="USE_TX_THREAD_USER_EXTENSION" selectedIndex="0"/>
+                <gridItem id="USE_TX_NO_FILEX_POINTER" selectedIndex="0"/>
+                <gridItem id="USE_TX_TIMER_PROCESS_IN_ISR" selectedIndex="0"/>
+                <gridItem id="USE_TX_REACTIVATE_INLINE" selectedIndex="0"/>
+                <gridItem id="USE_TX_DISABLE_STACK_FILLING " selectedIndex="0"/>
+                <gridItem id="USE_TX_ENABLE_STACK_CHECKING " selectedIndex="0"/>
+                <gridItem id="USE_TX_DISABLE_PREEMPTION_THRESHOLD " selectedIndex="0"/>
+                <gridItem id="USE_TX_DISABLE_REDUNDANT_CLEARING" selectedIndex="0"/>
+                <gridItem id="USE_TX_NO_TIMER" selectedIndex="0"/>
+                <gridItem id="USE_TX_DISABLE_NOTIFY_CALLBACKS" selectedIndex="0"/>
+                <gridItem id="USE_TX_INLINE_THREAD_RESUME_SUSPEND" selectedIndex="0"/>
+                <gridItem id="USE_TX_NOT_INTERRUPTABLE" selectedIndex="0"/>
+                <gridItem id="USE_TX_ENABLE_EVENT_TRACE" selectedIndex="0"/>
+                <gridItem id="USE_TX_BLOCK_POOL_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
+                <gridItem id="USE_TX_BYTE_POOL_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
+                <gridItem id="USE_TX_EVENT_FLAGS_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
+                <gridItem id="USE_TX_MUTEX_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
+                <gridItem id="USE_TX_QUEUE_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
+                <gridItem id="USE_TX_SEMAPHORE_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
+                <gridItem id="USE_TX_THREAD_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
+                <gridItem id="USE_TX_TIMER_ENABLE_PERFORMANCE_INFO" selectedIndex="0"/>
+                <gridItem id="USE_TX_BYTE_POOL_MULTIPLE_BLOCK_SEARCH" selectedIndex="0"/>
+                <gridItem id="TX_BYTE_POOL_MULTIPLE_BLOCK_SEARCH" selectedIndex="20"/>
+                <gridItem id="USE_TX_BYTE_POOL_DELAY_VALUE" selectedIndex="0"/>
+                <gridItem id="TX_BYTE_POOL_DELAY_VALUE" selectedIndex="3"/>
+                <gridItem id="TX_LOW_POWER" selectedIndex="0"/>
+                <gridItem id="TX_LOW_POWER_USER_ENTER" selectedIndex="Demo_LowPower_Enter()"/>
+                <gridItem id="TX_LOW_POWER_USER_EXIT" selectedIndex="Demo_LowPower_Exit()"/>
+                <gridItem id="USE_TX_LOW_POWER_TICKLESS" selectedIndex="0"/>
+                <gridItem id="USE_TX_LOW_POWER_TIMER_SETUP" selectedIndex="0"/>
+                <gridItem id="TX_LOW_POWER_TIMER_SETUP" selectedIndex="Demo_LowPower_Timer_Setup"/>
+                <gridItem id="USE_TX_LOW_POWER_USER_TIMER_ADJUST" selectedIndex="0"/>
+                <gridItem id="TX_LOW_POWER_USER_TIMER_ADJUST" selectedIndex="Demo_LowPower_User_Timer_Adjust()"/>
+                <gridItem id="TX_ENABLE_WAIT" selectedIndex="0"/>
+            </component>
+            <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
+        </configuration>
+        <configuration enable="true" exclude="false" id="366e652c-e461-4b99-8377-a0b5a38dde8d" inuse="true" name="azurertos_object">
+            <allocatable id="" name="" type="">
+                <allocatable id="THREAD" name="THREAD" type="TABALLOCATABLE">
+                    <allocatable id="THREAD1" name="THREAD1" type="ROWALLOCATABLE">
+                        <option defaultValue="new_thread[X]" id="threadpointer" value="ewf_info_thread"/>
+                        <option defaultValue="New Thread" id="threadname" value="EWF information thread"/>
+                        <option defaultValue="new_thread[X]_entry" id="entryfunction" value="ewf_info_thread_entry"/>
+                        <option defaultValue="0" id="entryinput" value="0"/>
+                        <option defaultValue="1024" id="stacksize" value="2048"/>
+                        <option defaultValue="1" id="priority" value="5"/>
+                        <option defaultValue="1" id="preemptionthreshold" value="5"/>
+                        <option defaultValue="0" id="timeslice" value="0"/>
+                        <option defaultValue="TX_AUTO_START" id="autostart" value="TX_AUTO_START"/>
+                    </allocatable>
+                </allocatable>
+                <allocatable id="QUEUE" name="QUEUE" type="TABALLOCATABLE"/>
+                <allocatable id="SEMAPHORE" name="SEMAPHORE" type="TABALLOCATABLE"/>
+                <allocatable id="MUTEX" name="MUTEX" type="TABALLOCATABLE"/>
+                <allocatable id="EVENT" name="EVENT" type="TABALLOCATABLE"/>
+                <allocatable id="TIMER" name="TIMER" type="TABALLOCATABLE"/>
+            </allocatable>
+            <component description="" detailDescription="" display="AzureRTOS Object" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.azurertos.object" version="1.0.112"/>
+            <source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
         </configuration>
     </tool>
     <tool id="System">

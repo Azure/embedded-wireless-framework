@@ -94,13 +94,13 @@ static ewf_interface ewf_interface_microchip_sam_uart__interface__##interface_na
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                                  \
     ewf_interface_microchip_sam_uart__interface__##interface_name_symb.response_queue_ptr,                                                                          \
     ewf_interface_microchip_sam_uart__response_queue__##interface_name_symb,                                                                                        \
-    ewf_interface_message,                                                                                                                                          \
-    EWF_INTERFACE_MICROCHIP_SAM_UART_CONFIG_RESPONSE_QUEUE_SIZE);                                                                                                                                                             \
+    ewf_message,                                                                                                                                                    \
+    EWF_INTERFACE_MICROCHIP_SAM_UART_CONFIG_RESPONSE_QUEUE_SIZE);                                                                                                   \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                                  \
     ewf_interface_microchip_sam_uart__interface__##interface_name_symb.urc_queue_ptr,                                                                               \
     ewf_interface_microchip_sam_uart__urc_queue__##interface_name_symb,                                                                                             \
-    ewf_interface_message,                                                                                                                                          \
-    EWF_INTERFACE_MICROCHIP_SAM_UART_CONFIG_URC_QUEUE_SIZE);                                                                                                                                                             \
+    ewf_message,                                                                                                                                                    \
+    EWF_INTERFACE_MICROCHIP_SAM_UART_CONFIG_URC_QUEUE_SIZE);                                                                                                        \
 ewf_interface_microchip_sam_uart__interface__##interface_name_symb.hardware_start = ewf_interface_microchip_sam_uart_hardware_start;                                \
 ewf_interface_microchip_sam_uart__interface__##interface_name_symb.hardware_stop = ewf_interface_microchip_sam_uart_hardware_stop;                                  \
 ewf_interface_microchip_sam_uart__interface__##interface_name_symb.hardware_send = ewf_interface_microchip_sam_uart_hardware_send;                                  \

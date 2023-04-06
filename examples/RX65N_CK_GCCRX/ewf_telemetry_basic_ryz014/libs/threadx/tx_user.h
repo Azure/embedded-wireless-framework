@@ -316,5 +316,49 @@
 #define TX_BYTE_POOL_DELAY_VALUE 					3
 #endif
 
+/* Define Low Power macros and flags */
+
+/* Define Low Power usage */
+#define TX_LOW_POWER								0
+
+/* Define the Enter low power mode macro*/
+#if TX_LOW_POWER
+void Demo_LowPower_Enter(void);
+#define TX_LOW_POWER_USER_ENTER						Demo_LowPower_Enter()
+#endif
+
+/* Define the Exist low power mode macro*/
+#if TX_LOW_POWER
+void Demo_LowPower_Exit(void);
+#define TX_LOW_POWER_USER_EXIT						Demo_LowPower_Exit()
+#endif
+
+/* Define Low Power tickess usage */
+#define USE_TX_LOW_POWER_TICKLESS					0
+#if USE_TX_LOW_POWER_TICKLESS
+#define TX_LOW_POWER_TICKLESS
+#endif
+
+/* Define the TX_LOW_POWER_TIMER_SETUP macro*/
+#if TX_LOW_POWER && !USE_TX_LOW_POWER_TICKLESS
+#define USE_TX_LOW_POWER_TIMER_SETUP				0
+#endif
+#if USE_TX_LOW_POWER_TIMER_SETUP
+void Demo_LowPower_Timer_Setup(unsigned long tx_low_power_next_expiration);  /* can not use ULONG */
+#define TX_LOW_POWER_TIMER_SETUP					Demo_LowPower_Timer_Setup
+#endif
+
+/* Define the TX_LOW_POWER_USER_TIMER_ADJUST macro*/
+#if TX_LOW_POWER && !USE_TX_LOW_POWER_TICKLESS
+#define USE_TX_LOW_POWER_USER_TIMER_ADJUST			0
+#endif
+#if USE_TX_LOW_POWER_USER_TIMER_ADJUST
+unsigned long Demo_LowPower_User_Timer_Adjust(void);						/* can not use ULONG */
+#define TX_LOW_POWER_USER_TIMER_ADJUST				Demo_LowPower_User_Timer_Adjust()
+#endif
+
+/* Define the TX_ENABLE_WAIT usage*/
+#define TX_ENABLE_WAIT								0
+
 #endif
 

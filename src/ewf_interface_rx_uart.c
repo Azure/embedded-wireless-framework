@@ -111,12 +111,8 @@ ewf_result ewf_interface_rx_uart_hardware_start(ewf_interface* interface_ptr)
      *  Provide address of the config structure,
      *  the callback function to be assigned,
      *  and the location for the handle to be stored.*/
-#ifdef EWF_RENESAS_RX65N_CK_ENABLE
     sci_err = R_SCI_Open(R_SCI_CFG_EWF_CELLULAR_SERIAL_CH, SCI_MODE_ASYNC, &ewf_rx_sci_config, ewf_rx_uart_callback, &ewf_rx_sci_handle);
-#else
-    /* Cloud kit for RX65N */
-    sci_err = R_SCI_Open(SCI_CH0, SCI_MODE_ASYNC, &ewf_rx_sci_config, ewf_rx_uart_callback, &ewf_rx_sci_handle);
-#endif
+
 
     /* If there were an error this would demonstrate error detection of API calls. */
     if (SCI_SUCCESS != sci_err)
@@ -130,14 +126,8 @@ ewf_result ewf_interface_rx_uart_hardware_start(ewf_interface* interface_ptr)
         R_SCI_Control(ewf_rx_sci_handle, SCI_CMD_SET_TXI_PRIORITY, &priority);
 #endif
 
-#ifdef EWF_RENESAS_RX65N_CK_ENABLE
         EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RTS_PORT, EWF_CELLULAR_CFG_RTS_PIN) = 0;
         EWF_CELLULAR_SET_PDR(EWF_CELLULAR_CFG_RTS_PORT, EWF_CELLULAR_CFG_RTS_PIN) = EWF_CELLULAR_PIN_DIRECTION_MODE_OUTPUT;
-#else
-        /* Cloud KIT RX65N */
-        PORT2.PODR.BIT.B2= 0;
-        PORT2.PDR.BIT.B2= 1;
-#endif
 
     }
     return EWF_RESULT_OK;

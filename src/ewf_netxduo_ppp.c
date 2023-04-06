@@ -19,13 +19,15 @@
 /**************************************************************************/
 /**************************************************************************/
 
+
+#include "ewf.h"
+
 /* EWF enabled to use with Azure RTOS NetX */
 #if (EWF_CONFIG_AZURE_RTOS_NETX == 1)
 
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "ewf.h"
 #include "ewf_adapter.h"
 #include "ewf_lib.h"
 

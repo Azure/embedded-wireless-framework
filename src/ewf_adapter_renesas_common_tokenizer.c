@@ -8,6 +8,8 @@
 
 #include "ewf_adapter_renesas_common.h"
 #include "ewf_tokenizer_basic.h"
+#include "ewf_platform.h"
+#include "ewf_lib.h"
 
 char ewf_adapter_renesas_common_command_response_end_tokenizer_pattern5_str[] = "\r\n+CME ERROR: ???\r\n";
 char ewf_adapter_renesas_common_command_response_end_tokenizer_pattern4_str[] = "\r\n+CME ERROR: ??\r\n";
@@ -67,6 +69,10 @@ static ewf_tokenizer_basic_pattern ewf_adapter_renesas_common_command_response_e
 
 static ewf_tokenizer_basic_pattern* ewf_adapter_renesas_common_command_response_end_tokenizer_pattern_ptr = &ewf_adapter_renesas_common_command_response_end_tokenizer_pattern1;
 
+/************************************************************************//**
+ * URC tokenizer pattern list
+ ****************************************************************************/
+
 char ewf_adapter_renesas_common_urc_tokenizer_pattern1_str[] = "\r\n";
 
 static ewf_tokenizer_basic_pattern ewf_adapter_renesas_common_urc_tokenizer_pattern1 =
@@ -78,6 +84,10 @@ static ewf_tokenizer_basic_pattern ewf_adapter_renesas_common_urc_tokenizer_patt
     NULL,
     NULL,
 };
+
+/************************************************************************//**
+ * Message tokenizer pattern list
+ ****************************************************************************/
 
 static ewf_tokenizer_basic_pattern* ewf_adapter_renesas_common_urc_tokenizer_pattern_ptr = &ewf_adapter_renesas_common_urc_tokenizer_pattern1;
 

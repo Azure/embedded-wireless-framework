@@ -356,7 +356,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_connect(ewf_adapter* adapter_pt
     timeout = 30 * EWF_PLATFORM_TICKS_PER_SECOND;
     while (--timeout)
     {
-        ewf_interface_receive_poll(interface_ptr);
+        ewf_interface_poll(interface_ptr);
         if (implementation_ptr->mqtt_basic_open)
         {
     EWF_LOG("connected\n");
@@ -432,7 +432,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_connect(ewf_adapter* adapter_pt
     timeout = 30 * EWF_PLATFORM_TICKS_PER_SECOND;
     while (--timeout)
     {
-        ewf_interface_receive_poll(interface_ptr);
+        ewf_interface_poll(interface_ptr);
         if (implementation_ptr->mqtt_basic_conn)
         {
             break;
@@ -478,7 +478,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_disconnect(ewf_adapter* adapter
     timeout = 30 * EWF_PLATFORM_TICKS_PER_SECOND;
     while (--timeout)
     {
-        ewf_interface_receive_poll(interface_ptr);
+        ewf_interface_poll(interface_ptr);
         if (implementation_ptr->mqtt_basic_conn == false) break;
         ewf_platform_sleep(1);
     }
