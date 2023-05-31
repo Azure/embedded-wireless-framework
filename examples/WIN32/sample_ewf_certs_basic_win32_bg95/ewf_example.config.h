@@ -76,7 +76,7 @@ extern "C" {
  * @defgroup group_example_configuration_certs Certificate Provisioning configuration
  * @brief Certificate Provisioning configuration used in examples
  * @{
-*/
+ */
 
 /** @brief Trusted Certificate Authority certificate file name to be stored on the modem */
 #define EWF_CONFIG_ADAPTER_QUECTEL_BG95_ROOT_CA_CERTIFICATE_FILE_NAME      ("root_ca_cert.pem")

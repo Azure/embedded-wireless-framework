@@ -57,18 +57,18 @@ extern "C" {
 /** @} *** group_example_configuration_interface */
 
 /**
- * @defgroup group_example_configuration_modem Modem configuration
- * @brief Modem configuration settings used in examples
+ * @defgroup group_example_configuration_wifi WiFi configuration
+ * @brief WiFi configuration settings used in examples
  * @{
  */
 
-/** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN                                          ("0000")
+/** @brief the network SSID */
+#define EWF_CONFIG_WIFI_STATION_SSID                                "DESKTOP-V5NOFS8"
 
-/** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                                       (1)
+/** @brief the network password */
+#define EWF_CONFIG_WIFI_STATION_PASSWORD                            "12F80u90"
 
-/** @} *** group_example_configuration_modem */
+/** @} *** group_example_configuration_wifi */
 
 /************************************************************************//**
  * @}

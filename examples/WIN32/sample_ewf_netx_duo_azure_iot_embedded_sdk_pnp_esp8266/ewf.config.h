@@ -20,7 +20,7 @@ extern "C" {
  ****************************************************************************/
 
 /** Define this symbol to enable compilation of debug code. When this symbol is not defined, debug code is not present and the footprint is reduced.  */
-#define EWF_DEBUG
+//#define EWF_DEBUG
 
 /** Define this symbol to enable verbose logging */
 //#define EWF_LOG_VERBOSE
@@ -33,6 +33,9 @@ extern "C" {
 #define EWF_PLATFORM_THREADX
 //#define EWF_PLATFORM_FREERTOS
 //#define EWF_PLATFORM_WIN32
+
+/** @brief Enable EWF usage with Azure RTOS NETX */
+#define EWF_CONFIG_AZURE_RTOS_NETX (1)
 
 /************************************************************************//**
  * @} *** group_configuration

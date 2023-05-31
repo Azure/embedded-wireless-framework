@@ -38,6 +38,7 @@ Includes   <System Includes> , "Project Includes"
 #include "nxd_sntp_client.h"
 #include "nx_secure_tls_api.h"
 
+#include "ewf_example.config.h"
 /* Inclusion of .c files is for demo purposes only.
  * In production code, please compile the below .c files as you would do for other source files :
  * In your IDE add the files to your project, in your make files add the files to your source list, etc.. */
@@ -45,6 +46,8 @@ Includes   <System Includes> , "Project Includes"
 #include "ewf_platform_threadx.c"
 #include "ewf_allocator.c"
 #include "ewf_allocator_threadx.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
 #include "ewf_interface.c"
 #include "ewf_interface_rx_uart.c"
 #include "ewf_adapter.c"
@@ -59,8 +62,8 @@ Includes   <System Includes> , "Project Includes"
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_packet_domain.c"
 #include "ewf_adapter_api_modem_network_service.c"
-#include "ewf_adapter_sequans.c"
 #include "ewf_adapter_renesas_ryz014.c"
+#include "ewf_adapter_renesas_common_tokenizer.c"
 #include "ewf_adapter_renesas_common_control.c"
 #include "ewf_adapter_renesas_common_info.c"
 #include "ewf_adapter_renesas_common_urc.c"
@@ -70,10 +73,10 @@ Includes   <System Includes> , "Project Includes"
 #include "ewf_adapter_renesas_common_tls_basic.c"
 #include "ewf_middleware_netxduo.c"
 
-#include "ewf_example.config.h"
+#include "ewf_cellular_private.h"
 
 /* Modem might take some minutes to attach and register to the network. Time out value in seconds */
-#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (1200)
+#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (120)
 
 /* Include the sample.  */
 extern VOID sample_entry(NX_IP* ip_ptr, NX_PACKET_POOL* pool_ptr, NX_DNS* dns_ptr, UINT (*unix_time_callback)(ULONG *unix_time));
@@ -150,12 +153,29 @@ static UINT dns_create();;
 UINT unix_time_get(ULONG *unix_time);
 static UINT sntp_time_sync();
 
+void renesas_ryz014a_adapter_power_on()
+{
+
+    // Release the RYZ014A from reset
+    EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_ON;
+    EWF_CELLULAR_SET_PDR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_PIN_DIRECTION_MODE_OUTPUT;
+    tx_thread_sleep (100);
+    EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_OFF;
+    demo_printf("Waiting for the module to Power Reset!\r\n");
+    ewf_platform_sleep(300);
+    demo_printf("Ready\r\n");
+
+}
+
 /* New Thread entry function */
 void application_thread_entry(ULONG entry_input)
 {
 
     /* Initialize the demo printf implementation. */
     demo_printf_init();
+
+    /* Power on the modem */
+    renesas_ryz014a_adapter_power_on();
 
 	ewf_result result;
 	UINT status = 0;
@@ -167,16 +187,6 @@ void application_thread_entry(ULONG entry_input)
 	EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
 	EWF_INTERFACE_RX_UART_STATIC_DECLARE(interface_ptr , sci_uart);
 	EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
-
-
-	// Release the RYZ014A from reset
-	PORTA.PODR.BIT.B1= 1;
-	PORTA.PDR.BIT.B1= 1;
-	tx_thread_sleep (200);
-	PORTA.PODR.BIT.B1= 0;
-	printf("Waiting for the module to Power Reset!\r\n");
-	ewf_platform_sleep(300);
-	printf("Ready\r\n");
 
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
@@ -206,7 +216,7 @@ void application_thread_entry(ULONG entry_input)
     }
 
     /* Wait time for modem to be ready*/
-    ewf_platform_sleep(300);
+    ewf_platform_sleep(3 * EWF_PLATFORM_TICKS_PER_SECOND);
 
     // Set the APN
     if (ewf_result_failed(result = ewf_adapter_modem_pdp_apn_set(adapter_ptr, EWF_CONFIG_CONTEXT_ID, EWF_ADAPTER_MODEM_PDP_TYPE_IP, EWF_CONFIG_SIM_APN)))
@@ -223,7 +233,7 @@ void application_thread_entry(ULONG entry_input)
     }
 
     /* Wait time for modem to be ready after modem is registered to network */
-    ewf_platform_sleep(200);
+    ewf_platform_sleep(3 * EWF_PLATFORM_TICKS_PER_SECOND);
 
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
@@ -232,7 +242,7 @@ void application_thread_entry(ULONG entry_input)
         exit(result);
     }
 
-    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, 1000)))
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT)))
     {
         EWF_LOG("[ERROR][Failed to register to network.]\n");
         return;

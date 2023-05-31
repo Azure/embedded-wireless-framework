@@ -12,6 +12,7 @@
 #include "ewf_adapter_thales_exs82_w.h"
 #include "ewf_lib.h"
 #include "ewf_example.config.h"
+#include "test/ewf_adapter_thales_exs82_w_test.c"
 
 // ThreadX thread, entry point declaration and stack definition.
 static TX_THREAD thread;

@@ -1,3 +1,28 @@
+/*
+ * FreeRTOS V202112.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * https://www.FreeRTOS.org
+ * https://aws.amazon.com/freertos
+ *
+ */
 
 /* Standard includes. */
 #include <stdio.h>
@@ -11,15 +36,13 @@
 /* Standard demo includes. */
 #include "StaticAllocation.h"
 
-/* Azure SD-NET */
+/* Embedded Wireless Framework */
 #include "ewf_platform_freertos.h"
 #include "ewf_allocator_memory_pool.h"
 #include "ewf_interface_win32_com.h"
 #include "ewf_adapter_quectel_bg95.h"
 
 #include "ewf_example.config.h"
-
-#include "ewf_lib.h"
 
 
 /*-----------------------------------------------------------*/
@@ -79,7 +102,7 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-void prvMainTask( void *pvParameters )
+static void prvMainTask( void *pvParameters )
 {
     /* Just to remove compiler warning. */
     ( void ) pvParameters;
@@ -105,28 +128,28 @@ void prvMainTask( void *pvParameters )
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
     {
         EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
-        return;
+        exit(result);
     }
 
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
         EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
-        return;
+        exit(result);
     }
 
-    // Set the ME functionality
+    // Enable full functionality
     if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
     {
-        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
-        return;
+        EWF_LOG_ERROR("Failed to set the ME functionality, ewf_result %d.\n", result);
+        exit(result);
     }
 
     // Activated the PDP context
     if (ewf_result_failed(result = ewf_adapter_quectel_bg95_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
-        EWF_LOG_ERROR("Failed to activate the PDP context, ewf_result %d.\n", result);
-        // continue despite the error
+        EWF_LOG("[WARNING] Failed to activate the PDP context, ewf_result %d.\n", result);
+        // continue despite the error, the context may be already active
     }
 
     /* Run the adapter tests.  */
@@ -136,13 +159,14 @@ void prvMainTask( void *pvParameters )
         exit(result);
     }
 
+    EWF_LOG("\nDone!\n");
+
     for( ;; )
     {
         /* Place this task in the blocked state until it is time to run again. */
         vTaskDelay(pdMS_TO_TICKS(1000UL));
 
-        /* This is the only task that uses stdout so its ok to call printf()
-        directly. */
+        /* This is the only task that uses stdout so its ok to call printf() directly. */
         printf( "tick count %d\r\n", xTaskGetTickCount());
     }
 }

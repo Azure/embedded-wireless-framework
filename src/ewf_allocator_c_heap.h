@@ -30,9 +30,6 @@ typedef struct _ewf_allocator_c_heap
     uint32_t allocated_count;
     uint32_t released_count;
 
-    uint32_t block_count; /** The maximum number of blocks to allocate */
-    uint32_t block_size; /** The size of a block */
-
 } ewf_allocator_c_heap;
 
 ewf_result ewf_allocator_c_heap_start(ewf_allocator* allocator_ptr);
@@ -66,8 +63,8 @@ do {                                                                            
 do {                                                                                                                                               \
 static ewf_allocator_c_heap ewf_allocator_c_heap__##allocator_name_symb = {0};                                                                     \
 static ewf_allocator ewf_allocator__##allocator_name_symb = {0};                                                                                   \
-ewf_allocator_c_heap__##allocator_name_symb.block_count = block_count_param;                                                                       \
-ewf_allocator_c_heap__##allocator_name_symb.block_size = block_size_param;                                                                         \
+ewf_allocator__##allocator_name_symb.block_count = block_count_param;                                                                              \
+ewf_allocator__##allocator_name_symb.block_size = block_size_param;                                                                                \
 ewf_allocator__##allocator_name_symb.start = ewf_allocator_c_heap_start;                                                                           \
 ewf_allocator__##allocator_name_symb.stop = ewf_allocator_c_heap_stop;                                                                             \
 ewf_allocator__##allocator_name_symb.allocate = ewf_allocator_c_heap_allocate;                                                                     \

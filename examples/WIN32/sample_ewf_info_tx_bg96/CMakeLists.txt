@@ -21,6 +21,10 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_control.h
@@ -56,6 +60,17 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_bg96.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_bg96.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_control.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_urc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_info.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_context.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_ufs.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_tls_basic.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_mqtt_basic.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_internet.c
     ewf.config.h
     ewf_example.config.h
     sample_info.c)

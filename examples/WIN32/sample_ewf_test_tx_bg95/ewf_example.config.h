@@ -6,7 +6,6 @@
  * @brief The Embedded Wireless Framework example configuration.
  ****************************************************************************/
 
-
 #ifndef __ewf_example_conf__h__included__
 #define __ewf_example_conf__h__included__
 
@@ -27,10 +26,10 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (6)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (512 * 3)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1600)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -41,7 +40,7 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM44")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM8")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
 #define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (CBR_115200)
@@ -77,16 +76,23 @@ extern "C" {
  * @{
  */
 
-#define EWF_ADAPTER_TEST_TCP_HTTP_TEST_ENABLED                      0
+#define EWF_ADAPTER_TEST_TCP_HTTP_TEST_ENABLED                      1
+
+#define EWF_ADAPTER_TEST_TCP_ECHO_TEST_ENABLED                      1
 #define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               ""
 #define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      4000
-#define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             0
-#define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS                       0
+#define EWF_ADAPTER_TEST_TCP_RECV_SLEEP_TICKS                       0 // (EWF_PLATFORM_TICKS_PER_SECOND * 1)
+#define EWF_ADAPTER_TEST_TCP_LOOP_SLEEP_TICKS                       0 // (EWF_PLATFORM_TICKS_PER_SECOND * 1)
 
+#define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             0
+
+#define EWF_ADAPTER_TEST_UDP_ECHO_TEST_ENABLED                      1
 #define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               ""
 #define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
+#define EWF_ADAPTER_TEST_UDP_RECV_SLEEP_TICKS                       0 // (EWF_PLATFORM_TICKS_PER_SECOND * 1)
+#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS                       0 // (EWF_PLATFORM_TICKS_PER_SECOND * 1)
+
 #define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             0
-#define EWF_ADAPTER_TEST_UDP_LOOP_SLEEP_TICKS                       0
 
 /** @} *** group_example_configuration_test_echo */
 

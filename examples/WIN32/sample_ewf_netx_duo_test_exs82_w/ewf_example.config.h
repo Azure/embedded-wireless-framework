@@ -71,19 +71,19 @@ extern "C" {
 /** @} *** group_example_configuration_modem */
 
 /**
- * @defgroup group_example_configuration_netx_duo_test NetX Duo test configuration
- * @brief NetX Duo test configuration settings used in examples
+ * @defgroup group_example_configuration_netx_duo_test NetX-Duo test configuration
+ * @brief NetX-Duo test configuration settings used in examples
  * @{
  */
 
-#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_TEST_ENABLED             (1)
-#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_TEST_ENABLED             (1)
-#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_TEST_ENABLED             (1)
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_SERVER_IP IP_ADDRESS(0,0,0,0)
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_IP IP_ADDRESS(0,0,0,0)
+#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_IP IP_ADDRESS(0,0,0,0)
 
 /** @} *** group_example_configuration_netx_duo_test */
 
 /************************************************************************//**
- * @} *** group_example_configuration
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

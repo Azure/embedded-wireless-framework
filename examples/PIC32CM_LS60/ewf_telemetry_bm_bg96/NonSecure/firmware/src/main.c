@@ -30,6 +30,8 @@
 #include "ewf_platform_bare_metal.c"
 #include "ewf_allocator.c"
 #include "ewf_allocator_memory_pool.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
 #include "ewf_interface.c"
 #include "ewf_interface_microchip_pic_uart.c"
 #include "ewf_adapter.c"
@@ -46,9 +48,20 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
 #include "ewf_adapter_quectel_bg96.c"
-
+#include "ewf_adapter_quectel_common_tokenizer.c"
+#include "ewf_adapter_quectel_common_urc.c"
+#include "ewf_adapter_quectel_common_control.c"
+#include "ewf_adapter_quectel_common_context.c"
+#include "ewf_adapter_quectel_common_info.c"
+#include "ewf_adapter_quectel_common_internet.c"
+#include "ewf_adapter_quectel_common_ufs.c"
+#include "ewf_adapter_quectel_common_mqtt_basic.c"
+#include "ewf_adapter_quectel_common_tls_basic.c"
 #include "ewf_example.config.h"
 #include "ewf_example_telemetry_basic.c"
+
+/* Modem might take some minutes to attach and register to the network. Time out value in seconds */
+#define EWF_ADAPTER_QUECTEL_NETWORK_REGISTER_TIMEOUT  (120)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -72,7 +85,7 @@ int main(void) {
     
     SYSTICK_TimerStart();
 
-   // mikroe_bg96_power_toggle();
+//    mikroe_bg96_power_toggle();
     
     ewf_result result;
 
@@ -80,7 +93,9 @@ int main(void) {
     ewf_interface* interface_ptr = NULL;
     ewf_adapter* adapter_ptr = NULL;
 
-    EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(message_allocator_ptr, message_allocator, 4, 1024);
+    EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(message_allocator_ptr, message_allocator, 
+            EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, 
+            EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_MICROCHIP_PIC_UART_STATIC_DECLARE(interface_ptr, pic_uart);
     EWF_ADAPTER_QUECTEL_BG96_STATIC_DECLARE(adapter_ptr, quectel_bg96, message_allocator_ptr, NULL, interface_ptr);
 
@@ -90,16 +105,49 @@ int main(void) {
         exit(result);
     }
 
-    // Set the SIM PIN
-    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN))) {
-        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
-        exit(result);
+    // Set the ME functionality to minimum to clear out any previous connections
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_MINIMUM)))
+    {
+        EWF_LOG("[Warning][Failed to the ME functionality]\n");
+    }
+    ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+    // Set the APN
+    if (ewf_result_failed(result = ewf_adapter_modem_pdp_apn_set(adapter_ptr, EWF_CONFIG_CONTEXT_ID, EWF_ADAPTER_MODEM_PDP_TYPE_IPV4V6, EWF_CONFIG_SIM_APN)))
+    {
+        EWF_LOG_ERROR("Failed to the set APN, ewf_result %d.\n", result);
+        while(1);
     }
 
     // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1"))) {
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
+    {
         EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
-        exit(result);
+        while(1);
+    }
+
+    /* Wait time for modem to be ready after modem is registered to network */
+    ewf_platform_sleep(3 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+    // Set the SIM PIN
+    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
+    {
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
+        while(1);
+    }
+
+    /* Check modem registration */
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, 
+            EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, 
+            EWF_ADAPTER_QUECTEL_NETWORK_REGISTER_TIMEOUT)))
+    {
+        EWF_LOG("[ERROR][Failed to register to network.]\n");
+        while(1);
+    }
+    
+    if (ewf_result_failed(result = ewf_adapter_quectel_common_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
+    {
+        EWF_LOG("[WARNING][Failed to activate the context.]\n");
     }
 
 #ifdef EWF_ADAPTER_QUECTEL_BG96_TLS_BASIC_ENABLED

@@ -31,7 +31,7 @@ extern "C" {
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1600)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -47,7 +47,15 @@ extern "C" {
 /** @brief The modem context ID used */
 #define EWF_CONFIG_CONTEXT_ID                                       (1)
 
+
+void ryz014a_adapter_power_on();
+/** @brief The modem power on user function */
+#define EWF_ADAPTER_USER_POWER_ON                                   ryz014a_adapter_power_on
+
 /** @} *** group_example_configuration_modem */
+
+/** @brief Enable EWF usage with Azure RTOS NETX */
+#define EWF_CONFIG_AZURE_RTOS_NETX                                  (1)
 
 /**
  * @defgroup group_example_configuration_iot_hub IoT Hub configuration
@@ -64,24 +72,23 @@ extern "C" {
 /** @} *** group_example_configuration_iot_hub */
 
 /**
- * @defgroup group_example_configuration_telemetry
- * @brief Telemetry example configuration
+ * @defgroup group_example_configuration_test_netx_duo NetX-Duo test configuration
+ * @brief NetX-Duo test configuration settings used in examples
  * @{
  */
 
-/** @brief The size of the buffer used to hold the IoT Hub username */
-#define EWF_CONFIG_TELEMETRY_USERNAME_LENGTH                        (256)
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_TEST_ENABLED             (1)
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_SERVER_IP                IP_ADDRESS(0,0,0,0)
 
-/** @brief The size of the buffer used to hold the IoT Hub client ID */
-#define EWF_CONFIG_TELEMETRY_CLIENT_ID_LENGTH                       (64)
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_TEST_ENABLED             (1)
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_IP                IP_ADDRESS(0,0,0,0)
 
-/** @brief The size of the buffer used to hold the IoT Hub topic length */
-#define EWF_CONFIG_TELEMETRY_TOPIC_LENGTH                           (256)
+#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_DNS_TEST_ENABLED              (1)
 
-/** @brief The number of minutes to run the telemetry loop, 0 means to run forever */
-#define EWF_CONFIG_TELEMETRY_LOOP_MINUTES                           (60)
+#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_TEST_ENABLED             (1)
+#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_IP                IP_ADDRESS(0,0,0,0)
 
-/** @} */
+/** @} *** group_example_configuration_test_netx_duo */
 
 /************************************************************************//**
  * @}

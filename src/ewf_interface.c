@@ -8,22 +8,13 @@
 
 #include "ewf_interface.h"
 #include "ewf_allocator.h"
+#include "ewf_tokenizer_basic.h"
 #include "ewf_lib.h"
 
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-/************************************************************************//**
- *
- * Internal function declarations
- *
- ****************************************************************************/
-
-static ewf_result _ewf_interface_queue_current_message();
-static ewf_result _ewf_interface_receive_from_queue(ewf_interface* interface_ptr, ewf_platform_queue* queue_ptr, uint8_t** buffer_ptr_ptr, uint32_t* buffer_length_ptr, uint32_t wait_time);
-static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface* interface_ptr, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* match_ptr);
 
 /************************************************************************//**
  *
@@ -48,18 +39,8 @@ ewf_result ewf_interface_init(ewf_interface* interface_ptr)
     interface_ptr->current_message.buffer_ptr = NULL;
     interface_ptr->current_message.buffer_length = 0;
 
-    /* Not in command mode initially */
-    interface_ptr->command_mode = false;
-
     /* Not in Data mode initially */
     interface_ptr->data_mode = false;
-
-#ifdef EWF_LOG_VERBOSE
-    EWF_LOG("[COMMAND MODE: FALSE]\n");
-#endif
-
-    /* Process URCs synchronously by default */
-    interface_ptr->sync_urc_processing = true;
 
     /* All ok! */
     return EWF_RESULT_OK;
@@ -91,7 +72,7 @@ ewf_result ewf_interface_start(ewf_interface* interface_ptr)
     /* Initialize the command allocator */
     if (interface_ptr->message_allocator_ptr)
     {
-        result = interface_ptr->message_allocator_ptr->start(interface_ptr->message_allocator_ptr);
+        result = ewf_allocator_start(interface_ptr->message_allocator_ptr);
         if (ewf_result_failed(result))
         {
             EWF_LOG_ERROR("Error creating the interface command allocator.\n");
@@ -102,7 +83,7 @@ ewf_result ewf_interface_start(ewf_interface* interface_ptr)
     /* Initialize the data allocator */
     if (interface_ptr->data_allocator_ptr)
     {
-        result = interface_ptr->data_allocator_ptr->start(interface_ptr->data_allocator_ptr);
+        result = ewf_allocator_start(interface_ptr->data_allocator_ptr);
         if (ewf_result_failed(result))
         {
             EWF_LOG_ERROR("Error creating the interface data allocator.\n");
@@ -128,6 +109,17 @@ ewf_result ewf_interface_start(ewf_interface* interface_ptr)
         if (ewf_result_failed(result))
         {
             EWF_LOG_ERROR("Error creating the interface URC queue.\n");
+            return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
+        }
+    }
+
+    /* Initialize the tokenizer */
+    if (interface_ptr->tokenizer_ptr && interface_ptr->tokenizer_ptr->init)
+    {
+        result = interface_ptr->tokenizer_ptr->init(interface_ptr->tokenizer_ptr, interface_ptr);
+        if (ewf_result_failed(result))
+        {
+            EWF_LOG_ERROR("The tokenizer init failed, ewf_result %d.\n", result);
             return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
         }
     }
@@ -160,6 +152,16 @@ ewf_result ewf_interface_stop(ewf_interface* interface_ptr)
         if (ewf_result_failed(result))
         {
             EWF_LOG_ERROR("ewf_interface_hardware_start failed, ewf_result %d.\n", result);
+        }
+    }
+
+    /* Clean the tokenizer */
+    if (interface_ptr->tokenizer_ptr && interface_ptr->tokenizer_ptr->clean)
+    {
+        result = interface_ptr->tokenizer_ptr->clean(interface_ptr->tokenizer_ptr);
+        if (ewf_result_failed(result))
+        {
+            EWF_LOG_ERROR("The tokenizer clean failed, ewf_result %d.\n", result);
         }
     }
 
@@ -205,13 +207,22 @@ ewf_result ewf_interface_send(ewf_interface* interface_ptr, const uint8_t * cons
 #endif /* EWF_PLATFORM_HAS_THREADING */
 
     /* Log the buffer */
-    EWF_LOG("[SEND][%4lu][%s]\n", length, ewfl_escape_str_to_str_buffer((char *) buffer, length));
-
-    /* Enter command mode */
-    interface_ptr->command_mode = true;
-#ifdef EWF_LOG_VERBOSE
-    EWF_LOG("[COMMAND MODE: TRUE]\n");
+#ifdef EWF_DEBUG
+    EWF_LOG(
+        "[SEND][%4lu][%s]\n", 
+        length, 
+        ewfl_escape_str_to_str_buffer((char *) buffer, length));
 #endif
+
+    if (interface_ptr->tokenizer_ptr && interface_ptr->tokenizer_ptr->send)
+    {
+        result = interface_ptr->tokenizer_ptr->send(interface_ptr->tokenizer_ptr);
+        if (ewf_result_failed(result))
+        {
+            EWF_LOG_ERROR("The tokenizer send failed, ewf_result %d.\n", result);
+            result = EWF_RESULT_ADAPTER_TRANSMIT_FAILED;
+        }
+    }
 
     /* Send the buffer to the hardware */
     if (interface_ptr->hardware_send != NULL)
@@ -219,8 +230,8 @@ ewf_result ewf_interface_send(ewf_interface* interface_ptr, const uint8_t * cons
         result = interface_ptr->hardware_send(interface_ptr, buffer, length);
         if (ewf_result_failed(result))
         {
-        	EWF_LOG_ERROR("The interface hardware send failed, ewf_result %d.\n", result);
-        	/* Override the hardware specific error */
+            EWF_LOG_ERROR("The interface hardware send failed, ewf_result %d.\n", result);
+            /* Override the hardware specific error */
             result = EWF_RESULT_ADAPTER_TRANSMIT_FAILED;
         }
     }
@@ -236,7 +247,80 @@ ewf_result ewf_interface_send(ewf_interface* interface_ptr, const uint8_t * cons
     return result;
 }
 
-static ewf_result _ewf_interface_receive_from_queue(ewf_interface* interface_ptr, ewf_platform_queue* queue_ptr, uint8_t** buffer_ptr_ptr, uint32_t* buffer_length_ptr, uint32_t wait_time)
+static ewf_result _ewf_interface_enqueue(ewf_interface* interface_ptr, ewf_platform_queue* queue_ptr, uint32_t wait_time)
+{
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    if (!queue_ptr)
+    {
+        EWF_LOG_ERROR("The queue pointer is NULL");
+        return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
+    }
+
+    ewf_result result = EWF_RESULT_OK;
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+    ewf_result result_mutex = EWF_RESULT_OK;
+    result_mutex = ewf_platform_mutex_get(&interface_ptr->global_mutex);
+    if (ewf_result_failed(result_mutex))
+    {
+        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result_mutex);
+        return result_mutex;
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
+
+    /* Set the message buffer */
+    ewf_message message;
+    message.buffer_ptr = interface_ptr->current_message.buffer_ptr;
+    message.buffer_length = interface_ptr->current_message.buffer_length;
+
+#ifdef EWF_DEBUG
+    /* Log the data */
+    EWF_LOG("[%s][%4lu]",
+        (queue_ptr == interface_ptr->response_queue_ptr) ? "RECV" : "URC^",
+        interface_ptr->current_message.buffer_length);
+    EWF_LOG(ewfl_escape_str_to_str_buffer(
+            (char*)interface_ptr->current_message.buffer_ptr,
+            interface_ptr->current_message.buffer_length));
+
+    EWF_LOG("\n");
+#endif
+
+    /* Clear the current RX buffer */
+    interface_ptr->current_message.buffer_ptr = NULL;
+    interface_ptr->current_message.buffer_length = 0;
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+    result_mutex = ewf_platform_mutex_put(&interface_ptr->global_mutex);
+    if (ewf_result_failed(result_mutex))
+    {
+        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result_mutex);
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
+
+    /* Enqueue the message */
+    result = ewf_platform_queue_enqueue(queue_ptr, &message, sizeof(message), wait_time);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to enqueue the message, dropping it, ewf_result %d.\n", result);
+        return result;
+    }
+
+    /* All ok! */
+    return EWF_RESULT_OK;
+}
+
+ewf_result ewf_interface_enqueue_response(ewf_interface* interface_ptr, uint32_t wait_time)
+{
+    return _ewf_interface_enqueue(interface_ptr, interface_ptr->response_queue_ptr, wait_time);
+}
+
+ewf_result ewf_interface_enqueue_urc(ewf_interface* interface_ptr, uint32_t wait_time)
+{
+    return _ewf_interface_enqueue(interface_ptr, interface_ptr->urc_queue_ptr, wait_time);
+}
+
+static ewf_result _ewf_interface_dequeue(ewf_interface* interface_ptr, ewf_platform_queue* queue_ptr, uint8_t** buffer_ptr_ptr, uint32_t* buffer_length_ptr, uint32_t wait_time)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
@@ -253,19 +337,46 @@ static ewf_result _ewf_interface_receive_from_queue(ewf_interface* interface_ptr
         return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
     }
 
-    ewf_interface_message message;
+    ewf_message message;
     uint32_t message_size = sizeof(message);
 
     ewf_result result = EWF_RESULT_EMPTY_QUEUE;
-    uint32_t timeout = wait_time;
-    do
+
+    if (wait_time == 0) // Don't wait, just check if there is a message
     {
         message_size = sizeof(message);
-        if ((result = ewf_platform_queue_dequeue(queue_ptr, &message, &message_size, false)) != EWF_RESULT_EMPTY_QUEUE) break;
-        ewf_interface_receive_poll(interface_ptr);
-        ewf_platform_sleep(1);
+        result = ewf_platform_queue_dequeue(queue_ptr, &message, &message_size, false);
     }
-    while (timeout-- > 0);
+    else if (wait_time == UINT32_MAX) // Wait forever until we get a message
+    {
+        while (true)
+        {
+            message_size = sizeof(message);
+            result = ewf_platform_queue_dequeue(queue_ptr, &message, &message_size, false);
+            if (result != EWF_RESULT_EMPTY_QUEUE) break;
+            ewf_interface_receive_poll(interface_ptr);
+            if (interface_ptr->response_queue_ptr == queue_ptr)
+            {
+                ewf_interface_process_poll(interface_ptr);
+            }
+            ewf_platform_sleep(1);
+        }
+    }
+    else // Wait for a specific amount of time
+    {
+        for (uint32_t timeout = wait_time; timeout > 0; timeout--)
+        {
+            message_size = sizeof(message);
+            result = ewf_platform_queue_dequeue(queue_ptr, &message, &message_size, false);
+            if (result != EWF_RESULT_EMPTY_QUEUE) break;
+            ewf_interface_receive_poll(interface_ptr);
+            if (interface_ptr->response_queue_ptr == queue_ptr)
+            {
+                ewf_interface_process_poll(interface_ptr);
+            }
+            ewf_platform_sleep(1);
+        }
+    }
 
     /* Nothing in the queue while waiting for the timeout */
     if (result == EWF_RESULT_EMPTY_QUEUE)
@@ -290,13 +401,13 @@ static ewf_result _ewf_interface_receive_from_queue(ewf_interface* interface_ptr
 ewf_result ewf_interface_receive_response(ewf_interface* interface_ptr, uint8_t** buffer_ptr_ptr, uint32_t* buffer_length_ptr, uint32_t wait_time)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    return _ewf_interface_receive_from_queue(interface_ptr, interface_ptr->response_queue_ptr, buffer_ptr_ptr, buffer_length_ptr, wait_time);
+    return _ewf_interface_dequeue(interface_ptr, interface_ptr->response_queue_ptr, buffer_ptr_ptr, buffer_length_ptr, wait_time);
 }
 
 ewf_result ewf_interface_receive_urc(ewf_interface* interface_ptr, uint8_t** buffer_ptr_ptr, uint32_t* buffer_length_ptr, uint32_t wait_time)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    return _ewf_interface_receive_from_queue(interface_ptr, interface_ptr->urc_queue_ptr, buffer_ptr_ptr, buffer_length_ptr, wait_time);
+    return _ewf_interface_dequeue(interface_ptr, interface_ptr->urc_queue_ptr, buffer_ptr_ptr, buffer_length_ptr, wait_time);
 }
 
 ewf_result ewf_interface_message_allocator_set(ewf_interface* interface_ptr, ewf_allocator* allocator_ptr)
@@ -342,563 +453,6 @@ ewf_result ewf_interface_default_timeout_get(ewf_interface* interface_ptr, uint3
     return EWF_RESULT_OK;
 }
 
-ewf_result ewf_interface_tokenizer_message_pattern_set(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern* tokenizer_patter_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    ewf_result result;
-    if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
-        return EWF_RESULT_IRRECOVERABLE_ERROR;
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    interface_ptr->message_tokenizer_pattern_ptr = tokenizer_patter_ptr;
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
-        return EWF_RESULT_IRRECOVERABLE_ERROR;
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_tokenizer_message_pattern_get(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern** tokenizer_patter_ptr_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    if (tokenizer_patter_ptr_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    *tokenizer_patter_ptr_ptr = interface_ptr->message_tokenizer_pattern_ptr;
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_tokenizer_command_response_end_pattern_set(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern* tokenizer_patter_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    ewf_result result;
-    if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
-        return EWF_RESULT_IRRECOVERABLE_ERROR;
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    interface_ptr->command_response_end_tokenizer_pattern_ptr = tokenizer_patter_ptr;
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
-        return EWF_RESULT_IRRECOVERABLE_ERROR;
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_tokenizer_command_response_end_pattern_get(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern** tokenizer_patter_ptr_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    if (tokenizer_patter_ptr_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    *tokenizer_patter_ptr_ptr = interface_ptr->command_response_end_tokenizer_pattern_ptr;
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_tokenizer_command_response_pattern_set(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern* tokenizer_patter_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    ewf_result result;
-    if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
-        return EWF_RESULT_IRRECOVERABLE_ERROR;
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    interface_ptr->command_response_tokenizer_pattern_ptr = tokenizer_patter_ptr;
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
-        return EWF_RESULT_IRRECOVERABLE_ERROR;
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_tokenizer_command_response_pattern_get(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern** tokenizer_patter_ptr_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    if (tokenizer_patter_ptr_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    *tokenizer_patter_ptr_ptr = interface_ptr->command_response_tokenizer_pattern_ptr;
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_tokenizer_urc_pattern_set(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern* tokenizer_patter_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    ewf_result result;
-    if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
-        return EWF_RESULT_IRRECOVERABLE_ERROR;
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    interface_ptr->urc_tokenizer_pattern_ptr = tokenizer_patter_ptr;
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
-        return EWF_RESULT_IRRECOVERABLE_ERROR;
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_tokenizer_urc_pattern_get(ewf_interface* interface_ptr, ewf_interface_tokenizer_pattern** tokenizer_patter_ptr_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    if (tokenizer_patter_ptr_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    *tokenizer_patter_ptr_ptr = interface_ptr->urc_tokenizer_pattern_ptr;
-    return EWF_RESULT_OK;
-}
-
-/******************************************************************************
- *
- * Internal functions
- *
- ******************************************************************************/
-
-/**
- * @brief enqueue an incoming message
- */
-static ewf_result _ewf_interface_queue_current_message(ewf_interface* interface_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-    ewf_result result;
-
-    /* Only if a valid buffer is available */
-    if (interface_ptr->current_message.buffer_ptr)
-    {
-        /* Add a null terminator */
-        if (interface_ptr->current_message.buffer_length <= interface_ptr->message_allocator_ptr->block_size)
-            interface_ptr->current_message.buffer_ptr[interface_ptr->current_message.buffer_length] = 0;
-
-        /* Log the data */
-        EWF_LOG("[%s][%4lu][%s]\n",
-            interface_ptr->command_mode ? ("RECV") : ("URC^"),
-            interface_ptr->current_message.buffer_length,
-            ewfl_escape_str_to_str_buffer(
-                (char*)interface_ptr->current_message.buffer_ptr,
-                interface_ptr->current_message.buffer_length));
-
-        /* Process URCs */
-        if (!interface_ptr->command_mode && interface_ptr->sync_urc_processing)
-        {
-            result = ewf_interface_urc_process_message(
-                interface_ptr,
-                interface_ptr->current_message.buffer_ptr,
-                interface_ptr->current_message.buffer_length);
-
-            if (ewf_result_failed(result))
-            {
-                EWF_LOG_ERROR("Failed to process the URC, ewf_result %d.\n", result);
-            }
-
-            /* Drop this message */
-            result = ewf_interface_release(interface_ptr, (void*)interface_ptr->current_message.buffer_ptr);
-            if (ewf_result_failed(result))
-            {
-                EWF_LOG_ERROR("Failed to release a buffer, ewf_result %d.\n", result);
-            }
-        }
-
-        /* Queue the message */
-        else
-        {
-            /* Queue the buffer */
-            result = ewf_platform_queue_enqueue(
-                (interface_ptr->command_mode) ? interface_ptr->response_queue_ptr : interface_ptr->urc_queue_ptr,
-                &(interface_ptr->current_message),
-                sizeof(interface_ptr->current_message),
-                false);
-
-            /* If queuing the message failed, then drop it */
-            if (ewf_result_failed(result))
-            {
-                EWF_LOG_ERROR("Failed to queue a buffer, ewf_result %d.\n", result);
-
-                /* Drop this message */
-                result = ewf_interface_release(interface_ptr, (void*)interface_ptr->current_message.buffer_ptr);
-                if (ewf_result_failed(result))
-                {
-                    EWF_LOG_ERROR("Failed to release a buffer, ewf_result %d.\n", result);
-                }
-            }
-        }
-
-        /* Clear the current RX buffer */
-        interface_ptr->current_message.buffer_ptr = NULL;
-        interface_ptr->current_message.buffer_length = 0;
-    }
-
-    return EWF_RESULT_OK;
-}
-
-/************************************************************************//**
- *
- * URC processing entry point
- *
- ****************************************************************************/
-
-ewf_result ewf_interface_urc_processing(ewf_interface* interface_ptr)
-{
-    ewf_result result;
-
-    uint8_t* buffer_ptr;
-    uint32_t buffer_length;
-
-    result = ewf_interface_receive_urc(
-        interface_ptr, 
-        &buffer_ptr, 
-        &buffer_length, 
-        0 /* No wait*/);
-    if (ewf_result_failed(result))
-    {
-        if (result != EWF_RESULT_EMPTY_QUEUE)
-        {
-            EWF_LOG_ERROR("Failed to receive an URC, ewf_result %d.\n", result);
-        }
-
-        return result;
-    }
-
-    result = ewf_interface_urc_process_message(
-        interface_ptr,
-        interface_ptr->current_message.buffer_ptr,
-        interface_ptr->current_message.buffer_length);
-    if (ewf_result_failed(result))
-    {
-        EWF_LOG_ERROR("Failed to process the URC, ewf_result %d.\n", result);
-        // continue, to release the packet
-    }
-
-    result = ewf_interface_release(interface_ptr, buffer_ptr);
-    if (ewf_result_failed(result))
-    {
-        EWF_LOG_ERROR("Failed to release a buffer, ewf_result %d.\n", result);
-        return result;
-    }
-
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_urc_process_message(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
-{
-    ewf_result result;
-
-    EWF_LOG("[URCv][%4lu][%s]\n", buffer_length, ewfl_escape_str_to_str_buffer((char*)buffer_ptr, buffer_length));
-
-    if (interface_ptr->urc_callback)
-    {
-        result = interface_ptr->urc_callback(
-            interface_ptr,
-            interface_ptr->current_message.buffer_ptr,
-            interface_ptr->current_message.buffer_length);
-        if (ewf_result_failed(result))
-        {
-            EWF_LOG_ERROR("The URC callback failed: ewf_result %d.\n", result);
-        }
-    }
-
-    if (interface_ptr->user_urc_callback)
-    {
-        result = interface_ptr->user_urc_callback(
-            interface_ptr,
-            interface_ptr->current_message.buffer_ptr,
-            interface_ptr->current_message.buffer_length);
-        if (ewf_result_failed(result))
-        {
-            EWF_LOG_ERROR("The user URC callback failed: ewf_result %d.\n", result);
-        }
-    }
-
-    return EWF_RESULT_OK;
-}
-
-/************************************************************************//**
- *
- * Hardware helpers
- *
- ****************************************************************************/
-
-static ewf_result _ewf_interface_match_current_message_to_pattern(ewf_interface* interface_ptr, const ewf_interface_tokenizer_pattern* pattern_ptr, bool* match_ptr)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-    if (pattern_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-    if (match_ptr == NULL) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
-
-    *match_ptr = false;
-
-    for (; pattern_ptr; pattern_ptr = pattern_ptr->next_ptr)
-    {
-        if (pattern_ptr->match_function)
-        {
-            bool stop = false;
-            if (pattern_ptr->match_function(
-                interface_ptr->current_message.buffer_ptr,
-                interface_ptr->current_message.buffer_length,
-                pattern_ptr,
-                &stop))
-            {
-                *match_ptr = true;
-                return EWF_RESULT_OK;
-            }
-            if (stop) break;
-        }
-        else
-        {
-            if (pattern_ptr->has_wildcards)
-            {
-                if (ewfl_buffer_ends_with_wildcard_string(
-                    interface_ptr->current_message.buffer_ptr,
-                    interface_ptr->current_message.buffer_length,
-                    (const uint8_t*)pattern_ptr->pattern_str,
-                    pattern_ptr->patter_length))
-                {
-                    *match_ptr = true;
-                    return EWF_RESULT_OK;
-                }
-            }
-            else
-            {
-                if (ewfl_buffer_ends_with(
-                    interface_ptr->current_message.buffer_ptr,
-                    interface_ptr->current_message.buffer_length,
-                    (const uint8_t*)pattern_ptr->pattern_str,
-                    pattern_ptr->patter_length))
-                {
-                    *match_ptr = true;
-                    return EWF_RESULT_OK;
-                }
-            }
-        }
-    }
-
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_process_byte(ewf_interface* interface_ptr, uint8_t b)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-    ewf_result result;
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    /* Too verbose normally, but helpful when debugging the interface */
-#ifdef EWF_LOG_VERBOSE
-    EWF_LOG("[BYTE][%3u][%c]\n", (unsigned)b, (b < 32) ? (' ') : ((char)b));
-#endif
-
-    /* If no current buffer, take a new one*/
-    if (interface_ptr->current_message.buffer_ptr == NULL)
-    {
-        result = ewf_allocator_allocate(
-            interface_ptr->message_allocator_ptr,
-            (void**)&(interface_ptr->current_message.buffer_ptr));
-
-        if (ewf_result_failed(result))
-        {
-            EWF_LOG_ERROR("Failed to allocate a new buffer, ewf_result %d.\n", result);
-
-            /* Make sure the buffer pointer is still NULL */
-            interface_ptr->current_message.buffer_ptr = NULL;
-        }
-
-        /* Point to the beginning of the buffer */
-        interface_ptr->current_message.buffer_length = 0;
-    }
-
-    /* Process only if the buffer is valid */
-    if (interface_ptr->current_message.buffer_ptr)
-    {
-        /* Store the byte in the buffer */
-        interface_ptr->current_message.buffer_ptr[(interface_ptr->current_message.buffer_length)++] = b;
-
-        /* Add a (temporary?) NULL terminator */
-        interface_ptr->current_message.buffer_ptr[interface_ptr->current_message.buffer_length] = 0;
-
-        /* Do we have a match? */
-        bool match = false;
-
-        /* Match the current message, generic */
-        if (interface_ptr->message_tokenizer_pattern_ptr)
-        {
-            bool saved_command_mode = interface_ptr->command_mode;
-
-            if (ewf_result_failed(
-                result = _ewf_interface_match_current_message_to_pattern(
-                    interface_ptr,
-                    interface_ptr->message_tokenizer_pattern_ptr,
-                    &match)))
-            {
-                EWF_LOG_ERROR("Error while matching the current message to the message tokenizer pattern, ewf_result %d.\n", result);
-            }
-            else
-            {
-                if (match)
-                {
-                    /* queue a buffer */
-                    _ewf_interface_queue_current_message(interface_ptr);
-                }
-            }
-
-            interface_ptr->command_mode = saved_command_mode;
-        }
-
-        if (!match)
-        {
-            /* In command mode - Check for end of command and regular tokenizer patterns */
-            if (interface_ptr->command_mode == true)
-            {
-                match = false;
-
-                if (interface_ptr->command_response_end_tokenizer_pattern_ptr)
-                {
-                    if (ewf_result_failed(
-                        result = _ewf_interface_match_current_message_to_pattern(
-                            interface_ptr,
-                            interface_ptr->command_response_end_tokenizer_pattern_ptr,
-                            &match)))
-                    {
-                        EWF_LOG_ERROR("Error while matching the current message to the command response end tokenizer pattern, ewf_result %d.\n", result);
-                    }
-                    else
-                    {
-                        if (match)
-                        {
-                            /* queue a buffer */
-                            _ewf_interface_queue_current_message(interface_ptr);
-
-                            /* and exit command mode */
-                            interface_ptr->command_mode = false;
-
-#ifdef EWF_LOG_VERBOSE
-                            EWF_LOG("[COMMAND MODE: FALSE]\n");
-#endif
-                        }
-                    }
-                }
-
-                if (interface_ptr->command_response_tokenizer_pattern_ptr)
-                {
-                    if (ewf_result_failed(
-                        result = _ewf_interface_match_current_message_to_pattern(
-                            interface_ptr,
-                            interface_ptr->command_response_tokenizer_pattern_ptr,
-                            &match)))
-                    {
-                        EWF_LOG_ERROR("Error while matching the current message to the command response tokenizer pattern, ewf_result %d.\n", result);
-                    }
-                    else
-                    {
-                        if (match)
-                        {
-                            /* queue a buffer and stay in command mode */
-                            _ewf_interface_queue_current_message(interface_ptr);
-                        }
-                    }
-                }
-            }
-
-            /* In URC mode - Check for URC tokenizer patterns */
-            else
-            {
-                match = false;
-
-                if (interface_ptr->urc_tokenizer_pattern_ptr)
-                {
-                    if (ewf_result_failed(
-                        result = _ewf_interface_match_current_message_to_pattern(
-                            interface_ptr,
-                            interface_ptr->urc_tokenizer_pattern_ptr,
-                            &match)))
-                    {
-                        EWF_LOG_ERROR("Error while matching the current message to the URC tokenizer pattern.");
-                    }
-                    else
-                    {
-                        if (match)
-                        {
-                            _ewf_interface_queue_current_message(interface_ptr);
-                        }
-                    }
-                }
-            }
-
-            /* If the buffer is still full, queue it */
-            if (interface_ptr->current_message.buffer_length >= (interface_ptr->message_allocator_ptr->block_size - 1))
-            {
-                _ewf_interface_queue_current_message(interface_ptr);
-            }
-        }
-    }
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    return EWF_RESULT_OK;
-}
-
-ewf_result ewf_interface_process_buffer(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
-{
-    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
-
-    ewf_result result;
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    if (ewf_result_failed(result = ewf_platform_mutex_get(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-#ifdef EWF_PLATFORM_HAS_THREADING
-    if (ewf_result_failed(result = ewf_platform_mutex_put(&interface_ptr->global_mutex)))
-    {
-        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
-    }
-#endif /* EWF_PLATFORM_HAS_THREADING */
-
-    return EWF_RESULT_OK;
-}
-
 /************************************************************************//**
  *
  * Polling
@@ -910,18 +464,18 @@ ewf_result ewf_interface_poll(ewf_interface* interface_ptr)
     ewf_result result = EWF_RESULT_OK;
 
     result = ewf_interface_receive_poll(interface_ptr);
-    if (ewf_result_failed(result))
+    if (result != EWF_RESULT_EMPTY_QUEUE && ewf_result_failed(result))
     {
+        EWF_LOG_ERROR("Failed to receive, ewf_result %d.\n", result);
         return result;
-
     }
 
     result = ewf_interface_process_poll(interface_ptr);
-    if (ewf_result_failed(result))
+    if (result != EWF_RESULT_EMPTY_QUEUE && ewf_result_failed(result))
     {
-        return result;
+        EWF_LOG_ERROR("Failed to process, ewf_result %d.\n", result);
     }
- 
+
     return result;
 }
 
@@ -931,38 +485,180 @@ ewf_result ewf_interface_receive_poll(ewf_interface* interface_ptr)
 
     ewf_result result = EWF_RESULT_OK;
 
-    do
+#ifdef EWF_PLATFORM_HAS_THREADING
+    ewf_result result_mutex = EWF_RESULT_OK;
+    result_mutex = ewf_platform_mutex_get(&interface_ptr->global_mutex);
+    if (ewf_result_failed(result_mutex))
     {
-        uint8_t buffer[1];
-        uint32_t buffer_length = sizeof(buffer);
+        EWF_LOG_ERROR("Failed to acquire the host interface mutex, ewf_result %d.\n", result);
+        return result_mutex;
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
-        result = interface_ptr->hardware_receive(interface_ptr, buffer, &buffer_length, false);
-        if (result == EWF_RESULT_EMPTY_QUEUE || result == EWF_RESULT_NO_DATA_AVAILABLE)
+    if (interface_ptr->data_mode)
+    {
+        do
         {
-            return result;
-        }
-        else if (ewf_result_failed(result))
-        {
-            EWF_LOG_ERROR("Failed to receive data from the hardware, ewf_result %d.\n", result);
-            break;
-        }
+            uint8_t buffer[1];
+            uint32_t buffer_length = sizeof(buffer);
 
-        if ((interface_ptr->data_mode) && (interface_ptr->data_mode_callback))
-        {
-                interface_ptr->data_mode_callback(interface_ptr, (uint8_t*)&buffer, buffer_length);
-        }
-        else
-        {
-            /* Process the received byte */
-            result = ewf_interface_process_byte(interface_ptr, buffer[0]);
-            if (ewf_result_failed(result))
+            result = interface_ptr->hardware_receive(interface_ptr, buffer, &buffer_length, false);
+            if (result == EWF_RESULT_EMPTY_QUEUE || result == EWF_RESULT_NO_DATA_AVAILABLE)
             {
-                EWF_LOG_ERROR("Failed to process a byte, byte [%02d], ewf_result %d.\n", buffer[0], result);
                 break;
             }
+            else if (ewf_result_failed(result))
+            {
+                EWF_LOG_ERROR("Failed to receive data from the hardware, ewf_result %d.\n", result);
+                break;
+            }
+
+            if (interface_ptr->data_mode_callback)
+            {
+                interface_ptr->data_mode_callback(interface_ptr, (uint8_t*)&buffer, 1U);
+            }
         }
+        while(ewf_result_succeeded(result));
     }
-    while(ewf_result_succeeded(result));
+    else
+    {
+        do
+        {
+            /* If no current buffer, take a new one*/
+            if (interface_ptr->current_message.buffer_ptr == NULL)
+            {
+                result = ewf_allocator_allocate(
+                    interface_ptr->message_allocator_ptr,
+                    (void**)&(interface_ptr->current_message.buffer_ptr));
+
+                if (ewf_result_failed(result))
+                {
+                    EWF_LOG_ERROR("Failed to allocate a new buffer, ewf_result %d.\n", result);
+
+                    /* Make sure the buffer pointer is still NULL */
+                    interface_ptr->current_message.buffer_ptr = NULL;
+
+                    break;
+                }
+
+                /* Zero the first character */
+                interface_ptr->current_message.buffer_ptr[0] = 0;
+
+                /* Point to the beginning of the buffer */
+                interface_ptr->current_message.buffer_length = 0;
+            }
+
+            /* Process only if the buffer is valid */
+            if (interface_ptr->current_message.buffer_ptr)
+            {
+
+#ifdef EWF_LOG_VERBOSE
+                /* Too verbose normally, but helpful when debugging the interface */
+                {
+                    uint32_t i;
+                    uint8_t b;
+                    for (i = 0; i < interface_ptr->current_message.buffer_length; i++)
+                    {
+                        b = interface_ptr->current_message.buffer_ptr[i];
+                        EWF_LOG("[BYTE][%3u][%c]\n", (unsigned)b, (b < 32) ? (' ') : ((char)b));
+                    }
+                }
+#endif
+
+                /*
+                 * This code can be used if the tokenizer can handle bulk reception,
+                 * otherwise the other branch of this if does character by character
+                 */
+                if (false) 
+                {
+                    uint32_t buffer_length = interface_ptr->message_allocator_ptr->block_size - interface_ptr->current_message.buffer_length;
+
+                    result = interface_ptr->hardware_receive(
+                        interface_ptr,
+                        interface_ptr->current_message.buffer_ptr + interface_ptr->current_message.buffer_length,
+                        &buffer_length,
+                        false);
+                    if (result == EWF_RESULT_EMPTY_QUEUE || result == EWF_RESULT_NO_DATA_AVAILABLE)
+                    {
+                        break;
+                    }
+                    else if (ewf_result_failed(result))
+                    {
+                        EWF_LOG_ERROR("Failed to receive data from the hardware, ewf_result %d.\n", result);
+                        break;
+                    }
+                    else
+                    {
+                        /* Success, update the size used from the current message */
+                        interface_ptr->current_message.buffer_length += buffer_length;
+                    }
+
+                    /* Call the tokenizer receive function */
+                    if (interface_ptr->tokenizer_ptr && interface_ptr->tokenizer_ptr->receive)
+                    {
+                        result = interface_ptr->tokenizer_ptr->receive(interface_ptr->tokenizer_ptr);
+                        if (ewf_result_failed(result))
+                        {
+                            EWF_LOG_ERROR("The tokenizer receive failed, ewf_result %d.\n", result);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    if (interface_ptr->current_message.buffer_length >= interface_ptr->message_allocator_ptr->block_size)
+                    {
+                        break;
+                    }
+
+                    uint32_t buffer_length = 1;
+
+                    result = interface_ptr->hardware_receive(
+                        interface_ptr,
+                        interface_ptr->current_message.buffer_ptr + interface_ptr->current_message.buffer_length,
+                        &buffer_length,
+                        false);
+                    if (result == EWF_RESULT_EMPTY_QUEUE || result == EWF_RESULT_NO_DATA_AVAILABLE)
+                    {
+                        break;
+                    }
+                    else if (ewf_result_failed(result))
+                    {
+                        EWF_LOG_ERROR("Failed to receive data from the hardware, ewf_result %d.\n", result);
+                        break;
+                    }
+                    else
+                    {
+                        /* Success, update the size used from the current message */
+                        interface_ptr->current_message.buffer_length += buffer_length;
+
+                        /* Zero terminate the buffer */
+                        *(interface_ptr->current_message.buffer_ptr + interface_ptr->current_message.buffer_length) = 0;
+                    }
+
+                    /* Call the tokenizer receive function */
+                    if (interface_ptr->tokenizer_ptr && interface_ptr->tokenizer_ptr->receive)
+                    {
+                        result = interface_ptr->tokenizer_ptr->receive(interface_ptr->tokenizer_ptr);
+                        if (ewf_result_failed(result))
+                        {
+                            EWF_LOG_ERROR("The tokenizer receive failed, ewf_result %d.\n", result);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        while (ewf_result_succeeded(result));
+    }
+
+#ifdef EWF_PLATFORM_HAS_THREADING
+    result_mutex = ewf_platform_mutex_put(&interface_ptr->global_mutex);
+    if (ewf_result_failed(result_mutex))
+    {
+        EWF_LOG_ERROR("Failed to release the host interface mutex, ewf_result %d.\n", result);
+    }
+#endif /* EWF_PLATFORM_HAS_THREADING */
 
     return result;
 }
@@ -972,6 +668,65 @@ ewf_result ewf_interface_process_poll(ewf_interface* interface_ptr)
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
     ewf_result result = EWF_RESULT_OK;
+
+    while (result == EWF_RESULT_OK)
+    {
+        uint8_t* buffer_ptr;
+        uint32_t buffer_length;
+
+        result = ewf_interface_receive_urc(
+            interface_ptr,
+            &buffer_ptr,
+            &buffer_length,
+            0 /* No wait*/);
+        
+        if (result == EWF_RESULT_EMPTY_QUEUE)
+        {
+            // Nothing to do on this call
+            break;
+        }
+
+        if (ewf_result_failed(result))
+        {
+            EWF_LOG_ERROR("Failed to receive an URC, ewf_result %d.\n", result);
+            return result;
+        }
+
+#ifdef EWF_DEBUG
+        EWF_LOG("[URCv][%4lu][%s]\n", buffer_length, ewfl_escape_str_to_str_buffer((char*)buffer_ptr, buffer_length));
+#endif
+
+        if (interface_ptr->urc_callback)
+        {
+            result = interface_ptr->urc_callback(
+                interface_ptr,
+                buffer_ptr,
+                buffer_length);
+            if (ewf_result_failed(result))
+            {
+                EWF_LOG_ERROR("The URC callback failed: ewf_result %d.\n", result);
+            }
+        }
+
+        if (interface_ptr->user_urc_callback)
+        {
+            result = interface_ptr->user_urc_callback(
+                interface_ptr,
+                buffer_ptr,
+                buffer_length);
+            if (ewf_result_failed(result))
+            {
+                EWF_LOG_ERROR("The user URC callback failed: ewf_result %d.\n", result);
+            }
+        }
+
+        result = ewf_interface_release(interface_ptr, buffer_ptr);
+        if (ewf_result_failed(result))
+        {
+            EWF_LOG_ERROR("Failed to release a buffer, ewf_result %d.\n", result);
+            return result;
+        }
+    }
 
     return result;
 }
@@ -1063,30 +818,114 @@ ewf_result ewf_interface_drop_all_responses(ewf_interface* interface_ptr)
     return EWF_RESULT_OK;
 }
 
+ewf_result ewf_interface_send_buffer_wait_for_prompt(ewf_interface* interface_ptr, const char* prompt_str, const uint8_t* buffer_ptr, uint32_t buffer_length)
+{
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    ewf_result result = EWF_RESULT_OK;
+    ewf_result result_send = EWF_RESULT_OK;
+    ewf_result result_verify = EWF_RESULT_OK;
+
+    ewf_tokenizer* tokenizer_ptr = (ewf_tokenizer*)interface_ptr->tokenizer_ptr;
+
+    ewf_tokenizer_basic_data* tokenizer_basic_data_ptr = (ewf_tokenizer_basic_data*)tokenizer_ptr->data_ptr;
+
+    ewf_tokenizer_basic_pattern tokenizer_pattern = {
+        NULL,
+        prompt_str ,
+        strlen(prompt_str),
+        false,
+        NULL,
+        NULL,
+    };
+
+    if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_basic_data_ptr, &tokenizer_pattern))) return result;
+
+    result_send = ewf_interface_send(interface_ptr, buffer_ptr, buffer_length);
+
+    if (ewf_result_succeeded(result_send))
+    {
+        result_verify = ewf_interface_verify_response(interface_ptr, prompt_str);
+    }
+
+    if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_basic_data_ptr, NULL))) return result;
+
+    if (ewf_result_failed(result_verify)) return result_verify;
+
+    return EWF_RESULT_OK;
+}
+
+ewf_result ewf_interface_send_commands_wait_for_prompt(ewf_interface* interface_ptr, const char* prompt_str, const char* command_str, ...)
+{
+    EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
+
+    ewf_result result = EWF_RESULT_OK;
+    ewf_result result_command = EWF_RESULT_OK;
+    ewf_result result_verify = EWF_RESULT_OK;
+
+    ewf_tokenizer* tokenizer_ptr = (ewf_tokenizer *) interface_ptr->tokenizer_ptr;
+
+    ewf_tokenizer_basic_data* tokenizer_basic_data_ptr = (ewf_tokenizer_basic_data*)tokenizer_ptr->data_ptr;
+
+    ewf_tokenizer_basic_pattern tokenizer_pattern = {
+        NULL,
+        prompt_str ,
+        strlen(prompt_str),
+        false,
+        NULL,
+        NULL,
+    };
+
+    if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_basic_data_ptr, &tokenizer_pattern))) return result;
+
+    va_list args;
+    va_start(args, command_str);
+    do
+    {
+        uint32_t length;
+        length = ewfl_str_length((char*)command_str);
+        result_command = ewf_interface_send(interface_ptr, (const uint8_t*)command_str, length);
+        if (ewf_result_failed(result_command))
+            break;
+    } while ((command_str = va_arg(args, char*)));
+    va_end(args);
+
+    if (ewf_result_succeeded(result_command))
+    {
+        result_verify = ewf_interface_verify_response(interface_ptr, prompt_str);
+    }
+
+    if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_basic_data_ptr, NULL))) return result;
+
+    if (ewf_result_failed(result_verify)) return result_verify;
+
+    return EWF_RESULT_OK;
+}
+
 ewf_result ewf_interface_drop_response(ewf_interface* interface_ptr)
 {
     EWF_INTERFACE_VALIDATE_POINTER(interface_ptr);
 
-    ewf_result result;
+    ewf_result result = EWF_RESULT_OK;
     uint8_t * response = NULL;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, NULL, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, NULL, interface_ptr->default_timeout);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.\n");
-        return EWF_RESULT_RECEPTION_FAILED;
+        return result;
     }
     if (!response)
     {
         EWF_LOG_ERROR("Unexpected NULL response.\n");
-        return EWF_RESULT_UNEXPECTED_RESPONSE;
+        return result;
     }
     else
     {
         ewf_interface_release(interface_ptr, response);
     }
 
-    return EWF_RESULT_OK;
+    return result;
 }
 
 ewf_result ewf_interface_get_response(ewf_interface* interface_ptr, uint8_t ** response_out)
@@ -1096,7 +935,7 @@ ewf_result ewf_interface_get_response(ewf_interface* interface_ptr, uint8_t ** r
     ewf_result result;
     uint8_t * response = NULL;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, NULL, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, NULL, interface_ptr->default_timeout);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.\n");
@@ -1124,7 +963,7 @@ ewf_result ewf_interface_verify_response(ewf_interface* interface_ptr, const cha
     uint8_t * response = NULL;
     uint32_t response_legth;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, interface_ptr->default_timeout);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.\n");
@@ -1162,7 +1001,7 @@ ewf_result ewf_interface_verify_responses(ewf_interface* interface_ptr, uint32_t
     uint32_t response_legth;
     uint8_t i;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, interface_ptr->default_timeout);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.\n");
@@ -1198,7 +1037,7 @@ ewf_result ewf_interface_verify_response_starts_with(ewf_interface* interface_pt
     uint8_t * response = NULL;
     uint32_t response_legth;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, interface_ptr->default_timeout);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.");
@@ -1235,7 +1074,7 @@ ewf_result ewf_interface_verify_response_ends_with(ewf_interface* interface_ptr,
     uint8_t* response = NULL;
     uint32_t response_legth;
 
-    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, EWF_INTERFACE_MAX_RESPONSE_WAIT_TIME_TICKS);
+    result = ewf_interface_receive_response(interface_ptr, &response, &response_legth, interface_ptr->default_timeout);
     if (ewf_result_failed(result))
     {
         EWF_LOG_ERROR("Modem reception failed.");

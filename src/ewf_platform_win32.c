@@ -45,6 +45,12 @@ ewf_result ewf_platform_thread_create(ewf_platform_thread * thread_ptr)
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
 
+    if (!SetThreadPriority(thread_ptr->hThread, thread_ptr->nPriority))
+    {
+        EWF_LOG_ERROR("Failed to set the thread priority, error: 0x%08X", GetLastError());
+        return EWF_RESULT_IRRECOVERABLE_ERROR;
+    }
+
     return EWF_RESULT_OK;
 }
 

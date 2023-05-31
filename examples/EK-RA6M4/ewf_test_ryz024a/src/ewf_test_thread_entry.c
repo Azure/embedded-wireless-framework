@@ -11,6 +11,8 @@
 #include "ewf_platform_threadx.c"
 #include "ewf_allocator.c"
 #include "ewf_allocator_threadx.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
 #include "ewf_interface.c"
 #include "ewf_interface_ra_uart.c"
 #include "ewf_adapter.c"
@@ -25,8 +27,8 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_packet_domain.c"
 #include "ewf_adapter_api_modem_network_service.c"
-#include "ewf_adapter_sequans.c"
 #include "ewf_adapter_renesas_ryz024a.c"
+#include "ewf_adapter_renesas_common_tokenizer.c"
 #include "ewf_adapter_renesas_common_control.c"
 #include "ewf_adapter_renesas_common_info.c"
 #include "ewf_adapter_renesas_common_urc.c"
@@ -38,7 +40,7 @@
 #include "ewf_adapter_renesas_ryz024a_test.c"
 
 /* Modem might take some minutes to attach and register to the network. Time out value in seconds */
-#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (1200)
+#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (120)
 
 /* Embedded Wireless Framework (EWF) test thread entry function */
 void ewf_test_thread_entry(void)

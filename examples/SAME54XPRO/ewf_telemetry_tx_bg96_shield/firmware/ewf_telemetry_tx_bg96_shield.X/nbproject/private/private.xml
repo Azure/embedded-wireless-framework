@@ -7,10 +7,12 @@
             <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
         </group>
         <group>
-            <file>file:/C:/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
-            <file>file:/C:/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/main.c</file>
-            <file>file:/C:/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/ewf_telemetry.c</file>
-            <file>file:/C:/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/ewf_example.config.h</file>
+            <file>file:/C:/Andres_EWF/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/ewf.config.h</file>
+            <file>file:/C:/Andres_EWF/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
+            <file>file:/C:/Andres_EWF/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/ewf_example.config.h</file>
+            <file>file:/C:/Andres_EWF/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/config/sam_e54_xpro/libc_syscalls.c</file>
+            <file>file:/C:/Andres_EWF/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/ewf_telemetry.c</file>
+            <file>file:/C:/Andres_EWF/comms_framework/examples/SAME54XPRO/ewf_telemetry_tx_bg96_shield/firmware/src/main.c</file>
         </group>
     </open-files>
 </project-private>

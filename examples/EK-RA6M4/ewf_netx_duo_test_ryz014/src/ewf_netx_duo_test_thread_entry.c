@@ -11,6 +11,8 @@
 #include "ewf_platform_threadx.c"
 #include "ewf_allocator.c"
 #include "ewf_allocator_threadx.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
 #include "ewf_interface.c"
 #include "ewf_interface_ra_uart.c"
 #include "ewf_adapter.c"
@@ -25,8 +27,8 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_packet_domain.c"
 #include "ewf_adapter_api_modem_network_service.c"
-#include "ewf_adapter_sequans.c"
 #include "ewf_adapter_renesas_ryz014.c"
+#include "ewf_adapter_renesas_common_tokenizer.c"
 #include "ewf_adapter_renesas_common_control.c"
 #include "ewf_adapter_renesas_common_info.c"
 #include "ewf_adapter_renesas_common_urc.c"
@@ -39,12 +41,24 @@
 #include "ewf_example_netx_duo_test.c"
 
 /* Modem might take some minutes to attach and register to the network. Time out value in seconds */
-#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (1200)
+#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (120)
+
+
+void ryz014a_adapter_power_on()
+{
+    R_IOPORT_PinWrite(&g_ioport_ctrl, PMOD2_IO1, BSP_IO_LEVEL_HIGH);
+    ewf_platform_sleep(50);
+    R_IOPORT_PinWrite(&g_ioport_ctrl, PMOD2_IO1, BSP_IO_LEVEL_LOW);
+    EWF_LOG("Waiting for the module to Power Reset!\r\n");
+    ewf_platform_sleep(300);
+}
 
 /* Embedded Wireless Framework (EWF) test thread entry function */
 void ewf_netx_duo_test_thread_entry(void)
 {
     ewf_result result;
+
+    ryz014a_adapter_power_on();
 
     ewf_allocator* message_allocator_ptr = NULL;
     ewf_interface* interface_ptr = NULL;
@@ -54,11 +68,6 @@ void ewf_netx_duo_test_thread_entry(void)
     EWF_INTERFACE_RA_UART_STATIC_DECLARE(interface_ptr , sci_uart);
     EWF_ADAPTER_RENESAS_RYZ014_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
 
-    // Release the RYZ014A from reset
-    ewf_platform_sleep(50);
-    R_IOPORT_PinWrite(&g_ioport_ctrl, PMOD2_IO1, BSP_IO_LEVEL_LOW);
-    EWF_LOG("Waiting for the module to Power Reset!\r\n");
-    ewf_platform_sleep(300);
 
     // Start the adapter
     if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))

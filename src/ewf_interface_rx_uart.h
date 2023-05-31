@@ -18,6 +18,8 @@
 #include "r_sci_rx_config.h"    // User configurable options for the SCI module
 #include "r_sci_rx_pinset.h"
 
+#include "ewf_cellular_private.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -95,13 +97,13 @@ static ewf_interface ewf_interface_rx_uart__interface__##interface_name_symb = {
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                 \
     ewf_interface_rx_uart__interface__##interface_name_symb.response_queue_ptr,                                                                    \
     ewf_interface_rx_uart__response_queue__##interface_name_symb,                                                                                  \
-    ewf_interface_message,                                                                                                                         \
+    ewf_message,                                                                                                                                   \
 	EWF_INTERFACE_RX_UART_CONFIG_RESPONSE_QUEUE_SIZE);                                                                                             \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                 \
     ewf_interface_rx_uart__interface__##interface_name_symb.urc_queue_ptr,                                                                         \
     ewf_interface_rx_uart__urc_queue__##interface_name_symb,                                                                                       \
-    ewf_interface_message,                                                                                                                         \
-	EWF_INTERFACE_RX_UART_CONFIG_URC_QUEUE_SIZE);                                                                                                                                                 \
+    ewf_message,                                                                                                                                   \
+	EWF_INTERFACE_RX_UART_CONFIG_URC_QUEUE_SIZE);                                                                                                  \
 ewf_interface_rx_uart__interface__##interface_name_symb.hardware_start = ewf_interface_rx_uart_hardware_start;                                     \
 ewf_interface_rx_uart__interface__##interface_name_symb.hardware_stop = ewf_interface_rx_uart_hardware_stop;                                       \
 ewf_interface_rx_uart__interface__##interface_name_symb.hardware_send = ewf_interface_rx_uart_hardware_send;                                       \

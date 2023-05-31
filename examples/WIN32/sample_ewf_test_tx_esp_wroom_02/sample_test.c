@@ -11,7 +11,7 @@
 #include "ewf_interface_win32_com.h"
 #include "ewf_adapter_espressif_wroom_02.h"
 #include "ewf_example.config.h"
-#include "ewf_adapter_espressif_wroom_02_test.c"
+#include "test/ewf_adapter_espressif_wroom_02_test.c"
 
 /* The thread */
 static TX_THREAD thread;

@@ -151,7 +151,7 @@ SECTIONS
 	{
 		KEEP(*(.ofs8))
 	} > OFS
-.r_bsp_NULL :
+	.r_bsp_NULL :
 	{
 		. += 0x100;
 		"_r_bsp_NULL_end" = .;

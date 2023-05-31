@@ -6,6 +6,7 @@ project(sample_ewf_test_tx_ryz014 LANGUAGES C ASM)
 # Add sample project
 add_executable(
     ${PROJECT_NAME}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_ids.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_lib.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_lib.h
@@ -20,6 +21,10 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_types.h
@@ -41,6 +46,8 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_info.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tls.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tls.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tls_basic.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tls_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_dtls.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_dtls.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tcp.h
@@ -49,10 +56,11 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_udp.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_mqtt.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_mqtt.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_sequans.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_sequans.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_tokenizer.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_control.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_info.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_urc.c
@@ -69,6 +77,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE threadx az_core az_iot_hub)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../common/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../test)
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src)

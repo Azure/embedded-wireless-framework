@@ -21,8 +21,25 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_types.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_general.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_general.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_network_service.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_network_service.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_packet_domain.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_packet_domain.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sim_utility.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sim_utility.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_control.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_control.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_info.h
@@ -41,21 +58,11 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_mqtt.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_mqtt_basic.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_mqtt_basic.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_types.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_general.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_general.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_network_service.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_network_service.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_packet_domain.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_packet_domain.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sim_utility.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sim_utility.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz014.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_tokenizer.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_control.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_info.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_urc.c
@@ -73,5 +80,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE threadx az_core az_iot_hub)
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../externals/azure-sdk-for-c/sdk/inc)

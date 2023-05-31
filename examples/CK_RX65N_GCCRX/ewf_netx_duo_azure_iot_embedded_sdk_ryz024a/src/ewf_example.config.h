@@ -31,7 +31,7 @@ extern "C" {
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1024)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1600)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -41,14 +41,9 @@ extern "C" {
  * @{
  */
 
-/** @brief The SIM PIN for the modem */
-#define EWF_CONFIG_SIM_PIN                                          ("0000")
-
-/** @brief The SIM operator APN */
-#define EWF_CONFIG_SIM_APN                                          ("internet.telekom")
-
-/** @brief The modem context ID used */
-#define EWF_CONFIG_CONTEXT_ID                                       (1)
+void renesas_ryz024a_adapter_power_on();
+/** @brief The modem power on user function */
+#define EWF_ADAPTER_USER_POWER_ON                                   renesas_ryz024a_adapter_power_on
 
 /** @brief Define the RX interface UART baud rate */
 #define EWF_CONFIG_INTERFACE_RX_BAUD_RATE                           (115200)

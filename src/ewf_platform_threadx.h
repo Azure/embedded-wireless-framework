@@ -104,8 +104,7 @@ thread_ptr = &(_ewf_platform_thread__##thread_name_symb);                       
  */
 struct _ewf_platform_mutex
 {
-	/* Use a ThreadX binary semaphore for implementation! */
-    TX_SEMAPHORE sem;
+    TX_MUTEX m;
     CHAR * name_cstr;
 };
 

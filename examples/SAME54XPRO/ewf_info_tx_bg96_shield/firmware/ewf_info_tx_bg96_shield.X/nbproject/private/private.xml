@@ -2,12 +2,11 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_info_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
-            <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_info_tx_bg96_shield/firmware/src/main.c</file>
-        </group>
         <group name="ewf_same54_tx_bg96">
             <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_info_tx_bg96_shield/firmware/src/ewf_example.config.h</file>
+        </group>
+        <group>
+            <file>file:/C:/Andres_EWF/comms_framework/examples/SAME54XPRO/ewf_info_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
         </group>
     </open-files>
 </project-private>

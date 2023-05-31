@@ -12,7 +12,7 @@
 
 #include "demo_printf.h"
 
-#define DEMO_PRINTF_BUF_LEN (256U)
+#define DEMO_PRINTF_BUF_LEN (4096U)
 
 void demo_printf_transmit_end(void * pArgs);
 

@@ -25,11 +25,11 @@ extern "C" {
  * @{
  */
 
-/** @brief the number of data allocator blocks */
+/** @brief the number of message allocator blocks */
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (6)
 
-/** @brief the size of each data allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
+/** @brief the size of each message allocator block */
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1600)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -62,16 +62,16 @@ extern "C" {
  * @{
  */
 
- /** @brief the number of message allocator blocks */
+/** @brief the network SSID */
 #define EWF_CONFIG_WIFI_STATION_SSID                                "DESKTOP-V5NOFS8"
 
-/** @brief the size of each message allocator block */
+/** @brief the network password */
 #define EWF_CONFIG_WIFI_STATION_PASSWORD                            "12F80u90"
 
 /** @} *** group_example_configuration_wifi */
 
 /************************************************************************//**
- * @} *** group_example_configuration
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

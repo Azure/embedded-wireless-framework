@@ -90,7 +90,9 @@ void prvMainTask( void *pvParameters )
 	ewf_interface* interface_ptr = NULL;
 	ewf_adapter* adapter_ptr = NULL;
 
-	EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(message_allocator_ptr, message_allocator, 8, 64);
+    EWF_ALLOCATOR_MEMORY_POOL_STATIC_DECLARE(message_allocator_ptr, message_allocator, 
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
+        EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
     EWF_INTERFACE_WIN32_COM_STATIC_DECLARE(interface_ptr, com_port,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME,
         EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE,

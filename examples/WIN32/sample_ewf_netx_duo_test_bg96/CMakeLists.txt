@@ -21,6 +21,10 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_control.h
@@ -56,6 +60,17 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_bg96.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_bg96.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_control.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_urc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_info.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_context.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_ufs.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_tls_basic.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_mqtt_basic.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_quectel_common_internet.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_middleware_netxduo.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples/ewf_example_netx_duo_test.c
     ewf.config.h
@@ -67,5 +82,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE threadx netxduo az_core az_iot_hub
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples
     ${CMAKE_CURRENT_SOURCE_DIR}/../netxduo/addons/azure_iot/azure-sdk-for-c/sdk/inc)

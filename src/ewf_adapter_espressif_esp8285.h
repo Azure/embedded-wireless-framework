@@ -12,6 +12,7 @@
 #include "ewf_adapter.h"
 #include "ewf_allocator.h"
 #include "ewf_interface.h"
+#include "ewf_tokenizer_basic.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -262,6 +263,7 @@ adapter_ptr->mqtt_basic_api_ptr = &ewf_adapter_espressif_common_api_mqtt_basic; 
 do {                                                                                                                                                        \
 static ewf_adapter_espressif_esp8285 ewf_adapter_espressif_esp8285__implementation__##adapter_name_symb = {0};                                              \
 static ewf_adapter ewf_adapter_espressif_esp8285__##adapter_name_symb = {0};                                                                                \
+EWF_TOKENIZER_BASIC_STATIC_DECLARE(interface_ptr_param->tokenizer_ptr, ewf_adapter_espressif_esp8285__tokenizer__##adapter_name_symb);                      \
 interface_ptr_param->message_allocator_ptr = message_allocator_ptr_param;                                                                                   \
 interface_ptr_param->data_allocator_ptr = data_allocator_ptr_param;                                                                                         \
 interface_ptr_param->urc_callback = ewf_adapter_espressif_esp8285_urc_callback;                                                                             \

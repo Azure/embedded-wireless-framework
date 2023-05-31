@@ -42,9 +42,8 @@
 #include "ewf_interface_win32_com.h"
 #include "ewf_adapter_quectel_bg95.h"
 
-#include "ewf_lib.h"
-
 #include "ewf_example.config.h"
+
 
 /*-----------------------------------------------------------*/
 

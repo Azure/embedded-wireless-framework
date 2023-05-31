@@ -95,11 +95,11 @@ void sample_thread_entry(ULONG parameter)
         exit(result);
     }
 
-    // Set the SIM PIN
-    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
+    // Connect the adapter to a WiFi network
+    if (ewf_result_failed(result = ewf_adapter_wifi_station_connect(adapter_ptr, EWF_CONFIG_WIFI_STATION_SSID, EWF_CONFIG_WIFI_STATION_PASSWORD)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to connect to a WiFi network, ewf_result %d.\n", result);
+        return;
     }
 
     // Call the NetX Duo test example

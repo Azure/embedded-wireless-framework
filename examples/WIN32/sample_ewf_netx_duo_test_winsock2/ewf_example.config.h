@@ -3,10 +3,8 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @details
- * The Embedded Wireless Framework example configuration.
+ * @brief The Embedded Wireless Framework example configuration.
  ****************************************************************************/
-
 
 #ifndef __ewf_example_conf__h__included__
 #define __ewf_example_conf__h__included__
@@ -35,8 +33,21 @@ extern "C" {
 
 /** @} *** group_example_configuration_allocator */
 
+
+/**
+ * @defgroup group_example_configuration_test_netx_duo NetX-Duo test configuration
+ * @brief NetX-Duo test configuration settings used in examples
+ * @{
+ */
+
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_SERVER_IP IP_ADDRESS(0,0,0,0)
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_IP IP_ADDRESS(0,0,0,0)
+#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_IP IP_ADDRESS(0,0,0,0)
+
+/** @} *** group_example_configuration_test_netx_duo */
+
 /************************************************************************//**
- * @} *** group_example_configuration
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

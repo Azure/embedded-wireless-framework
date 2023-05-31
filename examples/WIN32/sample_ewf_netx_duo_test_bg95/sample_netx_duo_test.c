@@ -33,6 +33,10 @@ void sample_thread_entry(ULONG parameter);
 /* The EWF NetX Duo test.  */
 ewf_result ewf_example_netx_duo_test(ewf_adapter* adapter_ptr);
 
+/* The EWF log mutex */
+volatile bool ewf_log_initialized = false;
+TX_MUTEX ewf_log_mutex;
+
 /**
  *  @brief The application entry point, initialize the hardware and start ThreadX
  */

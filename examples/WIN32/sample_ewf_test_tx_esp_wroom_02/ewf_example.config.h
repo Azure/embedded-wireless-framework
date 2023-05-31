@@ -26,10 +26,10 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (4)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (6)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (2048)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -62,11 +62,11 @@ extern "C" {
  * @{
  */
 
-/** @brief the number of message allocator blocks */
-#define EWF_CONFIG_WIFI_STATION_SSID                                "DESKTOP-V5NOFS8 4410"
+ /** @brief the number of message allocator blocks */
+#define EWF_CONFIG_WIFI_STATION_SSID                                "DESKTOP-V5NOFS8"
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_WIFI_STATION_PASSWORD                            ",12F80u9"
+#define EWF_CONFIG_WIFI_STATION_PASSWORD                            "12F80u90"
 
 /** @} *** group_example_configuration_wifi */
 
@@ -79,15 +79,17 @@ extern "C" {
 #define EWF_ADAPTER_TEST_TCP_ECHO_SERVER_HOSTNAME_STR               ""
 #define EWF_ADAPTER_TEST_TCP_LOCAL_SERVER_PORT                      4000
 #define EWF_ADAPTER_TEST_TCP_CLIENT_SERVER_TEST_ENABLED             0
+#define EWF_ADAPTER_TEST_TCP_RECV_SLEEP_SECS                        1
 
 #define EWF_ADAPTER_TEST_UDP_ECHO_SERVER_HOSTNAME_STR               ""
 #define EWF_ADAPTER_TEST_UDP_LOCAL_SERVER_PORT                      5000
 #define EWF_ADAPTER_TEST_UDP_CLIENT_SERVER_TEST_ENABLED             0
+#define EWF_ADAPTER_TEST_TCP_RECV_SLEEP_SECS                        1
 
 /** @} *** group_example_configuration_test_echo */
 
 /************************************************************************//**
- * @} *** group_example_configuration
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

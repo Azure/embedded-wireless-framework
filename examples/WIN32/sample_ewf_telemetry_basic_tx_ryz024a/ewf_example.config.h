@@ -28,7 +28,7 @@ extern "C" {
  */
 
 /** @brief the number of message allocator blocks */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                         (4)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                         (8)
 
 /** @brief the size of each message allocator block */
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                          (512)
@@ -42,10 +42,10 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME                    ("\\\\.\\COM20")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME                    ("\\\\.\\COM38")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE                    (921600)
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE                    (115200)
 
 /** @brief Define the WIN32 COM port interface serial port byte size */
 #define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BYTE_SIZE                    (8)

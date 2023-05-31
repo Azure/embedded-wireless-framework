@@ -44,7 +44,7 @@
 		<link>
 			<name>ewf</name>
 			<type>2</type>
-			<locationURI>copy_PARENT/src</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/src</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

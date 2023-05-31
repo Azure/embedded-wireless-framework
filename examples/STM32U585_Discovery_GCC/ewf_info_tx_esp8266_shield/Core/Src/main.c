@@ -39,6 +39,8 @@
 #include "ewf_platform_threadx.c"
 #include "ewf_allocator.c"
 #include "ewf_allocator_threadx.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
 #include "ewf_interface.c"
 #include "ewf_interface_stm32_uart.c"
 #include "ewf_adapter.c"
@@ -49,7 +51,13 @@
 #include "ewf_adapter_api_tcp.c"
 #include "ewf_adapter_api_udp.c"
 #include "ewf_adapter_espressif_esp8266.c"
-
+#include "ewf_adapter_espressif_common.c"
+#include "ewf_adapter_espressif_common_wifi_Station.c"
+#include "ewf_adapter_espressif_common_urc.c"
+#include "ewf_adapter_espressif_common_tokenizer.c"
+#include "ewf_adapter_espressif_common_control.c"
+#include "ewf_adapter_espressif_common_info.c"
+#include "ewf_adapter_espressif_common_internet.c"
 #include "ewf_example.config.h"
 
 /* USER CODE END Includes */

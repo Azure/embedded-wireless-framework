@@ -3,8 +3,7 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @details
- * The Embedded Wireless Framework configuration.
+ * @brief The Embedded Wireless Framework configuration.
  ****************************************************************************/
 
 #ifndef __ewf__config__h__included__

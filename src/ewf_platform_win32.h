@@ -52,6 +52,7 @@ struct _ewf_platform_thread
 {
     HANDLE hThread;
     unsigned dwThreadId;
+    int nPriority;
     ewf_platform_thread_function thread_function_ptr;
     void* thread_function_data;
 };
@@ -62,6 +63,7 @@ static ULONG _ewf_platform_thread__stack__##thread_name_symb[stack_size_param / 
 static struct _ewf_platform_thread _ewf_platform_thread__##thread_name_symb = {0};                                              \
 _ewf_platform_thread__##thread_name_symb.thread_function_ptr = thread_function_ptr_param;                                       \
 _ewf_platform_thread__##thread_name_symb.thread_function_data = thread_function_data_param;                                     \
+_ewf_platform_thread__##thread_name_symb.nPriority = thread_priority_param;                                                     \
 thread_ptr = &(_ewf_platform_thread__##thread_name_symb);                                                                       \
 } while(0)
 

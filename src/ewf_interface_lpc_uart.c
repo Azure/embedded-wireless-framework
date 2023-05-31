@@ -100,7 +100,13 @@ ewf_result ewf_interface_lpc_uart_hardware_start(ewf_interface* interface_ptr)
     implementation_ptr->config.enableRx     = true;
 
 #if FSL_FEATURE_SOC_LPUART_COUNT > 0
+
+#ifdef CPU_MCXN947VDF_cm33_core0
+    /* Special case for MCX-9XX-BRK */
+    ret = LPUART_Init(implementation_ptr->base, &implementation_ptr->config, CLOCK_GetLPFlexCommClkFreq(0));
+#else
     ret = LPUART_Init(implementation_ptr->base, &implementation_ptr->config, BOARD_DEBUG_UART_CLK_FREQ);
+#endif
 #elif FSL_FEATURE_SOC_USART_COUNT > 0
     ret = USART_Init(implementation_ptr->base, &implementation_ptr->config, BOARD_DEBUG_UART_CLK_FREQ);
 #endif

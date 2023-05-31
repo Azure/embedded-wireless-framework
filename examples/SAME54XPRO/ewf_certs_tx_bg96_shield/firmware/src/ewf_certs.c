@@ -34,6 +34,8 @@
 #include "ewf_platform_threadx.c"
 #include "ewf_allocator.c"
 #include "ewf_allocator_threadx.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
 #include "ewf_interface.c"
 #include "ewf_interface_microchip_sam_uart.c"
 #include "ewf_adapter.c"
@@ -50,11 +52,18 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
 #include "ewf_adapter_quectel_bg96.c"
+#include "ewf_adapter_quectel_common_tokenizer.c"
+#include "ewf_adapter_quectel_common_urc.c"
+#include "ewf_adapter_quectel_common_control.c"
+#include "ewf_adapter_quectel_common_context.c"
+#include "ewf_adapter_quectel_common_info.c"
+#include "ewf_adapter_quectel_common_internet.c"
+#include "ewf_adapter_quectel_common_ufs.c"
+#include "ewf_adapter_quectel_common_mqtt_basic.c"
+#include "ewf_adapter_quectel_common_tls_basic.c"
 
 #include "ewf_example.config.h"
 #include "ewf_example_certs_basic_quectel_bg96.c"
-
-#include "ewf_example.config.h"
 
 SYS_CONSOLE_HANDLE ewfConsoleHandle;
 char ewf_log_buffer[256];

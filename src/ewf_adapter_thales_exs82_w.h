@@ -12,11 +12,18 @@
 #include "ewf_adapter.h"
 #include "ewf_allocator.h"
 #include "ewf_interface.h"
+#include "ewf_tokenizer_basic.h"
 #include "ewf_adapter_api_modem.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* Disable TLS and MQTT */
+#define EWF_ADAPTER_THALES_EXS82_W_TLS_BASIC_ENABLED (0)
+#define EWF_ADAPTER_THALES_EXS82_W_TLS_ENABLED (0)
+#define EWF_ADAPTER_THALES_EXS82_W_MQTT_BASIC_ENABLED (0)
+#define EWF_ADAPTER_THALES_EXS82_W_MQTT_ENABLED (0)
 
 /************************************************************************//**
  * @defgroup group_configuration_adapter_thales_exs82_w Thales Cinterion EXS82-W adapter configuration
@@ -26,61 +33,79 @@ extern "C" {
  * @{
  ****************************************************************************/
 
+
+// Enable all features not defined
+
 #ifndef EWF_ADAPTER_THALES_EXS82_W_FFS_ENABLED
-#define EWF_ADAPTER_THALES_EXS82_W_FFS_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_FFS_ENABLED (0)
+#define EWF_ADAPTER_THALES_EXS82_W_FFS_ENABLED (1)
 #endif
 
-#if 1
-#define EWF_ADAPTER_THALES_EXS82_W_TLS_BASIC_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED (0)
-#define EWF_ADAPTER_THALES_EXS82_W_TLS_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_TLS_ENABLED (0)
-#else
-#if !defined(EWF_ADAPTER_THALES_EXS82_W_TLS_ENABLED) && !defined(EWF_ADAPTER_THALES_EXS82_W_TLS_BASIC_ENABLED)
-#if 1
+#ifndef EWF_ADAPTER_THALES_EXS82_W_TLS_BASIC_ENABLED
 #define EWF_ADAPTER_THALES_EXS82_W_TLS_BASIC_ENABLED (1)
-#define EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED (1)
-#define EWF_ADAPTER_THALES_EXS82_W_TLS_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_TLS_ENABLED (0)
-#else
-#define EWF_ADAPTER_THALES_EXS82_W_TLS_BASIC_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED (0)
+#endif
+
+#ifndef EWF_ADAPTER_THALES_EXS82_W_TLS_ENABLED
 #define EWF_ADAPTER_THALES_EXS82_W_TLS_ENABLED (1)
-#define EWF_ADAPTER_THALES_COMMON_TLS_ENABLED (1)
-#endif
-#endif
 #endif
 
 #ifndef EWF_ADAPTER_THALES_EXS82_W_TCP_ENABLED
 #define EWF_ADAPTER_THALES_EXS82_W_TCP_ENABLED (1)
-#define EWF_ADAPTER_THALES_COMMON_TCP_ENABLED (1)
 #endif
 
 #ifndef EWF_ADAPTER_THALES_EXS82_W_UDP_ENABLED
 #define EWF_ADAPTER_THALES_EXS82_W_UDP_ENABLED (1)
-#define EWF_ADAPTER_THALES_COMMON_UDP_ENABLED (1)
 #endif
 
-#if 1
-#define EWF_ADAPTER_THALES_EXS82_W_MQTT_BASIC_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED (0)
-#define EWF_ADAPTER_THALES_EXS82_W_MQTT_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED (0)
-#else
-#if !defined(EWF_ADAPTER_THALES_EXS82_W_MQTT_ENABLED) && !defined(EWF_ADAPTER_THALES_EXS82_W_MQTT_BASIC_ENABLED)
-#if 1
+#ifndef EWF_ADAPTER_THALES_EXS82_W_MQTT_BASIC_ENABLED 
 #define EWF_ADAPTER_THALES_EXS82_W_MQTT_BASIC_ENABLED (1)
-#define EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED (1)
-#define EWF_ADAPTER_THALES_EXS82_W_MQTT_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED (0)
-#else
-#define EWF_ADAPTER_THALES_EXS82_W_MQTT_BASIC_ENABLED (0)
-#define EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED (0)
+#endif
+
+#ifndef EWF_ADAPTER_THALES_EXS82_W_MQTT_ENABLED
 #define EWF_ADAPTER_THALES_EXS82_W_MQTT_ENABLED (1)
+#endif
+
+// Define common symbols depending on our configuration
+
+#if EWF_ADAPTER_THALES_EXS82_W_FFS_ENABLED
+#define EWF_ADAPTER_THALES_COMMON_FFS_ENABLED (1)
+#else
+#define EWF_ADAPTER_THALES_COMMON_FFS_ENABLED (0)
+#endif
+
+#if EWF_ADAPTER_THALES_EXS82_W_TLS_BASIC_ENABLED
+#define EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED (1)
+#else
+#define EWF_ADAPTER_THALES_COMMON_TLS_BASIC_ENABLED (0)
+#endif
+
+#if EWF_ADAPTER_THALES_EXS82_W_TLS_ENABLED
+#define EWF_ADAPTER_THALES_COMMON_TLS_ENABLED (1)
+#else
+#define EWF_ADAPTER_THALES_COMMON_TLS_ENABLED (0)
+#endif
+
+#if EWF_ADAPTER_THALES_EXS82_W_TCP_ENABLED
+#define EWF_ADAPTER_THALES_COMMON_TCP_ENABLED (1)
+#else
+#define EWF_ADAPTER_THALES_COMMON_TCP_ENABLED (0)
+#endif
+
+#if EWF_ADAPTER_THALES_EXS82_W_UDP_ENABLED
+#define EWF_ADAPTER_THALES_COMMON_UDP_ENABLED (1)
+#else
+#define EWF_ADAPTER_THALES_COMMON_UDP_ENABLED (0)
+#endif
+
+#if EWF_ADAPTER_THALES_EXS82_W_MQTT_BASIC_ENABLED
+#define EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED (1)
+#else
+#define EWF_ADAPTER_THALES_COMMON_MQTT_BASIC_ENABLED (0)
+#endif
+
+#if EWF_ADAPTER_THALES_EXS82_W_MQTT_ENABLED
 #define EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED (1)
-#endif
-#endif
+#else
+#define EWF_ADAPTER_THALES_COMMON_MQTT_ENABLED (0)
 #endif
 
 /************************************************************************//**
@@ -376,30 +401,31 @@ adapter_ptr->mqtt_basic_api_ptr = &ewf_adapter_thales_common_api_mqtt_basic;    
  * @param[in] data_allocator_ptr_param a pointer to an allocator, used by the adapter to allocate data buffers
  * @param[in] interface_ptr_param a pointer to an interface, used by the adapter to talk with the hardware
  */
-#define EWF_ADAPTER_THALES_EXS82_W_STATIC_DECLARE(adapter_ptr, adapter_name_symb, message_allocator_ptr_param, data_allocator_ptr_param, interface_ptr_param)     \
-do {                                                                                                                                                            \
+#define EWF_ADAPTER_THALES_EXS82_W_STATIC_DECLARE(adapter_ptr, adapter_name_symb, message_allocator_ptr_param, data_allocator_ptr_param, interface_ptr_param)       \
+do {                                                                                                                                                                \
 static ewf_adapter_thales_exs82_w ewf_adapter_thales_exs82_w__implementation__##adapter_name_symb = {0};                                                            \
-static ewf_adapter ewf_adapter_thales_exs82_w__##adapter_name_symb = {0};                                                                                         \
-interface_ptr_param->message_allocator_ptr = message_allocator_ptr_param;                                                                                       \
-interface_ptr_param->data_allocator_ptr = data_allocator_ptr_param;                                                                                             \
-interface_ptr_param->urc_callback = ewf_adapter_thales_exs82_w_urc_callback;                                                                                      \
-ewf_adapter_thales_exs82_w__##adapter_name_symb.interface_ptr = interface_ptr_param;                                                                              \
-ewf_adapter_thales_exs82_w__##adapter_name_symb.implementation_ptr = &(ewf_adapter_thales_exs82_w__implementation__##adapter_name_symb);                            \
-adapter_ptr = &(ewf_adapter_thales_exs82_w__##adapter_name_symb);                                                                                                 \
-interface_ptr_param->adapter_ptr = adapter_ptr;                                                                                                                 \
-EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_HEADER(adapter_ptr);                                                                                                        \
+static ewf_adapter ewf_adapter_thales_exs82_w__##adapter_name_symb = {0};                                                                                           \
+EWF_TOKENIZER_BASIC_STATIC_DECLARE(interface_ptr_param->tokenizer_ptr, ewf_adapter_thales_exs82_w__tokenizer__##adapter_name_symb);                                 \
+interface_ptr_param->message_allocator_ptr = message_allocator_ptr_param;                                                                                           \
+interface_ptr_param->data_allocator_ptr = data_allocator_ptr_param;                                                                                                 \
+interface_ptr_param->urc_callback = ewf_adapter_thales_exs82_w_urc_callback;                                                                                        \
+adapter_ptr = &(ewf_adapter_thales_exs82_w__##adapter_name_symb);                                                                                                   \
+adapter_ptr->interface_ptr = interface_ptr_param;                                                                                                                   \
+adapter_ptr->implementation_ptr = &(ewf_adapter_thales_exs82_w__implementation__##adapter_name_symb);                                                               \
+interface_ptr_param->adapter_ptr = adapter_ptr;                                                                                                                     \
+EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_HEADER(adapter_ptr);                                                                                                          \
 ewf_adapter_thales_exs82_w__##adapter_name_symb.control_api_ptr = &ewf_adapter_thales_exs82_w_api_control;                                                          \
-ewf_adapter_thales_exs82_w__##adapter_name_symb.info_api_ptr = &ewf_adapter_thales_common_api_info;                                                              \
-EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_TCP_API(adapter_ptr);                                                                                                       \
-EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_UDP_API(adapter_ptr);                                                                                                       \
-EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_TLS_BASIC_API(adapter_ptr);                                                                                                 \
-EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_MQTT_BASIC_API(adapter_ptr);                                                                                                \
+ewf_adapter_thales_exs82_w__##adapter_name_symb.info_api_ptr = &ewf_adapter_thales_common_api_info;                                                                 \
+EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_TCP_API(adapter_ptr);                                                                                                         \
+EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_UDP_API(adapter_ptr);                                                                                                         \
+EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_TLS_BASIC_API(adapter_ptr);                                                                                                   \
+EWF_ADAPTER_THALES_EXS82_W_INITIALIZE_MQTT_BASIC_API(adapter_ptr);                                                                                                  \
 } while(0)
 
 /** @} *** group_adapter_thales_exs82_w_declaration */
 
 /************************************************************************//**
- * @} *** group_adapter_thales_exs82_w
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

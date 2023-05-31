@@ -12,7 +12,6 @@
 #include "ewf_allocator_threadx.h"
 #include "ewf_interface_win32_com.h"
 #include "ewf_adapter_espressif_wroom_02.h"
-#include "ewf_lib.h"
 #include "ewf_middleware_netxduo.h"
 #include "ewf_example.config.h"
 
@@ -175,15 +174,14 @@ ULONG ip_address = 0;
 ULONG network_mask = 0;
 ULONG gateway_address = 0;
 
-ewf_result result;
-
-ewf_allocator* message_allocator_ptr = NULL;
-ewf_interface* interface_ptr = NULL;
-ewf_adapter* adapter_ptr = NULL;
-
 
     NX_PARAMETER_NOT_USED(parameter);
 
+    ewf_result result;
+
+    ewf_allocator* message_allocator_ptr = NULL;
+    ewf_interface* interface_ptr = NULL;
+    ewf_adapter* adapter_ptr = NULL;
 
     EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator,
         EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT,
@@ -203,17 +201,10 @@ ewf_adapter* adapter_ptr = NULL;
         exit(result);
     }
 
-    // Set the SIM PIN
-    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
+    // Connect the adapter to a WiFi network
+    if (ewf_result_failed(result = ewf_adapter_wifi_station_connect(adapter_ptr, EWF_CONFIG_WIFI_STATION_SSID, EWF_CONFIG_WIFI_STATION_PASSWORD)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
-        exit(result);
-    }
-
-    // Enable full functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
-    {
-        EWF_LOG_ERROR("Failed to set the ME functionality, ewf_result %d.\n", result);
+        EWF_LOG_ERROR("Failed to connect to a WiFi network, ewf_result %d.\n", result);
         exit(result);
     }
 

@@ -9,9 +9,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_common.h"
-#include "ewf_platform.h"
-#include "ewf_lib.h"
-
+#include "ewf_tokenizer_basic.h"
 
 ewf_result ewf_adapter_renesas_common_nvm_urc_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
 {
@@ -88,7 +86,7 @@ ewf_result ewf_adapter_renesas_common_nvm_upload(ewf_adapter* adapter_ptr, const
 
     EWF_LOG("\newf_adapter_nvm_upload: [%s] (%p) (%lu)\n", filename_str, data, length);
     char tokenizer_pattern_str[] = "\r\n> ";
-    ewf_interface_tokenizer_pattern tokenizer_pattern = {
+    ewf_tokenizer_basic_pattern tokenizer_pattern = {
         NULL,
         tokenizer_pattern_str ,
         sizeof(tokenizer_pattern_str) - 1,
@@ -98,10 +96,11 @@ ewf_result ewf_adapter_renesas_common_nvm_upload(ewf_adapter* adapter_ptr, const
     };
     char file_size_str[5];
     const char* file_size_cstr = ewfl_unsigned_to_str(length, file_size_str, sizeof(file_size_str));
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
+    ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+    if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern))) return result;
     if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSNVW=\"", filename_str, "\",", index, ",", file_size_cstr, "\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str))) return result;
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+    if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, data, length))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 

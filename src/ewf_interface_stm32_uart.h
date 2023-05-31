@@ -32,7 +32,7 @@ extern "C" {
  */
 
 #ifndef EWF_INTERFACE_STM32_UART_CONFIG_UART_RX_QUEUE_SIZE
-#define EWF_INTERFACE_STM32_UART_CONFIG_UART_RX_QUEUE_SIZE      (256 * 8)
+#define EWF_INTERFACE_STM32_UART_CONFIG_UART_RX_QUEUE_SIZE      (256 * 16)
 #endif
 
 #ifndef EWF_INTERFACE_STM32_UART_CONFIG_RESPONSE_QUEUE_SIZE
@@ -106,12 +106,12 @@ EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                              
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \
     ewf_interface_stm32_uart__interface__##interface_name_symb.response_queue_ptr,                                                                  \
     ewf_interface_stm32_uart__response_queue__##interface_name_symb,                                                                                \
-    ewf_interface_message,                                                                                                                          \
+    ewf_message,                                                                                                                          			\
     EWF_INTERFACE_STM32_UART_CONFIG_RESPONSE_QUEUE_SIZE);                                                                                           \
 EWF_PLATFORM_QUEUE_STATIC_DECLARE(                                                                                                                  \
     ewf_interface_stm32_uart__interface__##interface_name_symb.urc_queue_ptr,                                                                       \
     ewf_interface_stm32_uart__urc_queue__##interface_name_symb,                                                                                     \
-    ewf_interface_message,                                                                                                                          \
+    ewf_message,                                                                                                                          			\
     EWF_INTERFACE_STM32_UART_CONFIG_URC_QUEUE_SIZE);                                                                                                \
 ewf_interface_stm32_uart__interface__##interface_name_symb.hardware_start = ewf_interface_stm32_uart_hardware_start;                                \
 ewf_interface_stm32_uart__interface__##interface_name_symb.hardware_stop = ewf_interface_stm32_uart_hardware_stop;                                  \

@@ -7,20 +7,12 @@ extern "C" {
 
 /* TLS Common Configuration. */
 
-
-
-
 #define NX_SECURE_ENABLE_PSK_CIPHERSUITES
-
-
-
 
 #define NX_SECURE_TLS_ENABLE_TLS_1_0
 #define NX_SECURE_TLS_ENABLE_TLS_1_1
 
 #define NX_SECURE_TLS_SERVER_DISABLED
-
-
 
 #ifdef __cplusplus
 }

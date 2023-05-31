@@ -204,10 +204,10 @@ ewf_result ewf_example_netx_duo_test(ewf_adapter* adapter_ptr)
     return EWF_RESULT_OK;
 }
 
+#if EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_TEST_ENABLED
+
 /* EWF NetX Duo test - HTTP query variables */
-ULONG http_server_ip = IP_ADDRESS(23, 35, 229, 160);
-//ULONG http_server_ip = IP_ADDRESS(20, 228, 124, 154);
-//ULONG http_server_ip = IP_ADDRESS(92, 123, 229, 216);
+ULONG http_server_ip = EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_SERVER_IP;
 UINT http_server_port = EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_SERVER_PORT;
 char http_request[] = EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_REQUEST_STR;
 ULONG http_message_length = sizeof(http_request) - 1;
@@ -367,7 +367,11 @@ ewf_result ewf_example_test_netx_duo_http(NX_IP* ip_ptr)
     return EWF_RESULT_OK;
 }
 
-ULONG ewf_example_test_netx_duo_tcp_echo_server_ip = IP_ADDRESS(20, 253, 207, 165);
+#endif /* EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_TEST_ENABLED */
+
+#if EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_TEST_ENABLED
+
+ULONG ewf_example_test_netx_duo_tcp_echo_server_ip = EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_IP;
 UINT ewf_example_test_netx_duo_tcp_echo_server_port = EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_PORT;
 CHAR ewf_example_test_netx_duo_tcp_echo_message[] = EWF_EXAMPLE_NETX_DUO_TEST_TCP_LARGE_MESSAGE_STR;
 UINT ewf_example_test_netx_duo_tcp_echo_message_length = sizeof(ewf_example_test_netx_duo_tcp_echo_message);
@@ -539,6 +543,10 @@ ewf_result ewf_example_test_netx_duo_tcp_echo(NX_IP* ip_ptr)
     return EWF_RESULT_OK;
 }
 
+#endif /* EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_TEST_ENABLED */
+
+#if EWF_EXAMPLE_NETX_DUO_TEST_UDP_DNS_TEST_ENABLED
+
 /* EWF NetX Duo test - DNS query variables */
 #define MAX_RECORD_COUNT  20
 ULONG record_buffer[50];
@@ -651,11 +659,14 @@ ewf_result ewf_example_test_netx_duo_dns(NX_IP* ip_ptr)
     return EWF_RESULT_OK;
 }
 
-CHAR ewf_example_test_netx_duo_udp_echo_server_hostname[] = EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_HOSTNAME_STR;
-ULONG ewf_example_test_netx_duo_udp_echo_server_ip = IP_ADDRESS(168, 61, 1, 33);
+#endif /* EWF_EXAMPLE_NETX_DUO_TEST_UDP_DNS_TEST_ENABLED */
+
+#if EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_TEST_ENABLED
+
+ULONG ewf_example_test_netx_duo_udp_echo_server_ip = EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_IP;
 UINT ewf_example_test_netx_duo_udp_echo_server_port = EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_PORT;
 CHAR ewf_example_test_netx_duo_udp_echo_message[] = EWF_EXAMPLE_NETX_DUO_TEST_UDP_LARGE_MESSAGE_STR;
-UINT ewf_example_test_netx_duo_udp_echo_message_length = sizeof(ewf_example_test_netx_duo_tcp_echo_message);
+UINT ewf_example_test_netx_duo_udp_echo_message_length = sizeof(ewf_example_test_netx_duo_udp_echo_message);
 
 ewf_result ewf_example_test_netx_duo_udp_echo(NX_IP* ip_ptr)
 {
@@ -808,3 +819,5 @@ ewf_result ewf_example_test_netx_duo_udp_echo(NX_IP* ip_ptr)
 
     return EWF_RESULT_OK;
 }
+
+#endif /* EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_TEST_ENABLED */

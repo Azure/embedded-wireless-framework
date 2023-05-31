@@ -3,8 +3,7 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @details
- * The Embedded Wireless Framework configuration template.
+ * @brief The Embedded Wireless Framework configuration.
  ****************************************************************************/
 
 #ifndef __ewf__config__h__included__
@@ -39,9 +38,8 @@ extern "C" {
  * @} *** group_configuration
  ****************************************************************************/
 
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __ewf_config__h__included__ */
+#endif /* __ewf__config__h__included__ */

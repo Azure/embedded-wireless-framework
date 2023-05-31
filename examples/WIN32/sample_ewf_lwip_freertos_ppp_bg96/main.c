@@ -1,5 +1,4 @@
 
-#include "ewf_adapter_winsock2.h" // Include first to force correct inclussion order for winsock2.h
 
 /* Standard includes. */
 #include <stdio.h>

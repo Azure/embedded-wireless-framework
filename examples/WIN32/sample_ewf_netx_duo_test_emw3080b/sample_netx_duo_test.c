@@ -11,6 +11,7 @@
 #include "ewf_adapter_mxchip_emw3080b.h"
 #include "ewf_lib.h"
 #include "ewf_example.config.h"
+#include "examples/ewf_example_netx_duo_test.c"
 
 /* Define the thread for running Azure SDK on ThreadX (THREADX IoT Platform).  */
 #ifndef SAMPLE_STACK_SIZE

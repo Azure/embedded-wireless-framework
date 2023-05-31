@@ -305,7 +305,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.415008478" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.fpu.1250630315" name="Floating point" superClass="com.crt.advproject.link.fpu" value="com.crt.advproject.link.fpu.fpv5dp.hard" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.manage.1647513091" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.1447762916" name="Linker script" superClass="com.crt.advproject.link.script" value="evkmimxrt1060_threadx_demo_Debug.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.1447762916" name="Linker script" superClass="com.crt.advproject.link.script" value="evkmimxrt1060_ewf_info_tx_sim7000_Debug.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.1997559085" name="Script path" superClass="com.crt.advproject.link.scriptdir"/>
 								<option id="com.crt.advproject.link.crpenable.1923764366" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.633908699" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -406,7 +406,7 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_EVK-MIMXRT1060</sdkName>
 		<sdkExample>evkmimxrt1060_threadx_demo</sdkExample>
-		<sdkVersion>2.12.1</sdkVersion>
+		<sdkVersion>2.13.0</sdkVersion>
 		<sdkComponents>middleware.azure_rtos.tx.MIMXRT1062;platform.drivers.clock.MIMXRT1062;platform.drivers.common.MIMXRT1062;device.MIMXRT1062_CMSIS.MIMXRT1062;utility.debug_console.MIMXRT1062;component.lpuart_adapter.MIMXRT1062;component.serial_manager.MIMXRT1062;component.lists.MIMXRT1062;component.serial_manager_uart.MIMXRT1062;platform.drivers.lpuart.MIMXRT1062;device.MIMXRT1062_startup.MIMXRT1062;platform.drivers.iomuxc.MIMXRT1062;platform.utilities.assert.MIMXRT1062;platform.drivers.igpio.MIMXRT1062;platform.drivers.xip_device.MIMXRT1062;platform.drivers.xip_board.evkmimxrt1060.MIMXRT1062;middleware.azure_rtos.tx.template.MIMXRT1062;platform.utilities.misc_utilities.MIMXRT1062;CMSIS_Include_core_cm.MIMXRT1062;device.MIMXRT1062_system.MIMXRT1062;evkmimxrt1060_threadx_demo;</sdkComponents>
 		<boardId>evkmimxrt1060</boardId>
 		<package>MIMXRT1062DVL6A</package>

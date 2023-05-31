@@ -7,11 +7,6 @@
             <file>file:/C:/MyDrive/Repo/tmp/comms_framework/src/ewf_adapter_api_modem.c</file>
             <file>file:/C:/MyDrive/Repo/tmp/comms_framework/examples/SAME54XPRO/ewf_certs_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
         </group>
-        <group>
-            <file>file:/C:/comms_framework/src/examples/ewf_example_telemetry_basic.c</file>
-            <file>file:/C:/comms_framework/examples/SAME54XPRO/ewf_certs_tx_bg96_shield/firmware/src/config/sam_e54_xpro/tasks.c</file>
-            <file>file:/C:/comms_framework/src/ewf_adapter_quectel_bg96.h</file>
-            <file>file:/C:/comms_framework/src/ewf_adapter_api_mqtt_basic.c</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

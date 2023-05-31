@@ -46,6 +46,8 @@
 #include "ewf_platform_threadx.c"
 #include "ewf_allocator.c"
 #include "ewf_allocator_threadx.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
 #include "ewf_interface.c"
 #include "ewf_interface_ra_uart.c"
 #include "ewf_adapter.c"
@@ -60,8 +62,8 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_packet_domain.c"
 #include "ewf_adapter_api_modem_network_service.c"
-#include "ewf_adapter_sequans.c"
 #include "ewf_adapter_renesas_ryz014.c"
+#include "ewf_adapter_renesas_common_tokenizer.c"
 #include "ewf_adapter_renesas_common_control.c"
 #include "ewf_adapter_renesas_common_info.c"
 #include "ewf_adapter_renesas_common_urc.c"
@@ -73,7 +75,7 @@
 #include "ewf_middleware_netxduo.c"
 
 /* Modem might take some minutes to attach and register to the network. Time out value in seconds */
-#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (1200)
+#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (120)
 
 char ewf_log_buffer[1024];
 
@@ -375,7 +377,6 @@ static UINT dns_create()
 
 UINT    status;
 ULONG   dns_server_address[3];
-UINT    dns_server_address_size = 12;
 
     /* Create a DNS instance for the Client.  Note this function will create
        the DNS Client packet pool for creating DNS message packets intended

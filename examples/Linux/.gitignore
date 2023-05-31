@@ -1,4 +1,3 @@
-*.pem
 *.pem.h
 *.bak
 build/

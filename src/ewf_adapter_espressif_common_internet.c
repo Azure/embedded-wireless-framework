@@ -7,8 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_espressif_common.h"
-#include "ewf_platform.h"
-#include "ewf_lib.h"
+#include "ewf_tokenizer_basic.h"
 
 /******************************************************************************
  *
@@ -262,32 +261,52 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_open(ewf_adapter* adapt
     char port_str[7];
     const char* port_cstr = ewfl_unsigned_to_str(port, port_str, sizeof(port_str));
 
-    char param_str[12];
-    param_str[0] = 0;
     if (ewfl_str_equals_str("TCP", service_type_str) && keep_alive != 0)
     {
-        sprintf(param_str, ",%lu\r\n", keep_alive);
+        char keep_alive_str[12];
+        const char * keep_alive_cstr = ewfl_unsigned_to_str(keep_alive, keep_alive_str, sizeof(keep_alive_str));
+        /* Open a connection */
+        if (ewf_result_failed(result = ewf_interface_send_commands(
+            interface_ptr,
+            "AT+CIPSTART=",
+            socket_cstr, ",",
+            "\"", service_type_str, "\",",
+            "\"", server_str, "\",",
+            port_cstr, ",",
+            keep_alive_cstr, "\r\n",
+            NULL)))
+            return result;
     }
     else if (ewfl_str_equals_str("UDP", service_type_str) && local_port != 0)
     {
-        sprintf(param_str, ",%lu,2\r\n", local_port);
+        char local_port_str[12];
+        const char* local_port_cstr = ewfl_unsigned_to_str(local_port, local_port_str, sizeof(local_port_str));
+        /* Open a connection */
+        if (ewf_result_failed(result = ewf_interface_send_commands(
+            interface_ptr,
+            "AT+CIPSTART=",
+            socket_cstr, ",",
+            "\"", service_type_str, "\",",
+            "\"", server_str, "\",",
+            port_cstr, ",",
+            local_port_cstr, ",2\r\n",
+            NULL)))
+            return result;
     }
     else
     {
-        sprintf(param_str, "\r\n");
+        /* Open a connection */
+        if (ewf_result_failed(result = ewf_interface_send_commands(
+            interface_ptr,
+            "AT+CIPSTART=",
+            socket_cstr, ",",
+            "\"", service_type_str, "\",",
+            "\"", server_str, "\",",
+            port_cstr,
+            "\r\n",
+            NULL)))
+            return result;
     }
-
-    /* Open a connection */
-    if (ewf_result_failed(result = ewf_interface_send_commands(
-        interface_ptr,
-        "AT+CIPSTART=",
-        socket_cstr, ",",
-        "\"", service_type_str, "\",",
-        "\"", server_str, "\",",
-        port_cstr,
-        param_str,
-        NULL)))
-        return result;
 
     uint8_t* response_ptr;
     uint32_t response_length;
@@ -379,7 +398,7 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
 
     {
         char tokenizer_pattern_error_str[] = "\r\nERROR\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern_error = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern_error = {
             NULL,
             tokenizer_pattern_error_str,
             sizeof(tokenizer_pattern_error_str) - 1,
@@ -387,7 +406,7 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
         };
 
         char tokenizer_pattern_ok_str[] = "\r\nOK\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern_ok = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern_ok = {
             &tokenizer_pattern_error,
             tokenizer_pattern_ok_str,
             sizeof(tokenizer_pattern_ok_str) - 1,
@@ -395,7 +414,7 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
         };
 
         char tokenizer_pattern_prompt_str[] = "> ";
-        ewf_interface_tokenizer_pattern tokenizer_pattern_prompt = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern_prompt = {
             &tokenizer_pattern_ok,
             tokenizer_pattern_prompt_str,
             sizeof(tokenizer_pattern_prompt_str) - 1,
@@ -406,11 +425,13 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
         ewf_result result_verify_ok;
         ewf_result result_verify_prompt;
 
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
         // Send the AT+CIPSEND command and wait for the > prompt
-        ewf_interface_tokenizer_pattern* saved_end_pattern_ptr = NULL;
-        ewf_interface_tokenizer_command_response_end_pattern_get(interface_ptr, &saved_end_pattern_ptr);
-        ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, NULL);
-        ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern_prompt);
+        ewf_tokenizer_basic_pattern* saved_end_pattern_ptr = NULL;
+        ewf_tokenizer_basic_command_response_end_pattern_get(tokenizer_data_ptr, &saved_end_pattern_ptr);
+        ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, NULL);
+        ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern_prompt);
         char socket_str[3];
         char len_str[5];
         result_command = ewf_interface_send_commands(
@@ -424,8 +445,8 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
             result_verify_ok = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_ok_str);
         if (ewf_result_succeeded(result_command) && ewf_result_succeeded(result_verify_ok))
             result_verify_prompt = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_prompt_str);
-        ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, saved_end_pattern_ptr);
-        ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL);
+        ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, saved_end_pattern_ptr);
+        ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL);
         if (ewf_result_failed(result_command)) return result_command;
         if (ewf_result_failed(result_verify_ok)) return result_verify_ok;
         if (ewf_result_failed(result_verify_prompt)) return result_verify_prompt;
@@ -433,42 +454,42 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
 
     {
         char tokenizer_pattern4_str[] = "\r\nRecv ???? bytes\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern4 = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern4 = {
             NULL,
             tokenizer_pattern4_str, sizeof(tokenizer_pattern4_str) - 1, true,
             NULL, NULL,
         };
 
         char tokenizer_pattern3_str[] = "\r\nRecv ??? bytes\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern3 = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern3 = {
             &tokenizer_pattern4,
             tokenizer_pattern3_str, sizeof(tokenizer_pattern3_str) - 1, true,
             NULL, NULL,
         };
 
         char tokenizer_pattern2_str[] = "\r\nRecv ?? bytes\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern2 = {
             &tokenizer_pattern3,
             tokenizer_pattern2_str, sizeof(tokenizer_pattern2_str) - 1, true,
             NULL, NULL,
         };
 
         char tokenizer_pattern1_str[] = "\r\nRecv ? bytes\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern1 = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern1 = {
             &tokenizer_pattern2,
             tokenizer_pattern1_str, sizeof(tokenizer_pattern1_str) - 1, true,
             NULL, NULL,
         };
 
         char tokenizer_pattern_send_fail_str[] = "\r\nSEND FAIL\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern_send_fail = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern_send_fail = {
             NULL,
             tokenizer_pattern_send_fail_str, sizeof(tokenizer_pattern_send_fail_str) - 1, false,
             NULL, NULL,
         };
 
         char tokenizer_pattern_send_ok_str[] = "\r\nSEND OK\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern_send_ok = {
+        ewf_tokenizer_basic_pattern tokenizer_pattern_send_ok = {
             &tokenizer_pattern_send_fail,
             tokenizer_pattern_send_ok_str, sizeof(tokenizer_pattern_send_ok_str) - 1, false,
             NULL, NULL,
@@ -476,19 +497,20 @@ ewf_result _ewf_adapter_espressif_common_internet_socket_send(ewf_adapter* adapt
 
         ewf_result result_command;
         ewf_result result_verify;
-        ewf_interface_tokenizer_pattern* saved_command_end_pattern_ptr = NULL;
-        ewf_interface_tokenizer_pattern* saved_command_pattern_ptr = NULL;
-        ewf_interface_tokenizer_command_response_end_pattern_get(interface_ptr, &saved_command_end_pattern_ptr);
-        ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, &tokenizer_pattern_send_ok);
-        ewf_interface_tokenizer_command_response_pattern_get(interface_ptr, &saved_command_pattern_ptr);
-        ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern1);
+        ewf_tokenizer_basic_pattern* saved_command_end_pattern_ptr = NULL;
+        ewf_tokenizer_basic_pattern* saved_command_pattern_ptr = NULL;
+        ewf_tokenizer_basic_data *tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+        ewf_tokenizer_basic_command_response_end_pattern_get(tokenizer_data_ptr, &saved_command_end_pattern_ptr);
+        ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, &tokenizer_pattern_send_ok);
+        ewf_tokenizer_basic_command_response_pattern_get(tokenizer_data_ptr, &saved_command_pattern_ptr);
+        ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern1);
         result_command = ewf_interface_send(interface_ptr, (const uint8_t*)buffer_ptr, buffer_length);
         if (ewf_result_succeeded(result_command)) {
             ewf_interface_drop_response(interface_ptr);
             result_verify = ewf_interface_verify_response_ends_with(interface_ptr, tokenizer_pattern_send_ok_str);
         }
-        ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, saved_command_end_pattern_ptr);
-        ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, saved_command_pattern_ptr);
+        ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, saved_command_end_pattern_ptr);
+        ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, saved_command_pattern_ptr);
         if (ewf_result_failed(result_command)) return result_command;
         if (ewf_result_failed(result_verify)) return result_verify;
     }

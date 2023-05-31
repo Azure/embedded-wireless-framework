@@ -40,7 +40,7 @@ extern "C" {
  */
 
 /** @brief Define the WIN32 COM port interface serial port file name */
-#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM53")
+#define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_FILE_NAME               ("\\\\.\\COM52")
 
 /** @brief Define the WIN32 COM port interface serial port baud rate */
 #define EWF_CONFIG_INTERFACE_WIN32_COM_PORT_BAUD_RATE               (CBR_115200)
@@ -62,16 +62,28 @@ extern "C" {
  * @{
  */
 
- /** @brief the number of message allocator blocks */
+/** @brief the network SSID */
 #define EWF_CONFIG_WIFI_STATION_SSID                                "DESKTOP-V5NOFS8"
 
-/** @brief the size of each message allocator block */
+/** @brief the network password */
 #define EWF_CONFIG_WIFI_STATION_PASSWORD                            "12F80u90"
 
 /** @} *** group_example_configuration_wifi */
 
+/**
+ * @defgroup group_example_configuration_test_netx_duo NetX-Duo test configuration
+ * @brief NetX-Duo test configuration settings used in examples
+ * @{
+ */
+
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_HTTP_SERVER_IP IP_ADDRESS(0,0,0,0)
+#define EWF_EXAMPLE_NETX_DUO_TEST_TCP_ECHO_SERVER_IP IP_ADDRESS(0,0,0,0)
+#define EWF_EXAMPLE_NETX_DUO_TEST_UDP_ECHO_SERVER_IP IP_ADDRESS(0,0,0,0)
+
+/** @} *** group_example_configuration_test_netx_duo */
+
 /************************************************************************//**
- * @} *** group_example_configuration
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

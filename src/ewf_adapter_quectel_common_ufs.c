@@ -7,8 +7,6 @@
  ****************************************************************************/
 
 #include "ewf_adapter_quectel_common.h"
-#include "ewf_platform.h"
-#include "ewf_lib.h"
 
 ewf_result ewf_adapter_quectel_common_ufs_urc_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
 {
@@ -74,21 +72,11 @@ ewf_result ewf_adapter_quectel_common_ufs_upload(ewf_adapter* adapter_ptr, const
     ewf_result result;
 
     EWF_LOG("\newf_adapter_ufs_upload: [%s] (%p) (%lu)\n", filename_str, data, length);
-    char tokenizer_pattern_str[] = "\r\nCONNECT\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern = {
-            NULL,
-            tokenizer_pattern_str ,
-            sizeof(tokenizer_pattern_str)-1,
-            false,
-        };
 
     char file_size_str[5];
     const char* file_size_cstr = ewfl_unsigned_to_str(length, file_size_str, sizeof(file_size_str));
 
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern))) return result;
-    if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QFUPL=\"", filename_str, "\",", file_size_cstr, ",10,0\r", NULL))) return result;
-    if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str))) return result;
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+    if (ewf_result_failed(result = ewf_interface_send_commands_wait_for_prompt(interface_ptr, "\r\nCONNECT\r\n", "AT+QFUPL=\"", filename_str, "\",", file_size_cstr, ",10,0\r", NULL))) return result;
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, data, length))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
 

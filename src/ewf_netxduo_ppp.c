@@ -19,10 +19,15 @@
 /**************************************************************************/
 /**************************************************************************/
 
+
+#include "ewf.h"
+
+/* EWF enabled to use with Azure RTOS NetX */
+#if (EWF_CONFIG_AZURE_RTOS_NETX == 1)
+
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "ewf.h"
 #include "ewf_adapter.h"
 #include "ewf_lib.h"
 
@@ -32,13 +37,11 @@
 #include "nx_ip.h"
 #include "nx_ppp.h"
 
-#ifdef EWF_PLATFORM_THREADX
 static TX_THREAD ewf_ppp_rx_thread;
 static uint8_t ewf_ppp_rx_thread_stack[1024];
 
 static NX_PPP* g_ppp0_ptr;
 static NX_IP* g_ip0_ptr;
-#endif
 
 ewf_netxduo_ppp_cfg* g_ppp_cfg;
 
@@ -116,14 +119,11 @@ ewf_result ewf_adapter_data_mode_exit(ewf_adapter* adapter_ptr)
 
     ewf_result result;
 
-#ifdef EWF_PLATFORM_THREADX
-
     nx_ppp_stop(g_ppp0_ptr);
 
     nx_ip_delete(g_ip0_ptr);
 
     nx_ppp_delete(g_ppp0_ptr);
-#endif
 
     /* Wait for 1 second before inputing the exit string ("+++") */
     ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
@@ -145,10 +145,8 @@ ewf_result ewf_adapter_data_mode_exit(ewf_adapter* adapter_ptr)
     if (ewf_result_failed(result = ewf_interface_drop_all_responses(interface_ptr))) return result;
 #endif
 
-#ifdef EWF_PLATFORM_THREADX
     // Delete the PPP receive thread
     tx_thread_delete(&ewf_ppp_rx_thread);
-#endif
 
     g_interface0_ptr->data_mode = false;
     EWF_LOG("[ADAPTER DATA MODE OFF]\n");
@@ -162,7 +160,6 @@ void ewf_ppp_byte_send(UCHAR byte)
     ewf_interface_send(g_interface0_ptr, (const uint8_t* )&byte, 1U);
 }
 
-#ifdef EWF_PLATFORM_THREADX
 void ewf_ppp_link_up_callback(NX_PPP *ppp_ptr)
 {
 	EWF_PARAMETER_NOT_USED(ppp_ptr);
@@ -345,7 +342,7 @@ void ewf_ppp_invalid_packet_handler(NX_PACKET *packet_ptr)
 
     return EWF_RESULT_OK;
 }
-#endif
+
 
 ewf_result ewf_interface_data_mode_ppp_byte_receive_callback(ewf_interface* interface_ptr, uint8_t* buffer_ptr, uint32_t buffer_length)
 {
@@ -356,8 +353,9 @@ ewf_result ewf_interface_data_mode_ppp_byte_receive_callback(ewf_interface* inte
     EWF_LOG("[%s][%c]\n", "PPP_RECV", *buffer_ptr);
 #endif
 
-#ifdef EWF_PLATFORM_THREADX
     (void)nx_ppp_byte_receive(g_ppp0_ptr, *buffer_ptr);
-#endif
+
     return EWF_RESULT_OK;
 }
+
+#endif

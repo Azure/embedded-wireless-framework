@@ -131,7 +131,7 @@ void sample_thread_entry(ULONG parameter)
         return;
     }
 
-    // Call the NetX Duo PPP test example
+    // Call the NetX Duo test example
     if (ewf_result_failed(result = ewf_example_netx_duo_ppp_test(adapter_ptr)))
     {
         EWF_LOG_ERROR("The NetX Duo test example failed, ewf_result %d.\n", result);

@@ -82,14 +82,12 @@ void thread_entry(ULONG param)
         return;
     }
 
-#if 0
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
         EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
         return;
     }
-#endif
 
     // Set the ME functionality
     if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))

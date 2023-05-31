@@ -34,6 +34,9 @@ extern "C" {
 //#define EWF_PLATFORM_FREERTOS
 //#define EWF_PLATFORM_WIN32
 
+ /** @brief Enable EWF usage with Azure RTOS NETX */
+#define EWF_CONFIG_AZURE_RTOS_NETX                                   (1)
+
 /************************************************************************//**
  * @} *** group_configuration
  ****************************************************************************/

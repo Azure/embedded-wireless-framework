@@ -3,10 +3,8 @@
  * @version Preview
  * @copyright Copyright (c) Microsoft Corporation. All rights reserved.
  * SPDX-License-Identifier: MIT
- * @details
- * The Embedded Wireless Framework example configuration.
+ * @brief The Embedded Wireless Framework example configuration.
  ****************************************************************************/
-
 
 #ifndef __ewf_example_conf__h__included__
 #define __ewf_example_conf__h__included__

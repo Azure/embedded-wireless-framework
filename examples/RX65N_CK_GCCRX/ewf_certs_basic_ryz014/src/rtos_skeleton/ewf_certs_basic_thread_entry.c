@@ -26,7 +26,6 @@ Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
 #include "azurertos_object_init.h"
 
-#include "ewf_example.config.h"
 /* Inclusion of .c files is for demo purposes only.
  * In production code, please compile the below .c files as you would do for other source files :
  * In your IDE add the files to your project, in your make files add the files to your source list, etc.. */
@@ -34,6 +33,8 @@ Includes   <System Includes> , "Project Includes"
 #include "ewf_platform_threadx.c"
 #include "ewf_allocator.c"
 #include "ewf_allocator_threadx.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
 #include "ewf_interface.c"
 #include "ewf_interface_rx_uart.c"
 #include "ewf_adapter.c"
@@ -48,9 +49,8 @@ Includes   <System Includes> , "Project Includes"
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_packet_domain.c"
 #include "ewf_adapter_api_modem_network_service.c"
-#include "ewf_adapter_sequans.c"
 #include "ewf_adapter_renesas_ryz014.c"
-#include "ewf_example_certs_basic_renesas_ryz014.c"
+#include "ewf_adapter_renesas_common_tokenizer.c"
 #include "ewf_adapter_renesas_common_control.c"
 #include "ewf_adapter_renesas_common_info.c"
 #include "ewf_adapter_renesas_common_urc.c"
@@ -58,21 +58,35 @@ Includes   <System Includes> , "Project Includes"
 #include "ewf_adapter_renesas_common_nvm.c"
 #include "ewf_adapter_renesas_common_mqtt_basic.c"
 #include "ewf_adapter_renesas_common_tls_basic.c"
+#include "ewf_example_certs_basic_renesas_ryz014.c"
+
+#include "ewf_example.config.h"
+
+#include "ewf_cellular_private.h"
+
 
 #include "r_gpio_rx_if.h"
+
+void renesas_ryz014a_adapter_power_on()
+{
+
+    // Release the RYZ014A from reset
+    EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_ON;
+    EWF_CELLULAR_SET_PDR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_PIN_DIRECTION_MODE_OUTPUT;
+    ewf_platform_sleep (1 * EWF_PLATFORM_TICKS_PER_SECOND);
+    EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_OFF;
+    EWF_LOG("Waiting for the module to Power Reset!\r\n");
+    ewf_platform_sleep(3 * EWF_PLATFORM_TICKS_PER_SECOND);
+    EWF_LOG("Ready\r\n");
+
+}
 
 /* New Thread entry function */
 void ewf_certs_basic_thread_entry(ULONG entry_input)
 {
 
     // Release the RYZ014A from reset
-    PORTD.PODR.BIT.B0= 1;
-    PORTD.PDR.BIT.B0= 1;
-    tx_thread_sleep (100);
-    PORTD.PODR.BIT.B0= 0;
-    EWF_LOG("Waiting for the module to Power Reset!\r\n");
-    ewf_platform_sleep(200);
-    EWF_LOG("Ready\r\n");
+	renesas_ryz014a_adapter_power_on();
 
     ewf_result result;
 

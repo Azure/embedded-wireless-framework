@@ -7,15 +7,7 @@
  ****************************************************************************/
 
 #include "ewf_adapter_seeed_lora_e5.h"
-#include "ewf_platform.h"
-#include "ewf_lib.h"
-
-#include <stdio.h>
-#include <string.h>
-#include <stddef.h>
-#include <ctype.h>
-
-#include "ewf_lib.h"
+#include "ewf_tokenizer_basic.h"
 
 ewf_adapter_api_control ewf_adapter_seeed_lora_e5_api_control =
 {
@@ -29,7 +21,7 @@ char ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern3_str[] = "
 char ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern2_str[] = "\r\nERROR\r\n";
 char ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern1_str[] = "\r\n";
 
-static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern5 =
+static ewf_tokenizer_basic_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern5 =
 {
     NULL,
     ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern5_str,
@@ -37,7 +29,7 @@ static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_respons
     true,
 };
 
-static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern4 =
+static ewf_tokenizer_basic_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern4 =
 {
     &ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern5,
     ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern4_str,
@@ -45,7 +37,7 @@ static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_respons
     true,
 };
 
-static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern3 =
+static ewf_tokenizer_basic_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern3 =
 {
     &ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern4,
     ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern3_str,
@@ -53,7 +45,7 @@ static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_respons
     true,
 };
 
-static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern2 =
+static ewf_tokenizer_basic_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern2 =
 {
     &ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern3,
     ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern2_str,
@@ -61,7 +53,7 @@ static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_respons
     false,
 };
 
-static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern1 =
+static ewf_tokenizer_basic_pattern ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern1 =
 {
     &ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern2,
     ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern1_str,
@@ -69,11 +61,11 @@ static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_command_respons
     false,
 };
 
-static ewf_interface_tokenizer_pattern* ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern_ptr = &ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern1;
+static ewf_tokenizer_basic_pattern* ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern_ptr = &ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern1;
 
 char ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern1_str[] = "\r\n";
 
-static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern1 =
+static ewf_tokenizer_basic_pattern ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern1 =
 {
     NULL,
     ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern1_str,
@@ -81,7 +73,7 @@ static ewf_interface_tokenizer_pattern ewf_adapter_seeed_lora_e5_urc_tokenizer_p
     false,
 };
 
-static ewf_interface_tokenizer_pattern* ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern_ptr = &ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern1;
+static ewf_tokenizer_basic_pattern* ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern_ptr = &ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern1;
 
 ewf_result ewf_adapter_seeed_lora_e5_start(ewf_adapter* adapter_ptr)
 {
@@ -108,13 +100,15 @@ ewf_result ewf_adapter_seeed_lora_e5_start(ewf_adapter* adapter_ptr)
 
     /* Initialize the interface tokenizer patterns */
 
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern_ptr)))
+    ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+    if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, ewf_adapter_seeed_lora_e5_command_response_end_tokenizer_pattern_ptr)))
     {
         EWF_LOG_ERROR("Failed to set the interface command response end tokenizer pattern: ewf_result %d.\n", result);
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
 
-    if (ewf_result_failed(result = ewf_interface_tokenizer_urc_pattern_set(interface_ptr, ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern_ptr)))
+    if (ewf_result_failed(result = ewf_tokenizer_basic_urc_pattern_set(tokenizer_data_ptr, ewf_adapter_seeed_lora_e5_urc_tokenizer_pattern_ptr)))
     {
         EWF_LOG_ERROR("Failed to set the interface URC tokenizer pattern: ewf_result %d.\n", result);
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;

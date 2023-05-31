@@ -233,6 +233,15 @@ char* ewfl_find_chars_with_terms(char* str, char* chars_str, char* term_str);
  */
 char* ewfl_str_tok(char* str, const char* delim, char** saveptr);
 
+/**
+ * @brief Check if the character is digit.
+ *
+ * This function will return 1 if the character is digit and 0 if not. *
+ * @param[in] c is character to be validated.
+ * @return an uint32_t value 1 or 0
+ */
+uint32_t ewfl_char_is_digit(char c);
+
 /************************************************************************//**
  * @} *** group_lib_string
  ****************************************************************************/

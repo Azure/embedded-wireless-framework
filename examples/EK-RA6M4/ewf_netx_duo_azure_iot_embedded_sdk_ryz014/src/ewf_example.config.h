@@ -31,7 +31,7 @@ extern "C" {
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (8)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1600)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -48,6 +48,9 @@ extern "C" {
 #define EWF_CONFIG_CONTEXT_ID                                       (1)
 
 /** @} *** group_example_configuration_modem */
+
+/** @brief Enable EWF usage with Azure RTOS NETX */
+#define EWF_CONFIG_AZURE_RTOS_NETX                                  (1)
 
 /**
  * @defgroup group_example_configuration_iot_hub IoT Hub configuration

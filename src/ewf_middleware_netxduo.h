@@ -11,6 +11,9 @@
 #ifndef __ewf_middleware_netxduo__h__included__
 #define __ewf_middleware_netxduo__h__included__
 
+/* EWF enabled to use with Azure RTOS NetX */
+#if (EWF_CONFIG_AZURE_RTOS_NETX == 1)
+
 /**************************************************************************/
 /**************************************************************************/
 /**                                                                       */
@@ -41,6 +44,8 @@ VOID  nx_driver_ewf_adapter(NX_IP_DRIVER *driver_req_ptr);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif /* __ewf_middleware_netxduo__h__included__ */

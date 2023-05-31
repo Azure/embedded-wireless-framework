@@ -55,13 +55,6 @@ NX_PACKET_POOL          pool_0;
 NX_IP                   ip_0;
 NX_PPP                  ppp_0;
 
-void invalid_packet_handler(NX_PACKET* packet_ptr)
-{
-
-    nx_packet_release(packet_ptr);
-
-}
-
 /* Intalize the PPP config */
 ewf_netxduo_ppp_cfg ppp_cfg =
 {
@@ -69,7 +62,6 @@ ewf_netxduo_ppp_cfg ppp_cfg =
     .ppp_thread_stack_ptr = &ppp_0_stack[0],
     .ppp_thread_stack_size = sizeof(ppp_0_stack),
     .ppp_thread_priority = SAMPLE_PPP_THREAD_PRIORITY,
-    .ppp_invalid_packet_callback = invalid_packet_handler,
     .ip_ptr = &ip_0,
     .ip_thread_stack_ptr = (uint8_t*)&ip_thread_stack[0],
     .ip_thread_stack_size = sizeof(ip_thread_stack),

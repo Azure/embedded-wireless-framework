@@ -15,3 +15,5 @@ root_ca_cert.pem.h
 ca_cert.pem.h
 device_cert.pem.h
 device_key.pem.h
+.bin
+.importmanifest.json

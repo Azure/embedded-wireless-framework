@@ -21,6 +21,10 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_control.h

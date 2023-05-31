@@ -43,13 +43,13 @@ ewf_result ewf_allocator_c_heap_allocate(ewf_allocator* allocator_ptr, void** p)
 
     if (!p) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
-    if ((ewf_allocator_c_heap_ptr->allocated_count - ewf_allocator_c_heap_ptr->released_count) > ewf_allocator_c_heap_ptr->block_count)
+    if ((ewf_allocator_c_heap_ptr->allocated_count - ewf_allocator_c_heap_ptr->released_count) > allocator_ptr->block_count)
     {
         EWF_LOG_ERROR("Trying to allocate too many blocks in the C heap allocator!");
         return EWF_RESULT_OUT_OF_MEMORY;
     }
 
-    *p = malloc(ewf_allocator_c_heap_ptr->block_size);
+    *p = malloc(allocator_ptr->block_size);
     if (!*p)
     {
         EWF_LOG_ERROR("malloc failed to allocate a block in the C heap allocator!");

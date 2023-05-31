@@ -19,7 +19,6 @@ extern "C" {
 #define NX_PHYSICAL_TRAILER ()
 #endif
 
-
 #if (+0)
 #define NX_ARP_EXPIRATION_RATE ()
 #endif
@@ -55,8 +54,6 @@ extern "C" {
 #define NX_MAX_LISTEN_REQUESTS ()
 #endif
 
-
-
 #if (+0)
 #define NX_TCP_ACK_EVERY_N_PACKETS ()
 #endif
@@ -64,7 +61,7 @@ extern "C" {
 #define NX_ENABLE_INTERFACE_CAPABILITY
 
 /* Automatically define NX_TCP_ACK_EVERY_N_PACKETS to 1 if NX_TCP_IMMEDIATE_ACK is defined.
-   This is needed for backward compatibility. */
+ This is needed for backward compatibility. */
 #if (defined(NX_TCP_IMMEDIATE_ACK) && !defined(NX_TCP_ACK_EVERY_N_PACKETS))
 #define NX_TCP_ACK_EVERY_N_PACKETS 1
 #endif
@@ -82,27 +79,9 @@ extern "C" {
 #define NX_TCP_KEEPALIVE_RETRIES ()
 #endif
 
-
 #if (+0)
 #define NX_MAX_PHYSICAL_INTERFACES ()
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #define NX_ENABLE_EXTENDED_NOTIFY_SUPPORT
 
@@ -123,8 +102,6 @@ extern "C" {
 #endif
 
 // IPv6 Options
-
-
 
 #if (+0)
 #define NX_PATH_MTU_INCREASE_WAIT_INTERVAL 
@@ -181,9 +158,6 @@ extern "C" {
 #endif
 // Miscellaneous ICMPv6 Configuration Options
 
-
-
-
 #if (+0)
 #define NX_ICMPV6_MAX_RTR_SOLICITATIONS    
 #endif
@@ -191,19 +165,14 @@ extern "C" {
 #define NX_ICMPV6_RTR_SOLICITATION_INTERVAL      
 #endif
 
-
-
-
-
-
 #if (+0)
 #define NX_PACKET_ALIGNMENT      
 #endif
 
-int rand (void);
+int rand(void);
 #define NX_RAND rand
 
-void srand (unsigned int);
+void srand(unsigned int);
 #define NX_SRAND srand
 
 /* Azure IoT Configuration */
@@ -218,9 +187,6 @@ void srand (unsigned int);
 /* DHCP IPv4 Client Configuration. */
 /* Required for projects that need the packet pool to be placed in nonsecure memory. */
 #define NX_DHCP_CLIENT_USER_CREATE_PACKET_POOL
-
-
-
 
 #ifdef NX_DHCP_CLIENT_SEND_ARP_PROBE
 #define NX_DHCP_CLIENT_SEND_ARP_PROBE
@@ -313,7 +279,6 @@ void srand (unsigned int);
 
 /* HTTP Server Configuration. */
 
-
 #define NX_HTTP_SERVER_PRIORITY                     16
 #define NX_HTTP_SERVER_WINDOW_SIZE                  2048
 #define NX_HTTP_SERVER_TIMEOUT                      (10 * NX_IP_PERIODIC_RATE)
@@ -334,9 +299,6 @@ void srand (unsigned int);
 
 /* DNS Client Configuration. */
 #define NX_DNS_CLIENT_USER_CREATE_PACKET_POOL
-
-
-
 
 #define NX_DNS_PACKET_PAYLOAD_UNALIGNED                         (16 + sizeof(NX_IPV4_HEADER) + sizeof(NX_UDP_HEADER) + NX_DNS_MESSAGE_MAX)
 #define NX_DNS_TYPE_OF_SERVICE                                  NX_IP_NORMAL
@@ -384,8 +346,6 @@ void srand (unsigned int);
 
 /* Web HTTP Server Configuration. */
 
-
-
 #define NX_WEB_HTTP_SERVER_PRIORITY                     16
 #define NX_WEB_HTTP_SERVER_WINDOW_SIZE                  2048
 #define NX_WEB_HTTP_SERVER_TIMEOUT                      (10 * NX_IP_PERIODIC_RATE)
@@ -418,7 +378,6 @@ void srand (unsigned int);
 #define NX_SMTP_CLIENT_MAX_USERNAME                 (40)
 
 /* Telnet Server Configuration */
-
 
 #define NX_TELNET_SERVER_PRIORITY                           (16)
 #define NX_TELNET_MAX_CLIENTS                               (4)
@@ -467,7 +426,6 @@ void srand (unsigned int);
 #define NX_TFTP_SOURCE_PORT                         NX_ANY_PORT
 
 /* TFTP Server Configuration */
-
 
 #ifdef NX_TFTP_SERVER_RETRANSMIT_ENABLE
 #define NX_TFTP_SERVER_TIMEOUT_PERIOD                       (20)
@@ -541,9 +499,6 @@ void srand (unsigned int);
 #define NX_SNMP_AGENT_PORT                        (161)
 #define NX_SNMP_MANAGER_TRAP_PORT                 (162)
 #define NX_SNMP_MAX_TRAP_KEY                      (64)
-
-
-
 
 /* POP3 Client Configuration */
 #define NXD_POP3_CLIENT_MAIL_BUFFER_SIZE            (2000)

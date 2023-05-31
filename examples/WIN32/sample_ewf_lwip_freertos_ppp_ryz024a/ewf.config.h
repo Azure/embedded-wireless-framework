@@ -34,6 +34,9 @@ extern "C" {
 #define EWF_PLATFORM_FREERTOS
 //#define EWF_PLATFORM_WIN32
 
+ /** @brief Enable EWF usage with LWIP */
+#define EWF_LWIP_INCLUDED                                   (1)
+
 /************************************************************************//**
  * @} *** group_configuration
  ****************************************************************************/

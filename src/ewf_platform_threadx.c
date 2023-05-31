@@ -95,7 +95,7 @@ ewf_result ewf_platform_mutex_create(ewf_platform_mutex* mutex_ptr)
 {
     if (!mutex_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
-    UINT status = tx_semaphore_create(&(mutex_ptr->sem), mutex_ptr->name_cstr, 1);
+    UINT status = tx_mutex_create(&(mutex_ptr->m), mutex_ptr->name_cstr, TX_INHERIT);
     if (status != TX_SUCCESS)
     {
         EWF_LOG_ERROR("Failed to create a mutex.");
@@ -109,7 +109,7 @@ ewf_result ewf_platform_mutex_destroy(ewf_platform_mutex* mutex_ptr)
 {
     if (!mutex_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
-    UINT status = tx_semaphore_delete(&(mutex_ptr->sem));
+    UINT status = tx_mutex_delete(&(mutex_ptr->m));
     if (status != TX_SUCCESS)
     {
         EWF_LOG_ERROR("Failed to destroy a mutex.");
@@ -123,10 +123,10 @@ ewf_result ewf_platform_mutex_get(ewf_platform_mutex* mutex_ptr)
 {
     if (!mutex_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
-    UINT status = tx_semaphore_get(&(mutex_ptr->sem), TX_WAIT_FOREVER);
+    UINT status = tx_mutex_get(&(mutex_ptr->m), TX_WAIT_FOREVER);
     if (status != TX_SUCCESS)
     {
-        EWF_LOG_ERROR("Failed to obtain ownership of a mutex.");
+        EWF_LOG_ERROR("Failed to obtain ownership of a mutex, error %u\r\n", status);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
 
@@ -137,10 +137,10 @@ ewf_result ewf_platform_mutex_put(ewf_platform_mutex* mutex_ptr)
 {
     if (!mutex_ptr) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
-    UINT status = tx_semaphore_ceiling_put(&(mutex_ptr->sem), 1);
+    UINT status = tx_mutex_put(&(mutex_ptr->m));
     if (status != TX_SUCCESS)
     {
-        EWF_LOG_ERROR("Failed to release ownership of a mutex.");
+        EWF_LOG_ERROR("Failed to release ownership of a mutex, error %u\r\n", status);
         return EWF_RESULT_IRRECOVERABLE_ERROR;
     }
 
@@ -221,7 +221,7 @@ ewf_result ewf_platform_queue_dequeue(ewf_platform_queue* queue_ptr, void* buffe
     UINT status = tx_queue_receive(
         &(queue_ptr->queue),
         buffer_ptr,
-		wait ? TX_WAIT_FOREVER : TX_NO_WAIT);
+        wait ? TX_WAIT_FOREVER : TX_NO_WAIT);
     switch (status)
     {
     case TX_QUEUE_EMPTY:

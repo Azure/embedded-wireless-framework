@@ -41,7 +41,7 @@ extern "C" {
 //#define EWF_PLATFORM_FREERTOS
 //#define EWF_PLATFORM_WIN32
 
-/* Enable CK-RX65N UART confif */
+/* Enable CK-RX65N UART config */
 #define EWF_RENESAS_RX65N_CK_ENABLE
 
 #ifdef EWF_DEBUG
@@ -49,6 +49,9 @@ extern "C" {
 #else
 #define EWF_LOG(...)
 #endif
+
+/** @brief Enable EWF usage with Azure RTOS NETX */
+#define EWF_CONFIG_AZURE_RTOS_NETX                                  (1)
 
 /************************************************************************//**
  * @} *** group_configuration

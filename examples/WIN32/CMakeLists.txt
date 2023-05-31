@@ -76,6 +76,7 @@ if(DEFINED PCAP_NAME)
 else()
   add_subdirectory(tcpip_offload_driver)
 endif()
+
 ###############################################################################
 # Azure RTOS
 ###############################################################################
@@ -196,6 +197,7 @@ add_subdirectory(sample_ewf_telemetry_basic_freertos_bg96)
 add_subdirectory(sample_ewf_lwip_freertos_ppp_bg96)
 add_subdirectory(sample_ewf_lwip_freertos_ppp_ryz024a)
 add_subdirectory(sample_ewf_lwip_freertos_ppp_exs82_w)
+
 #######################################
 # RYZ014
 #######################################
@@ -215,7 +217,9 @@ add_subdirectory(sample_ewf_info_tx_ryz024a)
 add_subdirectory(sample_ewf_test_tx_ryz024a)
 add_subdirectory(sample_ewf_certs_basic_tx_ryz024a)
 add_subdirectory(sample_ewf_telemetry_basic_tx_ryz024a)
+add_subdirectory(sample_ewf_netx_duo_azure_iot_embedded_sdk_ryz024a)
 add_subdirectory(sample_ewf_netx_duo_ppp_ryz024a)
+add_subdirectory(sample_ewf_netx_duo_test_ryz024a)
 
 #######################################
 # SIM7000

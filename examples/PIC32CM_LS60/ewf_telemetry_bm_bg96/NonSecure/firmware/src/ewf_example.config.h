@@ -31,7 +31,7 @@ extern "C" {
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                         (8)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                          (128)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                          (512)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -43,6 +43,9 @@ extern "C" {
 
 /** @brief The SIM PIN for the modem */
 #define EWF_CONFIG_SIM_PIN                                               ("0000")
+
+/** @brief The SIM operator APN */
+#define EWF_CONFIG_SIM_APN                                               ("internet.telekom")
 
 /** @brief The modem context ID used */
 #define EWF_CONFIG_CONTEXT_ID                                            (1)

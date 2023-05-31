@@ -2,11 +2,9 @@
 #ifndef TX_USER_H_
 #define TX_USER_H_
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 #ifndef TX_TIMER_TICKS_PER_SECOND
 #define TX_TIMER_TICKS_PER_SECOND (100)
@@ -40,16 +38,6 @@ extern "C" {
 #endif
 #define TX_DISABLE_NOTIFY_CALLBACKS
 
-
-
-
-
-
-
-
-
-
-
 #define RM_THREADX_PORT_CFG_HW_STACK_MONITOR_ENABLE  (0)
 #define TX_PORT_CFG_SYSTICK_IPL  ((0))
 #define TX_PORT_MAX_IPL  ((0))
@@ -69,8 +57,6 @@ extern "C" {
 /* Treat as secure unless this is a non-secure project. */
 #define TX_SINGLE_MODE_SECURE
 #endif
-
-
 
 #ifdef __cplusplus
 }

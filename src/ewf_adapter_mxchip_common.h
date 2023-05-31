@@ -69,21 +69,6 @@ extern "C" {
  ****************************************************************************/
 
 /************************************************************************//**
- * @defgroup group_adapter_thales_common_tokenizer Thales common driver tokenizer
- * @brief Thales common adapter tokenizer
- * @{
- ****************************************************************************/
-
-extern ewf_interface_tokenizer_pattern* ewf_adapter_mxchip_common_message_tokenizer_pattern_ptr;
-extern ewf_interface_tokenizer_pattern* ewf_adapter_mxchip_common_command_response_end_tokenizer_pattern_ptr;
-extern ewf_interface_tokenizer_pattern* ewf_adapter_mxchip_common_command_response_tokenizer_pattern_ptr;
-extern ewf_interface_tokenizer_pattern* ewf_adapter_mxchip_common_urc_tokenizer_pattern_ptr;
-
-/************************************************************************//**
- * @} *** group_adapter_thales_common_tokenizer
- ****************************************************************************/
-
-/************************************************************************//**
  * @defgroup group_adapter_mxchip_common_data MX-CHIP common driver internal data
  * @brief MX-CHIP common adapter data structure
  * @{
@@ -259,7 +244,7 @@ ewf_result ewf_adapter_mxchip_common_udp_receive_from(ewf_socket_udp* socket_ptr
 /** @} *** group_adapter_mxchip_common_udp */
 
 /************************************************************************//**
- * @} *** group_adapter_mxchip_common
+ * @}
  ****************************************************************************/
 
 #ifdef __cplusplus

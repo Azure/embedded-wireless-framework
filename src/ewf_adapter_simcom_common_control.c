@@ -10,76 +10,11 @@
 #include "ewf_platform.h"
 #include "ewf_lib.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <stddef.h>
-#include <ctype.h>
-
 ewf_adapter_api_control ewf_adapter_simcom_common_api_control =
 {
     ewf_adapter_simcom_common_start,
     ewf_adapter_simcom_common_stop,
 };
-
-char ewf_adapter_simcom_common_command_response_end_tokenizer_pattern5_str[] = "\r\n+CME ERROR: ???\r\n";
-char ewf_adapter_simcom_common_command_response_end_tokenizer_pattern4_str[] = "\r\n+CME ERROR: ??\r\n";
-char ewf_adapter_simcom_common_command_response_end_tokenizer_pattern3_str[] = "\r\n+CME ERROR: ?\r\n";
-char ewf_adapter_simcom_common_command_response_end_tokenizer_pattern2_str[] = "\r\nERROR\r\n";
-char ewf_adapter_simcom_common_command_response_end_tokenizer_pattern1_str[] = "\r\nOK\r\n";
-
-static ewf_interface_tokenizer_pattern ewf_adapter_simcom_common_command_response_end_tokenizer_pattern5 =
-{
-    NULL,
-    ewf_adapter_simcom_common_command_response_end_tokenizer_pattern5_str,
-    sizeof(ewf_adapter_simcom_common_command_response_end_tokenizer_pattern5_str)-1,
-    true,
-};
-
-static ewf_interface_tokenizer_pattern ewf_adapter_simcom_common_command_response_end_tokenizer_pattern4 =
-{
-    &ewf_adapter_simcom_common_command_response_end_tokenizer_pattern5,
-    ewf_adapter_simcom_common_command_response_end_tokenizer_pattern4_str,
-    sizeof(ewf_adapter_simcom_common_command_response_end_tokenizer_pattern4_str)-1,
-    true,
-};
-
-static ewf_interface_tokenizer_pattern ewf_adapter_simcom_common_command_response_end_tokenizer_pattern3 =
-{
-    &ewf_adapter_simcom_common_command_response_end_tokenizer_pattern4,
-    ewf_adapter_simcom_common_command_response_end_tokenizer_pattern3_str,
-    sizeof(ewf_adapter_simcom_common_command_response_end_tokenizer_pattern3_str)-1,
-    true,
-};
-
-static ewf_interface_tokenizer_pattern ewf_adapter_simcom_common_command_response_end_tokenizer_pattern2 =
-{
-    &ewf_adapter_simcom_common_command_response_end_tokenizer_pattern3,
-    ewf_adapter_simcom_common_command_response_end_tokenizer_pattern2_str,
-    sizeof(ewf_adapter_simcom_common_command_response_end_tokenizer_pattern2_str)-1,
-    false,
-};
-
-static ewf_interface_tokenizer_pattern ewf_adapter_simcom_common_command_response_end_tokenizer_pattern1 =
-{
-    &ewf_adapter_simcom_common_command_response_end_tokenizer_pattern2,
-    ewf_adapter_simcom_common_command_response_end_tokenizer_pattern1_str,
-    sizeof(ewf_adapter_simcom_common_command_response_end_tokenizer_pattern1_str)-1,
-    false,
-};
-
-static ewf_interface_tokenizer_pattern* ewf_adapter_simcom_common_command_response_end_tokenizer_pattern_ptr = &ewf_adapter_simcom_common_command_response_end_tokenizer_pattern1;
-
-char ewf_adapter_simcom_common_urc_tokenizer_pattern1_str[] = "\r\n";
-
-static ewf_interface_tokenizer_pattern ewf_adapter_simcom_common_urc_tokenizer_pattern1 =
-{
-    NULL,
-    ewf_adapter_simcom_common_urc_tokenizer_pattern1_str,
-    sizeof(ewf_adapter_simcom_common_urc_tokenizer_pattern1_str)-1,
-    false,
-};
-
-static ewf_interface_tokenizer_pattern* ewf_adapter_simcom_common_urc_tokenizer_pattern_ptr = &ewf_adapter_simcom_common_urc_tokenizer_pattern1;
 
 ewf_result ewf_adapter_simcom_common_start(ewf_adapter* adapter_ptr)
 {
@@ -103,20 +38,6 @@ ewf_result ewf_adapter_simcom_common_start(ewf_adapter* adapter_ptr)
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
 
-    /* Initialize the interface tokenizer patterns */
-
-    if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, ewf_adapter_simcom_common_command_response_end_tokenizer_pattern_ptr)))
-    {
-        EWF_LOG_ERROR("Failed to set the interface command response end tokenizer pattern: ewf_result %d.\n", result);
-        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
-    }
-
-    if (ewf_result_failed(result = ewf_interface_tokenizer_urc_pattern_set(interface_ptr, ewf_adapter_simcom_common_urc_tokenizer_pattern_ptr)))
-    {
-        EWF_LOG_ERROR("Failed to set the interface URC tokenizer pattern: ewf_result %d.\n", result);
-        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
-    }
-
     /* Start the interface */
     if (ewf_result_failed(result = ewf_interface_start(interface_ptr)))
     {
@@ -124,9 +45,43 @@ ewf_result ewf_adapter_simcom_common_start(ewf_adapter* adapter_ptr)
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
     }
 
+    /* Initialize the tokenizer */
+    result = ewf_adapter_simcom_common_tokenizer_init(interface_ptr);
+    if (ewf_result_failed(result))
+    {
+        EWF_LOG_ERROR("Failed to initialize the tokenizer: ewf_result %d.\n", result);
+        return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
+    }
+
     /* AT - wake the modem */
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
-    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr)))
+    {
+        EWF_LOG("Modem did not respond, trying to switch modem in command mode.\r\n");
+        /* If the modem doesnt respond, check if is in data mode and switch to coammand mode */
+        /* Wait for 1 second before inputing the exit string ("+++") */
+        ewf_platform_sleep(2 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+        /* Exit Data Mode */
+        if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "\x2B\x2B\x2B"))) return result;
+        ewf_platform_sleep(5 * EWF_PLATFORM_TICKS_PER_SECOND);
+        if (ewf_result_failed(result = ewf_interface_drop_all_responses(interface_ptr))) return result;
+
+        /* Wait for 1 second after inputing the exit string ("+++") */
+        ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+    }
+    /* Try to send AT again, if fails try power cycling the modem */
+    if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
+    if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr)))
+    {
+#ifdef EWF_ADAPTER_USER_POWER_ON
+       /* EWF does not process Power ON URC's at init.
+          Application code must add delay of atleast 500ms after modem is power on to skip the URC's
+          */
+       EWF_ADAPTER_USER_POWER_ON();
+#endif
+    }
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;
     if (ewf_result_failed(result = ewf_interface_drop_response(interface_ptr))) return result;
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT\r"))) return result;

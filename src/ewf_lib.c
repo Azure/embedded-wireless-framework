@@ -16,65 +16,106 @@
 
 /** This can be configured to match the application requirements  */
 #ifndef EWF_ESCAPE_STR_BUFFER_SIZE
-#define EWF_ESCAPE_STR_BUFFER_SIZE (2048)
+#define EWF_ESCAPE_STR_BUFFER_SIZE (1024 * 4)
 #endif
+
+static char str_buffer_ptr[EWF_ESCAPE_STR_BUFFER_SIZE];
 
 char const * ewfl_escape_str_to_str_buffer(const char * str, uint32_t len)
 {
-    static char buffer_ptr[EWF_ESCAPE_STR_BUFFER_SIZE];
-    char * guard = buffer_ptr + sizeof(buffer_ptr) - 5; /* one character may be escaped to four by using \xhh */
-    char * out = buffer_ptr;
+    if (!str || !len)
+    {
+        str_buffer_ptr[0] = 0;
+        return str_buffer_ptr;
+    }
+
+    char * out = str_buffer_ptr;
     const char * in = str;
-    for ( ; *in && (out < guard) && ((len == 0) ? (true) : ((uint32_t)(in - str) < len)); in++)
+
+    for ( ; (((size_t)(in - str)) < len) && (((size_t) (out - str_buffer_ptr)) < (sizeof(str_buffer_ptr) - (4 + 1))) ; in++)
     {
-    switch(*in)
-    {
-    case '\\':
-        *out++ = '\\';
-        *out++ = '\\';
-        break;
-    case '\n':
-        *out++ = '\\';
-        *out++ = 'n';
-        break;
-    case '\r':
-        *out++ = '\\';
-        *out++ = 'r';
-        break;
-    case '\t':
-        *out++ = '\\';
-        *out++ = 't';
-        break;
-    case '\v':
-        *out++ = '\\';
-        *out++ = 'v';
-        break;
-    case '\f':
-        *out++ = '\\';
-        *out++ = 'f';
-        break;
-    case '\a':
-        *out++ = '\\';
-        *out++ = 'a';
-        break;
-    case '\b':
-        *out++ = '\\';
-        *out++ = 'b';
-        break;
-    default:
-        if (*in < 32) {
-        *out++ = '\\';
-        *out++ = 'x';
-        *out++ = '0' + ((*in & 0xF0) >> 4);
-        *out++ = '0' + (*in & 0xF);
-        } else  {
-        *out++ = *in;
+        switch (*in)
+        {
+        case '\\':
+            *out++ = '\\';
+            *out++ = '\\';
+            break;
+        case '\'':
+            *out++ = '\\';
+            *out++ = '\'';
+            break;
+        case '\"':
+            *out++ = '\\';
+            *out++ = '\"';
+            break;
+        case '\?':
+            *out++ = '\\';
+            *out++ = '\?';
+            break;
+        case '\a':
+            *out++ = '\\';
+            *out++ = 'a';
+            break;
+        case '\b':
+            *out++ = '\\';
+            *out++ = 'b';
+            break;
+        case '\f':
+            *out++ = '\\';
+            *out++ = 'f';
+            break;
+        case '\n':
+            *out++ = '\\';
+            *out++ = 'n';
+            break;
+        case '\r':
+            *out++ = '\\';
+            *out++ = 'r';
+            break;
+        case '\t':
+            *out++ = '\\';
+            *out++ = 't';
+            break;
+        case '\v':
+            *out++ = '\\';
+            *out++ = 'v';
+            break;
+        default:
+#if 0
+            if ((*in < 32) || (127 <= *in)) {
+                *out++ = '\\';
+                if ((((*in >> 6) & 0x3) == 0) && (((*in >> 3) & 0x7) == 0)) {
+                    *out++ = '0' + ((*in) & 0x7);
+                }
+                else if (((*in >> 6) & 0x3) == 0) {
+                    *out++ = '0' + ((*in >> 3) & 0x7);
+                    *out++ = '0' + ((*in) & 0x7);
+                }
+                else {
+                    *out++ = '0' + ((*in >> 6) & 0x3);
+                    *out++ = '0' + ((*in >> 3) & 0x7);
+                    *out++ = '0' + ((*in) & 0x7);
+                }
+            } else {
+                *out++ = *in;
+            }
+#else
+            if ((*in < 32) || (127 <= *in))
+            {
+                *out++ = '.';
+            }
+            else
+            {
+                *out++ = *in;
+            }
+#endif
+            break;
         }
-        break;
     }
-    }
+
     *out = 0;
-    return buffer_ptr;
+
+    return str_buffer_ptr;
 }
 
 #endif
@@ -170,7 +211,7 @@ bool ewfl_buffer_ends_with_wildcard_string(const uint8_t* buffer_ptr, uint32_t b
     if (suffix_length > buffer_length) return false;
     const uint8_t* buffer_tail = &(buffer_ptr[buffer_length - 1]);
     const uint8_t* suffix_tail = &(suffix_ptr[suffix_length - 1]);
-    for (; (buffer_tail != buffer_ptr) && (suffix_tail != suffix_ptr); buffer_tail--, suffix_tail--)
+    for (; suffix_tail >= suffix_ptr; buffer_tail--, suffix_tail--)
     {
         if (*suffix_tail == '?')
         {
@@ -178,7 +219,11 @@ bool ewfl_buffer_ends_with_wildcard_string(const uint8_t* buffer_ptr, uint32_t b
             continue;
         }
 
-        if (*buffer_tail != *suffix_tail) return false;
+        if (*buffer_tail != *suffix_tail)
+        {
+            // Missmatch
+            return false;
+        }
     }
     return true;
 }
@@ -335,4 +380,9 @@ char* ewfl_str_tok(char* str, const char* delim, char** saveptr)
 
     return token; 
 #endif
+}
+
+uint32_t ewfl_char_is_digit(char c)
+{
+    return((c) >= '0' && (c) <= '9');
 }

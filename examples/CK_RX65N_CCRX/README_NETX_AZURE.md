@@ -1,5 +1,6 @@
 #Overview
-This readme will help to create Azure Resources used for the examples running NetX Duo and PNP
+This readme will help to create Azure Resources used for the examples running NetX Duo and PNP, NetX Duo PPP for Device update from IoT Hub
+
 ## Prepare Azure resources
 
 To prepare Azure cloud resources and connect a device to Azure, you can use Azure CLI. There are two ways to access the Azure CLI: by using the Azure Cloud Shell, or by installing Azure CLI locally.  Azure Cloud Shell lets you run the CLI in a browser so you don't have to install anything.

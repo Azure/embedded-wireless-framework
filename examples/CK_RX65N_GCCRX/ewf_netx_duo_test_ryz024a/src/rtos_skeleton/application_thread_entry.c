@@ -1,0 +1,196 @@
+/***********************************************************************************************************************
+* DISCLAIMER
+* This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products. No
+* other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
+* applicable laws, including copyright laws.
+* THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
+* THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED. TO THE MAXIMUM
+* EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES
+* SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS
+* SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability of
+* this software. By using this software, you agree to the additional terms and conditions found by accessing the
+* following link:
+* http://www.renesas.com/disclaimer
+*
+* Copyright (C) 2021 Renesas Electronics Corporation. All rights reserved.
+***********************************************************************************************************************/
+/***********************************************************************************************************************
+ * File Name    : thread_x_entry.c
+ * Version      : 1.0
+ * Description  : declare Thread entry function  
+ **********************************************************************************************************************/
+/***********************************************************************************************************************
+Includes   <System Includes> , "Project Includes"
+***********************************************************************************************************************/
+#include "azurertos_object_init.h"
+
+#include "demo_printf.h"
+
+#define SAMPLE_DHCP_DISABLE
+
+#include "nx_api.h"
+#include "nxd_dns.h"
+#include "nxd_sntp_client.h"
+#include "nx_secure_tls_api.h"
+
+#include "ewf_example.config.h"
+/* Inclusion of .c files is for demo purposes only.
+ * In production code, please compile the below .c files as you would do for other source files :
+ * In your IDE add the files to your project, in your make files add the files to your source list, etc.. */
+#include "ewf_lib.c"
+#include "ewf_platform_threadx.c"
+#include "ewf_allocator.c"
+#include "ewf_allocator_threadx.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
+#include "ewf_interface.c"
+#include "ewf_interface_rx_uart.c"
+#include "ewf_adapter.c"
+#include "ewf_adapter_api_tcp.c"
+#include "ewf_adapter_api_udp.c"
+#include "ewf_adapter_api_mqtt_basic.c"
+#include "ewf_adapter_api_tls_basic.c"
+#include "ewf_adapter_api_info.c"
+#include "ewf_adapter_api_control.c"
+#include "ewf_adapter_api_modem.c"
+#include "ewf_adapter_api_modem_general.c"
+#include "ewf_adapter_api_modem_sim_utility.c"
+#include "ewf_adapter_api_modem_packet_domain.c"
+#include "ewf_adapter_api_modem_network_service.c"
+#include "ewf_adapter_renesas_ryz024a.c"
+#include "ewf_adapter_renesas_common_tokenizer.c"
+#include "ewf_adapter_renesas_common_control.c"
+#include "ewf_adapter_renesas_common_info.c"
+#include "ewf_adapter_renesas_common_urc.c"
+#include "ewf_adapter_renesas_common_internet.c"
+#include "ewf_adapter_renesas_common_nvm.c"
+#include "ewf_adapter_renesas_common_mqtt_basic.c"
+#include "ewf_adapter_renesas_common_tls_basic.c"
+#include "ewf_middleware_netxduo.c"
+
+#include "ewf_example.config.h"
+
+#include "ewf_cellular_private.h"
+
+#include "ewf_example_netx_duo_test.c"
+
+/* Modem might take some minutes to attach and register to the network. Time out value in seconds */
+#define EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT  (120)
+
+void renesas_ryz024a_adapter_power_on()
+{
+
+    // Release the RYZ014A from reset
+    EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_ON;
+    EWF_CELLULAR_SET_PDR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_PIN_DIRECTION_MODE_OUTPUT;
+    tx_thread_sleep (100);
+    EWF_CELLULAR_SET_PODR(EWF_CELLULAR_CFG_RESET_PORT, EWF_CELLULAR_CFG_RESET_PIN) = EWF_CELLULAR_CFG_RESET_SIGNAL_OFF;
+    demo_printf("Waiting for the module to Power Reset!\r\n");
+    ewf_platform_sleep(300);
+    demo_printf("Ready\r\n");
+
+}
+
+/* New Thread entry function */
+void application_thread_entry(ULONG entry_input)
+{
+
+    /* Initialize the demo printf implementation. */
+    demo_printf_init();
+
+    /* Power on the modem */
+    renesas_ryz024a_adapter_power_on();
+
+	ewf_result result;
+	UINT status = 0;
+
+	ewf_allocator* message_allocator_ptr = NULL;
+	ewf_interface* interface_ptr = NULL;
+	ewf_adapter* adapter_ptr = NULL;
+
+	EWF_ALLOCATOR_THREADX_STATIC_DECLARE(message_allocator_ptr, message_allocator, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT, EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE);
+	EWF_INTERFACE_RX_UART_BAUD_STATIC_DECLARE(interface_ptr , sci_uart, 115200);
+	EWF_ADAPTER_RENESAS_RYZ024A_STATIC_DECLARE(adapter_ptr, renesas_ryz014, message_allocator_ptr, NULL, interface_ptr);
+
+    // Start the adapter
+    if (ewf_result_failed(result = ewf_adapter_start(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("Failed to start the adapter, ewf_result %d.\n", result);
+
+        EWF_LOG("Enter while(1) loop to stop program execution.\n");
+        while(1);
+    }
+
+    /* Disable EPS network Registration URC */
+    if (ewf_result_failed(result = ewf_adapter_modem_eps_network_registration_urc_set(adapter_ptr, "0")))
+    {
+        EWF_LOG_ERROR("Failed to disable network registration status URC, ewf_result %d.\n", result);
+        return;
+    }
+
+    // Set the ME functionality to minimum to clear out any previous connections
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_MINIMUM)))
+    {
+        EWF_LOG("[Warning][Failed to the ME functionality]\n");
+    }
+
+    /* Wait time for modem to be ready*/
+    ewf_platform_sleep(300);
+
+    // Set the APN
+    if (ewf_result_failed(result = ewf_adapter_modem_pdp_apn_set(adapter_ptr, EWF_CONFIG_CONTEXT_ID, EWF_ADAPTER_MODEM_PDP_TYPE_IP, EWF_CONFIG_SIM_APN)))
+    {
+        EWF_LOG_ERROR("Failed to the set APN, ewf_result %d.\n", result);
+        return;
+    }
+
+    // Set the ME functionality
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
+    {
+        EWF_LOG_ERROR("Failed to the ME functionality, ewf_result %d.\n", result);
+        return;
+    }
+
+    /* Wait time for modem to be ready after modem is registered to network */
+    ewf_platform_sleep(3 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+    // Set the SIM PIN
+    if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
+    {
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
+
+        EWF_LOG("Enter while(1) loop to stop program execution.\n");
+        while(1);
+    }
+
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, EWF_ADAPTER_RENESAS_NETWORK_REGISTER_TIMEOUT)))
+    {
+        EWF_LOG("[ERROR][Failed to register to network.]\n");
+        return;
+    }
+
+    // Activated the PDP context
+    if (ewf_result_failed(result = ewf_adapter_modem_packet_service_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
+    {
+        EWF_LOG_ERROR("Failed to activate the PDP context: ewf_result %d.\n", result);
+        // continue despite the error
+    }
+
+    // Call the NetX Duo test example
+    if (ewf_result_failed(result = ewf_example_netx_duo_test(adapter_ptr)))
+    {
+        EWF_LOG_ERROR("The NetX Duo test example failed, ewf_result %d.\n", result);
+        while(1);
+    }
+
+    EWF_LOG("Done!\n");
+
+    // Stay here forever.
+    while (1)
+    {
+        EWF_LOG(".");
+        ewf_platform_sleep(EWF_PLATFORM_TICKS_PER_SECOND);
+    }
+}

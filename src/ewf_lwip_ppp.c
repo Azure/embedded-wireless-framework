@@ -18,10 +18,13 @@
 /**************************************************************************/
 /**************************************************************************/
 
+#include "ewf.h"
+
+#ifdef EWF_LWIP_INCLUDED
+
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "ewf.h"
 #include "ewf_adapter.h"
 #include "ewf_lwip_ppp.h"
 
@@ -250,3 +253,7 @@ ewf_result ewf_interface_data_mode_ppp_byte_receive_callback(ewf_interface* inte
 
     return EWF_RESULT_OK;
 }
+
+#endif
+
+

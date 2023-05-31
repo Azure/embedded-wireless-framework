@@ -10,7 +10,6 @@
 #include "ewf_allocator_threadx.h"
 #include "ewf_interface_win32_com.h"
 #include "ewf_adapter_quectel_bg95.h"
-#include "ewf_lib.h"
 #include "ewf_example.config.h"
 
 /* The thread */
@@ -22,7 +21,7 @@ static ULONG thread_stack[THREAD_STACK_SIZE / sizeof(ULONG)];
 /**
  *  @brief The application entry point, initialize the hardware and start ThreadX
  */
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
     /* Enter the ThreadX kernel.  */
     tx_kernel_enter();
@@ -34,7 +33,7 @@ int main(int argc, char ** argv)
 /**
  *  @brief Define what the initial ThreadX system looks like.
  */
-void tx_application_define(void *first_unused_memory)
+void tx_application_define(void* first_unused_memory)
 {
     UINT status;
 

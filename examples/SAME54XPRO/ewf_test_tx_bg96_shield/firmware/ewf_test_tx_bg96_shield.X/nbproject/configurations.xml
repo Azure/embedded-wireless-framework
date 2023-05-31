@@ -312,7 +312,6 @@
             <itemPath>../../../../../src/examples/ewf_example_certs_basic_quectel_bg95.c</itemPath>
             <itemPath>../../../../../src/examples/ewf_example_certs_basic_quectel_bg96.c</itemPath>
             <itemPath>../../../../../src/examples/ewf_example_certs_basic_quectel_common.c</itemPath>
-            <itemPath>../../../../../src/examples/ewf_example_certs_basic_renesas_ryz014.c</itemPath>
             <itemPath>../../../../../src/examples/ewf_example_netx_duo_test.c</itemPath>
             <itemPath>../../../../../src/examples/ewf_example_telemetry.c</itemPath>
             <itemPath>../../../../../src/examples/ewf_example_telemetry_basic.c</itemPath>
@@ -358,24 +357,6 @@
           <itemPath>../../../../../src/ewf_adapter_api_tls_basic.h</itemPath>
           <itemPath>../../../../../src/ewf_adapter_api_udp.c</itemPath>
           <itemPath>../../../../../src/ewf_adapter_api_udp.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_api_urc.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_api_wifi_ap.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_api_wifi_ap.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_api_wifi_station.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_api_wifi_station.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_common.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_common.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_common_control.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_common_info.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_common_urc.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_esp8266.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_esp8266.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_esp8285.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_esp8285.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_wroom_02.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_espressif_wroom_02.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_linux_socket.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_mqtt_basic.h</itemPath>
           <itemPath>../../../../../src/ewf_adapter_quectel_bg95.c</itemPath>
           <itemPath>../../../../../src/ewf_adapter_quectel_bg95.h</itemPath>
           <itemPath>../../../../../src/ewf_adapter_quectel_bg96.c</itemPath>
@@ -390,61 +371,17 @@
           <itemPath>../../../../../src/ewf_adapter_quectel_common_tls_basic.c</itemPath>
           <itemPath>../../../../../src/ewf_adapter_quectel_common_ufs.c</itemPath>
           <itemPath>../../../../../src/ewf_adapter_quectel_common_urc.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_renesas_ryz014.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_renesas_ryz014.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_renesas_ryz014_control.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_renesas_ryz014_info.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_renesas_ryz014_internet.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_renesas_ryz014_mqtt_basic.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_renesas_ryz014_nvm.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_renesas_ryz014_tls_basic.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_renesas_ryz014_urc.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_seeed_lora_e5.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_seeed_lora_e5.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_sequans.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_sequans.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_common.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_common.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_common_control.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_common_info.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_common_urc.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_sim7000.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_sim7000.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_sim868.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_sim868.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_sim900.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_simcom_sim900.h</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_winsock2.c</itemPath>
-          <itemPath>../../../../../src/ewf_adapter_winsock2.h</itemPath>
           <itemPath>../../../../../src/ewf_allocator.c</itemPath>
           <itemPath>../../../../../src/ewf_allocator.h</itemPath>
-          <itemPath>../../../../../src/ewf_allocator_c_heap.c</itemPath>
-          <itemPath>../../../../../src/ewf_allocator_c_heap.h</itemPath>
           <itemPath>../../../../../src/ewf_allocator_memory_pool.c</itemPath>
           <itemPath>../../../../../src/ewf_allocator_memory_pool.h</itemPath>
-          <itemPath>../../../../../src/ewf_allocator_netx.c</itemPath>
-          <itemPath>../../../../../src/ewf_allocator_netx.h</itemPath>
           <itemPath>../../../../../src/ewf_allocator_threadx.c</itemPath>
           <itemPath>../../../../../src/ewf_allocator_threadx.h</itemPath>
           <itemPath>../../../../../src/ewf_ids.h</itemPath>
           <itemPath>../../../../../src/ewf_interface.c</itemPath>
           <itemPath>../../../../../src/ewf_interface.h</itemPath>
-          <itemPath>../../../../../src/ewf_interface_gpio_bb.c</itemPath>
-          <itemPath>../../../../../src/ewf_interface_linux.c</itemPath>
-          <itemPath>../../../../../src/ewf_interface_lpc_uart.c</itemPath>
-          <itemPath>../../../../../src/ewf_interface_lpc_uart.h</itemPath>
-          <itemPath>../../../../../src/ewf_interface_microchip_pic_uart.c</itemPath>
-          <itemPath>../../../../../src/ewf_interface_microchip_pic_uart.h</itemPath>
           <itemPath>../../../../../src/ewf_interface_microchip_sam_uart.c</itemPath>
           <itemPath>../../../../../src/ewf_interface_microchip_sam_uart.h</itemPath>
-          <itemPath>../../../../../src/ewf_interface_ra_uart.c</itemPath>
-          <itemPath>../../../../../src/ewf_interface_ra_uart.h</itemPath>
-          <itemPath>../../../../../src/ewf_interface_rx_uart.c</itemPath>
-          <itemPath>../../../../../src/ewf_interface_rx_uart.h</itemPath>
-          <itemPath>../../../../../src/ewf_interface_stm32_uart.c</itemPath>
-          <itemPath>../../../../../src/ewf_interface_stm32_uart.h</itemPath>
-          <itemPath>../../../../../src/ewf_interface_win32_com.c</itemPath>
-          <itemPath>../../../../../src/ewf_interface_win32_com.h</itemPath>
           <itemPath>../../../../../src/ewf_lib.c</itemPath>
           <itemPath>../../../../../src/ewf_lib.h</itemPath>
           <itemPath>../../../../../src/ewf_middleware_netxduo.c</itemPath>
@@ -452,14 +389,17 @@
           <itemPath>../../../../../src/ewf_platform.h</itemPath>
           <itemPath>../../../../../src/ewf_platform_bare_metal.c</itemPath>
           <itemPath>../../../../../src/ewf_platform_bare_metal.h</itemPath>
-          <itemPath>../../../../../src/ewf_platform_c11.c</itemPath>
-          <itemPath>../../../../../src/ewf_platform_freertos.c</itemPath>
-          <itemPath>../../../../../src/ewf_platform_freertos.h</itemPath>
-          <itemPath>../../../../../src/ewf_platform_pthread.c</itemPath>
           <itemPath>../../../../../src/ewf_platform_threadx.c</itemPath>
           <itemPath>../../../../../src/ewf_platform_threadx.h</itemPath>
-          <itemPath>../../../../../src/ewf_platform_win32.c</itemPath>
-          <itemPath>../../../../../src/ewf_platform_win32.h</itemPath>
+          <itemPath>../../../../../src/ewf_adapter_api_wifi_ap.c</itemPath>
+          <itemPath>../../../../../src/ewf_adapter_api_wifi_ap.h</itemPath>
+          <itemPath>../../../../../src/ewf_adapter_api_wifi_station.c</itemPath>
+          <itemPath>../../../../../src/ewf_adapter_api_wifi_station.h</itemPath>
+          <itemPath>../../../../../src/ewf_adapter_quectel_common_tokenizer.c</itemPath>
+          <itemPath>../../../../../src/ewf_tokenizer.c</itemPath>
+          <itemPath>../../../../../src/ewf_tokenizer.h</itemPath>
+          <itemPath>../../../../../src/ewf_tokenizer_basic.c</itemPath>
+          <itemPath>../../../../../src/ewf_tokenizer_basic.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f2" displayName="threadx" projectFiles="true">
@@ -1445,24 +1385,6 @@
         <C32Global>
         </C32Global>
       </item>
-      <item path="../../../../../src/ewf_adapter_api_urc.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
       <item path="../../../../../src/ewf_adapter_api_wifi_ap.c"
             ex="true"
             overriding="false">
@@ -1518,240 +1440,6 @@
         </C32Global>
       </item>
       <item path="../../../../../src/ewf_adapter_api_wifi_station.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_common.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_common.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_common_control.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_common_info.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_common_urc.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_esp8266.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_esp8266.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_esp8285.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_esp8285.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_wroom_02.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_espressif_wroom_02.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_linux_socket.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_mqtt_basic.h"
             ex="true"
             overriding="false">
         <C32>
@@ -1985,6 +1673,24 @@
         <C32Global>
         </C32Global>
       </item>
+      <item path="../../../../../src/ewf_adapter_quectel_common_tokenizer.c"
+            ex="true"
+            overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
       <item path="../../../../../src/ewf_adapter_quectel_common_ufs.c"
             ex="true"
             overriding="false">
@@ -2004,474 +1710,6 @@
         </C32Global>
       </item>
       <item path="../../../../../src/ewf_adapter_quectel_common_urc.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_renesas_ryz014.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_renesas_ryz014.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_renesas_ryz014_control.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_renesas_ryz014_info.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_renesas_ryz014_internet.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_renesas_ryz014_mqtt_basic.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_renesas_ryz014_nvm.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_renesas_ryz014_tls_basic.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_renesas_ryz014_urc.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_seeed_lora_e5.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_seeed_lora_e5.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_sequans.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_sequans.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_common.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_common.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_common_control.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_common_info.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_common_urc.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_sim7000.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_sim7000.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_sim868.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_sim868.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_sim900.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_simcom_sim900.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_winsock2.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_adapter_winsock2.h"
             ex="true"
             overriding="false">
         <C32>
@@ -2521,42 +1759,6 @@
         <C32Global>
         </C32Global>
       </item>
-      <item path="../../../../../src/ewf_allocator_c_heap.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_allocator_c_heap.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
       <item path="../../../../../src/ewf_allocator_memory_pool.c"
             ex="true"
             overriding="false">
@@ -2576,42 +1778,6 @@
         </C32Global>
       </item>
       <item path="../../../../../src/ewf_allocator_memory_pool.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_allocator_netx.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_allocator_netx.h"
             ex="true"
             overriding="false">
         <C32>
@@ -2713,114 +1879,6 @@
         <C32Global>
         </C32Global>
       </item>
-      <item path="../../../../../src/ewf_interface_gpio_bb.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_linux.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_lpc_uart.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_lpc_uart.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_microchip_pic_uart.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_microchip_pic_uart.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
       <item path="../../../../../src/ewf_interface_microchip_sam_uart.c"
             ex="true"
             overriding="false">
@@ -2840,150 +1898,6 @@
         </C32Global>
       </item>
       <item path="../../../../../src/ewf_interface_microchip_sam_uart.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_ra_uart.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_ra_uart.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_rx_uart.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_rx_uart.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_stm32_uart.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_stm32_uart.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_win32_com.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_interface_win32_com.h"
             ex="true"
             overriding="false">
         <C32>
@@ -3121,76 +2035,6 @@
         <C32Global>
         </C32Global>
       </item>
-      <item path="../../../../../src/ewf_platform_c11.c" ex="true" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_platform_freertos.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_platform_freertos.h"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/ewf_platform_pthread.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
       <item path="../../../../../src/ewf_platform_threadx.c"
             ex="true"
             overriding="false">
@@ -3227,7 +2071,39 @@
         <C32Global>
         </C32Global>
       </item>
-      <item path="../../../../../src/ewf_platform_win32.c"
+      <item path="../../../../../src/ewf_tokenizer.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../../../../../src/ewf_tokenizer.h" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../../../../../src/ewf_tokenizer_basic.c"
             ex="true"
             overriding="false">
         <C32>
@@ -3245,7 +2121,7 @@
         <C32Global>
         </C32Global>
       </item>
-      <item path="../../../../../src/ewf_platform_win32.h"
+      <item path="../../../../../src/ewf_tokenizer_basic.h"
             ex="true"
             overriding="false">
         <C32>
@@ -3300,24 +2176,6 @@
         </C32Global>
       </item>
       <item path="../../../../../src/examples/ewf_example_certs_basic_quectel_common.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="../../../../../src/examples/ewf_example_certs_basic_renesas_ryz014.c"
             ex="true"
             overriding="false">
         <C32>

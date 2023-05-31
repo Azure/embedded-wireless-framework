@@ -43,6 +43,10 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_control.h
@@ -51,6 +55,8 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_info.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tls.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tls.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tls_basic.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tls_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_dtls.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_dtls.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_tcp.h
@@ -76,6 +82,9 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz024a.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_ryz024a.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_tokenizer.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_control.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_info.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_renesas_common_urc.c

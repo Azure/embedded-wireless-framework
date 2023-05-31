@@ -21,6 +21,10 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_interface_win32_com.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_tokenizer_basic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_control.h
@@ -56,6 +60,15 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_api_modem_sms.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_exs82_w.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_exs82_w.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_common.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_common.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_common_tokenizer.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_common_control.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_common_urc.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_common_info.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_common_context.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_common_ffs.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_adapter_thales_common_internet.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/ewf_middleware_netxduo.c
     ewf.config.h
     ewf_example.config.h
@@ -73,5 +86,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE netxduo)
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../src
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/examples
     ${CMAKE_CURRENT_SOURCE_DIR}/../netxduo/addons/azure_iot/azure-sdk-for-c/sdk/inc)

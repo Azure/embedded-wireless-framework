@@ -9,6 +9,7 @@
 /*                                                                        */
 /**************************************************************************/
 
+
 /**************************************************************************/
 /**                                                                       */
 /** NetX Component                                                        */
@@ -22,8 +23,12 @@
 
 /* Indicate that driver source is being compiled.  */
 
-#include "ewf_middleware_netxduo.h"
 #include "ewf.h"
+
+/* EWF enabled to use with Azure RTOS NetX */
+#if (EWF_CONFIG_AZURE_RTOS_NETX == 1)
+
+#include "ewf_middleware_netxduo.h"
 #include "ewf_adapter.h"
 
 #ifndef EWF_NX_INTERFACE_TYPE
@@ -54,7 +59,7 @@
 #endif /* NX_DRIVER_RECEIVE_QUEUE_SIZE */
 
 #ifndef NX_DRIVER_STACK_SIZE
-#define NX_DRIVER_STACK_SIZE                    1024
+#define NX_DRIVER_STACK_SIZE                    4096
 #endif /* NX_DRIVER_STACK_SIZE  */
 
 /* Interval to receive packets when there is no packet. The default value is 100 ticks which is 1s.  */
@@ -1220,7 +1225,7 @@ static bool _nxd_address_to_string(NXD_ADDRESS* address_ptr, CHAR* buffer_ptr, U
             (UINT)(address_ptr->nxd_ip_address.v4 >> 8) & 0xFF,
             (UINT)address_ptr->nxd_ip_address.v4 & 0xFF);
         break;
-
+#ifndef NX_DISABLE_IPV6
     case NX_IP_VERSION_V6:
         snprintf(buffer_ptr, buffer_size, "%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x",
             (UINT)(address_ptr->nxd_ip_address.v6[0] >> 16) & 0xFFFF,
@@ -1232,7 +1237,7 @@ static bool _nxd_address_to_string(NXD_ADDRESS* address_ptr, CHAR* buffer_ptr, U
             (UINT)(address_ptr->nxd_ip_address.v6[3] >> 16) & 0xFFFF,
             (UINT)(address_ptr->nxd_ip_address.v6[3]) & 0xFFFF);
         break;
-
+#endif
     default:
         snprintf(buffer_ptr, buffer_size, "UNKNOWN");
         return false;
@@ -1904,7 +1909,7 @@ static UINT  _nx_driver_hardware_initialize(NX_IP_DRIVER *driver_req_ptr)
     /* The priority of network thread is lower than IP thread.  */
     status = tx_thread_create(&nx_driver_thread, "Driver Thread", _nx_driver_thread_entry, 0,
                               nx_driver_thread_stack, NX_DRIVER_STACK_SIZE,
-                              priority + 1, priority + 1,
+                              priority - 1, priority - 1,
                               TX_NO_TIME_SLICE, TX_DONT_START);
 
     /* Return success!  */
@@ -2122,3 +2127,5 @@ static UINT _nx_driver_hardware_capability_set(NX_IP_DRIVER *driver_req_ptr)
 #endif /* NX_ENABLE_INTERFACE_CAPABILITY */
 
 /****** DRIVER SPECIFIC ****** Start of part/vendor specific internal driver functions.  */
+#endif
+

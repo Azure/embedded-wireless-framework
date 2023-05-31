@@ -8,8 +8,10 @@
  ****************************************************************************/
 
 #include "ewf_adapter_renesas_common.h"
-#include "ewf_platform.h"
-#include "ewf_lib.h"
+#include "ewf_tokenizer_basic.h"
+
+#include <string.h>
+#include <stdlib.h>
 
 /******************************************************************************
  *
@@ -163,16 +165,14 @@ ewf_result ewf_adapter_renesas_common_internet_urc_callback(ewf_interface* inter
                     {
                         switch (internet_socket_ptr->type)
                         {
+                        case ewf_adapter_renesas_common_socket_service_type_tcp:
+                        // fall through
+                        // no break
                         case ewf_adapter_renesas_common_socket_service_type_tcp_listener:
                         {
                             internet_socket_ptr->recv = true;
                             internet_socket_ptr->conn = true;
                             internet_socket_ptr->conn_error = false;
-                        }
-                        // fall through
-                        // no break
-                        case ewf_adapter_renesas_common_socket_service_type_tcp:
-                        {
                             ewf_socket_tcp* socket_ptr = (ewf_socket_tcp*)internet_socket_ptr->socket_ptr;
                             if (socket_ptr->receive_callback)
                             {
@@ -180,16 +180,14 @@ ewf_result ewf_adapter_renesas_common_internet_urc_callback(ewf_interface* inter
                             }
                         }
                         break;
+                        case ewf_adapter_renesas_common_socket_service_type_udp:
+                        // fall through
+                        // no break
                         case ewf_adapter_renesas_common_socket_service_type_udp_listener:
                         {
                             internet_socket_ptr->recv = true;
                             internet_socket_ptr->conn = true;
                             internet_socket_ptr->conn_error = false;
-                        }
-                        // fall through
-                        // no break
-                        case ewf_adapter_renesas_common_socket_service_type_udp:
-                        {
                             ewf_socket_udp* socket_ptr = (ewf_socket_udp*)internet_socket_ptr->socket_ptr;
                             if (socket_ptr->receive_callback)
                             {
@@ -207,11 +205,12 @@ ewf_result ewf_adapter_renesas_common_internet_urc_callback(ewf_interface* inter
             }
         }
         {
-            const char match_str[] = "H:";
+            const char match_str[] = "H: ";
             if (ewfl_str_starts_with(urc_str, match_str))
             {
                 char* parse_str = urc_str + ewfl_str_length(match_str);
                 uint32_t socket_connect_id = (uint32_t)atoi(parse_str);
+                adapter_renesas_common_ptr->internet_socket_pool[socket_connect_id - 1].conn = false;
                 adapter_renesas_common_ptr->internet_socket_pool[socket_connect_id - 1].conn_error = true;
                 ewf_adapter_renesas_common_internet_socket* internet_socket_ptr = &(adapter_renesas_common_ptr->internet_socket_pool[socket_connect_id - 1]);
 
@@ -422,17 +421,23 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
     char const* buffer_length_cstr = ewfl_unsigned_to_str(buffer_length, buffer_length_str, sizeof(buffer_length_str));
 
     {
-        char tokenizer_pattern1_str[] = "\r\n> ";
-        ewf_interface_tokenizer_pattern tokenizer_pattern1 = {
+        ewf_tokenizer_basic_pattern* tokenizer_basic_command_response_pattern_saved_ptr = NULL;
+
+        char tokenizer_pattern_str[] = "\r\n> ";
+        ewf_tokenizer_basic_pattern tokenizer_pattern = {
             NULL,
-            tokenizer_pattern1_str,
-            sizeof(tokenizer_pattern1_str) - 1,
+            tokenizer_pattern_str,
+            sizeof(tokenizer_pattern_str) - 1,
             false,
             NULL,
             NULL,
         };
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern1))) return result;
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_get(tokenizer_data_ptr, &tokenizer_basic_command_response_pattern_saved_ptr))) return result;
+
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, &tokenizer_pattern))) return result;
 
         ewf_result result_send_command;
         ewf_result result_verify_response;
@@ -446,10 +451,10 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
 
         if (ewf_result_succeeded(result_send_command))
         {
-            result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern1_str);
+            result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str);
         }
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, tokenizer_basic_command_response_pattern_saved_ptr))) return result;
 
         if (ewf_result_failed(result_send_command))
         {
@@ -463,11 +468,11 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
     }
 
     {
-        char tokenizer_pattern2_str[] = "\r\nOK\r\n";
-        ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
+        char tokenizer_pattern_str[] = "\r\nOK\r\n";
+        ewf_tokenizer_basic_pattern tokenizer_pattern = {
             NULL,
-            tokenizer_pattern2_str,
-            sizeof(tokenizer_pattern2_str) - 1,
+            tokenizer_pattern_str,
+            sizeof(tokenizer_pattern_str) - 1,
             false,
             NULL,
             NULL,
@@ -476,22 +481,24 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
         ewf_result result_send = EWF_RESULT_OK;
         ewf_result result_verify_response = EWF_RESULT_OK;
 
-        ewf_interface_tokenizer_pattern* saved_tokenizer_pattern_ptr = NULL;
-        result = ewf_interface_tokenizer_command_response_end_pattern_get(interface_ptr, &saved_tokenizer_pattern_ptr);
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        ewf_tokenizer_basic_pattern* saved_tokenizer_pattern_ptr = NULL;
+        result = ewf_tokenizer_basic_command_response_end_pattern_get(tokenizer_data_ptr, &saved_tokenizer_pattern_ptr);
         if (ewf_result_failed(result)) return result;
 
-        result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, &tokenizer_pattern2);
+        result = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, &tokenizer_pattern);
         if (ewf_result_failed(result)) return result;
 
         result_send = ewf_interface_send(interface_ptr, (const uint8_t*)buffer_ptr, buffer_length);
 
         if (ewf_result_succeeded(result_send))
         {
-            result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern2_str);
+            result_verify_response = ewf_interface_verify_response(interface_ptr, tokenizer_pattern_str);
         }
 
         /* Restore the previously saved tokenizer pattern */
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_end_pattern_set(interface_ptr, saved_tokenizer_pattern_ptr)))
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, saved_tokenizer_pattern_ptr)))
         {
             return result;
         }
@@ -517,6 +524,97 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_send(ewf_adapter* 
 #endif
 
     return EWF_RESULT_OK;
+}
+
+
+struct _ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state
+{
+    ewf_interface* interface_ptr;
+    bool prefix_matches;
+    bool parsed;
+    uint32_t read_actual_length;
+    uint32_t total_expected_length;
+    uint8_t* data_ptr;
+};
+
+static bool _ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function(const uint8_t* buffer_ptr, uint32_t buffer_length, const ewf_tokenizer_basic_pattern* pattern_ptr, bool* stop_ptr)
+{
+    if (!buffer_ptr) return false;
+    if (!buffer_length) return false;
+    if (!pattern_ptr) return false;
+    if (!stop_ptr) return false;
+
+    struct _ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state* state_ptr =
+        (struct _ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state*)pattern_ptr->data_ptr;
+
+    /* Define the message prefix and calculate its length */
+    const uint8_t prefix_str[] = "\r\n+SQNSRECV: ";
+    const uint32_t prefix_length = sizeof(prefix_str) - 1;
+
+    /* If the buffer is smaller than the prefix, then it is not yet for us */
+    if (buffer_length < prefix_length)
+    {
+        return false;
+    }
+
+    /* If the buffer contains as many characters as the prefix, then look if it is for us */
+    if (buffer_length == prefix_length)
+    {
+        if (ewfl_buffer_equals_buffer(buffer_ptr, prefix_str, prefix_length))
+        {
+            state_ptr->prefix_matches = true;
+            return false;
+        }
+    }
+
+    /* At this point the buffer it is longer than the prefix */
+
+    /* We did not match the prefix in previous runs, just ignore the rest of the incoming characters */
+    if (!state_ptr->prefix_matches)
+    {
+        return false;
+    }
+    else
+    {
+        /* This is for us, stop parsing other tokens further down the list */
+        *stop_ptr = true;
+    }
+
+    /* At this point we have a matching prefix */
+
+    /* If the message parameters were not yet parsed */
+    if (!state_ptr->parsed)
+    {
+        /* and we have a whole line, then parse it now */
+        if (buffer_ptr[buffer_length - 2] == '\r' && buffer_ptr[buffer_length - 1] == '\n')
+        {
+            /* The message is complete, try to parse it */
+            char* p = NULL;
+            p = (char *)buffer_ptr + (sizeof(prefix_str) - 1) + 2; /* skip characters until actual receive length */
+            state_ptr->read_actual_length = ewfl_str_to_unsigned(p);
+
+            state_ptr->total_expected_length = buffer_length + state_ptr->read_actual_length + 2 + 6; /* counting lenght until end of "\r\n\r\nOK\r\n" */
+            state_ptr->data_ptr = (uint8_t*)buffer_ptr + buffer_length;
+
+            state_ptr->parsed = true;
+        }
+
+        return false;
+    }
+
+    /* From this point we parsed data */
+
+    /* Is the message complete? */
+    if ((buffer_length) >= state_ptr->total_expected_length)
+    {
+        /* Signal the match */
+        return true;
+    }
+    else
+    {
+        /* Not yet matched */
+        return false;
+    }
 }
 
 static ewf_result _ewf_adapter_renesas_common_internet_socket_receive(
@@ -573,7 +671,7 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_receive(
     uint32_t response_length = 0;
 
     {
-        uint32_t t = (wait) ? (t = (60 * EWF_PLATFORM_TICKS_PER_SECOND)) : 1;
+        uint32_t t = (wait) ? (interface_ptr->default_timeout) : 1;
 
         ewf_interface_poll(interface_ptr);
 
@@ -586,26 +684,32 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_receive(
             uint32_t unread_length = 0;
             uint32_t total_sent_not_acknowledged = 0;
 
-            if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+SQNSI=", connection_id_cstr, "\r", NULL))) return result;
+            result = ewf_interface_send_commands(interface_ptr, "AT+SQNSI=", connection_id_cstr, "\r", NULL);
+            if (ewf_result_failed(result))
+            {
+                return result;
+            }
 
+            response_ptr = NULL;
             result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 200);
             if (ewf_result_succeeded(result))
             {
+                unread_length = 0;
                 const char match_str[] = "\r\n+SQNSI: ";
                 if (ewfl_str_starts_with((char*)response_ptr, match_str))
                 {
                     char* parse_str = (char*)(response_ptr + ewfl_str_length(match_str));
                     socket_id = ewfl_str_to_unsigned(parse_str);
-                    while (*parse_str && isdigit((unsigned char)*parse_str)) parse_str++;
+                    while (*parse_str && ewfl_char_is_digit((unsigned char)*parse_str)) parse_str++;
                     parse_str++; /* Skip ',' */
                     total_sent_length = ewfl_str_to_unsigned(parse_str);
-                    while (*parse_str && isdigit((unsigned char)*parse_str)) parse_str++;
+                    while (*parse_str && ewfl_char_is_digit((unsigned char)*parse_str)) parse_str++;
                     parse_str++; /* Skip ',' */
                     total_receive_length = ewfl_str_to_unsigned(parse_str);
-                    while (*parse_str && isdigit((unsigned char)*parse_str)) parse_str++;
+                    while (*parse_str && ewfl_char_is_digit((unsigned char)*parse_str)) parse_str++;
                     parse_str++; /* Skip ',' */
                     unread_length = ewfl_str_to_unsigned(parse_str);
-                    while (*parse_str && isdigit((unsigned char)*parse_str)) parse_str++;
+                    while (*parse_str && ewfl_char_is_digit((unsigned char)*parse_str)) parse_str++;
                     parse_str++; /* Skip ',' */
                     total_sent_not_acknowledged = ewfl_str_to_unsigned(parse_str);
 
@@ -632,15 +736,16 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_receive(
 
             ewf_interface_poll(interface_ptr);
             ewf_platform_sleep(1);
+
         }
 
         /* Did the operation timed-out? */
         if (!t)
         {
-            if (wait)
-            {
-                EWF_LOG_ERROR("Timeout while waiting for receive!\n");
-            }
+        	if (wait)
+        	{
+        		EWF_LOG_ERROR("Timeout while waiting for receive!\n");
+        	}
             return EWF_RESULT_NO_DATA_RECEIVED;
         }
     }
@@ -656,60 +761,116 @@ static ewf_result _ewf_adapter_renesas_common_internet_socket_receive(
     char read_length_str[8] = {0};
     char* read_length_cstr = ewfl_unsigned_to_str(read_length, read_length_str, sizeof(read_length_str));
 
-    result = ewf_interface_send_commands(
-        interface_ptr,
-        "AT+SQNSRECV=",
-        connection_id_cstr, ",",
-        read_length_cstr, "\r",
-        NULL);
-    if (ewf_result_failed(result)) return result;
+    struct _ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state = { 0 };
+    ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state.interface_ptr = interface_ptr;
 
-    result = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, 500);
-    if (ewf_result_failed(result)) return result;
-
-    /* Terminate the string to make parsing safer and faster */
-    response_ptr[response_length] = 0;
-
-    /* Parse the response */
     {
-        char data_read_response_str[] = "\r\n+SQNSRECV: ";
-        uint32_t read_actual_length = 0;
-
-        char* read_actual_length_str = NULL;
-
-        char* p = NULL;
-
-        if (!ewfl_buffer_equals_buffer((char* )response_ptr, data_read_response_str, sizeof(data_read_response_str) - 1))
+        ewf_tokenizer_basic_pattern ewf_adapter_renesas_common_sqnsrev_message_tokenizer_pattern =
         {
-            result = EWF_RESULT_UNEXPECTED_RESPONSE;
-        }
-        else
-        {
-            p = (char *) (response_ptr + (sizeof(data_read_response_str) - 1) + 2) /* skip characters until actual receive length */;
-            read_actual_length_str = p;
-            read_actual_length = ewfl_str_to_unsigned(read_actual_length_str);
-        }
+            NULL,
+            NULL,
+            0,
+            false,
+            _ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function,
+            &ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state
+        };
 
-        if (ewf_result_succeeded(result))
+        ewf_tokenizer_basic_data* tokenizer_data_ptr = (ewf_tokenizer_basic_data*)interface_ptr->tokenizer_ptr->data_ptr;
+
+        ewf_tokenizer_basic_pattern* tokenizer_basic_message_pattern_saved_ptr = NULL;
+        ewf_tokenizer_basic_pattern* tokenizer_basic_command_response_pattern_saved_ptr = NULL;
+        ewf_tokenizer_basic_pattern* tokenizer_basic_command_response_end_pattern_saved_ptr = NULL;
+        ewf_tokenizer_basic_pattern* tokenizer_basic_urc_pattern_saved_ptr = NULL;
+
+        ewf_result ewf_result_send_command = EWF_RESULT_OK;
+        ewf_result ewf_result_receive_response = EWF_RESULT_OK;
+
+        if (ewf_result_failed(result = ewf_tokenizer_basic_message_pattern_get(tokenizer_data_ptr, &tokenizer_basic_message_pattern_saved_ptr))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_pattern_get(tokenizer_data_ptr, &tokenizer_basic_command_response_pattern_saved_ptr))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_command_response_end_pattern_get(tokenizer_data_ptr, &tokenizer_basic_command_response_end_pattern_saved_ptr))) return result;
+        if (ewf_result_failed(result = ewf_tokenizer_basic_urc_pattern_get(tokenizer_data_ptr, &tokenizer_basic_urc_pattern_saved_ptr))) return result;
+
+        if (ewf_result_succeeded(result = ewf_tokenizer_basic_message_pattern_set(tokenizer_data_ptr, &ewf_adapter_renesas_common_sqnsrev_message_tokenizer_pattern))&&
+            ewf_result_succeeded(result = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, NULL))&&
+            ewf_result_succeeded(result = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, NULL))&&
+            ewf_result_succeeded(result = ewf_tokenizer_basic_urc_pattern_set(tokenizer_data_ptr, NULL)))
         {
-            p = ewfl_find_chars_with_terms(p, "\r", NULL);
-            if (!p) result = EWF_RESULT_UNEXPECTED_RESPONSE;
-            else
+            ewf_result_send_command = ewf_interface_send_commands(
+                interface_ptr,
+                "AT+SQNSRECV=",
+                connection_id_cstr, ",",
+                read_length_cstr, "\r",
+                NULL);
+
+            if (ewf_result_succeeded(ewf_result_send_command))
             {
-                *p = 0; p++;
-                if (*p != '\n') result = EWF_RESULT_UNEXPECTED_RESPONSE;
-                else { p++; }
+                ewf_result_receive_response = ewf_interface_receive_response(interface_ptr, &response_ptr, &response_length, interface_ptr->default_timeout);
+            }
+
+            ewf_result result_restore_message_pattern = ewf_tokenizer_basic_message_pattern_set(tokenizer_data_ptr, tokenizer_basic_message_pattern_saved_ptr);
+            ewf_result result_restore_command_response_pattern = ewf_tokenizer_basic_command_response_pattern_set(tokenizer_data_ptr, tokenizer_basic_command_response_pattern_saved_ptr);
+            ewf_result result_restore_command_response_end_pattern  = ewf_tokenizer_basic_command_response_end_pattern_set(tokenizer_data_ptr, tokenizer_basic_command_response_end_pattern_saved_ptr);
+            ewf_result result_restore_urc_pattern = ewf_tokenizer_basic_urc_pattern_set(tokenizer_data_ptr, tokenizer_basic_urc_pattern_saved_ptr);
+
+            if (ewf_result_failed(result_restore_message_pattern))
+            {
+                *buffer_length_ptr = 0;
+                if (ewf_result_succeeded(ewf_result_receive_response))
+                {
+                    ewf_interface_release(interface_ptr, response_ptr);
+                }
+                return result_restore_message_pattern;
+            }
+            if (ewf_result_failed(result_restore_command_response_pattern))
+            {
+                *buffer_length_ptr = 0;
+                if (ewf_result_succeeded(ewf_result_receive_response))
+                {
+                    ewf_interface_release(interface_ptr, response_ptr);
+                }
+                return result_restore_command_response_pattern;
+            }
+            if (ewf_result_failed(result_restore_command_response_end_pattern))
+            {
+                *buffer_length_ptr = 0;
+                if (ewf_result_succeeded(ewf_result_receive_response))
+                {
+                    ewf_interface_release(interface_ptr, response_ptr);
+                }
+                return result_restore_command_response_end_pattern;
+            }
+            if (ewf_result_failed(result_restore_urc_pattern))
+            {
+                *buffer_length_ptr = 0;
+                if (ewf_result_succeeded(ewf_result_receive_response))
+                {
+                    ewf_interface_release(interface_ptr, response_ptr);
+                }
+                return result_restore_urc_pattern;
             }
         }
 
-        if (ewf_result_succeeded(result))
+        if (ewf_result_failed(ewf_result_send_command))
         {
-            *buffer_length_ptr = (*buffer_length_ptr >= read_actual_length) ? read_actual_length : *buffer_length_ptr;
-            memcpy(buffer_ptr, p, *buffer_length_ptr);
+            *buffer_length_ptr = 0;
+            return ewf_result_send_command;
+        }
+
+        if (ewf_result_failed(ewf_result_receive_response))
+        {
+            *buffer_length_ptr = 0;
+            return ewf_result_receive_response;
         }
     }
 
-    ewf_interface_release(interface_ptr, response_ptr);
+    /* Copy the buffer */
+    memcpy(buffer_ptr, ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state.data_ptr, ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state.read_actual_length);
+
+    /* Feed the data length received back to calling application/driver */
+    *buffer_length_ptr = ewf_adapter_renesas_common_sqnsrecv_message_tokenizer_pattern_match_function_state.read_actual_length;
+
+    /* Release the buffer */
+    result = ewf_interface_release(interface_ptr, response_ptr);
 
     if (ewf_result_failed(result))
     {
@@ -858,7 +1019,7 @@ ewf_result ewf_adapter_renesas_common_tcp_accept(ewf_socket_tcp* socket_ptr,  ew
 
     ewf_result result;
 
-    if ((internet_socket_ptr->id = 0) || (EWF_ADAPTER_RENESAS_COMMON_INTERNET_SOCKET_POOL_SIZE < internet_socket_ptr->id))
+    if ((internet_socket_ptr->id == 0) || (EWF_ADAPTER_RENESAS_COMMON_INTERNET_SOCKET_POOL_SIZE < internet_socket_ptr->id))
     {
         EWF_LOG_ERROR("Invalid socket value.");
         return EWF_RESULT_INVALID_SOCKET;

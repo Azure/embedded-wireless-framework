@@ -356,7 +356,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_connect(ewf_adapter* adapter_pt
     timeout = 30 * EWF_PLATFORM_TICKS_PER_SECOND;
     while (--timeout)
     {
-        ewf_interface_receive_poll(interface_ptr);
+        ewf_interface_poll(interface_ptr);
         if (implementation_ptr->mqtt_basic_open)
         {
     EWF_LOG("connected\n");
@@ -432,7 +432,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_connect(ewf_adapter* adapter_pt
     timeout = 30 * EWF_PLATFORM_TICKS_PER_SECOND;
     while (--timeout)
     {
-        ewf_interface_receive_poll(interface_ptr);
+    	ewf_interface_poll(interface_ptr);
         if (implementation_ptr->mqtt_basic_conn)
         {
             break;
@@ -478,7 +478,7 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_disconnect(ewf_adapter* adapter
     timeout = 30 * EWF_PLATFORM_TICKS_PER_SECOND;
     while (--timeout)
     {
-        ewf_interface_receive_poll(interface_ptr);
+    	ewf_interface_poll(interface_ptr);
         if (implementation_ptr->mqtt_basic_conn == false) break;
         ewf_platform_sleep(1);
     }
@@ -552,36 +552,14 @@ ewf_result ewf_adapter_quectel_common_mqtt_basic_publish(ewf_adapter* adapter_pt
     uint32_t message_length = (message_cstr == NULL) ? 0 : strlen(message_cstr);
     if (message_length > 512) return EWF_RESULT_INVALID_FUNCTION_ARGUMENT;
 
-    {
-        char tokenizer_pattern2_str[] = "\r\n\r\n> ";
-        ewf_interface_tokenizer_pattern tokenizer_pattern2 = {
-            NULL,
-            tokenizer_pattern2_str ,
-            sizeof(tokenizer_pattern2_str) - 1,
-            false,
-        };
-        char tokenizer_pattern1_str[] = "\r\n> ";
-        ewf_interface_tokenizer_pattern tokenizer_pattern1 = {
-            &tokenizer_pattern2,
-            tokenizer_pattern1_str ,
-            sizeof(tokenizer_pattern1_str) - 1,
-            false,
-        };
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, &tokenizer_pattern1))) return result;
-        char message_length_str[6];
-        if (ewf_result_failed(result = ewf_interface_send_commands(interface_ptr, "AT+QMTPUB=0,0,0,0,\"", topic_cstr, "\",", ewfl_unsigned_to_str(message_length, message_length_str, sizeof(message_length_str)), "\r", NULL))) return result;
-        uint8_t* response_ptr = NULL;
-        if (ewf_result_failed(result = ewf_interface_get_response(interface_ptr, &response_ptr))) return result;
-        if (!ewfl_buffer_equals_buffer((uint8_t*)tokenizer_pattern1_str, response_ptr, sizeof(tokenizer_pattern1_str) - 1) &&
-        	!ewfl_buffer_equals_buffer((uint8_t*)tokenizer_pattern2_str, response_ptr, sizeof(tokenizer_pattern2_str) - 1))
-        {
-            ewf_interface_release(interface_ptr, response_ptr);
-            return EWF_RESULT_UNEXPECTED_RESPONSE;
-        }
-        ewf_interface_release(interface_ptr, response_ptr);
+    char message_length_str[6];
+    const char* message_length_cstr = ewfl_unsigned_to_str(message_length, message_length_str, sizeof(message_length_str));
 
-        if (ewf_result_failed(result = ewf_interface_tokenizer_command_response_pattern_set(interface_ptr, NULL))) return result;
-    }
+    if (ewf_result_failed(result = ewf_interface_send_commands_wait_for_prompt(
+        interface_ptr,
+        "\r\n> ",
+        "AT+QMTPUB=0,0,0,0,\"", topic_cstr, "\",", message_length_cstr, "\r", NULL)))
+            return result;
     if (ewf_result_failed(result = ewf_interface_send(interface_ptr, (const uint8_t*)message_cstr, message_length))) return result;
     if (ewf_result_failed(result = ewf_interface_verify_response(interface_ptr, "\r\nOK\r\n"))) return result;
 

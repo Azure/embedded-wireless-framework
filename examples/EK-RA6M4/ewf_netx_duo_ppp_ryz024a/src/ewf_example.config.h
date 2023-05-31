@@ -31,7 +31,7 @@ extern "C" {
 #define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_COUNT                    (12)
 
 /** @brief the size of each message allocator block */
-#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1500)
+#define EWF_CONFIG_MESSAGE_ALLOCATOR_BLOCK_SIZE                     (1600)
 
 /** @} *** group_example_configuration_allocator */
 
@@ -45,12 +45,19 @@ extern "C" {
 #define EWF_CONFIG_SIM_PIN                                          ("0000")
 
 /** @brief The SIM operator APN */
-#define EWF_CONFIG_APN                                              ("internet.telekom")
+#define EWF_CONFIG_SIM_APN                                          ("internet.telekom")
 
 /** @brief The modem context ID used */
 #define EWF_CONFIG_CONTEXT_ID                                       (1)
 
+void renesas_ryz024a_adapter_power_on();
+/** @brief The modem power on user function */
+#define EWF_ADAPTER_USER_POWER_ON                                   renesas_ryz024a_adapter_power_on
+
 /** @} *** group_example_configuration_modem */
+
+/** @brief Enable EWF usage with Azure RTOS NETX */
+#define EWF_CONFIG_AZURE_RTOS_NETX                                  (1)
 
 /************************************************************************//**
  * @}

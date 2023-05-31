@@ -38,17 +38,17 @@ extern ether_instance_ctrl_t g_ether0_ctrl;
 extern const ether_cfg_t g_ether0_cfg;
 
 #ifndef rm_netxduo_ether_callback
-void rm_netxduo_ether_callback(ether_callback_args_t * p_args);
+void rm_netxduo_ether_callback(ether_callback_args_t *p_args);
 #endif
 #define G_PACKET_POOL0_PACKET_SIZE (1568)
-            #define G_PACKET_POOL0_PACKET_NUM  (48)
-            extern NX_PACKET_POOL g_packet_pool0;
-            extern uint8_t g_packet_pool0_pool_memory[(G_PACKET_POOL0_PACKET_NUM * (G_PACKET_POOL0_PACKET_SIZE + sizeof(NX_PACKET)))];
+#define G_PACKET_POOL0_PACKET_NUM  (48)
+extern NX_PACKET_POOL g_packet_pool0;
+extern uint8_t g_packet_pool0_pool_memory[(G_PACKET_POOL0_PACKET_NUM * (G_PACKET_POOL0_PACKET_SIZE + sizeof(NX_PACKET)))];
 
-            /* Quick Setup for g_packet_pool0 instance. */
-            void g_packet_pool0_quick_setup();
+/* Quick Setup for g_packet_pool0 instance. */
+void g_packet_pool0_quick_setup();
 /* NetX Duo Ethernet Driver */
-void g_netxduo_ether_0(NX_IP_DRIVER * driver_req_ptr);
+void g_netxduo_ether_0(NX_IP_DRIVER *driver_req_ptr);
 
 /* Instance for storing state information for the Ethernet Driver. */
 extern rm_netxduo_ether_instance_t g_netxduo_ether_0_instance;
@@ -84,7 +84,7 @@ extern icu_instance_ctrl_t pushButtonS2_ctrl;
 extern const external_irq_cfg_t pushButtonS2_cfg;
 
 #ifndef pb_callback
-void pb_callback(external_irq_callback_args_t * p_args);
+void pb_callback(external_irq_callback_args_t *p_args);
 #endif
 /** External IRQ on ICU Instance. */
 extern const external_irq_instance_t pushButtonS1;
@@ -94,7 +94,7 @@ extern icu_instance_ctrl_t pushButtonS1_ctrl;
 extern const external_irq_cfg_t pushButtonS1_cfg;
 
 #ifndef pb_callback
-void pb_callback(external_irq_callback_args_t * p_args);
+void pb_callback(external_irq_callback_args_t *p_args);
 #endif
 /* IOPORT Instance */
 extern const ioport_instance_t g_ioport;

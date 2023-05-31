@@ -24,10 +24,13 @@
 /* USER CODE BEGIN Includes */
 #include <stdlib.h>
 
+#include "ewf_example.config.h"
 #include "ewf_lib.c"
 #include "ewf_platform_threadx.c"
 #include "ewf_allocator.c"
 #include "ewf_allocator_threadx.c"
+#include "ewf_tokenizer.c"
+#include "ewf_tokenizer_basic.c"
 #include "ewf_interface.c"
 #include "ewf_interface_stm32_uart.c"
 #include "ewf_adapter.c"
@@ -44,6 +47,15 @@
 #include "ewf_adapter_api_modem_sim_utility.c"
 #include "ewf_adapter_api_modem_sms.c"
 #include "ewf_adapter_quectel_bg96.c"
+#include "ewf_adapter_quectel_common_tokenizer.c"
+#include "ewf_adapter_quectel_common_urc.c"
+#include "ewf_adapter_quectel_common_control.c"
+#include "ewf_adapter_quectel_common_context.c"
+#include "ewf_adapter_quectel_common_info.c"
+#include "ewf_adapter_quectel_common_internet.c"
+#include "ewf_adapter_quectel_common_ufs.c"
+#include "ewf_adapter_quectel_common_mqtt_basic.c"
+#include "ewf_adapter_quectel_common_tls_basic.c"
 #include "examples/ewf_example_telemetry_basic.c"
 #include "ewf.config.h"
 #include "ewf_example.config.h"
@@ -110,6 +122,24 @@ void thread_sample_entry(ULONG thread_input)
         exit(result);
     }
 
+    // Enable full functionality
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_MINIMUM)))
+    {
+        EWF_LOG_ERROR("Failed to set the ME functionality, ewf_result %d.\n", result);
+        exit(result);
+    }
+
+    ewf_platform_sleep(2 * EWF_PLATFORM_TICKS_PER_SECOND);
+
+    // Enable full functionality
+    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, EWF_ADAPTER_MODEM_FUNCTIONALITY_FULL)))
+    {
+        EWF_LOG_ERROR("Failed to set the ME functionality, ewf_result %d.\n", result);
+        exit(result);
+    }
+
+    ewf_platform_sleep(1 * EWF_PLATFORM_TICKS_PER_SECOND);
+
     // Enable roaming
 #if 1
     if (ewf_result_failed(result = ewf_interface_send_command(interface_ptr, "AT+QCFG=\"roamservice\",2,1\r"))) exit(result);
@@ -119,22 +149,21 @@ void thread_sample_entry(ULONG thread_input)
     // Set the SIM PIN
     if (ewf_result_failed(result = ewf_adapter_modem_sim_pin_enter(adapter_ptr, EWF_CONFIG_SIM_PIN)))
     {
-        EWF_LOG_ERROR("Failed to the SIM PIN: result 0x%08x.", result);
-        exit(result);
+        EWF_LOG_ERROR("Failed to the SIM PIN, ewf_result %d.\n", result);
+        return;
     }
 
-    // Set the ME functionality
-    if (ewf_result_failed(result = ewf_adapter_modem_functionality_set(adapter_ptr, "1")))
+    if (ewf_result_failed(result = ewf_adapter_modem_network_registration_check(adapter_ptr, EWF_ADAPTER_MODEM_CMD_QUERY_EPS_NETWORK_REG, 120)))
     {
-        EWF_LOG_ERROR("Failed to the ME functionality: result 0x%08x.", result);
-        exit(result);
+        EWF_LOG("[ERROR][Failed to register to network.]\n");
+        return;
     }
 
-    // Activated the PDP context
+    // Activate the PDP context
     if (ewf_result_failed(result = ewf_adapter_quectel_bg96_context_activate(adapter_ptr, EWF_CONFIG_CONTEXT_ID)))
     {
-        EWF_LOG("Failed to activate the PDP context: ewf_result %d.\n", result);
-        // continue despite the error
+        EWF_LOG("[WARNING] Failed to activate the PDP context, ewf_result %d.\n", result);
+        // continue despite the error, the context may be already active
     }
 
 #ifdef EWF_ADAPTER_QUECTEL_BG96_TLS_BASIC_ENABLED
