@@ -77,11 +77,8 @@ ewf_result ewf_interface_ra_uart_hardware_start(ewf_interface* interface_ptr)
     g_interface_ptr = interface_ptr;
 
     /* Initialize UART channel */
-#if (BSP_FEATURE_SCI_VERSION == 2U)
-    status = R_SCI_B_UART_Open (&g_uart0_ctrl, &g_uart0_cfg);
-#else
-    status = R_SCI_UART_Open (&g_uart0_ctrl, &g_uart0_cfg);
-#endif
+    status = g_uart0.p_api->open(g_uart0.p_ctrl, g_uart0.p_cfg);
+
     if (FSP_SUCCESS != status)
       return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
 
@@ -98,11 +95,7 @@ ewf_result ewf_interface_ra_uart_hardware_stop(ewf_interface* interface_ptr)
 #endif
 
     /* Close module */
-#if (BSP_FEATURE_SCI_VERSION == 2U)
-    R_SCI_B_UART_Close (&g_uart0_ctrl);
-#else
-    R_SCI_UART_Close (&g_uart0_ctrl);
-#endif
+    g_uart0.p_api->close(g_uart0.p_ctrl);
 
     return EWF_RESULT_OK;
 }
@@ -122,11 +115,8 @@ ewf_result ewf_interface_ra_uart_hardware_send(ewf_interface* interface_ptr, con
     g_uart_event = 0;
 
     /* Writing to terminal */
-#if (BSP_FEATURE_SCI_VERSION == 2U)
-    err = R_SCI_B_UART_Write (&g_uart0_ctrl, (uint8_t *) buffer, length);
-#else
-    err = R_SCI_UART_Write (&g_uart0_ctrl, (uint8_t *) buffer, length);
-#endif
+    g_uart0.p_api->write(g_uart0.p_ctrl, (uint8_t *) buffer, length);
+
     if (FSP_SUCCESS != err)
     {
         return EWF_RESULT_ADAPTER_TRANSMIT_FAILED;
