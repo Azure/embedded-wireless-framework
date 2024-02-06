@@ -11,7 +11,6 @@
 
 #include "ewf_interface.h"
 
-#include "r_sci_uart.h"
 #include "r_uart_api.h"
 #include "hal_data.h"
 

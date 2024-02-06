@@ -187,7 +187,7 @@ ewf_result ewf_adapter_renesas_common_stop(ewf_adapter* adapter_ptr)
     }
 
     /* Cleanup the interface */
-    if (ewf_result_failed(result = ewf_interface_init(interface_ptr)))
+    if (ewf_result_failed(result = ewf_interface_clean(interface_ptr)))
     {
         EWF_LOG_ERROR("Failed to clean the interface: ewf_result %d.\n", result);
         return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;

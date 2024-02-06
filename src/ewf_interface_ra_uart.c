@@ -77,7 +77,8 @@ ewf_result ewf_interface_ra_uart_hardware_start(ewf_interface* interface_ptr)
     g_interface_ptr = interface_ptr;
 
     /* Initialize UART channel */
-    status = R_SCI_UART_Open (&g_uart0_ctrl, &g_uart0_cfg);
+    status = g_uart0.p_api->open(g_uart0.p_ctrl, g_uart0.p_cfg);
+
     if (FSP_SUCCESS != status)
       return EWF_RESULT_INTERFACE_INITIALIZATION_FAILED;
 
@@ -94,7 +95,7 @@ ewf_result ewf_interface_ra_uart_hardware_stop(ewf_interface* interface_ptr)
 #endif
 
     /* Close module */
-    R_SCI_UART_Close (&g_uart0_ctrl);
+    g_uart0.p_api->close(g_uart0.p_ctrl);
 
     return EWF_RESULT_OK;
 }
@@ -114,7 +115,8 @@ ewf_result ewf_interface_ra_uart_hardware_send(ewf_interface* interface_ptr, con
     g_uart_event = 0;
 
     /* Writing to terminal */
-    err = R_SCI_UART_Write (&g_uart0_ctrl, (uint8_t *) buffer, length);
+    g_uart0.p_api->write(g_uart0.p_ctrl, (uint8_t *) buffer, length);
+
     if (FSP_SUCCESS != err)
     {
         return EWF_RESULT_ADAPTER_TRANSMIT_FAILED;
