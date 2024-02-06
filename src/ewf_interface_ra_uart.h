@@ -11,7 +11,12 @@
 
 #include "ewf_interface.h"
 
-#include "r_sci_uart.h"
+#if (BSP_FEATURE_SCI_VERSION == 2U)
+    #include "r_sci_b_uart.h"
+#else
+    #include "r_sci_uart.h"
+#endif
+
 #include "r_uart_api.h"
 #include "hal_data.h"
 
